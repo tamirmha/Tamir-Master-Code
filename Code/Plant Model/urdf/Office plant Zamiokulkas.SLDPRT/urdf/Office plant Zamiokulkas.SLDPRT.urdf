@@ -1,0 +1,43 @@
+<robot
+  name="Office plant Zamiokulkas.SLDPRT">
+  <link
+    name="Office plant Zamiokulkas.SLDPRT">
+    <inertial>
+      <origin
+        xyz="-6.8598E-07 -1.61839999988994E-07 0.17974"
+        rpy="0 0 0" />
+      <mass
+        value="31.123" />
+      <inertia
+        ixx="0.55846598379295"
+        ixy="1.84707520104659E-06"
+        ixz="-1.63217847862095E-06"
+        iyy="0.558494230197172"
+        iyz="8.79355142826577E-07"
+        izz="0.575032877279389" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Office plant Zamiokulkas.SLDPRT/meshes/Office plant Zamiokulkas.SLDPRT.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Office plant Zamiokulkas.SLDPRT/meshes/Office plant Zamiokulkas.SLDPRT.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -1,0 +1,60 @@
+<?xml version='1.0'?>
+<sdf version='1.4'>
+  <model name='ur5'>
+     
+    <link name='forearm_link'>
+      <pose>0.425 0.01615 0.089159 3.14159 1.57079 3.14159</pose>
+      <inertial>
+        <pose>0 0.0265 0.11993 0 -0 0</pose>
+        <mass>2.275</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <collision name='forearm_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://universal-robot-ur5/meshes/ur5/collision/Forearm.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='forearm_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://universal-robot-ur5/meshes/ur5/visual/Forearm.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='elbow_joint' type='revolute'>
+      <child>forearm_link</child>
+      <parent>upper_arm_link</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-6.28319</lower>
+          <upper>6.28319</upper>
+          <effort>10</effort>
+          <velocity>3.14159</velocity>
+        </limit>
+        <dynamics>
+          <damping>10</damping>
+        </dynamics>
+      </axis>
+    </joint>
+
+</model>
+</sdf>

@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
+
+  <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+    <inertial>
+      <mass value="${mass}" />
+      <xacro:insert_block name="origin" />
+      <inertia ixx="${0.0833333 * mass * (3 * radius * radius + length * length)}" ixy="0.0" ixz="0.0"
+        iyy="${0.0833333 * mass * (3 * radius * radius + length * length)}" iyz="0.0"
+        izz="${0.5 * mass * radius * radius}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="ur5_robot" params="prefix joint_limited
+     shoulder_pan_lower_limit:=${-pi}    shoulder_pan_upper_limit:=${pi}
+     shoulder_lift_lower_limit:=${-pi}    shoulder_lift_upper_limit:=${pi}
+     elbow_joint_lower_limit:=${-pi}    elbow_joint_upper_limit:=${pi}
+     wrist_1_lower_limit:=${-pi}    wrist_1_upper_limit:=${pi}
+     wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
+     wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}">
+
+    <!-- Inertia parameters -->
+    <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
+    <xacro:property name="link1_mass" value="3.7000" />
+    <xacro:property name="link2_mass" value="8.3930" />
+    <xacro:property name="link3_mass" value="2.2750" />
+    <xacro:property name="link4_mass" value="1.2190" />
+    <xacro:property name="link5_mass" value="1.2190" />
+    <xacro:property name="link6_mass" value="0.1879" />
+
+	<xacro:property name="base_radius" value="0.060" /> 
+    <xacro:property name="link1_radius" value="0.060" /> 
+    <xacro:property name="link2_radius" value="0.060" />   
+    <xacro:property name="link3_radius" value="0.060" />  
+    <xacro:property name="link4_radius" value="0.040" />      
+    <xacro:property name="link5_radius" value="0.030" />   
+    <xacro:property name="link6_radius" value="0.025" /> 
+
+    <xacro:property name="base_length" value="0.05" /> 
+	<xacro:property name="link1_length" value="0.15" /> 
+	<xacro:property name="link2_length" value="0.5" /> 
+	<xacro:property name="link3_length" value="0.4" /> 
+	<xacro:property name="link4_length" value="0.07" /> 
+	<xacro:property name="link5_length" value="0.1" /> 
+	<xacro:property name="link6_length" value="0.02" /> 
+    
+	<xacro:property name="origin_offset" value="0.01" /> 
+
+	<!--   Base Link -->
+    <link name="${prefix}base_link" >
+      <visual>
+		<origin xyz="0 0 -0.075" rpy="0 0 0" /> 
+        <geometry>
+ 			<cylinder radius="${base_radius}" length="${base_length}"/> 
+        </geometry>
+      </visual>
+      <collision>
+			<origin xyz="0 0 -0.075" rpy="0 0 0" /> 
+        <geometry>
+			<cylinder radius="${base_radius}" length="${base_length}"/>	
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${base_radius}" length="${base_length}" mass="${base_mass}">
+        <origin xyz="0.0 0.0 -0.075" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 1	-->
+    <joint name="${prefix}shoulder_pan_joint" type="revolute">
+      <parent link="${prefix}base_link" />
+      <child link = "${prefix}link1" />
+      <origin xyz="0.0 0.0 0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}" effort="150.0" velocity="3.15"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+<!--  		link 1	-->
+    <link name="${prefix}link1">
+      <visual>
+		<origin xyz="0 0 ${base_length/2} " rpy="0 0 0" /> 
+        <geometry>
+			<cylinder radius="${link1_radius}" length="${link1_length}"/>	 
+        </geometry>
+      </visual>
+      <collision>
+		 <origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
+        <geometry>
+			<cylinder radius="${link1_radius}" length="${link1_length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass}">
+        <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 2	-->
+    <joint name="${prefix}shoulder_lift_joint" type="revolute">
+      <parent link="${prefix}link1" />
+      <child link = "${prefix}link2" />
+      <origin xyz="0.0 ${link1_radius * 2.0} ${link1_length /2}" rpy="0.0 ${pi / 2.0} 0.0" />
+      <axis xyz="0 1 0" />
+    <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}" effort="150.0" velocity="3.15"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+<!--		link 2			-->
+    <link name="${prefix}link2">
+      <visual>
+		<origin xyz="0 0 ${link2_length / 2 -origin_offset}" rpy="0 0 0" />
+        <geometry>
+			<cylinder radius="${link2_radius}" length="${link2_length}"/> 
+        </geometry>
+      </visual>
+      <collision>
+	    <origin xyz="0 0 ${link2_length / 2 -origin_offset}" rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link2_radius}" length="${link2_length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link2_radius}" length="${link2_length}" mass="${link2_mass}">
+        <origin xyz="0.0 0.0 ${link2_length / 2 -origin_offset}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 3	-->
+    <joint name="${prefix}elbow_joint" type="revolute">
+      <parent link="${prefix}link2" />
+      <child link = "${prefix}link3" />
+      <origin xyz="0.0 ${link2_radius*2.0} ${link2_length}" rpy="0.0 0.0 0.0" />
+      <axis xyz="0 1 0" />
+        <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}" effort="150.0" velocity="3.15"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+<!--  link 3 -->  
+    <link name="${prefix}link3">
+      <visual>
+		<origin xyz="0 0 ${link3_length / 2 -origin_offset}" rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link3_radius}" length="${link3_length}"/>
+        </geometry>
+      </visual>
+      <collision>
+		<origin xyz="0 0 ${link3_length / 2 -origin_offset}" rpy="0 0 0" />
+        <geometry>
+			<cylinder radius="${link3_radius}" length="${link3_length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link3_radius}" length="${link3_length}" mass="${link3_mass}">
+        <origin xyz="0 0 ${link3_radius}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 4	-->
+    <joint name="${prefix}wrist_1_joint" type="revolute">
+      <parent link="${prefix}link3" />
+      <child link = "${prefix}link4" />
+      <origin xyz="0 -${(link4_radius+origin_offset) * 2 } ${link3_length-origin_offset}" rpy="0.0 0 0.0" />
+      <axis xyz="0 1 0 " />
+        <limit lower="${wrist_1_lower_limit}" upper="${wrist_1_upper_limit}" effort="28.0" velocity="3.2"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+<!-- link 4 -->
+    <link name="${prefix}link4">
+      <visual>
+		<origin xyz="0 0 ${link4_length/2}" rpy="0 0 0" />
+        <geometry>
+			   <cylinder radius="${link4_radius}" length="${link4_length}"/>
+        </geometry>
+      </visual>
+      <collision>
+		<origin xyz="0 0 ${link4_length/2}" rpy="0 0 0" />
+        <geometry>
+			   <cylinder radius="${link4_radius}" length="${link4_length}"/>	
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link4_radius}" length="${link4_length}" mass="${link4_mass}">
+        <origin xyz="0 0 ${link4_length/2}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 5	-->
+    <joint name="${prefix}wrist_2_joint" type="revolute">
+      <parent link="${prefix}link4" />
+      <child link = "${prefix}link5" />
+      <origin xyz="0 0 ${link4_length+link5_radius}" rpy=" ${-pi/2} 0 0" />
+      <axis xyz="0  1  0" />
+        <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}" effort="28.0" velocity="3.2"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+<!-- link 5 -->
+    <link name="${prefix}link5">
+      <visual>
+        <origin xyz=" 0 0 ${link5_length/2} " rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link5_radius}" length="${link5_length}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${link5_length/2} " rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link5_radius}" length="${link5_length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link5_radius}" length="${link5_length}" mass="${link5_mass}">
+        <origin xyz="0 0 ${link5_length/2}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+<!--  		joint 6	-->
+    <joint name="${prefix}wrist_3_joint" type="revolute">
+      <parent link="${prefix}link5" />
+      <child link = "${prefix}link6" />
+      <origin xyz="0 0 ${link5_length } " rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}" effort="28.0" velocity="3.2"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+<!-- link 6 -->
+    <link name="${prefix}link6">
+      <visual>
+        <origin xyz="0 0 ${link6_length/2}" rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link6_radius}" length="${link6_length}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${link6_length/2}" rpy="0 0 0" />
+        <geometry>
+		<cylinder radius="${link6_radius}" length="${link6_length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link6_radius}" length="${link6_length}" mass="${link6_mass}">
+        <origin xyz="0 0 ${link6_length/2}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+
+    <joint name="${prefix}ee_fixed_joint" type="fixed">
+      <parent link="${prefix}link6" />
+      <child link = "${prefix}ee_link" />
+      <origin xyz="0.0 ${link6_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+    </joint>
+
+<!-- ee link -->
+    <link name="${prefix}ee_link">
+      <collision>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+      </collision>
+    </link>
+
+    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_gazebo prefix="${prefix}" />
+
+    <!-- ROS base_link to UR 'Base' Coordinates transform -->
+    <link name="${prefix}base"/>
+    <joint name="${prefix}base_link-base_fixed_joint" type="fixed">
+      <!-- NOTE: this rotation is only needed as long as base_link itself is
+       not corrected wrt the real robot (ie: rotated over 180 degrees)  -->
+      <origin xyz="0 0 0" rpy="0 0 ${-pi}"/>
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}base"/>
+    </joint>
+
+    <!-- Frame coincident with all-zeros TCP on UR controller
+    <link name="${prefix}tool0"/>
+    <joint name="${prefix}link6-tool0_fixed_joint" type="fixed">
+      <origin xyz="0 ${link6_length} 0" rpy="${pi/-2.0} 0 0"/>
+      <parent link="${prefix}link6"/>
+      <child link="${prefix}tool0"/>
+    </joint> -->
+
+  </xacro:macro>
+</robot>

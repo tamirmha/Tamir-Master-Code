@@ -1,0 +1,58 @@
+<?xml version='1.0'?>
+<sdf version='1.4'>
+  <model name='ur5'>
+     <link name='wrist_1_link'>
+      <pose>0.81725 0.01615 0.089159 3.14159 3.58979e-09 3.14159</pose>
+      <inertial>
+        <pose>0 0.110949 0.01634 0 -0 0</pose>
+        <mass>1.219</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <collision name='wrist_1_link_collision'>
+        <pose>0 0.093 0 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://universal-robot-ur5/meshes/ur5/collision/Wrist1.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='wrist_1_link_visual'>
+        <pose>0 0.093 0 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://universal-robot-ur5/meshes/ur5/visual/Wrist1.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='wrist_1_joint' type='revolute'>
+      <child>wrist_1_link</child>
+      <parent>forearm_link</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.14159</lower>
+          <upper>0.785398</upper>
+          <effort>10</effort>
+          <velocity>3.14159</velocity>
+        </limit>
+        <dynamics>
+          <damping>10</damping>
+        </dynamics>
+      </axis>
+    </joint>
+</model>
+</sdf>
