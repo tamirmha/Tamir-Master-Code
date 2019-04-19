@@ -1,20 +1,14 @@
-''' i Will create many URDF files as the number of manipulators that i want to simulate
+""" i Will create many URDF files as the number of manipulators that i want to simulate
 links lengths- check from [0.1-1]meter in intervals of 0.3 meter
 # of DOF- check between 3-6 DOF
 type of DOF - check 2 types - prismatic and revolute
 order- for each # and type of DOF i will check all the possible options
-'''
+"""
 import datetime
 import itertools
 import os
 from logging import warning
 import numpy as np
-
-# default data
-links = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-joints_type = ['revolute', 'prismatic', 'revolute', 'revolute', 'revolute', 'revolute']
-joints_axis = ['z', 'y', 'y', 'y', 'z', 'y']
-#
 
 
 class UrdfClass(object):
@@ -36,7 +30,7 @@ class UrdfClass(object):
         self.joint_data = joints
         self.axis = self.init_calc(joints, joints_axis)
         self.links_number = len(self.links)
-        self.rpy=rpy
+        self.rpy = rpy
 
     def urdf_data(self):
         head = '''<?xml version="1.0"?>
@@ -216,7 +210,7 @@ class UrdfClass(object):
     def joint_create(self, n):
         jointname = 'joint' + str(n)
         orgin = self.calc_origin(n)
-        rpy = self.rpy[n-1]#calc_rpy(n)
+        rpy = self.rpy[n-1][0]+self.rpy[n-1][1]+self.rpy[n-1][2]
         joint = '\n<xacro:property name="' + jointname + '_type" value="' + self.joint_data[n - 1] + '"/>\n' \
                                                                                                      '<xacro:property name="' + jointname + '_axe" value="' + \
                 self.axis[n - 1] + '"/>\n' \
@@ -276,12 +270,21 @@ class UrdfClass(object):
 
 class ToSimulate(object):
     def __init__(self,number):
-        link_min = 0.1; link_interval = 0.3;link_max = 1.1
+        first_joint=['revolute', 'z', '0', '0.1']
+        link_min = 0.1; link_interval = 0.3; link_max = 1.1
         lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
-        self.links_length = list(itertools.product(lengths_2_check, repeat=(number)))
-        self.joints_axis = list(itertools.product(['y', 'z'], repeat=number))
-        self.joints = list(itertools.product(['prismatic', 'revolute'], repeat=number))
-        self.rpy = list(itertools.product(['0', '-90'], repeat=number))
+        #self.links_length =list(itertools.product(lengths_2_check, repeat=(number-1)))
+        #self.joints_axis = list(itertools.product(['y', 'z'], repeat=number-1))
+        #self.joints = list(itertools.product(['prismatic', 'revolute'], repeat=number-1))
+        #self.rpy = list(itertools.product(['0', '-90'], repeat=number-1))
+        self.joints = [[first_joint[0]] + list(tup) for tup in
+                       list(itertools.product(['prismatic', 'revolute'], repeat=number - 1))]
+        self.joints_axis = [[first_joint[1]] + list(tup) for tup in
+                       list(itertools.product(['y', 'z'], repeat=number-1))]
+        self.rpy = [[first_joint[2]] + list(tup) for tup in
+                       list(itertools.product(['0', '-90'], repeat=number-1))]
+        self.links_length = [[first_joint[3]] + list(tup) for tup in
+                       list(itertools.product(lengths_2_check, repeat=(number - 1)))]
 
     def getaxis(self):
         return self.joints_axis
@@ -302,78 +305,112 @@ class ToSimulate(object):
 
 
 class Assumptinos (object):
-    '''Assumptions that used to reduce the number of manipulators to simulate
-    explained details in word files and in the functions    '''
+    """Assumptions that used to reduce the number of manipulators to simulate
+    explained details in word files and in the functions    """
 
-    def __init__(self,length=1):
-        self.length=length # the length for the first link
+    # @staticmethod
+    # def assume_1(links):
+    #     """first link is always 0.1 meter"""
+    #     if links[0]== 1.0:
+    #         return True
+    #     return False
+    #
+    # @staticmethod
+    # def assume_2(axe):
+    #     """first joint axe is always z axe """
+    #     if axe == 'z':
+    #        return True
+    #     return False
 
-    def assume_1(self,links):
-        '''first link is always 0.1 meter'''
-        if links[0]== 1.0:
-            return True
-        return False
+    # @staticmethod
+    # def assume_4(joint_types):
+    #     """first joint is always revolute"""
+    #     if joint_types[0] == 'prismatic':
+    #         return False
+    #     return True
+    #
+    # @staticmethod
+    # def assume_5(roll):
+    #     """first joint roll is always 0 """
+    #     if roll[0] == '-90':
+    #         return False
+    #     return True
 
-    def assume_2(self,axe):
-        '''first joint axe is always z axe '''
-        if axe =='z':
-           return True
-        return False
+    # @staticmethod
+    # def assume_7(joints, rpy):
+    #     """ two adjacent prismatics joints won't be parallel """
+    #     prev_joint = 'revolute'
+    #     for j in range(2, len(joints) + 1):
+    #         if joints[j - 1] == 'prismatic' and prev_joint == 'prismatic' and rpy[j - 1] != '-90':  # or axis[j] == 'y':
+    #             return False
+    #         prev_joint = joints[j - 1]
+    #     return True
 
-    def assume_3(self,joint_types):
-        '''No more than 3 parismatics joints'''
-        sum=0
+    @staticmethod
+    def assume_3(joint_types):
+        """No more than 3 parismatics joints"""
+        tot = 0
         for j in joint_types:
-            if j=='prismatic':
-                sum=sum+1
-            if sum > 3:
+            if j == 'prismatic':
+                tot = tot+1
+            if tot > 3:
                 return False
         return True
 
-    def assume_4(self,joint_types):
-        '''first joint is always revolute'''
-        if joint_types[0] == 'prismatic':
-            return False
+    @staticmethod
+    def assume_6(joint_types, axis,rpy):
+        """If the second joint is revolute than it must be perpendicular to the first """
+        prev_joint = 'revolute'
+        prev_axe = 'z'
+        for j in range(2, len(joint_types)+1):
+            if prev_joint == 'revolute' and joint_types[j-1] == 'revolute' and axis[j-1] == prev_axe and rpy[j-1] == '0':
+                return False
+            prev_joint == joint_types[j-1]
+            prev_axe = axis[j-1]
         return True
 
-    def assume_5(self,roll):
-        '''first joint roll is always 0 '''
-        if roll[0] == '-90':
-            return False
+
+    @staticmethod
+    def assume_8(joints, axis):
+        """Prismatic is always through Z axe"""
+        for j in range(2, len(joints)+1):
+            if axis[j-1] == 'y' and joints[j-1] == 'prismatic':
+                return False
         return True
 
-    def assume_3_4_count(self,n,counter):
-        if n==3:
-            counter=counter +  4096
-        elif n == 4:
-            counter = counter+ 65536
-        elif n == 5:
-            counter = counter + 1048576
-        elif n == 6:
-            counter = counter + 16777216
-        return counter
+    @staticmethod
+    def setrpy(rpy,joints):
+        """Set roll or pitch to joint  """
+        rpy_new = [['0 ', '0 ', '0 ']]
+        pris_num = 0
+        for j in range(2, len(joints)+1):
+            if joints[j-1] == 'revolute':
+                if rpy[j-1] == '0':
+                    rpy_new.append(['0 ', '0 ', '0 '])
+                else:
+                    rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                pris_num = 0
+            else:
+                if pris_num == 1:
+                    rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                elif pris_num == 0:
+                    if rpy[j - 1] == '0':
+                        rpy_new.append(['0 ', '0 ', '0 '])
+                    else:
+                        rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                    pris_num = 0
+                else:
+                    rpy_new.append(['0 ', '${-pi/2} ', '0 '])
+                pris_num = pris_num + 1
+        return rpy_new
 
-    def assume_2_count(self,n,counter):
-        if n==3:
-            counter=counter + 512
-        elif n == 4:
-            counter = counter + 4096
-        elif n == 5:
-            counter = counter + 32768
-        elif n == 6:
-            counter = counter + 262144
-        return counter
+    @staticmethod
+    def assume_3_4_count(number, counter):
+        return counter+(16**number)/16
 
-    def assume_1_count(self, number, counter):
-        if number == 3:
-            counter = counter + 8
-        elif number == 4:
-            counter = counter + 16
-        elif number == 5:
-            counter = counter + 32
-        elif number == 6:
-            counter = counter + 64
-        return counter
+    @staticmethod
+    def assume_2_6_count(number, counter):
+        return counter + (8**number)/8
 
 
 def create_folder(name):
@@ -382,63 +419,124 @@ def create_folder(name):
     return name
 
 
-if __name__ == "__main__":
+def run():
     tic = datetime.datetime.now()
     combinations = 0
-    base_folder = '/media/arl_main/New Volume/'+'urdf_'+str(datetime.datetime.now().date())
+    base_folder = '/home/arl_main/' + 'urdf_' + str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
     base_folder = create_folder(base_folder)
     assum = Assumptinos()
-    d = 0; o = 0; t = 0; z = 0; q = 0; r = 0
-    for n in range(3, 7):
+    d = 0
+    t = 0
+    u = 0
+    p = 0
+    x = 0
+    for n in range(3, 4):
         sim = ToSimulate(n)
         links_sim = sim.getlinks()  # create all possible links combinations
         joints_sim = sim.getjoints()  # create all possible joints combinations
-        axis_sim = sim.getaxis()      # create all possible axis combinations
-        rpy_sim = sim.getrpy()      # create all possible rpy combinations
-        path = base_folder+'/DOF_' + str(n) + '/'  # where to save the files
+        axis_sim = sim.getaxis()  # create all possible axis combinations
+        rpy_sim = sim.getrpy()  # create all possible rpy combinations
+        path = base_folder + '/DOF_' + str(n) + '/'  # where to save the files
         create_folder(path)
         for i in range(len(joints_sim)):  # run about all the joints combination
-            if not assum.assume_4(joints_sim[i]):  # check if the joint is meets the assumption 4
-                q=assum.assume_3_4_count(n,q)
+            if not assum.assume_3(joints_sim[i]):  # check if the joint meets assumption 3
+                d = assum.assume_3_4_count(n, d)
                 continue
-            if not assum.assume_3(joints_sim[i]):  # check if the joint is meets the assumption 3
-                d=assum.assume_3_4_count(n,d)
-                continue
-            joints_path = create_folder(path + str(joints_sim[i])) #create folder with the joints types
-            for a in range(len(axis_sim)): #run about all the axis combination
-                if not assum.assume_2(axis_sim[a][0]):  # check if the joint is meets the assumption 2
-                        o = assum.assume_2_count(n,o)
-                        continue
+            joints_path = create_folder(path + str(joints_sim[i]))  # create folder with the joints types
+            for a in range(len(axis_sim)):  # run about all the axis combination
+                if not assum.assume_8(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
+                    x = assum.assume_2_6_count(n, x)
+                    continue
                 axis_path = create_folder(joints_path + '/' + str(axis_sim[a]))
-                for j in range(len(links_sim)): # run about all the links combination
-                    if not assum.assume_1(links_sim[j]):   # check if the joint is meets the assumption 1
-                        z = assum.assume_1_count(n,z)
-                        continue
+                for j in range(len(links_sim)):  # run about all the links combination
                     link_path = create_folder(axis_path + '/' + str(links_sim[j]))
                     for k in range(len(rpy_sim)):  # run about all the rpy combination
-                        if not assum.assume_5(rpy_sim[k]):
-                            r = r+1
+                        if not assum.assume_6(joints_sim[i], axis_sim[a],rpy_sim[k]):  # check if the joint meets assumption 6
+                            u = u+1
                             continue
+                        rpy = assum.setrpy(rpy_sim[k],joints_sim[i])
                         urdf_name = link_path + '/' + str(rpy_sim[k])
-                        if False:  # os.path.isfile(urdf_name + '.urdf.xacro'):
-                            continue
-                        else:
-                            urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a],''.join( rpy_sim[k]))
-                            urdf.urdf_write(urdf.urdf_data(), urdf_name)
-                            t = t+1
-        combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim)+combinations
+                        urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
+                        urdf.urdf_write(urdf.urdf_data(), urdf_name)
+                        t = t + 1
+        combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim) + combinations
     toc = datetime.datetime.now()
-    delta = (toc-tic).seconds
-
-
+    delta = (toc - tic).seconds
 
     print('Pre filtered combinations: ' + str(combinations))
-    print('Amount of manipulators that filtered total: ' + str(z+d+o+q+r))
+    print('Amount of manipulators that filtered total: ' + str(d+u+p+x))
     print('Amount of manipulators after filteting: ' + str(t))
-    print('Amount of manipulators that filtered due assum 5: '+str(r))
-    print('Amount of manipulators that filtered due assum 4: '+str(q))
+    print('Amount of manipulators that filtered due assum 8: ' + str(x))
+    print('Amount of manipulators that filtered due assum 6: '+str(u))
     print('Amount of manipulators that filtered due assum 3: '+str(d))
-    print('Amount of manipulators that filtered due assum 2: ' + str(o))
-    print('Amount of manipulators that filtered due assum 1: ' + str(z))
     print('Time of Run (seconds): ' + str(delta))
     print('Combinations per second: ' + str(1.0*combinations/delta))
+
+
+if __name__ == "__main__":
+    # tic = datetime.datetime.now()
+    # combinations = 0
+    # base_folder = '/home/arl_main/'+'urdf_'+str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
+    # base_folder = create_folder(base_folder)
+    # assum = Assumptinos()
+    # d = 0; o = 0; t = 0; z = 0; q = 0; r = 0; u = 0; p = 0; x = 0
+    # for n in range(3, 5):
+    #     sim = ToSimulate(n)
+    #     links_sim = sim.getlinks()    # create all possible links combinations
+    #     joints_sim = sim.getjoints()  # create all possible joints combinations
+    #     axis_sim = sim.getaxis()      # create all possible axis combinations
+    #     rpy_sim = sim.getrpy()        # create all possible rpy combinations
+    #     path = base_folder+'/DOF_' + str(n) + '/'  # where to save the files
+    #     create_folder(path)
+    #     for i in range(len(joints_sim)):  # run about all the joints combination
+    #         # if not assum.assume_4(joints_sim[i]):  # check if the joint meets assumption 4
+    #         #     q = assum.assume_3_4_count(n, q)
+    #         #     continue
+    #         if not assum.assume_3(joints_sim[i]):  # check if the joint meets assumption 3
+    #             d = assum.assume_3_4_count(n, d)
+    #             continue
+    #         joints_path = create_folder(path + str(joints_sim[i]))  # create folder with the joints types
+    #         for a in range(len(axis_sim)):  # run about all the axis combination
+    #             # if not assum.assume_2(axis_sim[a][0]):  # check if the joint meets  assumption 2
+    #             #     o = assum.assume_2_6_count(n, o)
+    #             #     continue
+    #             if not assum.assume_6(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
+    #                 u = assum.assume_2_6_count(n, u)
+    #                 continue
+    #             if not assum.assume_8(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
+    #                 x = assum.assume_2_6_count(n, x)
+    #                 continue
+    #             axis_path = create_folder(joints_path + '/' + str(axis_sim[a]))
+    #             for j in range(len(links_sim)):  # run about all the links combination
+    #                 # if not assum.assume_1(links_sim[j]):  # check if the joint meets assumption 1
+    #                 #     z = assum.assume_1_count(n, z)
+    #                 #     continue
+    #                 link_path = create_folder(axis_path + '/' + str(links_sim[j]))
+    #                 for k in range(len(rpy_sim)):  # run about all the rpy combination
+    #                     # if not assum.assume_5(rpy_sim[k]):  # check if the joint meets assumption 5
+    #                     #     r = r+1
+    #                     #     continue
+    #                     if not assum.assume_7(joints_sim[i], rpy_sim[k]):  # check if the joint meets the assumption 7
+    #                         p = p + 1
+    #                         continue
+    #                     urdf_name = link_path + '/' + str(rpy_sim[k])
+    #                     urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], ''.join( rpy_sim[k]))
+    #                     urdf.urdf_write(urdf.urdf_data(), urdf_name)
+    #                     t = t+1
+    #     combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim)+combinations
+    # toc = datetime.datetime.now()
+    # delta = (toc-tic).seconds
+    # print('Pre filtered combinations: ' + str(combinations))
+    # print('Amount of manipulators that filtered total: ' + str(d+u+p+x))
+    # print('Amount of manipulators after filteting: ' + str(t))
+    # print('Amount of manipulators that filtered due assum 8: ' + str(x))
+    # print('Amount of manipulators that filtered due assum 7: '+str(p))
+    # print('Amount of manipulators that filtered due assum 6: '+str(u))
+    # #print('Amount of manipulators that filtered due assum 5: '+str(r))
+    # #print('Amount of manipulators that filtered due assum 4: '+str(q))
+    # print('Amount of manipulators that filtered due assum 3: '+str(d))
+    # #print('Amount of manipulators that filtered due assum 2: '+str(o))
+    # #print('Amount of manipulators that filtered due assum 1: '+str(z))
+    # print('Time of Run (seconds): ' + str(delta))
+    # print('Combinations per second: ' + str(1.0*combinations/delta))
+    run()
