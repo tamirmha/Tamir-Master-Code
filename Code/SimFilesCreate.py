@@ -269,7 +269,7 @@ class UrdfClass(object):
 
 
 class ToSimulate(object):
-    def __init__(self,number):
+    def __init__(self, number):
         first_joint=['revolute', 'z', '0', '0.1']
         link_min = 0.1; link_interval = 0.3; link_max = 1.1
         lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
@@ -358,7 +358,7 @@ class Assumptinos (object):
         return True
 
     @staticmethod
-    def assume_6(joint_types, axis,rpy):
+    def assume_6(joint_types, axis, rpy):
         """If the second joint is revolute than it must be perpendicular to the first """
         prev_joint = 'revolute'
         prev_axe = 'z'
@@ -369,7 +369,6 @@ class Assumptinos (object):
             prev_axe = axis[j-1]
         return True
 
-
     @staticmethod
     def assume_8(joints, axis):
         """Prismatic is always through Z axe"""
@@ -379,30 +378,37 @@ class Assumptinos (object):
         return True
 
     @staticmethod
-    def setrpy(rpy,joints):
+    def setrpy(rpy, joints):
         """Set roll or pitch to joint  """
         rpy_new = [['0 ', '0 ', '0 ']]
-        pris_num = 0
+        pris_num = 0   # how many parismatics in raw
+        rpy_name = '0 ,'  # name of file
         for j in range(2, len(joints)+1):
             if joints[j-1] == 'revolute':
                 if rpy[j-1] == '0':
                     rpy_new.append(['0 ', '0 ', '0 '])
+                    rpy_name += '0 ,'
                 else:
                     rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                    rpy_name += '-90 ,'
                 pris_num = 0
             else:
                 if pris_num == 1:
                     rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                    rpy_name += '-90 ,'
                 elif pris_num == 0:
                     if rpy[j - 1] == '0':
                         rpy_new.append(['0 ', '0 ', '0 '])
+                        rpy_name += '0 ,'
                     else:
                         rpy_new.append(['${-pi/2} ', '0 ', '0 '])
+                        rpy_name += '-90 ,'
                     pris_num = 0
                 else:
                     rpy_new.append(['0 ', '${-pi/2} ', '0 '])
+                    rpy_name += '-90y ,'
                 pris_num = pris_num + 1
-        return rpy_new
+        return rpy_new,rpy_name
 
     @staticmethod
     def assume_3_4_count(number, counter):
@@ -422,7 +428,7 @@ def create_folder(name):
 def run():
     tic = datetime.datetime.now()
     combinations = 0
-    base_folder = '/home/arl_main/' + 'urdf_' + str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
+    base_folder = '/home/tamir/' + 'urdf_' + str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
     base_folder = create_folder(base_folder)
     assum = Assumptinos()
     d = 0
@@ -430,7 +436,7 @@ def run():
     u = 0
     p = 0
     x = 0
-    for n in range(3, 4):
+    for n in range(3, 7):
         sim = ToSimulate(n)
         links_sim = sim.getlinks()  # create all possible links combinations
         joints_sim = sim.getjoints()  # create all possible joints combinations
@@ -454,8 +460,8 @@ def run():
                         if not assum.assume_6(joints_sim[i], axis_sim[a],rpy_sim[k]):  # check if the joint meets assumption 6
                             u = u+1
                             continue
-                        rpy = assum.setrpy(rpy_sim[k],joints_sim[i])
-                        urdf_name = link_path + '/' + str(rpy_sim[k])
+                        rpy,rpy_name = assum.setrpy(rpy_sim[k], joints_sim[i])
+                        urdf_name = link_path + '/' + str(rpy_name)
                         urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
                         urdf.urdf_write(urdf.urdf_data(), urdf_name)
                         t = t + 1
