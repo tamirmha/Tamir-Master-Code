@@ -1,5 +1,0 @@
-1)	launch/planning_context.launch -   Change urdf location path ++ srdf file chaned from panda_arm_hand to panda_arm
-2)	franka_description2/robots/panda_arm.urdf.xacro --  Change panda_arm.xacro location path
-2.1)	franka_description2/robots/panda_arm.xacro -- desicribes the manipulator kinematics 
-3)	config/panda_arm.xacro -- changed start position of the manipulator ++ delete collisions disable
-4)	config/joint_limits
