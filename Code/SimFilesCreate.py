@@ -111,7 +111,7 @@ class UrdfClass(object):
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}link''' + str(self.links_number) + '''" />
       <child link = "${prefix}ee_link" />
-      <origin xyz="0.0 ${link6_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+      <origin xyz="0.0  0.0 ${link6_length}" rpy="0.0 0.0 0" />
     </joint>
 
 <!-- ee link -->
@@ -120,7 +120,7 @@ class UrdfClass(object):
         <geometry>
           <box size="0.01 0.01 0.01"/>
         </geometry>
-        <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 0.005"/>
       </collision>
     </link>
 
@@ -480,69 +480,4 @@ def run():
 
 
 if __name__ == "__main__":
-    # tic = datetime.datetime.now()
-    # combinations = 0
-    # base_folder = '/home/arl_main/'+'urdf_'+str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
-    # base_folder = create_folder(base_folder)
-    # assum = Assumptinos()
-    # d = 0; o = 0; t = 0; z = 0; q = 0; r = 0; u = 0; p = 0; x = 0
-    # for n in range(3, 5):
-    #     sim = ToSimulate(n)
-    #     links_sim = sim.getlinks()    # create all possible links combinations
-    #     joints_sim = sim.getjoints()  # create all possible joints combinations
-    #     axis_sim = sim.getaxis()      # create all possible axis combinations
-    #     rpy_sim = sim.getrpy()        # create all possible rpy combinations
-    #     path = base_folder+'/DOF_' + str(n) + '/'  # where to save the files
-    #     create_folder(path)
-    #     for i in range(len(joints_sim)):  # run about all the joints combination
-    #         # if not assum.assume_4(joints_sim[i]):  # check if the joint meets assumption 4
-    #         #     q = assum.assume_3_4_count(n, q)
-    #         #     continue
-    #         if not assum.assume_3(joints_sim[i]):  # check if the joint meets assumption 3
-    #             d = assum.assume_3_4_count(n, d)
-    #             continue
-    #         joints_path = create_folder(path + str(joints_sim[i]))  # create folder with the joints types
-    #         for a in range(len(axis_sim)):  # run about all the axis combination
-    #             # if not assum.assume_2(axis_sim[a][0]):  # check if the joint meets  assumption 2
-    #             #     o = assum.assume_2_6_count(n, o)
-    #             #     continue
-    #             if not assum.assume_6(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
-    #                 u = assum.assume_2_6_count(n, u)
-    #                 continue
-    #             if not assum.assume_8(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
-    #                 x = assum.assume_2_6_count(n, x)
-    #                 continue
-    #             axis_path = create_folder(joints_path + '/' + str(axis_sim[a]))
-    #             for j in range(len(links_sim)):  # run about all the links combination
-    #                 # if not assum.assume_1(links_sim[j]):  # check if the joint meets assumption 1
-    #                 #     z = assum.assume_1_count(n, z)
-    #                 #     continue
-    #                 link_path = create_folder(axis_path + '/' + str(links_sim[j]))
-    #                 for k in range(len(rpy_sim)):  # run about all the rpy combination
-    #                     # if not assum.assume_5(rpy_sim[k]):  # check if the joint meets assumption 5
-    #                     #     r = r+1
-    #                     #     continue
-    #                     if not assum.assume_7(joints_sim[i], rpy_sim[k]):  # check if the joint meets the assumption 7
-    #                         p = p + 1
-    #                         continue
-    #                     urdf_name = link_path + '/' + str(rpy_sim[k])
-    #                     urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], ''.join( rpy_sim[k]))
-    #                     urdf.urdf_write(urdf.urdf_data(), urdf_name)
-    #                     t = t+1
-    #     combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim)+combinations
-    # toc = datetime.datetime.now()
-    # delta = (toc-tic).seconds
-    # print('Pre filtered combinations: ' + str(combinations))
-    # print('Amount of manipulators that filtered total: ' + str(d+u+p+x))
-    # print('Amount of manipulators after filteting: ' + str(t))
-    # print('Amount of manipulators that filtered due assum 8: ' + str(x))
-    # print('Amount of manipulators that filtered due assum 7: '+str(p))
-    # print('Amount of manipulators that filtered due assum 6: '+str(u))
-    # #print('Amount of manipulators that filtered due assum 5: '+str(r))
-    # #print('Amount of manipulators that filtered due assum 4: '+str(q))
-    # print('Amount of manipulators that filtered due assum 3: '+str(d))
-    # #print('Amount of manipulators that filtered due assum 2: '+str(o))
-    # #print('Amount of manipulators that filtered due assum 1: '+str(z))
-    # print('Time of Run (seconds): ' + str(delta))
-    # print('Combinations per second: ' + str(1.0*combinations/delta))
     run()
