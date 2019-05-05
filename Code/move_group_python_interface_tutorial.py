@@ -102,7 +102,7 @@ class MoveGroupPythonIntefaceTutorial(object):
         ## If you are using a different robot, change this value to the name of your robot
         ## arm planning group.
         ## This interface can be used to plan and execute motions:
-        group_name = "panda_arm"
+        group_name = "manipulator"
         move_group = moveit_commander.MoveGroupCommander(group_name)
 
         ## Create a `DisplayTrajectory`_ ROS publisher which is used to display
@@ -166,7 +166,7 @@ class MoveGroupPythonIntefaceTutorial(object):
         joint_goal[3] = -pi/2
         joint_goal[4] = 0
         joint_goal[5] = pi/3
-        joint_goal[6] = 0
+        #joint_goal[6] = 0
 
         # The go command can be called with joint values, poses, or without any
         # parameters if you have already set the pose or joint target for the group
@@ -350,11 +350,13 @@ class MoveGroupPythonIntefaceTutorial(object):
 
 
     def add_box(self, timeout=4):
+
         # Copy class variables to local variables to make the web tutorials more clear.
         # In practice, you should use the class variables directly unless you have a good
         # reason not to.
         box_name = self.box_name
         scene = self.scene
+        rospy.sleep(2)
 
         ## BEGIN_SUB_TUTORIAL add_box
         ##
@@ -362,12 +364,13 @@ class MoveGroupPythonIntefaceTutorial(object):
         ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ## First, we will create a box in the planning scene at the location of the left finger:
         box_pose = geometry_msgs.msg.PoseStamped()
-        box_pose.header.frame_id = "panda_leftfinger"
+        box_pose.header.frame_id = self.robot.get_planning_frame()# "panda_leftfinger"
         box_pose.pose.orientation.w = 1.0
-        box_pose.pose.position.z = 0.07 # slightly above the end effector
+        box_pose.pose.position.z = -0.3  # slightly above the end effector
         box_name = "box"
-        scene.add_box(box_name, box_pose, size=(0.1, 0.1, 0.1))
+        scene.add_box(box_name, box_pose, size=(10, 10, 0.01))
 
+        scene.attach_box('world',box_name)
         ## END_SUB_TUTORIAL
         # Copy local variables back to class variables. In practice, you should use the class
         # variables directly unless you have a good reason not to.
@@ -395,7 +398,7 @@ class MoveGroupPythonIntefaceTutorial(object):
         ## planning scene to ignore collisions between those links and the box. For the Panda
         ## robot, we set ``grasping_group = 'hand'``. If you are using a different robot,
         ## you should change this value to the name of your end effector group name.
-        grasping_group = 'hand'
+        grasping_group = 'endeffector'
         touch_links = robot.get_link_names(group=grasping_group)
         scene.attach_box(eef_link, box_name, touch_links=touch_links)
         ## END_SUB_TUTORIAL
@@ -454,14 +457,12 @@ def main():
     print ("============ Press `Enter` to begin the tutorial by setting up the moveit_commander ...")
     raw_input()
     tutorial = MoveGroupPythonIntefaceTutorial()
+    tutorial.add_box()
 
-    print ("============ Press `Enter` to execute a movement using a joint state goal ...")
-    raw_input()
     tutorial.go_to_joint_state()
 
-    print ("============ Press `Enter` to execute a movement using a pose goal ...")
-    raw_input()
-    tutorial.go_to_pose_goal()
+
+    #tutorial.attach_box()
 
     # print ("============ Press `Enter` to plan and display a Cartesian path ...")
     # raw_input()
