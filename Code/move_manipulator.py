@@ -34,10 +34,10 @@ def all_close(goal, actual, tolerance):
     return True
 
 
-class MoveGroupPythonIntefaceTutorial(object):
+class MoveGroupPythonInteface(object):
     """MoveGroupPythonIntefaceTutorial"""
     def __init__(self):
-        super(MoveGroupPythonIntefaceTutorial, self).__init__()
+        super(MoveGroupPythonInteface, self).__init__()
 
         # initialize `moveit_commander`_ and a `rospy`_ node:
         moveit_commander.roscpp_initialize(sys.argv)
@@ -62,28 +62,12 @@ class MoveGroupPythonIntefaceTutorial(object):
 
         ## Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
-        # print ("============ Planning frame: %s" )% planning_frame
-        #
         self.eef_link = self.move_group.get_end_effector_link()
-        # print ("============ End effector link: %s") % eef_link
         # # a list of all the groups in the robot:
         self.group_names = self.robot.get_group_names()
-        # print ("============ Available Planning Groups:", robot.get_group_names())
-
-        # # Sometimes for debugging it is useful to print the entire state of the robot:
-        # print ("============ Printing robot state")
-        # print (robot.get_current_state())
-        # print ("")
-
         # Misc variables
         self.box_name = ''
-        #self.robot = robot
-        #self.scene = scene
-        #self.move_group = move_group
-        #self.display_trajectory_publisher = display_trajectory_publisher
-        #self.planning_frame = planning_frame
-        #self.eef_link = eef_link
-        #self.group_names = group_names
+        self.cylinder_name = ''
         self.move_group.set_workspace([-10, -10, 0.2, 10, 10, 10])
 
     def go_to_joint_state(self):
@@ -169,42 +153,29 @@ class MoveGroupPythonIntefaceTutorial(object):
         return plan, fraction
 
     def execute_plan(self, plan):
-        # move_group = self.move_group
 
         # the plan that has already been computed:
         self.move_group.execute(plan, wait=True)
-
         ## **Note:** The robot's current joint state must be within some tolerance of the
         ## first waypoint in the `RobotTrajectory`_ or ``execute()`` will fail
 
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
-        # Copy class variables to local variables to make the web tutorials more clear.
-        # In practice, you should use the class variables directly unless you have a good
-        # reason not to.
-        box_name = self.box_name
-        scene = self.scene
 
-        ## BEGIN_SUB_TUTORIAL wait_for_scene_update
-        ##
         ## Ensuring Collision Updates Are Receieved
-        ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ## If the Python node dies before publishing a collision object update message, the message
         ## could get lost and the box will not appear. To ensure that the updates are
         ## made, we wait until we see the changes reflected in the
         ## ``get_attached_objects()`` and ``get_known_object_names()`` lists.
-        ## For the purpose of this tutorial, we call this function after adding,
-        ## removing, attaching or detaching an object in the planning scene. We then wait
-        ## until the updates have been made or ``timeout`` seconds have passed
         start = rospy.get_time()
         seconds = rospy.get_time()
         while (seconds - start < timeout) and not rospy.is_shutdown():
             # Test if the box is in attached objects
-            attached_objects = scene.get_attached_objects([box_name])
+            attached_objects = self.scene.get_attached_objects([self.box_name])
             is_attached = len(attached_objects.keys()) > 0
 
             # Test if the box is in the scene.
             # Note that attaching the box will remove it from known_objects
-            is_known = box_name in scene.get_known_object_names()
+            is_known = self.box_name in self.scene.get_known_object_names()
 
             # Test if we are in the expected state
             if (box_is_attached == is_attached) and (box_is_known == is_known):
@@ -216,111 +187,53 @@ class MoveGroupPythonIntefaceTutorial(object):
 
         # If we exited the while loop without returning then we timed out
         return False
-        ## END_SUB_TUTORIAL
 
-    def add_box(self, timeout=4):
-        # Copy class variables to local variables to make the web tutorials more clear.
-        # In practice, you should use the class variables directly unless you have a good
-        # re/ason not to.
-        box_name = self.box_name
-        scene = self.scene
-
+    def add_obstacles(self, timeout=4):
+        floor = {'name': 'floor', 'pose': [0, 0, -0.1], 'size': (2, 2, 0.01)}
+        height = 1.0
+        radius = 0.1
+        rospy.sleep(0.2)
+        # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
         box_pose.pose.orientation.w = 1.0
-        box_pose.pose.position.z = 0.00 # slightly above the end effector
-        box_name = "box"
-        scene.add_box(box_name, box_pose, size=(0.1, 0.1, 0.1))
-
-        self.box_name=box_name
+        box_pose.pose.position.x = floor['pose'][0]
+        box_pose.pose.position.y = floor['pose'][1]
+        box_pose.pose.position.z = floor['pose'][2]
+        self.box_name = floor['name']
+        self.scene.add_box(self.box_name, box_pose, size=floor['size'])
+        self.scene.attach_box('world', self.box_name)
+        # add plant
+        cylinder_pose = geometry_msgs.msg.PoseStamped()
+        cylinder_pose.header.frame_id = self.robot.get_planning_frame()
+        cylinder_pose.pose.orientation.w = 1.0
+        cylinder_pose.pose.position.x = 2**0.5/2.0
+        cylinder_pose.pose.position.y = 2**0.5/2.0
+        cylinder_pose.pose.position.z = height/2.0
+        self.cylinder_name= 'plant'
+        self.scene.add_cylinder(self.cylinder_name,cylinder_pose, height, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
-
-    def attach_box(self, timeout=4):
-        # Copy class variables to local variables to make the web tutorials more clear.
-        # In practice, you should use the class variables directly unless you have a good
-        # reason not to.
-        box_name = self.box_name
-        robot = self.robot
-        scene = self.scene
-        eef_link = self.eef_link
-        group_names = self.group_names
-
-        ## BEGIN_SUB_TUTORIAL attach_object
-        ##
-        ## Attaching Objects to the Robot
-        ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        ## Next, we will attach the box to the Panda wrist. Manipulating objects requires the
-        ## robot be able to touch them without the planning scene reporting the contact as a
-        ## collision. By adding link names to the ``touch_links`` array, we are telling the
-        ## planning scene to ignore collisions between those links and the box. For the Panda
-        ## robot, we set ``grasping_group = 'hand'``. If you are using a different robot,
-        ## you should change this value to the name of your end effector group name.
-        grasping_group = 'endeffector'
-        touch_links = robot.get_link_names(group=grasping_group)
-        scene.attach_box(eef_link, box_name, touch_links=touch_links)
-        ## END_SUB_TUTORIAL
-
 
 
 def main():
-    print ("Welcome to the MoveIt! MoveGroup Python Interface Tutorial")
-    print ("----------------------------------------------------------")
-    print ("Press Ctrl-D to exit at any time")
-    print ("")
-    print ("============ Press `Enter` to begin the tutorial by setting up the moveit_commander ...")
+    print ""
+    print "============ Press `Enter` to begin ..."
 
-    manipulator = MoveGroupPythonIntefaceTutorial()
-    manipulator.add_box()
-    manipulator.attach_box()
-    raw_input()
-    print ("============  execute a movement using a pose goal ...")
+    manipulator = MoveGroupPythonInteface()
+    manipulator.add_obstacles()  # add floor
+    #manipulator.add_obstacles(obstacle={'name': 'plant', 'pose': [0.5, 0.5, 0.5], 'size': (0.2, 0.2, 1)})  # add plant
+
+    #raw_input()
+    print "execute a movement using a pose goal ..."
     pose_array = [[0.3, 0.1, 0.5],[-0.3, -0.1, 0.5]]
     for i in range(len(pose_array)):
         pose = pose_array[i]
         orientaion = [-0.5, 0.5, 0.3]
         print manipulator.go_to_pose_goal(pose,orientaion)
 
-    print ("============  plan and display a Cartesian path ...")
     #cartesian_plan, fraction = manipulator.plan_cartesian_path()
     #manipulator.execute_plan(cartesian_plan)
 
 
 if __name__ == '__main__':
     main()
-
-
-## BEGIN_TUTORIAL
-## .. _moveit_commander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/namespacemoveit__commander.html
-##
-## .. _MoveGroupCommander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1move__group_1_1MoveGroupCommander.html
-##
-## .. _RobotCommander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1robot_1_1RobotCommander.html
-##
-## .. _PlanningSceneInterface:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1planning__scene__interface_1_1PlanningSceneInterface.html
-##
-## .. _DisplayTrajectory:
-##    http://docs.ros.org/melodic/api/moveit_msgs/html/msg/DisplayTrajectory.html
-##
-## .. _RobotTrajectory:
-##    http://docs.ros.org/melodic/api/moveit_msgs/html/msg/RobotTrajectory.html
-##
-## .. _rospy:
-##    http://docs.ros.org/melodic/api/rospy/html/
-## CALL_SUB_TUTORIAL imports
-## CALL_SUB_TUTORIAL setup
-## CALL_SUB_TUTORIAL basic_info
-## CALL_SUB_TUTORIAL plan_to_joint_state
-## CALL_SUB_TUTORIAL plan_to_pose
-## CALL_SUB_TUTORIAL plan_cartesian_path
-## CALL_SUB_TUTORIAL display_trajectory
-## CALL_SUB_TUTORIAL execute_plan
-## CALL_SUB_TUTORIAL add_box
-## CALL_SUB_TUTORIAL wait_for_scene_update
-## CALL_SUB_TUTORIAL attach_object
-## CALL_SUB_TUTORIAL detach_object
-## CALL_SUB_TUTORIAL remove_object
-## END_TUTORIAL

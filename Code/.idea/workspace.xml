@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91fb02c1-07f3-464f-9049-f45f40ed22e1" name="Default Changelist" comment="" />
+    <list default="true" id="91fb02c1-07f3-464f-9049-f45f40ed22e1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/move_manipulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/move_manipulator.py" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.idea/shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,10 +17,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/move_group_python_interface_tutorial.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5700">
-              <caret line="308" selection-start-line="308" selection-end-line="349" />
+            <state relative-caret-position="116">
+              <caret line="377" column="77" selection-start-line="350" selection-end-line="377" selection-end-column="77" />
               <folding>
                 <element signature="e#2034#2044#0" expanded="true" />
+                <element signature="e#15009#16233#0" />
+                <element signature="e#16281#17703#0" />
+                <element signature="e#17751#18526#0" />
+                <element signature="e#18574#19368#0" />
               </folding>
             </state>
           </provider>
@@ -26,10 +33,18 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/move_manipulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
-              <caret line="273" column="4" selection-start-line="273" selection-start-column="4" selection-end-line="273" selection-end-column="4" />
+            <state relative-caret-position="420">
+              <caret line="206" column="55" lean-forward="true" selection-start-line="205" selection-start-column="19" selection-end-line="206" selection-end-column="55" />
               <folding>
                 <element signature="e#23#33#0" expanded="true" />
+                <element signature="e#261#1003#0" />
+                <element signature="e#261#568#1" />
+                <element signature="e#625#745#0" />
+                <element signature="e#3529#4454#0" />
+                <element signature="e#4513#5732#0" />
+                <element signature="e#5788#6951#0" />
+                <element signature="e#6995#7296#0" />
+                <element signature="e#6630#7922#0" />
               </folding>
             </state>
           </provider>
@@ -45,6 +60,7 @@
       <find>planning_frame</find>
       <find>hand</find>
       <find>grasping_group</find>
+      <find>box_name</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -79,28 +95,38 @@
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
+      <pane id="ProjectPane" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
             <path>
-              <item name="Code" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Code" type="462c0819:PsiDirectoryNode" />
+              <item name="Code" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/Tamir_Ws/Master/Code" type="442cc68d:ScopeViewTreeModel$RootNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$APPLICATION_CONFIG_DIR$/scratches" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="Code" sdk-home="/usr/bin/python2.7" working-directory="$PROJECT_DIR$">
+        <option name="mySdkHome" value="/usr/bin/python2.7" />
+        <option name="myModuleName" value="Code" />
+        <option name="myWorkingDirectory" value="$PROJECT_DIR$" />
+      </console-settings>
+    </option>
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -191,9 +217,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="/usr/bin/python2.7" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/move_manipulator.py" />
@@ -247,13 +273,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1175" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24972677" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49945354" visible="true" weight="0.3288719" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49945354" visible="true" weight="0.27342257" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49945354" weight="0.332696" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -261,7 +288,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3298279" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3298279" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50054646" side_tool="true" weight="0.3288719" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32791588" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.39380023" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -270,17 +297,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add features" />
     <option name="LAST_COMMIT_MESSAGE" value="add features" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/move_group_python_interface_tutorial.py</url>
-          <line>377</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
@@ -375,39 +391,32 @@ joint_goal[5] = pi/3</expression-string>
     </entry>
     <entry file="file://$PROJECT_DIR$/move_group_python_interface_tutorial.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5700">
-          <caret line="308" selection-start-line="308" selection-end-line="349" />
+        <state relative-caret-position="116">
+          <caret line="377" column="77" selection-start-line="350" selection-end-line="377" selection-end-column="77" />
           <folding>
             <element signature="e#2034#2044#0" expanded="true" />
+            <element signature="e#15009#16233#0" />
+            <element signature="e#16281#17703#0" />
+            <element signature="e#17751#18526#0" />
+            <element signature="e#18574#19368#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/move_manipulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="273" column="4" selection-start-line="273" selection-start-column="4" selection-end-line="273" selection-end-column="4" />
+        <state relative-caret-position="420">
+          <caret line="206" column="55" lean-forward="true" selection-start-line="205" selection-start-column="19" selection-end-line="206" selection-end-column="55" />
           <folding>
             <element signature="e#23#33#0" expanded="true" />
-            <element signature="e#262#1004#0" />
-            <element signature="e#262#569#1" />
-            <element signature="e#626#746#0" />
-            <element signature="e#1127#3455#0" />
-            <element signature="e#1552#1632#0" />
-            <element signature="e#1758#1880#0" />
-            <element signature="e#2474#2534#0" />
-            <element signature="e#2607#2664#0" />
-            <element signature="e#2770#2846#0" />
-            <element signature="e#3147#3166#0" />
-            <element signature="e#4022#4947#0" />
-            <element signature="e#4022#4101#0" />
-            <element signature="e#5006#6152#0" />
-            <element signature="e#5006#5079#1" />
-            <element signature="e#6014#7177#0" />
-            <element signature="e#6571#6642#0" />
-            <element signature="e#7221#7522#0" />
-            <element signature="e#7398#9337#0" />
-            <element signature="e#8421#8438#0" />
+            <element signature="e#261#1003#0" />
+            <element signature="e#261#568#1" />
+            <element signature="e#625#745#0" />
+            <element signature="e#3529#4454#0" />
+            <element signature="e#4513#5732#0" />
+            <element signature="e#5788#6951#0" />
+            <element signature="e#6995#7296#0" />
+            <element signature="e#6630#7922#0" />
           </folding>
         </state>
       </provider>
