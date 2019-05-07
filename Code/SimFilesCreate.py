@@ -195,18 +195,6 @@ class UrdfClass(object):
         elif n == 6:
             return '0 0 ${link5_length }'
 
-    # def calc_rpy(self, n):
-    #     if n == 2:
-    #         return '0 0 0'
-    #     elif n == 3:
-    #         return '0 0 0'
-    #     elif n == 4:
-    #         return '0 0 0'
-    #     elif n == 5:
-    #         return '${-pi/2} 0 0'
-    #     elif n == 6:
-    #         return '0 0 0'
-
     def joint_create(self, n):
         jointname = 'joint' + str(n)
         orgin = self.calc_origin(n)
@@ -250,7 +238,6 @@ class UrdfClass(object):
         axis = []
         a = 0
         for j in joints:  # make calculations for all the joints
-            # self.type.append('\''+j+'\'')
             axis.append(self.axis_calc(joints_axis[a]))
             a = a + 1
         return axis
@@ -271,12 +258,10 @@ class UrdfClass(object):
 class ToSimulate(object):
     def __init__(self, number):
         first_joint=['revolute', 'z', '0', '0.1']
-        link_min = 0.1; link_interval = 0.3; link_max = 1.1
+        link_min = 0.1
+        link_interval = 0.3
+        link_max = 1.1
         lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
-        #self.links_length =list(itertools.product(lengths_2_check, repeat=(number-1)))
-        #self.joints_axis = list(itertools.product(['y', 'z'], repeat=number-1))
-        #self.joints = list(itertools.product(['prismatic', 'revolute'], repeat=number-1))
-        #self.rpy = list(itertools.product(['0', '-90'], repeat=number-1))
         self.joints = [[first_joint[0]] + list(tup) for tup in
                        list(itertools.product(['prismatic', 'revolute'], repeat=number - 1))]
         self.joints_axis = [[first_joint[1]] + list(tup) for tup in
