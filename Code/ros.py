@@ -18,7 +18,7 @@ class Ros(object):
     def __init__(self):
         """if needed add publish and subcribe"""
         try:
-            self.pathname = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/"
+            self.pathname = os.environ['HOME'] + "/catkin_ws/src/manipulator_ros/Manipulator/"  # /Tamir_Ws
         except ValueError:
             rospy.loginfo('Error occurred at init')  # shows warning message
             pass

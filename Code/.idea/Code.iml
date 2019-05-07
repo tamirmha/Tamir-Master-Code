@@ -7,11 +7,7 @@
     </content>
 
     <content url="file://$MODULE_DIR$" />
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> 74cf03af7dc60cc4af9c600516a5bcaeb3b75c8b
     <orderEntry type="jdk" jdkName="Python 2.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
