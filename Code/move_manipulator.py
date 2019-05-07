@@ -190,7 +190,7 @@ class MoveGroupPythonInteface(object):
 
     def add_obstacles(self, timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.1], 'size': (2, 2, 0.01)}
-        height = 1.0
+        height = 0.8
         radius = 0.1
         rospy.sleep(0.2)
         # Adding Objects to the Planning Scene
@@ -225,10 +225,10 @@ def main():
 
     #raw_input()
     print "execute a movement using a pose goal ..."
-    pose_array = [[0.3, 0.1, 0.5],[-0.3, -0.1, 0.5]]
+    pose_array = [[0.1, 0.2, 0.6], [0.3, 0.1, 0.1+0.3]]
     for i in range(len(pose_array)):
         pose = pose_array[i]
-        orientaion = [-0.5, 0.5, 0.3]
+        orientaion = [0, -3.14 , 00]
         print manipulator.go_to_pose_goal(pose,orientaion)
 
     #cartesian_plan, fraction = manipulator.plan_cartesian_path()

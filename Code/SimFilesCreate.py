@@ -86,19 +86,19 @@ class UrdfClass(object):
         	<!--   Base Link -->
     <link name="${prefix}base_link" >
       <visual>
-		<origin xyz="0 0 -0.075" rpy="0 0 0" /> 
+		<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
         <geometry>
  			<cylinder radius="${base_radius}" length="${base_length}"/> 
         </geometry>
       </visual>
       <collision>
-			<origin xyz="0 0 -0.0" rpy="0 0 0" /> 
+			<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
         <geometry>
 			<cylinder radius="${base_radius}" length="${base_length}"/>	
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${base_radius}" length="${base_length}" mass="${base_mass}">
-        <origin xyz="0.0 0.0 -0.075" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     '''
@@ -222,7 +222,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}base_link" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${(link1_length-0.15)/2}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${base_length/2 + link1_length/2}" rpy="0.0 0.0 0.0" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
