@@ -239,11 +239,11 @@ class UrdfClass(object):
         a = 0
         for j in joints:  # make calculations for all the joints
             axis.append(self.axis_calc(joints_axis[a]))
-            a = a + 1
+            # a = a + 1
         return axis
 
     def axis_calc(self, axe):
-        if axe == 'x':  # NO OPTION
+        if axe == 'x':
             return '1 0 0'
         elif axe == 'y':
             return '0 1 0'
@@ -366,7 +366,7 @@ class Assumptinos (object):
     def setrpy(rpy, joints):
         """Set roll or pitch to joint  """
         rpy_new = [['0 ', '0 ', '0 ']]
-        pris_num = 0   # how many parismatics in raw
+        pris_num = 0   # how many prismatics in raw
         rpy_name = '0 ,'  # name of file
         for j in range(2, len(joints)+1):
             if joints[j-1] == 'revolute':
@@ -394,6 +394,36 @@ class Assumptinos (object):
                     rpy_name += '-90y ,'
                 pris_num = pris_num + 1
         return rpy_new,rpy_name
+
+    @staticmethod
+    def joint_rpy(joints, axis):
+        # set the orientation of the link
+        rpy_new = [['0 ', '0 ', '0 ']]
+        rpy_name = '0 ,'  # name of file
+        for j in range(2, len(joints) + 1):
+            if joints[j - 1] == 'revolute':
+                if axis[j] == 'z':  # roll
+                    if axis[j-1] == 'x':
+                        rpy_new.append(['0', '90', '0'])  # rotate around y axis in 90 deg
+                    elif axis[j - 1] == 'y':
+                        rpy_new.append(['-90', '0', '0'])  # rotate around x axis in -90 deg
+                    elif axis[j - 1] == 'z':
+                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
+                else:  # pitch
+                    if axis[j - 1] == 'x':
+                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
+                    elif axis[j - 1] == 'y':
+                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
+                    elif axis[j - 1] == 'z':
+                        rpy_new.append(['0', '90', '0'])  # rotate around y axis in 90 deg
+            else:  # prismatic
+                if axis[j - 1] == 'x':
+                    rpy_new.append(['0', '-90', '0'])  # rotate around y axis in -90 deg
+                elif axis[j - 1] == 'y':
+                    rpy_new.append(['-90', '0', '0'])  # rotate around x axis in 90 deg
+                elif axis[j - 1] == 'z':
+                    rpy_new.append(['0', '0', '0'])  # no rotation is needed
+        return rpy_new, rpy_name
 
     @staticmethod
     def assume_3_4_count(number, counter):
