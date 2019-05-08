@@ -9,29 +9,29 @@ import geometry_msgs.msg
 import tf
 from math import pi
 from moveit_commander.conversions import pose_to_list
+import time
 
-
-def all_close(goal, actual, tolerance):
-    """
-    Convenience method for testing if a list of values are within a tolerance of their counterparts in another list
-    @param: goal       A list of floats, a Pose or a PoseStamped
-    @param: actual     A list of floats, a Pose or a PoseStamped
-    @param: tolerance  A float
-    @returns: bool
-    """
-    all_equal = True
-    if type(goal) is list:
-        for index in range(len(goal)):
-            if abs(actual[index] - goal[index]) > tolerance:
-                return False
-
-    elif type(goal) is geometry_msgs.msg.PoseStamped:
-        return all_close(goal.pose, actual.pose, tolerance)
-
-    elif type(goal) is geometry_msgs.msg.Pose:
-        return all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
-
-    return True
+# def all_close(goal, actual, tolerance):
+#     """
+#     Convenience method for testing if a list of values are within a tolerance of their counterparts in another list
+#     @param: goal       A list of floats, a Pose or a PoseStamped
+#     @param: actual     A list of floats, a Pose or a PoseStamped
+#     @param: tolerance  A float
+#     @returns: bool
+#     """
+#     # all_equal = True
+#     if type(goal) is list:
+#         for index in range(len(goal)):
+#             if abs(actual[index] - goal[index]) > tolerance:
+#                 return False
+#
+#     elif type(goal) is geometry_msgs.msg.PoseStamped:
+#         return all_close(goal.pose, actual.pose, tolerance)
+#
+#     elif type(goal) is geometry_msgs.msg.Pose:
+#         return all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
+#
+#     return True
 
 
 class MoveGroupPythonInteface(object):
@@ -55,12 +55,12 @@ class MoveGroupPythonInteface(object):
         group_name = "manipulator"
         self.move_group = moveit_commander.MoveGroupCommander(group_name)
 
-        ## Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
+        # Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                        moveit_msgs.msg.DisplayTrajectory,
                                                        queue_size=20)
 
-        ## Getting Basic Information
+        # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
         self.eef_link = self.move_group.get_end_effector_link()
         # # a list of all the groups in the robot:
@@ -93,7 +93,7 @@ class MoveGroupPythonInteface(object):
         move_group.stop()
 
         current_joints = move_group.get_current_joint_values()
-        return all_close(joint_goal, current_joints, 0.01)
+        return self.all_close(joint_goal, current_joints, 0.01)
 
     def go_to_pose_goal(self, pose, orientaion):
         """send position and orientaion of the desired point
@@ -101,7 +101,7 @@ class MoveGroupPythonInteface(object):
         orientaion - roll, pitch, yaw position - in world frame
         return true if the movement succeeded and reach at the desired accuracy
         """
-        quaternion =tf.transformations.quaternion_from_euler(orientaion[0], orientaion[1], orientaion[2])
+        quaternion = tf.transformations.quaternion_from_euler(orientaion[0], orientaion[1], orientaion[2])
         # Planning to a Pose Goal
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.orientation.x = quaternion[0]
@@ -120,7 +120,7 @@ class MoveGroupPythonInteface(object):
         self.move_group.stop()
         self.move_group.clear_pose_targets()
 
-        accuracy = all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
+        accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -188,11 +188,8 @@ class MoveGroupPythonInteface(object):
         # If we exited the while loop without returning then we timed out
         return False
 
-    def add_obstacles(self, timeout=4):
-        floor = {'name': 'floor', 'pose': [0, 0, -0.1], 'size': (2, 2, 0.01)}
-        height = 0.8
-        radius = 0.1
-        rospy.sleep(0.2)
+    def add_obstacles(self, height=0.8, radius=0.1, pose=[0.7, 0.7], timeout=4):
+        floor = {'name': 'floor', 'pose': [0, 0, -0.012], 'size': (2, 2, 0.01)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
@@ -207,12 +204,34 @@ class MoveGroupPythonInteface(object):
         cylinder_pose = geometry_msgs.msg.PoseStamped()
         cylinder_pose.header.frame_id = self.robot.get_planning_frame()
         cylinder_pose.pose.orientation.w = 1.0
-        cylinder_pose.pose.position.x = 2**0.5/2.0
-        cylinder_pose.pose.position.y = 2**0.5/2.0
+        cylinder_pose.pose.position.x = pose[0]
+        cylinder_pose.pose.position.y = pose[1]
         cylinder_pose.pose.position.z = height/2.0
-        self.cylinder_name= 'plant'
+        self.cylinder_name = 'plant'
         self.scene.add_cylinder(self.cylinder_name,cylinder_pose, height, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
+
+    def all_close(self, goal, actual, tolerance):
+        """
+        Convenience method for testing if a list of values are within a tolerance of their counterparts in another list
+        @param: goal       A list of floats, a Pose or a PoseStamped
+        @param: actual     A list of floats, a Pose or a PoseStamped
+        @param: tolerance  A float
+        @returns: bool
+        """
+        # all_equal = True
+        if type(goal) is list:
+            for index in range(len(goal)):
+                if abs(actual[index] - goal[index]) > tolerance:
+                    return False
+
+        elif type(goal) is geometry_msgs.msg.PoseStamped:
+            return self.all_close(goal.pose, actual.pose, tolerance)
+
+        elif type(goal) is geometry_msgs.msg.Pose:
+            return self.all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
+
+        return True
 
 
 def main():
@@ -220,18 +239,19 @@ def main():
     print "============ Press `Enter` to begin ..."
 
     manipulator = MoveGroupPythonInteface()
+    time.sleep(2)
     manipulator.add_obstacles()  # add floor
     #manipulator.add_obstacles(obstacle={'name': 'plant', 'pose': [0.5, 0.5, 0.5], 'size': (0.2, 0.2, 1)})  # add plant
 
     #raw_input()
-    print "execute a movement using a pose goal ..."
-    pose_array = [[0.1, 0.2, 0.6], [0.3, 0.1, 0.1+0.3]]
-    for i in range(len(pose_array)):
-        pose = pose_array[i]
-        orientaion = [0, -3.14 , 00]
-        print manipulator.go_to_pose_goal(pose,orientaion)
-
-    #cartesian_plan, fraction = manipulator.plan_cartesian_path()
+    # print "execute a movement using a pose goal ..."
+    # pose_array = [[0.1, 0.2, 0.6], [0.3, 0.1, 0.1+0.3]]
+    # for i in range(len(pose_array)):
+    #     pose = pose_array[i]
+    #     orientaion = [0, -3.14, 00]
+    #     print manipulator.go_to_pose_goal(pose,orientaion)
+    #
+    # #cartesian_plan, fraction = manipulator.plan_cartesian_path()
     #manipulator.execute_plan(cartesian_plan)
 
 
