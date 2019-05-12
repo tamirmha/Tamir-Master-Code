@@ -346,7 +346,7 @@ class UrdfClass(object):
     <origin xyz="0 0 0" rpy="0.0 0.0 0.0" />
   </joint>
 
-  <xacro:include filename="$(find man_gazebo)/urdf/transmission.xacro" />
+  <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
@@ -421,7 +421,7 @@ class UrdfClass(object):
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}link''' + str(self.links_number) + '''" />
       <child link = "${prefix}ee_link" />
-      <origin xyz="0.0  0.0 ${link6_length}" rpy="0.0 0.0 0" />
+      <origin xyz="0.0  0.0 ${link''' + str(self.links_number) + '''_length}" rpy="0.0 0.0 0" />
     </joint>
 
 <!-- ee link -->
