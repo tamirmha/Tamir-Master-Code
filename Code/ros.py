@@ -28,7 +28,7 @@ class Ros(object):
     def __init__(self):
         """if needed add publish and subcribe"""
         try:
-            self.pathname = os.environ['HOME'] + "/catkin_ws/src/manipulator_ros/Manipulator/"  # /Tamir_Ws
+            self.pathname = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/"  # /Tamir_Ws
         except ValueError:
             rospy.loginfo('Error occurred at init')  # shows warning message
             pass
@@ -456,19 +456,19 @@ class UrdfClass(object):
             link = link + '''<!--  link 1  -->
     <link name="${prefix}link1">
       <visual>
-		<origin xyz="0 0 ${base_length/2} " rpy="0 0 0" /> 
+		<origin xyz="0 0 ${link1_length / 2} " rpy="0 0 0" /> 
         <geometry>
 			<cylinder radius="${link1_radius}" length="${link1_length}"/>	 
         </geometry>
       </visual>
       <collision>
-		 <origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
+		 <origin xyz="0 0 ${link1_length / 2}" rpy="0 0 0" /> 
         <geometry>
 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass}">
-        <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 ${link1_length / 2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>'''
         else:
@@ -494,15 +494,7 @@ class UrdfClass(object):
 
     def calc_origin(self, n):
         # if n == 2:
-        #     return '0.0 ${link2_radius/2 + link1_radius/2} ${link1_length /2 +base_radius/2}'
-        # elif n == 3:
-        #     return '0.0 ${link3_radius/2+link2_radius/2} ${link2_length}'
-        # elif n == 4:
-        #     return '0 -${link4_radius/2 + link3_radius/2 } ${link3_length}'
-        # elif n == 5:
-        #     return '0 0 ${link4_length+link5_radius}'
-        # elif n == 6:
-        #     return '0 0 ${link5_length }'
+
         if self.joint_data[n-1] == "revolute":
             if self.axis[n - 1] == '0 0 1':  # roll
                 if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
@@ -536,7 +528,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}base_link" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${base_length/2 + link1_length/2}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${base_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
