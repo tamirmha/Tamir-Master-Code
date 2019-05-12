@@ -62,7 +62,7 @@ class UrdfClass(object):
 </xacro:macro>
 
 
-  <xacro:macro name="ur5_robot" params="prefix joint_limited">'''
+  <xacro:macro name="arm_robot" params="prefix joint_limited">'''
         inertia_parameters = '''
         <xacro:property name="base_length" value="0.05"/>
             <!-- Inertia parameters -->
@@ -395,35 +395,47 @@ class Assumptinos (object):
                 pris_num = pris_num + 1
         return rpy_new,rpy_name
 
-    @staticmethod
-    def joint_rpy(joints, axis):
-        # set the orientation of the link
-        rpy_new = [['0 ', '0 ', '0 ']]
-        rpy_name = '0 ,'  # name of file
-        for j in range(2, len(joints) + 1):
-            if joints[j - 1] == 'revolute':
-                if axis[j] == 'z':  # roll
-                    if axis[j-1] == 'x':
-                        rpy_new.append(['0', '90', '0'])  # rotate around y axis in 90 deg
-                    elif axis[j - 1] == 'y':
-                        rpy_new.append(['-90', '0', '0'])  # rotate around x axis in -90 deg
-                    elif axis[j - 1] == 'z':
-                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
-                else:  # pitch
-                    if axis[j - 1] == 'x':
-                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
-                    elif axis[j - 1] == 'y':
-                        rpy_new.append(['0', '0', '0'])  # no rotation is needed
-                    elif axis[j - 1] == 'z':
-                        rpy_new.append(['0', '90', '0'])  # rotate around y axis in 90 deg
-            else:  # prismatic
-                if axis[j - 1] == 'x':
-                    rpy_new.append(['0', '-90', '0'])  # rotate around y axis in -90 deg
-                elif axis[j - 1] == 'y':
-                    rpy_new.append(['-90', '0', '0'])  # rotate around x axis in 90 deg
-                elif axis[j - 1] == 'z':
-                    rpy_new.append(['0', '0', '0'])  # no rotation is needed
-        return rpy_new, rpy_name
+    # @staticmethod
+    # def joint_rpy(joints, axis):
+    #     # set the orientation of the link
+    #     rpy_new = [['0 ', '0 ', '0 ']]
+    #     rpy_name = '0,'  # name of file
+    #     for j in range(1, len(joints)):
+    #         if joints[j] == 'revolute':
+    #             if axis[j] == 'z':  # roll
+    #                 if axis[j-1] == 'x':
+    #                     rpy_new.append(['0 ', '90 ', '0 '])  # rotate around y axis in 90 deg
+    #                     rpy_name += '90y,,'
+    #                 elif axis[j-1] == 'y':
+    #                     rpy_new.append(['-90 ', '0 ', '0 '])  # rotate around x axis in -90 deg
+    #                     rpy_name += '-90x,'
+    #                 elif axis[j-1] == 'z':
+    #                     rpy_new.append(['0 ', '0 ', '0 '])  # no rotation is needed
+    #                     rpy_name += '0,'
+    #                 #rpy_name += 'roll_z,'
+    #             else:  # pitch
+    #                 if axis[j - 1] == 'x':
+    #                     rpy_new.append(['0 ', '0 ', '0 '])  # no rotation is needed
+    #                     rpy_name += '0x,'
+    #                 if axis[j - 1] == 'y':
+    #                     rpy_new.append(['0 ', '0 ', '0 '])  # no rotation is needed
+    #                     rpy_name += '0,'
+    #                 elif axis[j - 1] == 'z':
+    #                     rpy_new.append(['-90 ', '0 ', '0 '])  # rotate around x axis in -90 deg
+    #                     rpy_name += '-90x,'
+    #                 #rpy_name += "pitch"+axis[j]+","
+    #         else:  # prismatic
+    #             if axis[j - 1] == 'x':
+    #                 rpy_new.append(['0 ', '-90 ', '0 '])  # rotate around y axis in -90 deg
+    #                 rpy_name += '-90y,'
+    #             if axis[j - 1] == 'y':
+    #                 rpy_new.append(['-90 ', '0 ', '0 '])  # rotate around x axis in 90 deg
+    #                 rpy_name += '-90x,'
+    #             elif axis[j - 1] == 'z':
+    #                 rpy_new.append(['0 ', '0 ', '0 '])  # no rotation is needed
+    #                 rpy_name += '0,'
+    #             #rpy_name += 'pris_z,'
+    #     return rpy_new, rpy_name
 
     @staticmethod
     def assume_3_4_count(number, counter):
@@ -440,7 +452,7 @@ def create_folder(name):
     return name
 
 
-def run():
+def run_old():
     tic = datetime.datetime.now()
     combinations = 0
     base_folder = '/home/tamir/' + 'urdf_' + str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
@@ -493,6 +505,59 @@ def run():
     print('Time of Run (seconds): ' + str(delta))
     print('Combinations per second: ' + str(1.0*combinations/delta))
 
+def run():
+    tic = datetime.datetime.now()
+    combinations = 0
+    base_folder = '/home/tamir/' + 'urdf_' + str(datetime.datetime.now().date())  # '/media/arl_main/New Volume/'+
+    base_folder = create_folder(base_folder)
+    assum = Assumptinos()
+    d = 0
+    t = 0
+    u = 0
+    p = 0
+    x = 0
+    for n in range(3, 6):
+        sim = ToSimulate(n)
+        links_sim = sim.getlinks()  # create all possible links combinations
+        joints_sim = sim.getjoints()  # create all possible joints combinations
+        axis_sim = sim.getaxis()  # create all possible axis combinations
+        rpy_sim = sim.getrpy()  # create all possible rpy combinations
+        path = base_folder + '/DOF_' + str(n) + '/'  # where to save the files
+        create_folder(path)
+        for i in range(len(joints_sim)):  # run about all the joints combination
+            if not assum.assume_3(joints_sim[i]):  # check if the joint meets assumption 3
+                d = assum.assume_3_4_count(n, d)
+                continue
+            joints_path = create_folder(path + str(joints_sim[i]))  # create folder with the joints types
+            for a in range(len(axis_sim)):  # run about all the axis combination
+                if not assum.assume_8(joints_sim[i], axis_sim[a]):  # check if the joint meets assumption 6
+                    x = assum.assume_2_6_count(n, x)
+                    continue
+                axis_path = create_folder(joints_path + '/' + str(axis_sim[a]))
+                for j in range(1):#len(links_sim)):  # run about all the links combination
+                        link_path = create_folder(axis_path + '/' + str(links_sim[j]))
+                    # for k in range(len(rpy_sim)):  # run about all the rpy combination
+                    #     if not assum.assume_6(joints_sim[i], axis_sim[a],rpy_sim[k]):  # check if the joint meets assumption 6
+                    #         u = u+1
+                    #         continue
+                        rpy,rpy_name = assum.joint_rpy(joints_sim[i], axis_sim[a])
+                        urdf_name = link_path + '/' + str(rpy_name)
+                        urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
+                        urdf.urdf_write(urdf.urdf_data(), urdf_name)
+                        t = t + 1
+        combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim) + combinations
+    toc = datetime.datetime.now()
+    delta = (toc - tic).seconds
+
+    print('Pre filtered combinations: ' + str(combinations))
+    print('Amount of manipulators that filtered total: ' + str(d+u+p+x))
+    print('Amount of manipulators after filteting: ' + str(t))
+    print('Amount of manipulators that filtered due assum 8: ' + str(x))
+    print('Amount of manipulators that filtered due assum 6: '+str(u))
+    print('Amount of manipulators that filtered due assum 3: '+str(d))
+    print('Time of Run (seconds): ' + str(delta))
+    print('Combinations per second: ' + str(1.0*combinations/delta))
+
 
 if __name__ == "__main__":
-    run()
+    run_old()
