@@ -188,7 +188,7 @@ class MoveGroupPythonInteface(object):
         # If we exited the while loop without returning then we timed out
         return False
 
-    def add_obstacles(self, height=0.8, radius=0.1, pose=[0.7, 0.7], timeout=4):
+    def add_obstacles(self, height=0.75, radius=0.1, pose=[0.5, 0.0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.012], 'size': (2, 2, 0.01)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()

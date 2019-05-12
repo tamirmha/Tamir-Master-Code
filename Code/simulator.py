@@ -100,10 +100,10 @@ def create_arm(interface_joints, joint_parent_axis, links, folder):
     return {"arm":arm, "name":file_name, "folder":folder}
 
 
-def set_links_length(number=6, min_length=1.3):
+def set_links_length(number=6, min_length=1):
     link_min = 0.1
     link_interval = 0.3
-    link_max = 1.1
+    link_max = 0.71
     links = []
     lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
     links_length = [[0.1] + list(tup) for tup in
@@ -115,7 +115,7 @@ def set_links_length(number=6, min_length=1.3):
     return links
 
 
-def create_urdf_from_csv(csv_name="manips"):
+def create_urdf_from_csv(csv_name="manips",number=6):
     # read from csv file with all the possible configuration for manipulators
     configs = read_data(csv_name)
 
@@ -123,18 +123,9 @@ def create_urdf_from_csv(csv_name="manips"):
     arms = []
     folder = ""
     c = 0
-    base_path = os.environ['HOME'] + "/catkin_ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
-    links = set_links_length()
+    base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
+    links = set_links_length(number)
     for config in configs:
-        # Todo just for start- need to be replace with real lengths
-        # if len(config[0]["joint"]) == 6:
-        #     links = ["0.1", "0.4", "0.7", "0.1", "0.1", "0.1"]
-        # if len(config[0]["joint"]) == 5:
-        #     links = ["0.1", "0.4", "0.7", "0.1", "0.1"]
-        # if len(config[0]["joint"]) == 4:
-        #     links = ["0.1", "0.4", "0.7", "0.1"]
-        # if len(config[0]["joint"]) == 3:
-        #     links = ["0.1", "0.4", "0.7"]
         for arm in config:
             for i in range(len(arm["joint"])):
                 folder = folder + arm["joint"][i] + "_" +  arm["axe"][i] + "_"
@@ -162,25 +153,24 @@ ros = Ros()  # for work with Ros
 save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y") # file to save the results
 
 # desired points to reach  Todo decide points
-poses = [[0.1, 0.2, 0.6], [0.3, 0.1, 0.1+0.3]]  # desired positions of the EE in world frame
-oriens = [[0, -3.14, 0], [0, -3.14, 0]]  # desired orientaions of the EE in world frame
+poses = [[0.51, -0.13, 0.88], [0.52, 0.0, 0.9], [0.53, 0.13, 0.86],[0.5, -0.177, 0.25], [0.53, 0.29, 0.25]]  # desired positions of the EE in world frame
+oriens = [[2.518 , 2.27, 0.594], [2.34, 2.11, 0.022], [1.855, 1.69, -0.764], [-0.59, -0.53, -1.6],[0.8, 0.73, -1.6]]  # desired orientaions of the EE in world frame
 
 first_run = True
 to_replace = False
 all_data = [["date ", "Time ", "Arm ", "Results "]]
 arb = False
-for arm in range(0, 250):# len(arms)):
+for arm in range(0, len(arms)):
+    print "arm " + str(arm) + " of " + str(len(arms)) + " arms"
     if first_run:
         # run all the needed launch files
         launchs_path = "man_gazebo"
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:="+str(dof)+"dof", "man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"]]
-        main = ros.start_launch("main", launchs_path,main_launch_arg
-
-                                )  # main launch file
+        main = ros.start_launch("main", launchs_path,main_launch_arg)  # main launch file
         manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         time.sleep(1)  # need time to upload
-        manipulator_move.add_obstacles(height=0.8, radius=0.1,
-                                       pose=[0.7, 0.7])  # add floor and plant to the planning model
+        manipulator_move.add_obstacles(height=0.75, radius=0.1,
+                                       pose=[0.5, 0])  # add floor and plant to the planning model
 
     if arm % 100 == 0:  # save every 100 iterations
         save_data(all_data, save_name)
