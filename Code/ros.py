@@ -148,36 +148,31 @@ class MoveGroupPythonInterface(object):
         #self.move_group.set_workspace([-10, -10, 0.2, 10, 10, 10])
         #print self.move_group.get_goal_tolerance()
         self.move_group.set_goal_orientation_tolerance(0.0005)
-        self.move_group.set_goal_position_tolerance(0.0003)
+        self.move_group.set_goal_position_tolerance(0.03)
 
         #print self.move_group.get_goal_tolerance()
         #print self.move_group.get_current_pose()
         self.move_group.set_planning_time(2)
         self.move_group.set_num_planning_attempts(3)
 
-    def go_to_joint_state(self):
-        # Copy class variables to local variables to make the web tutorials more clear.
-        # In practice, you should use the class variables directly unless you have a good
-        # reason not to.
-        move_group = self.move_group
-
+    def go_to_joint_state(self, goal_joint):
         # Planning to a Joint Goal
-        joint_goal = move_group.get_current_joint_values()
-        joint_goal[0] = 0
-        joint_goal[1] = -pi/4
-        joint_goal[2] = 0
-        joint_goal[3] = -pi/2
-        joint_goal[4] = 0
-        joint_goal[5] = pi/3
+        joint_goal = self.move_group.get_current_joint_values()
+        joint_goal[0] = goal_joint[0]
+        joint_goal[1] = goal_joint[1]
+        joint_goal[2] = goal_joint[2]
+        joint_goal[3] = goal_joint[3]
+        joint_goal[4] = goal_joint[4]
+        joint_goal[5] = goal_joint[5]
 
         # The go command can be called with joint values, poses, or without any
         # parameters if you have already set the pose or joint target for the group
-        move_group.go(joint_goal, wait=True)
+        self.move_group.go(joint_goal, wait=True)
 
         # Calling ``stop()`` ensures that there is no residual movement
-        move_group.stop()
+        self.move_group.stop()
 
-        current_joints = move_group.get_current_joint_values()
+        current_joints = self.move_group.get_current_joint_values()
         return self.all_close(joint_goal, current_joints, 0.01)
 
     def go_to_pose_goal(self, pose, orientaion):
@@ -198,17 +193,25 @@ class MoveGroupPythonInterface(object):
         pose_goal.position.z = pose[2]
 
         self.move_group.set_pose_target(pose_goal)
-
         # we call the planner to compute the plan and execute it.
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
         a = self.move_group.get_current_pose().pose.orientation
-        print a
-        print tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])
+        #print a
+        orien = tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])
+
+        goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
+        pos = self.move_group.get_current_pose().pose.position
+        #orien = self.move_group.get_current_pose().pose.orientation
+        current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
+        print goal
+        print current
+        tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         #print tf.transformations.quaternion_from_euler(-1.98, -0.83, 0)
-        accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
+        accuracy = self.all_close(goal, current, tolerance)
+        #accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -308,16 +311,16 @@ class MoveGroupPythonInterface(object):
         @returns: bool
         """
         # all_equal = True
-        if type(goal) is list:
-            for index in range(len(goal)):
-                if abs(actual[index] - goal[index]) > tolerance:
+        #if type(goal) is list:
+        for index in range(len(goal)):
+                if abs(actual[index] - goal[index]) > tolerance[index]:
                     return False
 
-        elif type(goal) is geometry_msgs.msg.PoseStamped:
-            return self.all_close(goal.pose, actual.pose, tolerance)
-
-        elif type(goal) is geometry_msgs.msg.Pose:
-            return self.all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
+        # elif type(goal) is geometry_msgs.msg.PoseStamped:
+        #     return self.all_close(goal.pose, actual.pose, tolerance)
+        #
+        # elif type(goal) is geometry_msgs.msg.Pose:
+        #     return self.all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
 
         return True
 
@@ -604,12 +607,8 @@ def main_move_group():
     for i in range(len(poses)):
          pose = poses[i]
          orientaion = oriens[i]
-         # orientaion = [0, -3.14, 00]
-         #time.sleep(1)
          print manipulator.go_to_pose_goal(pose, orientaion)
-    #
-    # #cartesian_plan, fraction = manipulator.plan_cartesian_path()
-    #manipulator.execute_plan(cartesian_plan)
+
 
 
 if __name__ == '__main__':

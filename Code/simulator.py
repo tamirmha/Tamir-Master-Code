@@ -157,11 +157,10 @@ def run_simulation(dof = 6):
     ros = Ros()  # for work with Ros
     save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
 
-    # desired points to reach  Todo decide points
-    poses = [[0.51, -0.13, 0.88], [0.52, 0.0, 0.9], [0.53, 0.13, 0.86], [0.5, -0.177, 0.25],
-             [0.53, 0.29, 0.25]]  # desired positions of the EE in world frame
-    oriens = [[2.518, 2.27, 0.594], [2.34, 2.11, 0.022], [1.855, 1.69, -0.764], [-0.59, -0.53, -1.6],
-              [0.8, 0.73, -1.6]]  # desired orientaions of the EE in world frame
+    # desired positions of the EE in world frame
+    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 0.86], [0.5, -0.15, 0.45],[0.5, 0.15, 0.45]]
+    # desired orientaions of the EE in world frame
+    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
 
     first_run = True
     to_replace = False
