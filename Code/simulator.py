@@ -150,7 +150,7 @@ def create_folder(name):
     return name
 
 
-def run_simulation(dof = 3):
+def run_simulation(dof = 6):
     # initiliaze
     #dof = 3  # number of degrees of freedom
     arms = create_urdf_from_csv(str(dof) + "dof_configs", dof)  # all the configuration of the arms

@@ -137,7 +137,6 @@ class MoveGroupPythonInterface(object):
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                        moveit_msgs.msg.DisplayTrajectory,
                                                        queue_size=20)
-
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
         self.eef_link = self.move_group.get_end_effector_link()
@@ -146,7 +145,15 @@ class MoveGroupPythonInterface(object):
         # Misc variables
         self.box_name = ''
         self.cylinder_name = ''
-        self.move_group.set_workspace([-10, -10, 0.2, 10, 10, 10])
+        #self.move_group.set_workspace([-10, -10, 0.2, 10, 10, 10])
+        #print self.move_group.get_goal_tolerance()
+        self.move_group.set_goal_orientation_tolerance(0.0005)
+        self.move_group.set_goal_position_tolerance(0.0003)
+
+        #print self.move_group.get_goal_tolerance()
+        #print self.move_group.get_current_pose()
+        self.move_group.set_planning_time(2)
+        self.move_group.set_num_planning_attempts(3)
 
     def go_to_joint_state(self):
         # Copy class variables to local variables to make the web tutorials more clear.
@@ -197,7 +204,10 @@ class MoveGroupPythonInterface(object):
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
-
+        a = self.move_group.get_current_pose().pose.orientation
+        print a
+        print tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])
+        #print tf.transformations.quaternion_from_euler(-1.98, -0.83, 0)
         accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
         return accuracy and plan
 
@@ -266,7 +276,7 @@ class MoveGroupPythonInterface(object):
         # If we exited the while loop without returning then we timed out
         return False
 
-    def add_obstacles(self, height=0.8, radius=0.1, pose=[0.7, 0.7], timeout=4):
+    def add_obstacles(self, height=0.75, radius=0.1, pose=[0.5, 0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.02], 'size': (2, 2, 0.01)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
@@ -579,46 +589,53 @@ def main_move_group():
     print ""
     print "============ Press `Enter` to begin ..."
 
-    manipulator = MoveGroupPythonInteface()
+    manipulator = MoveGroupPythonInterface()
     time.sleep(2)
     manipulator.add_obstacles()  # add floor
     #manipulator.add_obstacles(obstacle={'name': 'plant', 'pose': [0.5, 0.5, 0.5], 'size': (0.2, 0.2, 1)})  # add plant
+    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 0.86], [0.5, -0.15, 0.45],
+         [0.5, 0.15, 0.45]]  # desired positions of the EE in world frame
+    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],
+              [0.9, 0.02, 0]]  # desired orientaions of the EE in world frame
+    # oriens = [[0.765, -0.222, 0.3397, 0.4998], [1, 0, 0, 0], [-0.765, -0.22, -0.33, 0.5], [-0.395, 0.01198, 0.0055, 0.918],
+    #           [0.4353, 0.0121, -0.0054, 0.90018]]  # desired orientaions of the EE in world frame
 
-    #raw_input()
-    # print "execute a movement using a pose goal ..."
-    # pose_array = [[0.1, 0.2, 0.6], [0.3, 0.1, 0.1+0.3]]
-    # for i in range(len(pose_array)):
-    #     pose = pose_array[i]
-    #     orientaion = [0, -3.14, 00]
-    #     print manipulator.go_to_pose_goal(pose,orientaion)
+    # print "execute a movement using a pose goal ..."[0.765, -0.222, 0.3397, 0.4998]
+    for i in range(len(poses)):
+         pose = poses[i]
+         orientaion = oriens[i]
+         # orientaion = [0, -3.14, 00]
+         #time.sleep(1)
+         print manipulator.go_to_pose_goal(pose, orientaion)
     #
     # #cartesian_plan, fraction = manipulator.plan_cartesian_path()
     #manipulator.execute_plan(cartesian_plan)
 
 
 if __name__ == '__main__':
-    ros = Ros()
-    launchs_path = "man_gazebo"
-    #main = ros.start_launch("main", launchs_path)
-    k = 120
-    z = 30
-    a = True
-    f = False
-    while k > -5:
-        time.sleep(1)
-        k = k-1
-        z = z-1
-
-        print k
-        # print k
-        # if z < 0:
-        #     z = 30
-        #     replace = ros.start_launch("replace_model",launchs_path)
-        #     if f:
-        #         ros.stop_launch(arm_control)
-        #     arm_control = ros.start_launch("replace_model2", launchs_path)
-        #     f = True
-        # if k < 0 and a:
-        #     ros.stop_launch(replace)
-        #     ros.stop_launch(arm_control)
-        #     a = ros.stop_launch(main)
+    # ros = Ros()
+    # launchs_path = "man_gazebo"
+    # #main = ros.start_launch("main", launchs_path)
+    # k = 120
+    # z = 30
+    # a = True
+    # f = False
+    # while k > -5:
+    #     time.sleep(1)
+    #     k = k-1
+    #     z = z-1
+    #
+    #     print k
+    #     # print k
+    #     # if z < 0:
+    #     #     z = 30
+    #     #     replace = ros.start_launch("replace_model",launchs_path)
+    #     #     if f:
+    #     #         ros.stop_launch(arm_control)
+    #     #     arm_control = ros.start_launch("replace_model2", launchs_path)
+    #     #     f = True
+    #     # if k < 0 and a:
+    #     #     ros.stop_launch(replace)
+    #     #     ros.stop_launch(arm_control)
+    #     #     a = ros.stop_launch(main)
+    main_move_group()
