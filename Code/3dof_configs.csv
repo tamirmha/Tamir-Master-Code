@@ -1,0 +1,25 @@
+joint ,axe,,joint ,axe,,joint ,axe,,,,,,,,,,,,,,,,,,
+roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,,,,
+pris,z,,pris,z,,pris,z,,,,,,,,,,,,,,,,,,
+roll,y,,pitch,y,,pris,y,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,,,,,,,,,,,,,,
+roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
+roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
+pitch ,y,,pris,y,,pris,z,,roll,y,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe
+roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z
+pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y
+roll,z,,roll,y,,roll,x,,pitch,z,,pitch,x,,pitch,y,,pris,z,,pris,x,,pris,y
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,,
+roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,,
+pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,,
+roll,z,,roll,y,,roll,x,,pitch,z,,pitch,x,,pitch,y,,pris,y,,pris,x,,,
