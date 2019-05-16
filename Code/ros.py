@@ -42,9 +42,8 @@ class Ros(object):
             roslaunch_file = [(roslaunch.rlutil.resolve_launch_arguments(cli_args)[0], args)]
             launch = roslaunch.parent.ROSLaunchParent(uuid, roslaunch_file)
             launch.start()
-            #time.sleep(0.1)
+            # time.sleep(0.1)
             return launch
-
         except ValueError:
             rospy.loginfo('Error occurred at start launch function')
             pass
@@ -61,7 +60,8 @@ class Ros(object):
         """Write Command to the terminal"""
         try:
             command = shlex.split(command)
-            ter_command_proc = subprocess.Popen(command)
+            ter_command_proc = subprocess.Popen(command, stdout=subprocess.PIPE,  preexec_fn=os.setsid)
+            return ter_command_proc
         except ValueError:
             rospy.loginfo('Error occurred at ter_command function')  # shows warning message
             pass
@@ -119,7 +119,7 @@ class MoveGroupPythonInterface(object):
 
         # initialize `moveit_commander`_ and a `rospy`_ node:
         moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_python_interface_tutorial', anonymous=True)
+        rospy.init_node('move_group_interface', anonymous=True)
 
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
@@ -145,15 +145,14 @@ class MoveGroupPythonInterface(object):
         # Misc variables
         self.box_name = ''
         self.cylinder_name = ''
-        #self.move_group.set_workspace([-10, -10, 0.2, 10, 10, 10])
-        #print self.move_group.get_goal_tolerance()
         self.move_group.set_goal_orientation_tolerance(0.0005)
         self.move_group.set_goal_position_tolerance(0.03)
 
-        #print self.move_group.get_goal_tolerance()
-        #print self.move_group.get_current_pose()
         self.move_group.set_planning_time(2)
         self.move_group.set_num_planning_attempts(3)
+
+        self.move_group.clear_pose_targets()
+
 
     def go_to_joint_state(self, goal_joint):
         # Planning to a Joint Goal
@@ -198,18 +197,13 @@ class MoveGroupPythonInterface(object):
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
-        a = self.move_group.get_current_pose().pose.orientation
-        #print a
-        orien = tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])
 
+        a = self.move_group.get_current_pose().pose.orientation
+        orien = tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])
         goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
         pos = self.move_group.get_current_pose().pose.position
-        #orien = self.move_group.get_current_pose().pose.orientation
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        print goal
-        print current
         tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
-        #print tf.transformations.quaternion_from_euler(-1.98, -0.83, 0)
         accuracy = self.all_close(goal, current, tolerance)
         #accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
         return accuracy and plan
@@ -292,14 +286,14 @@ class MoveGroupPythonInterface(object):
         self.scene.add_box(self.box_name, box_pose, size=floor['size'])
         self.scene.attach_box('world', self.box_name)
         # add plant
-        cylinder_pose = geometry_msgs.msg.PoseStamped()
-        cylinder_pose.header.frame_id = self.robot.get_planning_frame()
-        cylinder_pose.pose.orientation.w = 1.0
-        cylinder_pose.pose.position.x = pose[0]
-        cylinder_pose.pose.position.y = pose[1]
-        cylinder_pose.pose.position.z = height/2.0
-        self.cylinder_name = 'plant'
-        self.scene.add_cylinder(self.cylinder_name,cylinder_pose, height, radius)
+        # cylinder_pose = geometry_msgs.msg.PoseStamped()
+        # cylinder_pose.header.frame_id = self.robot.get_planning_frame()
+        # cylinder_pose.pose.orientation.w = 1.0
+        # cylinder_pose.pose.position.x = pose[0]
+        # cylinder_pose.pose.position.y = pose[1]
+        # cylinder_pose.pose.position.z = height/2.0
+        # self.cylinder_name = 'plant'
+        # self.scene.add_cylinder(self.cylinder_name,cylinder_pose, height, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
     def all_close(self, goal, actual, tolerance):
@@ -589,26 +583,19 @@ class UrdfClass(object):
 
 
 def main_move_group():
-    print ""
-    print "============ Press `Enter` to begin ..."
-
     manipulator = MoveGroupPythonInterface()
     time.sleep(2)
     manipulator.add_obstacles()  # add floor
-    #manipulator.add_obstacles(obstacle={'name': 'plant', 'pose': [0.5, 0.5, 0.5], 'size': (0.2, 0.2, 1)})  # add plant
     poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 0.86], [0.5, -0.15, 0.45],
          [0.5, 0.15, 0.45]]  # desired positions of the EE in world frame
     oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],
               [0.9, 0.02, 0]]  # desired orientaions of the EE in world frame
-    # oriens = [[0.765, -0.222, 0.3397, 0.4998], [1, 0, 0, 0], [-0.765, -0.22, -0.33, 0.5], [-0.395, 0.01198, 0.0055, 0.918],
-    #           [0.4353, 0.0121, -0.0054, 0.90018]]  # desired orientaions of the EE in world frame
-
-    # print "execute a movement using a pose goal ..."[0.765, -0.222, 0.3397, 0.4998]
-    for i in range(len(poses)):
-         pose = poses[i]
-         orientaion = oriens[i]
-         print manipulator.go_to_pose_goal(pose, orientaion)
-
+    for j in range(6):
+        for i in range(len(poses)):
+            pose = poses[i]
+            orientaion = oriens[i]
+            print manipulator.go_to_pose_goal(pose, orientaion)
+        raw_input("press enter")
 
 
 if __name__ == '__main__':
