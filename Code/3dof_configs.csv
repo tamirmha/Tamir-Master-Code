@@ -8,7 +8,11 @@ roll,y,,pitch,y,,pris,y,,,,,,,,,,,,,,,,,,
 joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,,,,,,,,,,,,,,
 roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
 roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
+<<<<<<< HEAD
 pitch ,y,,pris,y,,pris,z,,roll,y,,,,,,,,,,,,,,,
+=======
+pitch,y,,pris,y,,pris,z,,roll,y,,,,,,,,,,,,,,,
+>>>>>>> 9bc61e95e625c9459e74a713b846a3d78f11d221
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
