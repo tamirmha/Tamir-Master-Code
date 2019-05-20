@@ -5,8 +5,7 @@ import csv
 import os
 import numpy as np
 import itertools
-import rospy
-import signal
+# import rospy
 
 
 # start - handle with csv
@@ -128,8 +127,6 @@ def create_urdf_from_csv(csv_name="manips", number=6):
     c = 0
     base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
     links = set_links_length(number)
-    #links = [['0.1', '0.4', '0.4', '0.1', '0.1', '0.1'], ['0.1', '0.4', '0.4', '0.1', '0.1', '0.1'],
-    #        ['0.1', '0.4', '0.4', '0.1', '0.1', '0.1'], ['0.1', '0.4', '0.4', '0.1', '0.1', '0.1']]
     for config in configs:
         for arm in config:
             for i in range(len(arm["joint"])):
@@ -150,12 +147,12 @@ def create_urdf_from_csv(csv_name="manips", number=6):
 def arms_exist(folder="6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_/"):
     path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + folder
     # files = []
-    arms =[]
-    for file in os.listdir(path):
+    arms = []
+    for fil in os.listdir(path):
         # files.append(file.replace(".urdf.xacro", ""))
         fol = folder.split("/")
-
-        arms.append({ "name": file.replace(".urdf.xacro", ""), "folder": fol[1]})
+        arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[1]})
+    # arms.reverse()
     return arms
 
 
@@ -165,100 +162,79 @@ def create_folder(name):
     return name
 
 
-def run_simulation(dof=6):
-    # initiliaze
-    #arms = create_urdf_from_csv(str(dof) + "dof_configs", dof)  # all the configuration of the arms
-    arms = arms_exist()
+def replace_model(ros, arm_control, arms, arm, dof):
+    fil = "man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"] + " dof:=" + str(dof) + "dof"
+    if arm_control != 0:
+        ros.stop_launch(arm_control)  # this launch file must be stopped, otherwise it wont work
+    replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
+    ros.ter_command(replace_command)
+    time.sleep(1.5)
+    arm_control = ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(dof) + "dof"])
+    time.sleep(1)
+    return arm_control
 
+
+def simulation_init(ros, pose, orien, dof):
+    """
+    for some reason the first manipulator must succed to reach to point
+    otherwise all the other manipulators will failed
+    :param ros: Ros class
+    :param pose: position to send the first manip to verify success
+    :param orien: orientaion to send the first manip to verify success
+    :param dof: number degrees of freedom of manipulator
+    :return:
+    """
+    main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(dof) + "dof"]
+    main = ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
+    time.sleep(1)  # need time to upload
+    manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
+    time.sleep(0.01)  # need time to upload
+    # add floor and plant to the planning model
+    manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
+    time.sleep(0.01)
+    manipulator_move.go_to_pose_goal(pose, orien)
+    return main, manipulator_move
+
+
+def run_simulation(dof=6, create=False):
+    """
+    :param dof: number degrees of freedom of manipulator
+    :param create: if true than create files from csv file
+    :return: nothing
+    """
+    if create:
+        arms = create_urdf_from_csv(str(dof) + "dof_configs", dof)  # all the configuration of the arms
+    else:
+        arms = arms_exist()
     ros = Ros()  # for work with Ros
     save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
-
-    # desired positions of the EE in world frame
-    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89]] #, [0.5, -0.15, 0.86], [0.5, -0.15, 0.45], [0.5, 0.15, 0.45]]
-    # desired orientaions of the EE in world frame
-    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-
-    first_run = True
-    to_replace = False
     all_data = [["date ", "Time ", "Arm ", "Results "]]
-    moveit_arg = "dof:=" + str(dof) + "dof"
+    # desired positions and orientaions of the EE in world frame
+    poses = [[0.5, 0.15, 6.86], [0.5, 0.0, 6.89], [0.5, -0.15, 6.86], [0.5, -0.15, 6.45], [0.5, 0.15, 6.45]]
+    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    # set the obstacles and initiliaze the manipulator
+    main, manipulator_move = simulation_init(ros, poses[0], oriens[0], dof)
+    arm_control = replace_model(ros,  0, arms, 0, dof)  # set the first arm
     for arm in range(0, len(arms)):
         print "arm " + str(arm+1) + " of " + str(len(arms)) + " arms"
-        if first_run:
-            # run all the needed launch files
-            # launchs_path = "man_gazebo"
-            # main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(dof) + "dof",
-            #                    "man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"]]
-            # main = ros.start_launch("main", launchs_path, main_launch_arg)  # main launch file
-            #
-            man_launch_arg = ["gui:=false", "dof:=" + str(dof) + "dof",
-                              "man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"]]
-            man = ros.start_launch("manipulator", "man_gazebo", man_launch_arg)
-            # time.sleep(5)  # need time to upload
-            # man_command="x-terminal-emulator -e roslaunch man_gazebo manipulator.launch" \
-            #     " gui:=false " + "dof:=" + str(dof) + "dof man:=" + arms[arm]["folder"] + "/" + arms[arm]["name"]
-            # man = ros.ter_command(man_command)
-            # moveit_command = "x-terminal-emulator -e roslaunch man_moveit man_moveit_planning_execution.launch " + moveit_arg + "  __name:=test"
-            # moveit = ros.ter_command(moveit_command)
-            rospy.sleep(3)
-            moveit = ros.start_launch("man_moveit_planning_execution", "man_moveit", moveit_arg)
-            rospy.sleep(3)
-            manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-            rospy.sleep(3)  # need time to upload
-            # add floor and plant to the planning model
-            manipulator_move.add_obstacles(height=0.75, radius=0.1, pose=[0.5, 0])
-            rospy.sleep(3)
-
-        if arm % 100 == 0:  # save every 100 iterations
+        if arm % 20 == 0:  # save every x iterations
             save_data(all_data, save_name)
             all_data = []
-
         data = []
-        # send the manipulator to the selected points
-        rospy.sleep(3)
-        for i in range(len(poses)):
-            pose = poses[i]
-            orien = oriens[i]
-            time.sleep(0.65)
-            data.append(str(manipulator_move.go_to_pose_goal(pose, orien)))
-            to_replace = True
+        for i in range(len(poses)):  # send the manipulator to the selected points
+            data.append(str(manipulator_move.go_to_pose_goal(poses[i], oriens[i])))
         # inserting the data into array
         all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"), arms[arm]["name"], ",".join(data)])
-
         if arm == len(arms)-1:
             break
-
-        launch_arg = ["man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"], "dof:="+str(dof) + "dof"]
-        file = "man:=" + arms[arm + 1]["folder"] + "/" + arms[arm + 1]["name"] + " dof:=" + str(dof) + "dof"
-
-
-        if to_replace:  # to replace a manipulator
-            # replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + file
-            # ros.ter_command(replace_command)
-            ros.start_launch("replace_model", "man_gazebo", launch_arg)
-            if not first_run:  # doesnt run it first launch
-                # ros.stop_launch(arm_control)  # this launch file must be stopped, otherwise it wont work
-                # arm_control.kill()
-                # os.killpg(os.getpgid(arm_control.pid), signal.SIGTERM)
-                a =6
-            #arm_control = ros.start_launch("arm_controller", launchs_path, ["dof:="+str(dof) + "dof"])
-            # arm_control = ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo arm_controller.launch ")
-            rospy.sleep(0.06)
-            first_run = False
-
+        arm_control = replace_model(ros, arm_control, arms, arm, dof)
+    # save the remaining data and close all the launch files
     save_data(all_data, save_name)
-    man.kill()
-    # ros.stop_launch(replace)
-    # ros.stop_launch(arm_control)
-    # ros.stop_launch(man)
-    # ros.stop_launch(main)
+    ros.stop_launch(arm_control)
+    ros.stop_launch(main)
 
 
 tic = datetime.datetime.now()
 run_simulation()
-#arms=arms_exist()
-
-
 toc = datetime.datetime.now()
-delta = (toc - tic).seconds
-print('Time of Run (seconds): ' + str(delta))
+print('Time of Run (seconds): ' + str((toc - tic).seconds))
