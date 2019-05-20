@@ -22,6 +22,7 @@ from math import pi
 import datetime
 from logging import warning
 import numpy as np
+import csv
 
 
 class Ros(object):
@@ -581,6 +582,42 @@ class UrdfClass(object):
             warning('wrong axe input.' + axe + ' entered. returning [0 0 0] ' + str(
                 datetime.datetime.now()))  # will print a message to the console
             return '0 0 0'
+
+
+class HandleCSV(object):
+
+    def save_data(self, data, file_name):
+        """Save to csv format"""
+        with open(file_name + ".csv", 'ab') as name:
+            writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerows(data)
+
+    def read_data(self, file_name):
+        with open(file_name + ".csv", 'r') as _filehandler:
+            csv_file_reader = csv.reader(_filehandler)
+            data = []
+            manip = []
+            empty = True
+            for row in csv_file_reader:
+                while "" in row:
+                    row.remove("")
+                if len(row) > 0:
+                    data.append(row)
+                    empty = False
+                else:
+                    if not empty:
+                        manip.append(self.read_data_action(data))
+                        data = []
+                    empty = True
+            manip.append(self.read_data_action(data))  # append the last session
+            return manip
+
+    def read_data_action(self, data):
+        manip = map(list, zip(*data[1:]))
+        manip_array_of_dict = []
+        for i in range(0, len(manip) - 1, 2):
+            manip_array_of_dict.append({"joint": manip[i], "axe": manip[i + 1]})
+        return manip_array_of_dict
 
 
 def main_move_group():
