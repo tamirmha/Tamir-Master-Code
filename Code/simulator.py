@@ -149,13 +149,13 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        time.sleep(1.5)
+        time.sleep(2)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(1)
+        time.sleep(2)
 
     def run_simulation(self):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
-        all_data = [["Time ", "Arm ", "Results "]]
+        all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
             print "arm " + str(arm + 1) + " of " + str(len(self.arms)) + " arms"
             if arm % 20 == 0:  # save every x iterations
@@ -178,7 +178,8 @@ class Simulator(object):
 
 tic = datetime.datetime.now()
 dofe = 6
-foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_/"
+# foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_/"
+foldere = "6dof/roll_z_roll_y_pitch_y_pitch_y_roll_z_pitch_y_"
 sim = Simulator(dofe, foldere, True)
 sim.run_simulation()
 toc = datetime.datetime.now()
