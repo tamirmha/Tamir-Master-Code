@@ -9,7 +9,7 @@ import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 import tf
-from moveit_commander.conversions import pose_to_list
+# from moveit_commander.conversions import pose_to_list
 
 # System Libs
 import subprocess
@@ -62,7 +62,7 @@ class Ros(object):
         """Write Command to the terminal"""
         try:
             command = shlex.split(command)
-            ter_command_proc = subprocess.Popen(command, stdout=subprocess.PIPE,  preexec_fn=os.setsid)
+            ter_command_proc = subprocess.Popen(command, stdout=subprocess.PIPE, preexec_fn=os.setsid)
             return ter_command_proc
         except ValueError:
             rospy.loginfo('Error occurred at ter_command function')  # shows warning message
@@ -153,7 +153,7 @@ class MoveGroupPythonInterface(object):
         self.box_name = ''
         self.cylinder_name = ''
         self.move_group.set_goal_orientation_tolerance(0.05)
-        self.move_group.set_goal_position_tolerance(0.03)
+        self.move_group.set_goal_position_tolerance(0.01 )
 
         #self.move_group.set_planning_time(2)
         #self.move_group.set_num_planning_attempts(3)
@@ -203,6 +203,7 @@ class MoveGroupPythonInterface(object):
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
+
         orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
         a = self.move_group.get_current_pose().pose.orientation
         orien =(np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w]))-2 * np.pi) % (2 * np.pi)
@@ -211,8 +212,6 @@ class MoveGroupPythonInterface(object):
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         accuracy = self.all_close(goal, current, tolerance)
-        print accuracy, plan, current[3:], goal[3:]
-        #accuracy = self.all_close(pose_goal, self.move_group.get_current_pose().pose, 0.01)
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -245,14 +244,10 @@ class MoveGroupPythonInterface(object):
         return plan, fraction
 
     def execute_plan(self, plan):
-
         # the plan that has already been computed:
         self.move_group.execute(plan, wait=True)
-        ## **Note:** The robot's current joint state must be within some tolerance of the
-        ## first waypoint in the `RobotTrajectory`_ or ``execute()`` will fail
 
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
-
         ## Ensuring Collision Updates Are Receieved
         ## If the Python node dies before publishing a collision object update message, the message
         ## could get lost and the box will not appear. To ensure that the updates are
@@ -383,7 +378,7 @@ class UrdfClass(object):
 
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
-        <xacro:property name="base_length" value="0.25"/>
+        <xacro:property name="base_length" value="6.25"/>
             <!-- Inertia parameters -->
         <xacro:property name="base_mass" value="4.0" /> 
         <xacro:property name="link1_mass" value="3.7" />
@@ -636,30 +631,4 @@ def main_move_group():
         raw_input("press enter")
 
 
-if __name__ == '__main__':
-    # ros = Ros()
-    # launchs_path = "man_gazebo"
-    # #main = ros.start_launch("main", launchs_path)
-    # k = 120
-    # z = 30
-    # a = True
-    # f = False
-    # while k > -5:
-    #     time.sleep(1)
-    #     k = k-1
-    #     z = z-1
-    #
-    #     print k
-    #     # print k
-    #     # if z < 0:
-    #     #     z = 30
-    #     #     replace = ros.start_launch("replace_model",launchs_path)
-    #     #     if f:
-    #     #         ros.stop_launch(arm_control)
-    #     #     arm_control = ros.start_launch("replace_model2", launchs_path)
-    #     #     f = True
-    #     # if k < 0 and a:
-    #     #     ros.stop_launch(replace)
-    #     #     ros.stop_launch(arm_control)
-    #     #     a = ros.stop_launch(main)
-    main_move_group()
+
