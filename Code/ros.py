@@ -2,7 +2,7 @@
 # Ros Libs
 import roslaunch
 import rospy
-from std_msgs.msg import UInt8, String
+from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 # Moveit libs
 import moveit_commander
@@ -44,13 +44,13 @@ class Ros(object):
             roslaunch_file = [(roslaunch.rlutil.resolve_launch_arguments(cli_args)[0], args)]
             launch = roslaunch.parent.ROSLaunchParent(uuid, roslaunch_file)
             launch.start()
-            # time.sleep(0.1)
             return launch
         except ValueError:
             rospy.loginfo('Error occurred at start launch function')
             pass
 
-    def stop_launch(self, launch):
+    @staticmethod
+    def stop_launch(launch):
         try:
             launch.shutdown()
             return False
@@ -58,7 +58,8 @@ class Ros(object):
             rospy.loginfo('Error occurred at launch_stop function')
             pass
 
-    def ter_command(self, command):
+    @staticmethod
+    def ter_command(command):
         """Write Command to the terminal"""
         try:
             command = shlex.split(command)
@@ -68,11 +69,11 @@ class Ros(object):
             rospy.loginfo('Error occurred at ter_command function')  # shows warning message
             pass
 
-    def ros_core_start(self,):
+    def ros_core_start(self):
         try:
             self.roscore = subprocess.Popen('roscore')
             rospy.init_node('arl_python', anonymous=True)
-            time.sleep(1)  # wait a bit to be sure the roscore is really launched
+            rospy.sleep(1)  # wait a bit to be sure the roscore is really launched
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_start function')  # shows warning message
             pass
@@ -84,13 +85,9 @@ class Ros(object):
             rospy.loginfo('Error occurred at ros_core_stop function')  # shows warning message
             pass
 
-    # def call_node(self, node_name ):
-    #     rospy.init_node(node_name)
-    #
-
     """ pub sub functions need further checking"""
     def pub_sub_init(self, pub_name='MidLevelCommands', pub_type=String, sub_name='ard_odom', sub_type=Twist):
-        '''Initiliaze the topics that are published and subscribed'''
+        """Initiliaze the topics that are published and subscribed"""
         try:
             self.pub = rospy.Publisher(pub_name, pub_type, queue_size=10)
             rospy.Subscriber(sub_name, sub_type, self.callback)
@@ -105,16 +102,18 @@ class Ros(object):
             rospy.loginfo('Error occurred at talker function')  # shows warning message
             pass
 
-    def callback(self, datae):
+    @staticmethod
+    def callback(data):
         """ callback function when recive msg"""
+        data_back = "No data inserted, check msg type"
         if data._type == "geometry_msgs/Twist":
-            Data = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
+            data_back = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
                 data.linear.y) + "     z_ linear: " + str('%.2f' % data.linear.z) + '\n' + \
                    "x_ angular: " + str(data.angular.x) + "      y_ angular: " + str(
                 data.angular.y) + "     z_ angular: " + str('%.2f' % data.angular.z)
         if data._type == "std_msgs/String":
-            Data = data.data
-        return Data
+            data_back = data.data
+        return data_back
         # Todo add types of msgs
 
 
@@ -153,15 +152,16 @@ class MoveGroupPythonInterface(object):
         self.box_name = ''
         self.cylinder_name = ''
         self.move_group.set_goal_orientation_tolerance(0.05)
-        self.move_group.set_goal_position_tolerance(0.01 )
+        self.move_group.set_goal_position_tolerance(0.01)
 
-        #self.move_group.set_planning_time(2)
-        #self.move_group.set_num_planning_attempts(3)
-
+        self.move_group.set_planning_time(2)
+        self.move_group.set_num_planning_attempts(3)
+        self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
     def go_to_joint_state(self, goal_joint):
         # Planning to a Joint Goal
+        # Todo - fix goal and current joints positions
         joint_goal = self.move_group.get_current_joint_values()
         joint_goal[0] = goal_joint[0]
         joint_goal[1] = goal_joint[1]
@@ -178,7 +178,7 @@ class MoveGroupPythonInterface(object):
         self.move_group.stop()
 
         current_joints = self.move_group.get_current_joint_values()
-        return self.all_close(joint_goal, current_joints, 0.01)
+        return self.all_close(joint_goal, current_joints, self.tolerance)
 
     def go_to_pose_goal(self, pose, orientaion):
         """send position and orientaion of the desired point
@@ -200,23 +200,23 @@ class MoveGroupPythonInterface(object):
         self.move_group.set_pose_target(pose_goal)
         # we call the planner to compute the plan and execute it.
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
+
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
 
         orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
         a = self.move_group.get_current_pose().pose.orientation
-        orien =(np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w]))-2 * np.pi) % (2 * np.pi)
+        orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w]))-2 * np.pi) % (2 * np.pi)
         goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
         pos = self.move_group.get_current_pose().pose.position
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
-        accuracy = self.all_close(goal, current, tolerance)
+        # tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
+        accuracy = self.all_close(goal, current, self.tolerance)
+        print accuracy, plan
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
-        #move_group = self.move_group
-
         # Cartesian Paths
         waypoints = []
 
@@ -248,11 +248,10 @@ class MoveGroupPythonInterface(object):
         self.move_group.execute(plan, wait=True)
 
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
-        ## Ensuring Collision Updates Are Receieved
-        ## If the Python node dies before publishing a collision object update message, the message
-        ## could get lost and the box will not appear. To ensure that the updates are
-        ## made, we wait until we see the changes reflected in the
-        ## ``get_attached_objects()`` and ``get_known_object_names()`` lists.
+        # Ensuring Collision Updates Are Receieved
+        # If the Python node dies before publishing a collision object update message, the message
+        # could get lost and the box will not appear. To ensure that the updates are made, we wait until we see the
+        # changes reflected in the ``get_attached_objects()`` and ``get_known_object_names()`` lists.
         start = rospy.get_time()
         seconds = rospy.get_time()
         while (seconds - start < timeout) and not rospy.is_shutdown():
@@ -260,8 +259,7 @@ class MoveGroupPythonInterface(object):
             attached_objects = self.scene.get_attached_objects([self.box_name])
             is_attached = len(attached_objects.keys()) > 0
 
-            # Test if the box is in the scene.
-            # Note that attaching the box will remove it from known_objects
+            # Test if the box is in the scene. -Note that attaching the box will remove it from known_objects
             is_known = self.box_name in self.scene.get_known_object_names()
 
             # Test if we are in the expected state
@@ -295,10 +293,11 @@ class MoveGroupPythonInterface(object):
         cylinder_pose.pose.position.y = pose[1]
         cylinder_pose.pose.position.z = height/2.0
         self.cylinder_name = 'plant'
-        self.scene.add_cylinder(self.cylinder_name,cylinder_pose, height, radius)
+        self.scene.add_cylinder(self.cylinder_name, cylinder_pose, height, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
-    def all_close(self, goal, actual, tolerance):
+    @staticmethod
+    def all_close(goal, actual, tolerance):
         """
         Convenience method for testing if a list of values are within a tolerance of their counterparts in another list
         @param: goal       A list of floats
@@ -307,10 +306,10 @@ class MoveGroupPythonInterface(object):
         @returns: bool
         """
         for index in range(len(goal)):
-                if abs(actual[index] - goal[index]) > tolerance[index]:
-                    if index > 2:  # for angles
-                        if abs(actual[index] - goal[index]) < 2*pi - tolerance[index]:  # 2 pi with tolerance
-                            return False
+            if abs(actual[index] - goal[index]) > tolerance[index]:
+                if index > 2:  # for angles
+                    if abs(actual[index] - goal[index]) < 2*pi - tolerance[index]:  # 2 pi with tolerance
+                        return False
                     else:
                         return False
         return True
@@ -341,7 +340,7 @@ class UrdfClass(object):
         head = '''<?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro"  name="arm">
   <xacro:include filename="$(find man_gazebo)/urdf/common.gazebo.xacro" />
-  
+
 <link name="world" />
 
   <joint name="world_joint" type="fixed">
@@ -365,12 +364,12 @@ class UrdfClass(object):
 
 <xacro:macro name="joint_limit" params="joint_type link_length ">
 	<xacro:if value="${joint_type == 'revolute'}"  >
-		<xacro:property name="joint_upper_limit" value="${pi}" /> 
-		<xacro:property name="joint_lower_limit" value="${-pi}" /> 
+		<xacro:property name="joint_upper_limit" value="${pi}" />
+		<xacro:property name="joint_lower_limit" value="${-pi}" />
 	</xacro:if>
 	<xacro:unless value="${joint_type == 'revolute'}"  >
-		<xacro:property name="joint_upper_limit" value="${2*link_length}" /> 
-		<xacro:property name="joint_lower_limit" value="${0}" />  
+		<xacro:property name="joint_upper_limit" value="${2*link_length}" />
+		<xacro:property name="joint_lower_limit" value="${0}" />
 	</xacro:unless>
 	<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="150.0" velocity="3.15"/>
 </xacro:macro>
@@ -380,35 +379,35 @@ class UrdfClass(object):
         inertia_parameters = '''
         <xacro:property name="base_length" value="6.25"/>
             <!-- Inertia parameters -->
-        <xacro:property name="base_mass" value="4.0" /> 
+        <xacro:property name="base_mass" value="4.0" />
         <xacro:property name="link1_mass" value="3.7" />
         <xacro:property name="link2_mass" value="8.393" />
         <xacro:property name="link3_mass" value="2.275" />
         <xacro:property name="link4_mass" value="1.219" />
         <xacro:property name="link5_mass" value="1.219" />
-        <xacro:property name="link6_mass" value="0.1879" />  
+        <xacro:property name="link6_mass" value="0.1879" />
 
-	    <xacro:property name="base_radius" value="0.060" /> 
-        <xacro:property name="link1_radius" value="0.060" /> 
-        <xacro:property name="link2_radius" value="0.060" />   
-        <xacro:property name="link3_radius" value="0.060" />  
-        <xacro:property name="link4_radius" value="0.040" />      
-        <xacro:property name="link5_radius" value="0.030" />   
+	    <xacro:property name="base_radius" value="0.060" />
+        <xacro:property name="link1_radius" value="0.060" />
+        <xacro:property name="link2_radius" value="0.060" />
+        <xacro:property name="link3_radius" value="0.060" />
+        <xacro:property name="link4_radius" value="0.040" />
+        <xacro:property name="link5_radius" value="0.030" />
         <xacro:property name="link6_radius" value="0.025" /> '''
         base_link = '''
 
         	<!--   Base Link -->
     <link name="${prefix}base_link" >
       <visual>
-		<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
+		<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
         <geometry>
- 			<cylinder radius="${base_radius}" length="${base_length}"/> 
+ 			<cylinder radius="${base_radius}" length="${base_length}"/>
         </geometry>
       </visual>
       <collision>
-			<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" /> 
+			<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
         <geometry>
-			<cylinder radius="${base_radius}" length="${base_length}"/>	
+			<cylinder radius="${base_radius}" length="${base_length}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${base_radius}" length="${base_length}" mass="${base_mass}">
@@ -421,7 +420,7 @@ class UrdfClass(object):
         for i in range(self.links_number):
             data = data + self.joint_create(i + 1) + self.link_create(i + 1)
 
-        tail = '''    
+        tail = '''
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}link''' + str(self.links_number) + '''" />
       <child link = "${prefix}ee_link" />
@@ -448,25 +447,26 @@ class UrdfClass(object):
         txt = head + inertia_parameters + base_link + data + tail
         return txt
 
-    def link_create(self, n):
-        '''link- data about specific link. it buit from :
+    @staticmethod
+    def link_create(n):
+        """link- data about specific link. it buit from :
                 *inertia - inertail data of the link -Mass, moment of inertia, pose in the frame
                 *collision - the collision properties of a link.
                 *visual - > the visual properties of the link. This element specifies the shape of the object (box, cylinder, etc.) for visualization purposes
-                *velocity_decay - exponential damping of the link's velocity'''
+                *velocity_decay - exponential damping of the link's velocity"""
         linkname = 'link' + str(n)
         link = ''
         if n == 1:
             link = link + '''<!--  link 1  -->
     <link name="${prefix}link1">
       <visual>
-		<origin xyz="0 0 ${link1_length / 2} " rpy="0 0 0" /> 
+		<origin xyz="0 0 ${link1_length / 2} " rpy="0 0 0" />
         <geometry>
-			<cylinder radius="${link1_radius}" length="${link1_length}"/>	 
+			<cylinder radius="${link1_radius}" length="${link1_length}"/>
         </geometry>
       </visual>
       <collision>
-		 <origin xyz="0 0 ${link1_length / 2}" rpy="0 0 0" /> 
+		 <origin xyz="0 0 ${link1_length / 2}" rpy="0 0 0" />
         <geometry>
 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
         </geometry>
@@ -481,7 +481,7 @@ class UrdfClass(object):
       <visual>
 		<origin xyz="0 0 ${''' + linkname + '''_length / 2}" rpy="0 0 0" />
         <geometry>
-			<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/> 
+			<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
         </geometry>
       </visual>
       <collision>
@@ -506,10 +506,10 @@ class UrdfClass(object):
                 else:  # the links are perpendiculars
                     return "0 ${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
             else:  # pitch
-                if self.rpy[n-1] == ['0 ', '0 ', '0 '] :  # links in the same directoin
-                    return "0 ${link" + str(n-1) + "_radius+link"+ str(n) + "_radius} ${link" + str(n-1) + "_length}"
+                if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+                    return "0 ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} ${link" + str(n-1) + "_length}"
                 elif self.rpy[n-1] == ['0 ', '0 ', '${-pi/2} ']:  # links in the same directoin
-                    return " ${link" + str(n-1) + "_radius+link"+ str(n) + "_radius} 0 ${link" + str(n-1) + "_length}"
+                    return " ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(n-1) + "_length}"
                 else:  # the links are perpendiculars
                     return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
         else:  # prismatic
@@ -553,10 +553,11 @@ class UrdfClass(object):
     '''
         return joint
 
-    def urdf_write(self, data, filename=str(datetime.datetime.now().minute)):
-        file = open(filename + '.urdf.xacro', 'w')
-        file.write(data)
-        file.close()
+    @staticmethod
+    def urdf_write(data, filename=str(datetime.datetime.now().minute)):
+        fil = open(filename + '.urdf.xacro', 'w')
+        fil.write(data)
+        fil.close()
 
     def init_calc(self, joints, joints_axis):
         axis = []
@@ -566,7 +567,8 @@ class UrdfClass(object):
             a = a + 1
         return axis
 
-    def axis_calc(self, axe):
+    @staticmethod
+    def axis_calc(axe):
         if axe == 'x':
             return '1 0 0'
         elif axe == 'y':
@@ -581,7 +583,8 @@ class UrdfClass(object):
 
 class HandleCSV(object):
 
-    def save_data(self, data, file_name):
+    @staticmethod
+    def save_data(data, file_name):
         """Save to csv format"""
         with open(file_name + ".csv", 'ab') as name:
             writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -607,7 +610,8 @@ class HandleCSV(object):
             manip.append(self.read_data_action(data))  # append the last session
             return manip
 
-    def read_data_action(self, data):
+    @staticmethod
+    def read_data_action(data):
         manip = map(list, zip(*data[1:]))
         manip_array_of_dict = []
         for i in range(0, len(manip) - 1, 2):

@@ -1,10 +1,9 @@
 from ros import Ros, MoveGroupPythonInterface, UrdfClass, HandleCSV
-import time
 import datetime
 import os
 import numpy as np
 import itertools
-# import rospy
+import rospy
 
 
 class Simulator(object):
@@ -26,12 +25,12 @@ class Simulator(object):
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        time.sleep(1)  # need time to upload
+        rospy.sleep(1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        time.sleep(0.01)  # need time to upload
+        rospy.sleep(0.01)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
-        time.sleep(0.01)
+        rospy.sleep(0.01)
         self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -109,24 +108,28 @@ class Simulator(object):
         configs = HandleCSV().read_data(csv_name)
         # Create the urdf files
         data = []
-        folder = ""
-        c = 0
+        # folder = ""
+        # c = 0
         base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
+        folder = "combined3"
+        self.create_folder(base_path + "6dof/" + folder)
         links = self.set_links_length()
+        index = 0
         for config in configs:
             for arm in config:
-                for i in range(len(arm["joint"])):
-                    folder = folder + arm["joint"][i] + "_" + arm["axe"][i] + "_"
-                self.create_folder(base_path + str(len(arm["axe"])) + "dof/" + folder)
+                # for i in range(len(arm["joint"])):
+                #     folder = folder + arm["joint"][i] + "_" + arm["axe"][i] + "_"
+                # self.create_folder(base_path + str(len(arm["axe"])) + "dof/" + folder)
                 for link in links:
                     self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, folder))
                     path = base_path + str(len(arm["axe"])) + "dof/" + folder + "/"
-                    index = config.index(arm) + links.index(link) + c
+                    # index = config.index(arm) + links.index(link) + c
                     self.arms[index]["arm"].urdf_write(self.arms[index]["arm"].urdf_data(),
                                                        path + self.arms[index]["name"])
                     data.append([self.arms[index]["name"], folder, datetime.datetime.now().strftime("%d_%m_%y")])
-                folder = ""
-            c = c + len(config) + len(links)
+                    index = index+1
+                # folder = ""
+            # c = c + len(config) * len(links)
         HandleCSV().save_data(data, "created files")
 
     def arms_exist(self):
@@ -149,9 +152,9 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        time.sleep(2)
+        rospy.sleep(1.5)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(2)
+        rospy.sleep(1)
 
     def run_simulation(self):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
@@ -179,8 +182,13 @@ class Simulator(object):
 tic = datetime.datetime.now()
 dofe = 6
 # foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_/"
+<<<<<<< HEAD
 foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_"
 sim = Simulator(dofe, foldere, False)
+=======
+foldere = "6dof/test"
+sim = Simulator(dofe, foldere, True)
+>>>>>>> 96804ee2eacd06906df7f304713bdfa6b6a0cd10
 sim.run_simulation()
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))
