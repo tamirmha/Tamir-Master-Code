@@ -179,8 +179,8 @@ class Simulator(object):
 tic = datetime.datetime.now()
 dofe = 6
 # foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_/"
-foldere = "6dof/roll_z_roll_y_pitch_y_pitch_y_roll_z_pitch_y_"
-sim = Simulator(dofe, foldere, True)
+foldere = "6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z_"
+sim = Simulator(dofe, foldere, False)
 sim.run_simulation()
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))

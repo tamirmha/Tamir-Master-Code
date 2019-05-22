@@ -629,6 +629,3 @@ def main_move_group():
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
         raw_input("press enter")
-
-
-
