@@ -1,55 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91fb02c1-07f3-464f-9049-f45f40ed22e1" name="Default Changelist" comment="">
-
-      <change beforePath="$PROJECT_DIR$/.idea/Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Code.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ebf02c94-a5e2-4ee3-82c3-448fdcad34ea" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-
-      <change afterPath="$PROJECT_DIR$/simulator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Code.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimFilesCreate.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimFilesCreate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/move_manipulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/move_manipulator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/ros.py" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/shelf/" />
+    <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FavoritesManager">
-    <favorites_list name="Code" />
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/move_manipulator.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-
-            <state relative-caret-position="6669">
-              <caret line="377" column="77" selection-start-line="350" selection-end-line="377" selection-end-column="77" />
-
-            <state relative-caret-position="27">
-              <caret line="97" column="48" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
-
+            <state relative-caret-position="497">
+              <caret line="149" column="117" selection-start-line="149" selection-start-column="117" selection-end-line="149" selection-end-column="117" />
               <folding>
-                <element signature="e#23#33#0" expanded="true" />
-                <element signature="e#217#258#0" />
-                <element signature="e#1160#2813#0" />
-                <element signature="e#2856#3786#0" />
-                <element signature="e#3845#5070#0" />
-                <element signature="e#5126#6289#0" />
-                <element signature="e#6334#6594#0" />
-                <element signature="e#6696#7998#0" />
-                <element signature="e#7222#7902#0" />
-                <element signature="e#8089#9226#0" />
-                <element signature="e#9280#10088#0" />
+                <element signature="e#0#67#0" expanded="true" />
+                <element signature="e#1802#4550#0" />
+                <element signature="e#4606#5060#0" />
+                <element signature="e#5125#6552#0" />
+                <element signature="e#5603#6499#0" />
+                <element signature="e#6588#6888#0" />
+                <element signature="e#6945#7020#0" />
+                <element signature="e#7669#8817#0" />
               </folding>
             </state>
           </provider>
@@ -58,65 +38,57 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ros.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
+            <state relative-caret-position="489">
+              <caret line="621" column="22" selection-start-line="621" selection-start-column="22" selection-end-line="621" selection-end-column="22" />
               <folding>
                 <element signature="n#!!doc" />
-                <element signature="e#34#50#0" expanded="true" />
-                <element signature="e#340#608#0" />
-                <element signature="e#527#608#0" />
-                <element signature="e#681#1264#0" />
-                <element signature="e#730#1150#0" />
-                <element signature="e#1191#1264#0" />
-                <element signature="e#1309#1490#0" />
-                <element signature="e#1536#1821#0" />
-                <element signature="e#1862#2201#0" />
-                <element signature="e#2241#2421#0" />
-                <element signature="e#2593#2943#0" />
-                <element signature="e#2980#3150#0" />
-                <element signature="e#3191#3752#0" />
-                <element signature="e#3786#4464#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/simulator.py">
-          <provider selected="true" editor-type-id="text-editor">
-
-            <state relative-caret-position="437">
-              <caret line="189" selection-start-line="189" selection-end-line="189" />
-              <folding>
-                <element signature="e#23#33#0" expanded="true" />
-                <element signature="e#261#1003#0" />
-                <element signature="e#261#568#1" />
-                <element signature="e#625#745#0" />
-                <element signature="e#1119#2774#0" />
-                <element signature="e#2817#3742#0" />
-                <element signature="e#3801#5020#0" />
-                <element signature="e#5076#6239#0" />
-                <element signature="e#6284#6544#0" />
-                <element signature="e#6646#7948#0" />
-                <element signature="e#7998#9205#0" />
-
-            <state relative-caret-position="173">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" selection-start-line="4" selection-end-line="9" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-
+                <element signature="e#500#4105#0" />
+                <element signature="e#582#863#0" />
+                <element signature="e#782#863#0" />
+                <element signature="e#936#1522#0" />
+                <element signature="e#1567#1738#0" />
+                <element signature="e#1584#1626#0" />
+                <element signature="e#1666#1738#0" />
+                <element signature="e#1809#2176#0" />
+                <element signature="e#2192#2531#0" />
+                <element signature="e#2209#2391#0" />
+                <element signature="e#2431#2531#0" />
+                <element signature="e#2571#2751#0" />
+                <element signature="e#2946#3296#0" />
+                <element signature="e#3333#3503#0" />
+                <element signature="e#3557#4118#0" />
+                <element signature="e#4233#13557#0" />
+                <element signature="e#4303#6199#0" />
+                <element signature="e#6254#7024#0" />
+                <element signature="e#7083#8827#0" />
+                <element signature="e#7083#7338#1" />
+                <element signature="e#8883#10046#0" />
+                <element signature="e#10090#10181#0" />
+                <element signature="e#10282#11584#0" />
+                <element signature="e#11674#12814#0" />
+                <element signature="e#12886#13549#0" />
+                <element signature="e#13755#14512#0" />
+                <element signature="e#14547#18729#0" />
+                <element signature="e#14554#14952#0" />
+                <element signature="e#18781#20887#0" />
+                <element signature="e#18781#19231#1" />
+                <element signature="e#20915#22229#0" />
+                <element signature="e#21000#21931#0" />
+                <element signature="e#21381#21931#0" />
+                <element signature="e#21971#22241#0" />
+                <element signature="e#22270#23926#0" />
+                <element signature="e#22413#22548#0" />
+                <element signature="e#22618#22691#0" />
+                <element signature="e#22802#23224#0" />
+                <element signature="e#23251#23917#0" />
+                <element signature="e#24027#24112#0" />
+                <element signature="e#24182#24368#0" />
+                <element signature="e#24420#24772#0" />
+                <element signature="e#25858#27129#0" />
+                <element signature="e#25917#26124#0" />
+                <element signature="e#25038#25721#0" />
+                <element signature="e#26913#27141#0" />
+                <element signature="e#26115#26763#0" />
               </folding>
             </state>
           </provider>
@@ -124,100 +96,54 @@
       </file>
     </leaf>
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>raw_input</find>
-      <find>tutorial</find>
-      <find>move()</find>
-      <find>planning_frame</find>
-      <find>hand</find>
-      <find>grasping_group</find>
-      <find>box_name</find>
-      <find>self.launch_Capture</find>
-      <find>all_equal</find>
-      <find>all_close</find>
+      <find>print</find>
+      <find>arms_exist</find>
+      <find>arms</find>
+      <find>create_folder</find>
+      <find>sleep</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
-    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-    <option name="SET_USER_NAME_GLOBALLY" value="false" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/move_group_python_interface_tutorial.py" />
-        <option value="$PROJECT_DIR$/move_group_python_interface_tutorial.py" />
-        <option value="$PROJECT_DIR$/SimFilesCreate.py" />
-        <option value="$PROJECT_DIR$/move_manipulator.py" />
         <option value="$PROJECT_DIR$/ros.py" />
-        <option value="$PROJECT_DIR$/tests" />
         <option value="$PROJECT_DIR$/simulator.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="800" />
-    <option name="y" value="236" />
-    <option name="width" value="1370" />
-    <option name="height" value="1000" />
-  </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
+    <option name="x" value="67" />
+    <option name="y" value="25" />
+    <option name="width" value="927" />
+    <option name="height" value="1175" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
+    <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+      <pane id="ProjectPane">
+        <subPane>
           <expand>
             <path>
-              <item name="Code" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/Tamir/Master/Code" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="Code" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Code" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-
-    <property name="last_opened_file_path" value="/opt/ros/melodic/lib/python2.7/dist-packages" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.spelling" />
-
-  </component>
-  <component name="PyConsoleOptionsProvider">
-    <option name="myPythonConsoleState">
-      <console-settings module-name="Code" sdk-home="/usr/bin/python2.7" working-directory="$PROJECT_DIR$">
-        <option name="mySdkHome" value="/usr/bin/python2.7" />
-        <option name="myModuleName" value="Code" />
-        <option name="myWorkingDirectory" value="$PROJECT_DIR$" />
-      </console-settings>
-    </option>
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -232,48 +158,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.simulator">
-    <configuration name="SimFilesCreate" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SimFilesCreate.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="move_manipulator" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="/usr/bin/python2.7" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/move_manipulator.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="ros" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -316,62 +200,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="tests" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.simulator" />
-        <item itemvalue="Python.tests" />
-        <item itemvalue="Python.move_manipulator" />
         <item itemvalue="Python.ros" />
-        <item itemvalue="Python.SimFilesCreate" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="6" BundledDictionary0="django.dic" BundledDictionary1="python.dic" BundledDictionary2="pythonExtras.dic" BundledDictionary3="jetbrains.dic" BundledDictionary4="english.dic" BundledDictionary5="ros.dic" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="91fb02c1-07f3-464f-9049-f45f40ed22e1" name="Default Changelist" comment="" />
-      <created>1556689941052</created>
+      <changelist id="ebf02c94-a5e2-4ee3-82c3-448fdcad34ea" name="Default Changelist" comment="" />
+      <created>1557834942393</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1556689941052</updated>
+      <updated>1557834942393</updated>
     </task>
-    <task id="LOCAL-00001" summary="add features">
-      <created>1556804634240</created>
+    <task id="LOCAL-00001" summary="simulation work:&#10;first manipulator must succeed to reach a point">
+      <created>1558344048233</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1556804634240</updated>
+      <updated>1558344048233</updated>
     </task>
-    <task id="LOCAL-00002" summary="add plant model">
-      <created>1557068513503</created>
+    <task id="LOCAL-00002" summary="simulation work:&#10;first manipulator must succeed to reach a point">
+      <created>1558353783057</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1557068513503</updated>
+      <updated>1558353783057</updated>
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
@@ -386,223 +242,250 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <frame x="67" y="25" width="1853" height="1175" extended-state="6" />
     <layout>
-
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49892008" visible="true" weight="0.24972677" />
-      <window_info id="Structure" order="1" sideWeight="0.5010799" side_tool="true" weight="0.24972677" />
-      <window_info id="Favorites" order="2" sideWeight="0.5010799" side_tool="true" weight="0.24972677" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49945354" weight="0.27321815" />
-
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2010929" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49933067" visible="true" weight="0.24972677" />
+      <window_info id="Structure" order="1" sideWeight="0.50066936" side_tool="true" weight="0.24972677" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49945354" visible="true" weight="0.32791588" />
-
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49945354" weight="0.332696" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3250478" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.40535372" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3298279" />
-
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32937366" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32937366" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50054646" side_tool="true" weight="0.32829374" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.39380023" />
-
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3298279" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3298279" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50054646" side_tool="true" weight="0.3288719" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.39292544" />
-
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3298279" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add features" />
-    <MESSAGE value="add plant model" />
-    <option name="LAST_COMMIT_MESSAGE" value="add plant model" />
+    <MESSAGE value="simulation work:&#10;first manipulator must succeed to reach a point" />
+    <option name="LAST_COMMIT_MESSAGE" value="simulation work:&#10;first manipulator must succeed to reach a point" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.arms[2]" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
-    <expressions id="evaluateCodeFragment">
+    <expressions id="evaluateExpression">
       <expression>
-        <expression-string>joint_goal[0] = 0
-joint_goal[1] = -pi/2
-joint_goal[2] = 0
-joint_goal[3] = -pi/4
-joint_goal[4] = 0
-joint_goal[5] = pi/3</expression-string>
+        <expression-string>for i in range(len(data)):</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>joint_goal[0] = 0
-   joint_goal[1] = -pi/2
-   joint_goal[2] = 0
-   joint_goal[3] = -pi/4
-   joint_goal[4] = 0
-   joint_goal[5] = pi/3</expression-string>
+        <expression-string>data[1][0]</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>joint_goal = move_group.get_current_joint_values()
-   joint_goal[0] = 0
-   joint_goal[1] = -pi/2
-   joint_goal[2] = 0
-   joint_goal[3] = -pi/4
-   joint_goal[4] = 0
-   joint_goal[5] = pi/3</expression-string>
+        <expression-string>data[0][0]</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>data[0][1]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>data[0][&quot;name&quot;]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>sum(link)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>len(arms)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>path = os.environ['HOME'] + &quot;/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z&quot;</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>path = os.environ['HOME'] + &quot;/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z/&quot;</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/move_group_python_interface_tutorial.py" />
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rostopic/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="1134" selection-start-line="1134" selection-end-line="1134" />
+        <state relative-caret-position="139">
+          <caret line="1777" column="26" lean-forward="true" selection-start-line="1777" selection-start-column="26" selection-end-line="1777" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/moveit_commander/conversions.py">
+    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="57" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="239">
+          <caret line="458" selection-start-line="458" selection-end-line="458" />
         </state>
       </provider>
     </entry>
     <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/moveit_commander/move_group.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8987">
-          <caret line="500" column="33" selection-start-line="500" selection-start-column="27" selection-end-line="500" selection-end-column="33" />
+        <state relative-caret-position="239">
+          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/archive/move_group_python_interface_tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-85">
+          <caret line="220" selection-start-line="220" selection-end-line="220" />
           <folding>
-            <element signature="e#1643#1690#0" expanded="true" />
+            <element signature="n#!!doc" />
+            <element signature="e#2314#3056#0" />
+            <element signature="e#3179#6191#0" />
+            <element signature="e#6234#7648#0" />
+            <element signature="e#7689#9115#0" />
+            <element signature="e#9170#10909#0" />
+            <element signature="e#10960#12180#0" />
+            <element signature="e#12225#12922#0" />
+            <element signature="e#13024#14963#0" />
+            <element signature="e#15009#16233#0" />
+            <element signature="e#16644#16679#0" />
+            <element signature="e#19386#20287#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/move_group_python_interface_tutorial.py">
+    <entry file="file://$PROJECT_DIR$/archive/SimFilesCreate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6669">
-          <caret line="377" column="77" selection-start-line="350" selection-end-line="377" selection-end-column="77" />
+        <state relative-caret-position="341">
+          <caret line="302" column="6" lean-forward="true" selection-start-line="302" selection-start-column="6" selection-end-line="302" selection-end-column="19" />
           <folding>
-            <element signature="e#2034#2044#0" expanded="true" />
-            <element signature="e#15009#16233#0" />
-            <element signature="e#16281#17703#0" />
-            <element signature="e#17751#18526#0" />
-            <element signature="e#18574#19368#0" />
+            <element signature="e#435#10295#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/pmon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="545" selection-start-line="545" selection-end-line="545" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="1751" selection-start-line="1751" selection-end-line="1751" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ros.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        <state relative-caret-position="489">
+          <caret line="621" column="22" selection-start-line="621" selection-start-column="22" selection-end-line="621" selection-end-column="22" />
           <folding>
             <element signature="n#!!doc" />
-            <element signature="e#34#50#0" expanded="true" />
-            <element signature="e#340#608#0" />
-            <element signature="e#527#608#0" />
-            <element signature="e#681#1264#0" />
-            <element signature="e#730#1150#0" />
-            <element signature="e#1191#1264#0" />
-            <element signature="e#1309#1490#0" />
-            <element signature="e#1536#1821#0" />
-            <element signature="e#1862#2201#0" />
-            <element signature="e#2241#2421#0" />
-            <element signature="e#2593#2943#0" />
-            <element signature="e#2980#3150#0" />
-            <element signature="e#3191#3752#0" />
-            <element signature="e#3786#4464#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SimFilesCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="635">
-          <caret line="257" column="25" selection-start-line="257" selection-start-column="25" selection-end-line="257" selection-end-column="25" />
-          <folding>
-            <element signature="e#314#329#0" expanded="true" />
-            <element signature="e#550#1307#0" />
-            <element signature="e#1342#5189#0" />
-            <element signature="e#1349#2655#0" />
-            <element signature="e#2685#3642#0" />
-            <element signature="e#3663#4332#0" />
-            <element signature="e#4488#4588#0" />
-            <element signature="e#5229#7331#0" />
-            <element signature="e#7371#7786#0" />
-            <element signature="e#7827#9483#0" />
-            <element signature="e#9715#9901#0" />
-            <element signature="e#9941#10306#0" />
-            <element signature="e#10339#11602#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/move_manipulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-
-        <state relative-caret-position="437">
-          <caret line="189" selection-start-line="189" selection-end-line="189" />
-          <folding>
-            <element signature="e#23#33#0" expanded="true" />
-            <element signature="e#261#1003#0" />
-            <element signature="e#261#568#1" />
-            <element signature="e#625#745#0" />
-            <element signature="e#1119#2774#0" />
-            <element signature="e#2817#3742#0" />
-            <element signature="e#3801#5020#0" />
-            <element signature="e#5076#6239#0" />
-            <element signature="e#6284#6544#0" />
-            <element signature="e#6646#7948#0" />
-            <element signature="e#7998#9205#0" />
-
-        <state relative-caret-position="27">
-          <caret line="97" column="48" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
-          <folding>
-            <element signature="e#23#33#0" expanded="true" />
-            <element signature="e#217#258#0" />
-            <element signature="e#1160#2813#0" />
-            <element signature="e#2856#3786#0" />
-            <element signature="e#3845#5070#0" />
-            <element signature="e#5126#6289#0" />
-            <element signature="e#6334#6594#0" />
-            <element signature="e#6696#7998#0" />
-            <element signature="e#7222#7902#0" />
-            <element signature="e#8089#9226#0" />
-            <element signature="e#9280#10088#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" selection-start-line="4" selection-end-line="9" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#500#4105#0" />
+            <element signature="e#582#863#0" />
+            <element signature="e#782#863#0" />
+            <element signature="e#936#1522#0" />
+            <element signature="e#1567#1738#0" />
+            <element signature="e#1584#1626#0" />
+            <element signature="e#1666#1738#0" />
+            <element signature="e#1809#2176#0" />
+            <element signature="e#2192#2531#0" />
+            <element signature="e#2209#2391#0" />
+            <element signature="e#2431#2531#0" />
+            <element signature="e#2571#2751#0" />
+            <element signature="e#2946#3296#0" />
+            <element signature="e#3333#3503#0" />
+            <element signature="e#3557#4118#0" />
+            <element signature="e#4233#13557#0" />
+            <element signature="e#4303#6199#0" />
+            <element signature="e#6254#7024#0" />
+            <element signature="e#7083#8827#0" />
+            <element signature="e#7083#7338#1" />
+            <element signature="e#8883#10046#0" />
+            <element signature="e#10090#10181#0" />
+            <element signature="e#10282#11584#0" />
+            <element signature="e#11674#12814#0" />
+            <element signature="e#12886#13549#0" />
+            <element signature="e#13755#14512#0" />
+            <element signature="e#14547#18729#0" />
+            <element signature="e#14554#14952#0" />
+            <element signature="e#18781#20887#0" />
+            <element signature="e#18781#19231#1" />
+            <element signature="e#20915#22229#0" />
+            <element signature="e#21000#21931#0" />
+            <element signature="e#21381#21931#0" />
+            <element signature="e#21971#22241#0" />
+            <element signature="e#22270#23926#0" />
+            <element signature="e#22413#22548#0" />
+            <element signature="e#22618#22691#0" />
+            <element signature="e#22802#23224#0" />
+            <element signature="e#23251#23917#0" />
+            <element signature="e#24027#24112#0" />
+            <element signature="e#24182#24368#0" />
+            <element signature="e#24420#24772#0" />
+            <element signature="e#25858#27129#0" />
+            <element signature="e#25917#26124#0" />
+            <element signature="e#25038#25721#0" />
+            <element signature="e#26913#27141#0" />
+            <element signature="e#26115#26763#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+        <state relative-caret-position="497">
+          <caret line="149" column="117" selection-start-line="149" selection-start-column="117" selection-end-line="149" selection-end-column="117" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
-
+            <element signature="e#0#67#0" expanded="true" />
+            <element signature="e#1802#4550#0" />
+            <element signature="e#4606#5060#0" />
+            <element signature="e#5125#6552#0" />
+            <element signature="e#5603#6499#0" />
+            <element signature="e#6588#6888#0" />
+            <element signature="e#6945#7020#0" />
+            <element signature="e#7669#8817#0" />
           </folding>
         </state>
       </provider>
