@@ -24,8 +24,13 @@ class Simulator(object):
         self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
         # set the obstacles and initiliaze the manipulator
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
+<<<<<<< HEAD
         self.main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", self.main_launch_arg)  # main launch file
+=======
+        main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
+        self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
+>>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
         time.sleep(1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         time.sleep(1)  # need time to upload
@@ -204,9 +209,15 @@ class Simulator(object):
 
 tic = datetime.datetime.now()
 dofe = 6
+<<<<<<< HEAD
 foldere = "6dof/test"
 for k in range(4):
     sim = Simulator(dofe, foldere, True)
     sim.run_simulation()
+=======
+foldere = "6dof/combined3"
+sim = Simulator(dofe, foldere, True)
+sim.run_simulation()
+>>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))
