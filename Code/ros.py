@@ -4,6 +4,7 @@ import roslaunch
 import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
+import rosgraph
 # Moveit libs
 import moveit_commander
 import moveit_msgs.msg
@@ -23,6 +24,7 @@ import datetime
 from logging import warning
 import numpy as np
 import csv
+import socket
 
 
 class Ros(object):
@@ -73,7 +75,7 @@ class Ros(object):
         try:
             self.roscore = subprocess.Popen('roscore')
             rospy.init_node('arl_python', anonymous=True)
-            rospy.sleep(1)  # wait a bit to be sure the roscore is really launched
+            time.sleep(1)  # wait a bit to be sure the roscore is really launched
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_start function')  # shows warning message
             pass
@@ -83,6 +85,15 @@ class Ros(object):
             self.roscore.terminate()
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_stop function')  # shows warning message
+            pass
+
+    def checkroscorerun(self):
+        try:
+            roscore_pid = rosgraph.Master('/rostopic').getPid()
+            return roscore_pid
+            # self.CheckRosCore.set(roscore_pid)
+        except socket.error as e:
+            # self.CheckRosCore.set("None")
             pass
 
     """ pub sub functions need further checking"""
@@ -137,11 +148,9 @@ class MoveGroupPythonInterface(object):
         # This interface can be used to plan and execute motions:
         group_name = "manipulator"
         self.move_group = moveit_commander.MoveGroupCommander(group_name)
-
         # Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
-                                                       moveit_msgs.msg.DisplayTrajectory,
-                                                       queue_size=20)
+                                                       moveit_msgs.msg.DisplayTrajectory, queue_size=20)
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
         # self.move_group.set_planner_id("SBLkConfigDefault")
@@ -154,8 +163,8 @@ class MoveGroupPythonInterface(object):
         self.move_group.set_goal_orientation_tolerance(0.05)
         self.move_group.set_goal_position_tolerance(0.01)
 
-        self.move_group.set_planning_time(2)
-        self.move_group.set_num_planning_attempts(3)
+        # self.move_group.set_planning_time(2)
+        # self.move_group.set_num_planning_attempts(3)
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
@@ -252,8 +261,8 @@ class MoveGroupPythonInterface(object):
         # If the Python node dies before publishing a collision object update message, the message
         # could get lost and the box will not appear. To ensure that the updates are made, we wait until we see the
         # changes reflected in the ``get_attached_objects()`` and ``get_known_object_names()`` lists.
-        start = rospy.get_time()
-        seconds = rospy.get_time()
+        start = time.time()  # rospy.get_time()
+        seconds = time.time()  # rospy.get_time()
         while (seconds - start < timeout) and not rospy.is_shutdown():
             # Test if the box is in attached objects
             attached_objects = self.scene.get_attached_objects([self.box_name])
@@ -267,8 +276,8 @@ class MoveGroupPythonInterface(object):
                 return True
 
             # Sleep so that we give other threads time on the processor
-            rospy.sleep(0.1)
-            seconds = rospy.get_time()
+            time.sleep(0.1)
+            seconds = time.time()  # rospy.get_time()
 
         # If we exited the while loop without returning then we timed out
         return False
@@ -310,9 +319,12 @@ class MoveGroupPythonInterface(object):
                 if index > 2:  # for angles
                     if abs(actual[index] - goal[index]) < 2*pi - tolerance[index]:  # 2 pi with tolerance
                         return False
-                    else:
-                        return False
+                else:
+                    return False
         return True
+
+    def stop_moveit(self):
+        moveit_commander.roscpp_shutdown()
 
 
 class UrdfClass(object):
