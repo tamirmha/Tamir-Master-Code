@@ -165,10 +165,6 @@ class MoveGroupPythonInterface(object):
 
         # self.move_group.set_planning_time(2)
         # self.move_group.set_num_planning_attempts(3)
-<<<<<<< HEAD
-=======
-
->>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
@@ -282,12 +278,7 @@ class MoveGroupPythonInterface(object):
 
             # Sleep so that we give other threads time on the processor
             time.sleep(0.1)
-<<<<<<< HEAD
             seconds = time.time()  # rospy.get_time()
-=======
-            seconds = rospy.get_time()
->>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
-
         # If we exited the while loop without returning then we timed out
         return False
 
