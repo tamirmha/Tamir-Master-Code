@@ -12,6 +12,7 @@ class Simulator(object):
         self.dof = dof
         self.folder = folder
         self.ros = Ros()  # for work with Ros
+        # self.ros.ros_core_start()
         self.arm_control = 0
         self.arms = []
         if create:  # all the configuration of the arms
@@ -23,8 +24,13 @@ class Simulator(object):
         self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
         # set the obstacles and initiliaze the manipulator
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
+<<<<<<< HEAD
+        self.main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
+        self.main = self.ros.start_launch("main", "man_gazebo", self.main_launch_arg)  # main launch file
+=======
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
+>>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
         time.sleep(1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         time.sleep(1)  # need time to upload
@@ -160,6 +166,28 @@ class Simulator(object):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
+            # if arm % 3 == 0 and arm != 0:
+            #
+            #     # self.manipulator_move = []
+            #     # time.sleep(1)
+            #     # self.ros.stop_launch(self.arm_control)
+            #     # time.sleep(1)
+            #     # self.manipulator_move.stop_moveit()
+            #     self.ros.stop_launch(self.main)
+            #     # self.ros.ter_command("killall -15 robot_state_publisher")
+            #     # self.ros.ter_command("killall -15 rosout")
+            #     # self.ros.ros_core_stop()
+            #     time.sleep(3)
+            #     self.main = self.ros.start_launch("main", "man_gazebo", self.main_launch_arg)  # main launch file
+            #     time.sleep(1)  # need time to upload
+            #
+            #     # self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
+            #     # time.sleep(0.5)  # need time to upload
+            #     # # add floor and plant to the planning model
+            #     # self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
+            #     # time.sleep(0.5)
+            #     # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
+            #     self.replace_model(arm-1)  # set the first arm
             print "arm " + str(arm + 1) + " of " + str(len(self.arms)) + " arms"
             if arm % 20 == 0:  # save every x iterations
                 HandleCSV().save_data(all_data, save_name)
@@ -181,8 +209,15 @@ class Simulator(object):
 
 tic = datetime.datetime.now()
 dofe = 6
+<<<<<<< HEAD
+foldere = "6dof/test"
+for k in range(4):
+    sim = Simulator(dofe, foldere, True)
+    sim.run_simulation()
+=======
 foldere = "6dof/combined3"
 sim = Simulator(dofe, foldere, True)
 sim.run_simulation()
+>>>>>>> dea8a993b1aa1b4805905f92e81109539d303d8e
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))
