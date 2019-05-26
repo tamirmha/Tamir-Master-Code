@@ -73,7 +73,7 @@ class Ros(object):
         try:
             self.roscore = subprocess.Popen('roscore')
             rospy.init_node('arl_python', anonymous=True)
-            rospy.sleep(1)  # wait a bit to be sure the roscore is really launched
+            time.sleep(1)  # wait a bit to be sure the roscore is really launched
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_start function')  # shows warning message
             pass
@@ -154,8 +154,9 @@ class MoveGroupPythonInterface(object):
         self.move_group.set_goal_orientation_tolerance(0.05)
         self.move_group.set_goal_position_tolerance(0.01)
 
-        self.move_group.set_planning_time(2)
-        self.move_group.set_num_planning_attempts(3)
+        # self.move_group.set_planning_time(2)
+        # self.move_group.set_num_planning_attempts(3)
+
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
@@ -213,7 +214,8 @@ class MoveGroupPythonInterface(object):
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         # tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         accuracy = self.all_close(goal, current, self.tolerance)
-        print accuracy, plan
+        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
+        # print accuracy, plan, diff
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -267,7 +269,7 @@ class MoveGroupPythonInterface(object):
                 return True
 
             # Sleep so that we give other threads time on the processor
-            rospy.sleep(0.1)
+            time.sleep(0.1)
             seconds = rospy.get_time()
 
         # If we exited the while loop without returning then we timed out
@@ -310,8 +312,8 @@ class MoveGroupPythonInterface(object):
                 if index > 2:  # for angles
                     if abs(actual[index] - goal[index]) < 2*pi - tolerance[index]:  # 2 pi with tolerance
                         return False
-                    else:
-                        return False
+                else:
+                    return False
         return True
 
 
