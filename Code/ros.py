@@ -222,8 +222,8 @@ class MoveGroupPythonInterface(object):
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         # tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         accuracy = self.all_close(goal, current, self.tolerance)
-        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        # print accuracy, plan, diff
+        diff = [abs(current[j] - goal[j]) for j in range(len(current))]
+        print accuracy, plan, diff
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
