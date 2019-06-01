@@ -25,9 +25,10 @@ class Simulator(object):
         # set the obstacles and initiliaze the manipulator
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
 
-        main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
-        self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        time.sleep(1)  # need time to upload
+        # main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
+        # self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
+        self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
+        time.sleep(3)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         time.sleep(1)  # need time to upload
         # add floor and plant to the planning model
@@ -162,28 +163,22 @@ class Simulator(object):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
-            # if arm % 3 == 0 and arm != 0:
-            #
-            #     # self.manipulator_move = []
-            #     # time.sleep(1)
-            #     # self.ros.stop_launch(self.arm_control)
-            #     # time.sleep(1)
-            #     # self.manipulator_move.stop_moveit()
-            #     self.ros.stop_launch(self.main)
-            #     # self.ros.ter_command("killall -15 robot_state_publisher")
-            #     # self.ros.ter_command("killall -15 rosout")
-            #     # self.ros.ros_core_stop()
-            #     time.sleep(3)
-            #     self.main = self.ros.start_launch("main", "man_gazebo", self.main_launch_arg)  # main launch file
-            #     time.sleep(1)  # need time to upload
-            #
-            #     # self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-            #     # time.sleep(0.5)  # need time to upload
-            #     # # add floor and plant to the planning model
-            #     # self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
-            #     # time.sleep(0.5)
-            #     # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
-            #     self.replace_model(arm-1)  # set the first arm
+            if arm % 2 == 0 and arm != 0:
+                self.ros.ter_command("rosnode kill /robot_state_publisher")
+                self.manipulator_move.stop_moveit()
+                self.manipulator_move = None
+                self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
+                time.sleep(3)
+                self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
+                time.sleep(3)  # need time to upload
+
+                self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
+                time.sleep(0.5)  # need time to upload
+                # add floor and plant to the planning model
+                self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
+                time.sleep(0.5)
+                self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
+                self.replace_model(arm-1)  # set the first arm
             print "arm " + str(arm + 1) + " of " + str(len(self.arms)) + " arms"
             if arm % 20 == 0:  # save every x iterations
                 HandleCSV().save_data(all_data, save_name)
@@ -205,9 +200,10 @@ class Simulator(object):
 
 tic = datetime.datetime.now()
 dofe = 6
-foldere = "6dof/test"
+foldere = "6dof/combined3"
+sim = Simulator(dofe, foldere, True)
 for k in range(4):
-    sim = Simulator(dofe, foldere, True)
+    # sim = Simulator(dofe, foldere, True)
     sim.run_simulation()
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))
