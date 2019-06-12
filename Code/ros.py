@@ -33,6 +33,8 @@ class Ros(object):
         """if needed add publish and subcribe"""
         try:
             self.pathname = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/"  # /Tamir_Ws
+            self.data_back = "-5"
+            # rospy.rostime.switch_to_wallclock()
         except ValueError:
             rospy.loginfo('Error occurred at init')  # shows warning message
             pass
@@ -97,10 +99,10 @@ class Ros(object):
             pass
 
     """ pub sub functions need further checking"""
-    def pub_sub_init(self, pub_name='MidLevelCommands', pub_type=String, sub_name='ard_odom', sub_type=Twist):
+    def pub_sub_init(self, pub_name='sub_pyt', pub_type=String, sub_name='Sub_pyt', sub_type=String):
         """Initiliaze the topics that are published and subscribed"""
         try:
-            self.pub = rospy.Publisher(pub_name, pub_type, queue_size=10)
+            self.pub = rospy.Publisher(pub_name, pub_type, queue_size=1000)
             rospy.Subscriber(sub_name, sub_type, self.callback)
         except ValueError:
             rospy.loginfo('Error occurred at pub_sub_init function')  # shows warning message
@@ -113,30 +115,39 @@ class Ros(object):
             rospy.loginfo('Error occurred at talker function')  # shows warning message
             pass
 
-    @staticmethod
-    def callback(data):
+    def callback(self, data):
         """ callback function when recive msg"""
-        data_back = "No data inserted, check msg type"
+        self.data_back = "No data inserted, check msg type"
         if data._type == "geometry_msgs/Twist":
-            data_back = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
+            self.data_back = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
                 data.linear.y) + "     z_ linear: " + str('%.2f' % data.linear.z) + '\n' + \
                    "x_ angular: " + str(data.angular.x) + "      y_ angular: " + str(
                 data.angular.y) + "     z_ angular: " + str('%.2f' % data.angular.z)
         if data._type == "std_msgs/String":
-            data_back = data.data
-        return data_back
+            self.data_back = data.data
+        return self.data_back
         # Todo add types of msgs
+
+    def reset(self):
+        self.ter_command("rosservice call /gazebo/pause_physics")
+        self.ter_command("rosservice call /gazebo/reset_simulation")
+        #rospy.rostime._set_rostime(0)
+        rospy.rostime.switch_to_wallclock()
+        rospy.rostime.set_rostime_initialized(True)
+        self.ter_command("rosservice call /gazebo/unpause_physics")
 
 
 class MoveGroupPythonInterface(object):
     """MoveGroupPythonIntefaceTutorial"""
-    def __init__(self):
+    def __init__(self, first):
         super(MoveGroupPythonInterface, self).__init__()
 
         # initialize `moveit_commander`_ and a `rospy`_ node:
-        moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_interface', anonymous=True)
 
+        # if not first:
+        #     self.stop_moveit()
+        moveit_commander.roscpp_initialize(sys.argv)
+        rospy.init_node('move_group_interface1', anonymous=True)
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
 
@@ -324,6 +335,7 @@ class MoveGroupPythonInterface(object):
 
     def stop_moveit(self):
         moveit_commander.roscpp_shutdown()
+
 
 
 class UrdfClass(object):
@@ -645,4 +657,4 @@ def main_move_group():
             print manipulator.go_to_pose_goal(pose, orientaion)
         raw_input("press enter")
 
-main_move_group()
+#main_move_group()
