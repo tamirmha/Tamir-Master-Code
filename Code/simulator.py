@@ -12,7 +12,7 @@ class Simulator(object):
         self.dof = dof
         self.folder = folder
         self.ros = Ros()  # for work with Ros
-        #self.ros.ros_core_start()
+        # self.ros.ros_core_start()
         self.arm_control = 0
         self.arms = []
         if create:  # all the configuration of the arms
@@ -165,6 +165,16 @@ class Simulator(object):
         # time.sleep(1)
         # command = "rosrun gazebo_ros spawn_model -file " + path + "tamir.urdf -urdf -model robot"
         # self.ros.ter_command(command)
+
+        self.ros.ter_command("rosservice call /gazebo/delete_model \"model_name: 'robot'\"")
+        path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined3/"
+        command = "rosrun xacro xacro -o" + path + "tamir.urdf " + path + self.arms[arm + 1]["name"] + ".urdf.xacro"  # "manipulator.urdf.xacro"
+        self.ros.ter_command(command)
+        time.sleep(1)
+        command = "rosrun gazebo_ros spawn_model -file "+ path + "tamir.urdf -urdf -model robot"
+        self.ros.ter_command(command)
+        # replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
+        # self.ros.ter_command(replace_command)
         time.sleep(2)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
         time.sleep(2)
@@ -236,6 +246,9 @@ class Simulator(object):
             #     self.manipulator_move.stop_moveit()
             #     self.manipulator_move = None
             #     self.ros.stop_launch(self.arm_control)
+            #     self.ros.ter_command("rosnode kill /robot_state_publisher")
+            #     self.manipulator_move.stop_moveit()
+            #     self.manipulator_move = None
             #     self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
             #     time.sleep(3)
             #     self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
@@ -280,3 +293,6 @@ class Simulator(object):
 # #print sim.change_world("1")
 # toc = datetime.datetime.now()
 # print('Time of Run (seconds): ' + str((toc - tic).seconds))
+
+# self.ros.stop_launch(self.main)
+
