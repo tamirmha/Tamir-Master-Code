@@ -147,7 +147,7 @@ class MoveGroupPythonInterface(object):
         # if not first:
         #     self.stop_moveit()
         moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_interface1', anonymous=True)
+        rospy.init_node('move_group_interface', anonymous=True)
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
 
@@ -335,7 +335,6 @@ class MoveGroupPythonInterface(object):
 
     def stop_moveit(self):
         moveit_commander.roscpp_shutdown()
-
 
 
 class UrdfClass(object):
