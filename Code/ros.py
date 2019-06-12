@@ -220,7 +220,6 @@ class MoveGroupPythonInterface(object):
         goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
         pos = self.move_group.get_current_pose().pose.position
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        # tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         accuracy = self.all_close(goal, current, self.tolerance)
         diff = [abs(current[j] - goal[j]) for j in range(len(current))]
         print accuracy, plan, diff
@@ -645,3 +644,5 @@ def main_move_group():
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
         raw_input("press enter")
+
+main_move_group()
