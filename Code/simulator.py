@@ -153,8 +153,16 @@ class Simulator(object):
         fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + " dof:=" + str(self.dof) + "dof"
         if self.arm_control != 0:
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
-        replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
-        self.ros.ter_command(replace_command)
+
+        self.ros.ter_command("rosservice call /gazebo/delete_model \"model_name: 'robot'\"")
+        path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined3/"
+        command = "rosrun xacro xacro -o" + path + "tamir.urdf " + path + self.arms[arm + 1]["name"] + ".urdf.xacro"  # "manipulator.urdf.xacro"
+        self.ros.ter_command(command)
+        time.sleep(1)
+        command = "rosrun gazebo_ros spawn_model -file "+ path + "tamir.urdf -urdf -model robot"
+        self.ros.ter_command(command)
+        # replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
+        # self.ros.ter_command(replace_command)
         time.sleep(2)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
         time.sleep(2)
@@ -163,22 +171,22 @@ class Simulator(object):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
-            if arm % 2 == 0 and arm != 0:
-                self.ros.ter_command("rosnode kill /robot_state_publisher")
-                self.manipulator_move.stop_moveit()
-                self.manipulator_move = None
-                self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
-                time.sleep(3)
-                self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
-                time.sleep(3)  # need time to upload
-
-                self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-                time.sleep(0.5)  # need time to upload
-                # add floor and plant to the planning model
-                self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
-                time.sleep(0.5)
-                self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
-                self.replace_model(arm-1)  # set the first arm
+            # if arm % 2 == 0 and arm != 0:
+            #     self.ros.ter_command("rosnode kill /robot_state_publisher")
+            #     self.manipulator_move.stop_moveit()
+            #     self.manipulator_move = None
+            #     self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
+            #     time.sleep(3)
+            #     self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
+            #     time.sleep(3)  # need time to upload
+            #
+            #     self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
+            #     time.sleep(0.5)  # need time to upload
+            #     # add floor and plant to the planning model
+            #     self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
+            #     time.sleep(0.5)
+            #     self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
+            #     self.replace_model(arm-1)  # set the first arm
             print "arm " + str(arm + 1) + " of " + str(len(self.arms)) + " arms"
             if arm % 20 == 0:  # save every x iterations
                 HandleCSV().save_data(all_data, save_name)
@@ -195,15 +203,14 @@ class Simulator(object):
         # save the remaining data and close all the launch files
         HandleCSV().save_data(all_data, save_name)
         self.ros.stop_launch(self.arm_control)
-        self.ros.stop_launch(self.main)
+        # self.ros.stop_launch(self.main)
 
 
 tic = datetime.datetime.now()
 dofe = 6
 foldere = "6dof/combined3"
 sim = Simulator(dofe, foldere, True)
-for k in range(4):
-    # sim = Simulator(dofe, foldere, True)
-    sim.run_simulation()
+# for k in range(4):
+sim.run_simulation()
 toc = datetime.datetime.now()
 print('Time of Run (seconds): ' + str((toc - tic).seconds))
