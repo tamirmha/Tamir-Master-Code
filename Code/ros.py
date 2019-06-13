@@ -76,7 +76,7 @@ class Ros(object):
     def ros_core_start(self):
         try:
             self.roscore = subprocess.Popen('roscore')
-            rospy.init_node('arl_python', anonymous=True)
+            # rospy.init_node('arl_python', anonymous=True)
             time.sleep(1)  # wait a bit to be sure the roscore is really launched
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_start function')  # shows warning message
@@ -131,10 +131,12 @@ class Ros(object):
     def reset(self):
         self.ter_command("rosservice call /gazebo/pause_physics")
         self.ter_command("rosservice call /gazebo/reset_simulation")
-        #rospy.rostime._set_rostime(0)
-        rospy.rostime.switch_to_wallclock()
-        rospy.rostime.set_rostime_initialized(True)
+        # rospy.rostime._set_rostime(0)
+        # rospy.rostime.switch_to_wallclock()
+        # rospy.rostime.set_rostime_initialized(True)
+
         self.ter_command("rosservice call /gazebo/unpause_physics")
+        rospy.Time.set(rospy.Time(), 0, 0)
 
 
 class MoveGroupPythonInterface(object):
@@ -146,8 +148,8 @@ class MoveGroupPythonInterface(object):
 
         # if not first:
         #     self.stop_moveit()
-        moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_interface1', anonymous=True)
+        # moveit_commander.roscpp_initialize("")
+        # rospy.init_node('move_group_interface1', anonymous=True)
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
 
@@ -233,7 +235,7 @@ class MoveGroupPythonInterface(object):
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         accuracy = self.all_close(goal, current, self.tolerance)
         diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        print accuracy, plan, diff
+        print accuracy, plan, diff, rospy.get_time()
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -335,7 +337,6 @@ class MoveGroupPythonInterface(object):
 
     def stop_moveit(self):
         moveit_commander.roscpp_shutdown()
-
 
 
 class UrdfClass(object):
