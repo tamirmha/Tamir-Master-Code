@@ -289,7 +289,7 @@ class MoveGroupPythonInterface(object):
             seconds = time.time()  # rospy.get_time()
         # If we exited the while loop without returning then we timed out
         return False
-
+        
     def add_obstacles(self, height=6.75, radius=0.1, pose=[0.5, 0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
