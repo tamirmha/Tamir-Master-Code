@@ -141,23 +141,14 @@ class Ros(object):
 
 class MoveGroupPythonInterface(object):
     """MoveGroupPythonIntefaceTutorial"""
-    def __init__(self, first):
+    def __init__(self):
         super(MoveGroupPythonInterface, self).__init__()
 
         # initialize `moveit_commander`_ and a `rospy`_ node:
-
-        # if not first:
-        #     self.stop_moveit()
-<<<<<<< HEAD
         # moveit_commander.roscpp_initialize("")
         # rospy.init_node('move_group_interface1', anonymous=True)
-=======
-        moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_interface', anonymous=True)
->>>>>>> 601aa6e9edbd6a771f89a98bb8604596f618a7b6
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
-
         # This provides a remote interfacefor getting, setting, and updating the robot's
         # internal understanding of the surrounding world:
         self.scene = moveit_commander.PlanningSceneInterface()

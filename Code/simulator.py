@@ -8,7 +8,7 @@ import time
 
 class Simulator(object):
 
-    def __init__(self, dof, folder, create=False, first=True):
+    def __init__(self, dof, folder, create=False):
         self.dof = dof
         self.folder = folder
         self.ros = Ros()  # for work with Ros
@@ -29,7 +29,7 @@ class Simulator(object):
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
         #self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
         time.sleep(3)  # need time to upload
-        self.manipulator_move = MoveGroupPythonInterface(first)  # for path planning and set points
+        self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         time.sleep(3)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
@@ -114,8 +114,8 @@ class Simulator(object):
         # folder = ""
         # c = 0
         base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
-        folder = "combined3"
-        self.create_folder(base_path + "6dof/" + folder)
+        # folder = "combined3"
+        self.create_folder(base_path + "6dof/" + self.folder)
         links = self.set_links_length()
         index = 0
         for config in configs:
@@ -124,12 +124,12 @@ class Simulator(object):
                 #     folder = folder + arm["joint"][i] + "_" + arm["axe"][i] + "_"
                 # self.create_folder(base_path + str(len(arm["axe"])) + "dof/" + folder)
                 for link in links:
-                    self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, folder))
-                    path = base_path + str(len(arm["axe"])) + "dof/" + folder + "/"
+                    self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, self.folder))
+                    path = base_path + str(len(arm["axe"])) + "dof/" + self.folder + "/"
                     # index = config.index(arm) + links.index(link) + c
                     self.arms[index]["arm"].urdf_write(self.arms[index]["arm"].urdf_data(),
                                                        path + self.arms[index]["name"])
-                    data.append([self.arms[index]["name"], folder, datetime.datetime.now().strftime("%d_%m_%y")])
+                    data.append([self.arms[index]["name"], self.folder, datetime.datetime.now().strftime("%d_%m_%y")])
                     index = index+1
                 # folder = ""
             # c = c + len(config) * len(links)
@@ -272,7 +272,6 @@ class Simulator(object):
         HandleCSV().save_data(all_data, save_name)
         # self.manipulator_move.stop_moveit()
         self.ros.stop_launch(self.arm_control)
-<<<<<<< HEAD
         self.ros.stop_launch(self.main)
         # self.ros.ros_core_stop()
         # self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
@@ -288,22 +287,3 @@ if __name__ == '__main__':
     # print sim.change_world("1")
     toc = datetime.datetime.now()
     print('Time of Run (seconds): ' + str((toc - tic).seconds))
-=======
-        self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
-        #self.ros.ros_core_stop()
-        # self.ros.stop_launch(self.main)
-
-
-# tic = datetime.datetime.now()
-# dofe = 6
-# foldere = "6dof/combined"
-# sim = Simulator(dofe, foldere, True)
-# sim.run_simulation()
-# #a = rosservice.get_service_args("/gazebo/get_world_propertieons")
-# #print sim.change_world("1")
-# toc = datetime.datetime.now()
-# print('Time of Run (seconds): ' + str((toc - tic).seconds))
-
-# self.ros.stop_launch(self.main)
-
->>>>>>> 601aa6e9edbd6a771f89a98bb8604596f618a7b6
