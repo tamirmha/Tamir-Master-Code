@@ -76,7 +76,7 @@ class Ros(object):
     def ros_core_start(self):
         try:
             self.roscore = subprocess.Popen('roscore')
-            rospy.init_node('arl_python', anonymous=True)
+            # rospy.init_node('arl_python', anonymous=True)
             time.sleep(1)  # wait a bit to be sure the roscore is really launched
         except ValueError:
             rospy.loginfo('Error occurred at ros_core_start function')  # shows warning message
@@ -131,26 +131,24 @@ class Ros(object):
     def reset(self):
         self.ter_command("rosservice call /gazebo/pause_physics")
         self.ter_command("rosservice call /gazebo/reset_simulation")
-        #rospy.rostime._set_rostime(0)
-        rospy.rostime.switch_to_wallclock()
-        rospy.rostime.set_rostime_initialized(True)
+        # rospy.rostime._set_rostime(0)
+        # rospy.rostime.switch_to_wallclock()
+        # rospy.rostime.set_rostime_initialized(True)
+
         self.ter_command("rosservice call /gazebo/unpause_physics")
+        rospy.Time.set(rospy.Time(), 0, 0)
 
 
 class MoveGroupPythonInterface(object):
     """MoveGroupPythonIntefaceTutorial"""
-    def __init__(self, first):
+    def __init__(self):
         super(MoveGroupPythonInterface, self).__init__()
 
         # initialize `moveit_commander`_ and a `rospy`_ node:
-
-        # if not first:
-        #     self.stop_moveit()
-        moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('move_group_interface', anonymous=True)
+        # moveit_commander.roscpp_initialize("")
+        # rospy.init_node('move_group_interface1', anonymous=True)
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
-
         # This provides a remote interfacefor getting, setting, and updating the robot's
         # internal understanding of the surrounding world:
         self.scene = moveit_commander.PlanningSceneInterface()
@@ -233,7 +231,7 @@ class MoveGroupPythonInterface(object):
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         accuracy = self.all_close(goal, current, self.tolerance)
         diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        print accuracy, plan, diff
+        print accuracy, plan, diff, rospy.get_time()
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -291,7 +289,7 @@ class MoveGroupPythonInterface(object):
             seconds = time.time()  # rospy.get_time()
         # If we exited the while loop without returning then we timed out
         return False
-
+        
     def add_obstacles(self, height=6.75, radius=0.1, pose=[0.5, 0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene

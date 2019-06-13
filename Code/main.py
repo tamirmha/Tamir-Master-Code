@@ -1,20 +1,25 @@
 import datetime
 import time
-from ros import Ros, MoveGroupPythonInterface, UrdfClass, HandleCSV
 from simulator import Simulator
-
+import rospy
+from ros import Ros
 
 tic = datetime.datetime.now()
 dofe = 6
-foldere = "6dof/combined"
+ros = Ros()
+ros.ter_command("kill -9 " + str(ros.checkroscorerun()))
+ros.ros_core_start()
+rospy.init_node('arl_python', anonymous=True)
+foldere = "combined"
 sim = Simulator(dofe, foldere, True)
 arms = sim.arms
-for i in range(20):
+
+for i in range(len(arms)/50+1):
     if i != 0:
-        sim = Simulator(dofe, foldere, True, False)
-        sim.run_simulation(arms[i*20:(i+1)*20])
+        sim = Simulator(dofe, foldere, False)
+        sim.run_simulation(arms[i*50:(i+1)*50])
     else:
-        sim.run_simulation(arms[0:2])
+        sim.run_simulation(arms[0:50])
     time.sleep(3)
 
 toc = datetime.datetime.now()
