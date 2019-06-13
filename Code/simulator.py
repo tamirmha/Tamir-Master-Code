@@ -12,7 +12,6 @@ class Simulator(object):
         self.dof = dof
         self.folder = folder
         self.ros = Ros()  # for work with Ros
-        # self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
         # self.ros.ros_core_start()
         self.arm_control = 0
         self.arms = []
@@ -159,6 +158,9 @@ class Simulator(object):
         # self.ros.ter_command(replace_command)
         # self.ros.ter_command("rosservice call /gazebo/reset_world")
         # self.ros.ter_command("rosservice call /gazebo/delete_model \"model_name: 'robot'\"")
+
+        self.ros.start_launch("replace_model", "man_gazebo", fil)
+
         # path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined3/"
         # command = "rosrun xacro xacro -o" + path + "tamir.urdf " + path + self.arms[arm + 1][
         #     "name"] + ".urdf.xacro"  # "manipulator.urdf.xacro"
@@ -224,7 +226,7 @@ class Simulator(object):
         return data
 
     def run_simulation(self, arms=[]):
-        if len(arms)>0:
+        if len(arms) > 0:
             self.arms = arms
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = [["Date", "Time ", "Arm ", "Results "]]
@@ -237,6 +239,9 @@ class Simulator(object):
             #     self.manipulator_move.stop_moveit()
             #     self.manipulator_move = None
             #     self.ros.stop_launch(self.arm_control)
+            #     self.ros.ter_command("rosnode kill /robot_state_publisher")
+            #     self.manipulator_move.stop_moveit()
+            #     self.manipulator_move = None
             #     self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
             #     time.sleep(3)
             #     self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
@@ -267,6 +272,7 @@ class Simulator(object):
         HandleCSV().save_data(all_data, save_name)
         # self.manipulator_move.stop_moveit()
         self.ros.stop_launch(self.arm_control)
+<<<<<<< HEAD
         self.ros.stop_launch(self.main)
         # self.ros.ros_core_stop()
         # self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
@@ -282,3 +288,22 @@ if __name__ == '__main__':
     # print sim.change_world("1")
     toc = datetime.datetime.now()
     print('Time of Run (seconds): ' + str((toc - tic).seconds))
+=======
+        self.ros.ter_command("kill -9 " + str(self.ros.checkroscorerun()))
+        #self.ros.ros_core_stop()
+        # self.ros.stop_launch(self.main)
+
+
+# tic = datetime.datetime.now()
+# dofe = 6
+# foldere = "6dof/combined"
+# sim = Simulator(dofe, foldere, True)
+# sim.run_simulation()
+# #a = rosservice.get_service_args("/gazebo/get_world_propertieons")
+# #print sim.change_world("1")
+# toc = datetime.datetime.now()
+# print('Time of Run (seconds): ' + str((toc - tic).seconds))
+
+# self.ros.stop_launch(self.main)
+
+>>>>>>> 601aa6e9edbd6a771f89a98bb8604596f618a7b6
