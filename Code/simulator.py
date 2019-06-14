@@ -28,9 +28,9 @@ class Simulator(object):
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
         #self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
-        time.sleep(3)  # need time to upload
+        time.sleep(2)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        time.sleep(3)  # need time to upload
+        time.sleep(2)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
         time.sleep(1)
@@ -136,11 +136,12 @@ class Simulator(object):
         HandleCSV().save_data(data, "created files")
 
     def arms_exist(self):
-        path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + self.folder
+        path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + str(self.dof) \
+               + "dof/" + self.folder
 
         for fil in os.listdir(path):
             fol = self.folder.split("/")
-            self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[1]})
+            self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[0]})
         # self.arms.reverse()
 
     @staticmethod
@@ -158,8 +159,6 @@ class Simulator(object):
         # self.ros.ter_command(replace_command)
         # self.ros.ter_command("rosservice call /gazebo/reset_world")
         # self.ros.ter_command("rosservice call /gazebo/delete_model \"model_name: 'robot'\"")
-
-        self.ros.start_launch("replace_model", "man_gazebo", fil)
 
         # path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined3/"
         # command = "rosrun xacro xacro -o" + path + "tamir.urdf " + path + self.arms[arm + 1][
