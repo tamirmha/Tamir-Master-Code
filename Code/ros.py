@@ -230,8 +230,8 @@ class MoveGroupPythonInterface(object):
         pos = self.move_group.get_current_pose().pose.position
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         accuracy = self.all_close(goal, current, self.tolerance)
-        diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        print accuracy, plan, diff, rospy.get_time()
+        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
+        # print accuracy, plan, diff
         return accuracy and plan
 
     def plan_cartesian_path(self, scale=0.5):
@@ -289,7 +289,7 @@ class MoveGroupPythonInterface(object):
             seconds = time.time()  # rospy.get_time()
         # If we exited the while loop without returning then we timed out
         return False
-        
+
     def add_obstacles(self, height=6.75, radius=0.1, pose=[0.5, 0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
@@ -640,6 +640,7 @@ class HandleCSV(object):
 
 
 def main_move_group():
+    rospy.init_node('move_group_interface1', anonymous=True)
     manipulator = MoveGroupPythonInterface()
     time.sleep(2)
     manipulator.add_obstacles()  # add floor
@@ -654,4 +655,4 @@ def main_move_group():
             print manipulator.go_to_pose_goal(pose, orientaion)
         raw_input("press enter")
 
-#main_move_group()
+# main_move_group()
