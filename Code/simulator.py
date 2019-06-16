@@ -31,9 +31,9 @@ class Simulator(object):
 
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        time.sleep(1)  # need time to upload
+        time.sleep(0.1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        time.sleep(1)  # need time to upload
+        time.sleep(0.1)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
         time.sleep(1)
@@ -156,8 +156,8 @@ class Simulator(object):
         fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + " dof:=" + str(self.dof) + "dof"
         if self.arm_control != 0:
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
-        # self.ros.start_launch("replace_model", "man_gazebo", fil)
-        replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
+        # self.ros.start_launch("replace_model", "man_gazebo", fil)  x-terminal-emulator -e
+        replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         time.sleep(1.5)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ebf02c94-a5e2-4ee3-82c3-448fdcad34ea" name="Default Changelist" comment="">
+    <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/ros.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/shelf/" />
@@ -19,17 +18,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="149" column="117" selection-start-line="149" selection-start-column="117" selection-end-line="149" selection-end-column="117" />
+            <state relative-caret-position="287">
+              <caret line="162" column="61" lean-forward="true" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
               <folding>
                 <element signature="e#0#67#0" expanded="true" />
-                <element signature="e#1802#4550#0" />
-                <element signature="e#4606#5060#0" />
-                <element signature="e#5125#6552#0" />
-                <element signature="e#5603#6499#0" />
-                <element signature="e#6588#6888#0" />
-                <element signature="e#6945#7020#0" />
-                <element signature="e#7669#8817#0" />
+                <element signature="e#1916#4664#0" />
+                <element signature="e#4720#5174#0" />
+                <element signature="e#5239#6751#0" />
+                <element signature="e#6787#7099#0" />
+                <element signature="e#7156#7231#0" />
+                <element signature="e#7974#9038#0" />
+                <element signature="e#9509#9926#0" />
               </folding>
             </state>
           </provider>
@@ -38,57 +37,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ros.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="621" column="22" selection-start-line="621" selection-start-column="22" selection-end-line="621" selection-end-column="22" />
+            <state relative-caret-position="398">
+              <caret line="141" column="39" selection-start-line="141" selection-start-column="39" selection-end-line="141" selection-end-column="39" />
               <folding>
-                <element signature="n#!!doc" />
-                <element signature="e#500#4105#0" />
-                <element signature="e#582#863#0" />
-                <element signature="e#782#863#0" />
-                <element signature="e#936#1522#0" />
-                <element signature="e#1567#1738#0" />
-                <element signature="e#1584#1626#0" />
-                <element signature="e#1666#1738#0" />
-                <element signature="e#1809#2176#0" />
-                <element signature="e#2192#2531#0" />
-                <element signature="e#2209#2391#0" />
-                <element signature="e#2431#2531#0" />
-                <element signature="e#2571#2751#0" />
-                <element signature="e#2946#3296#0" />
-                <element signature="e#3333#3503#0" />
-                <element signature="e#3557#4118#0" />
-                <element signature="e#4233#13557#0" />
-                <element signature="e#4303#6199#0" />
-                <element signature="e#6254#7024#0" />
-                <element signature="e#7083#8827#0" />
-                <element signature="e#7083#7338#1" />
-                <element signature="e#8883#10046#0" />
-                <element signature="e#10090#10181#0" />
-                <element signature="e#10282#11584#0" />
-                <element signature="e#11674#12814#0" />
-                <element signature="e#12886#13549#0" />
-                <element signature="e#13755#14512#0" />
-                <element signature="e#14547#18729#0" />
-                <element signature="e#14554#14952#0" />
-                <element signature="e#18781#20887#0" />
-                <element signature="e#18781#19231#1" />
-                <element signature="e#20915#22229#0" />
-                <element signature="e#21000#21931#0" />
-                <element signature="e#21381#21931#0" />
-                <element signature="e#21971#22241#0" />
-                <element signature="e#22270#23926#0" />
-                <element signature="e#22413#22548#0" />
-                <element signature="e#22618#22691#0" />
-                <element signature="e#22802#23224#0" />
-                <element signature="e#23251#23917#0" />
-                <element signature="e#24027#24112#0" />
-                <element signature="e#24182#24368#0" />
-                <element signature="e#24420#24772#0" />
-                <element signature="e#25858#27129#0" />
-                <element signature="e#25917#26124#0" />
-                <element signature="e#25038#25721#0" />
-                <element signature="e#26913#27141#0" />
-                <element signature="e#26115#26763#0" />
+                <element signature="e#33#49#0" expanded="true" />
+                <element signature="e#243#298#0" />
+                <element signature="e#523#4959#0" />
+                <element signature="e#605#970#0" />
+                <element signature="e#1043#1599#0" />
+                <element signature="e#1092#1486#0" />
+                <element signature="e#1656#1827#0" />
+                <element signature="e#1885#2252#0" />
+                <element signature="e#4581#4959#0" />
+                <element signature="e#5006#14397#0" />
+                <element signature="e#9567#9632#0" />
+                <element signature="e#14500#25630#0" />
+                <element signature="e#25663#26945#0" />
+                <element signature="e#26975#27684#0" />
               </folding>
             </state>
           </provider>
@@ -98,11 +63,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print</find>
-      <find>arms_exist</find>
-      <find>arms</find>
-      <find>create_folder</find>
-      <find>sleep</find>
+      <find>path</find>
+      <find>Time</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -111,22 +73,26 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/main1.py" />
+        <option value="$PROJECT_DIR$/simulator1.py" />
         <option value="$PROJECT_DIR$/ros.py" />
+        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/simulator.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="67" />
-    <option name="y" value="25" />
-    <option name="width" value="927" />
-    <option name="height" value="1175" />
+    <option name="x" value="33" />
+    <option name="y" value="26" />
+    <option name="width" value="806" />
+    <option name="height" value="513" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -138,12 +104,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/simulator.py" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/simulator.py" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -158,6 +124,48 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.simulator">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="ros" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -171,6 +179,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ros.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ros1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ros1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -203,289 +232,206 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.simulator" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.ros" />
+        <item itemvalue="Python.main1" />
+        <item itemvalue="Python.ros1" />
       </list>
     </recent_temporary>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ebf02c94-a5e2-4ee3-82c3-448fdcad34ea" name="Default Changelist" comment="" />
-      <created>1557834942393</created>
+      <changelist id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="" />
+      <created>1559474997572</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1557834942393</updated>
+      <updated>1559474997572</updated>
     </task>
-    <task id="LOCAL-00001" summary="simulation work:&#10;first manipulator must succeed to reach a point">
-      <created>1558344048233</created>
+    <task id="LOCAL-00001" summary="close and reopen gazebo - working">
+      <created>1560433283028</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1558344048233</updated>
+      <updated>1560433283028</updated>
     </task>
-    <task id="LOCAL-00002" summary="simulation work:&#10;first manipulator must succeed to reach a point">
-      <created>1558353783057</created>
+    <task id="LOCAL-00002" summary="close and reopen gazebo - working">
+      <created>1560538701428</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1558353783057</updated>
+      <updated>1560538701428</updated>
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
   </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1175" extended-state="6" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49933067" visible="true" weight="0.24972677" />
-      <window_info id="Structure" order="1" sideWeight="0.50066936" side_tool="true" weight="0.24972677" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16229509" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3250478" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.40535372" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3725702" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956802" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3298279" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3298279" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3298279" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3298279" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50054646" side_tool="true" weight="0.3298279" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49945354" weight="0.32937366" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24972677" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3298279" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39961758" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="simulation work:&#10;first manipulator must succeed to reach a point" />
-    <option name="LAST_COMMIT_MESSAGE" value="simulation work:&#10;first manipulator must succeed to reach a point" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="self.arms[2]" />
-      </configuration>
-    </watches-manager>
+    <MESSAGE value="close and reopen gazebo - working" />
+    <option name="LAST_COMMIT_MESSAGE" value="close and reopen gazebo - working" />
   </component>
   <component name="debuggerHistoryManager">
-    <expressions id="evaluateExpression">
+    <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>for i in range(len(data)):</expression-string>
+        <expression-string>32*50</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data[1][0]</expression-string>
+        <expression-string>len(arms)/50</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data[0][0]</expression-string>
+        <expression-string>len(arms)/51</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data[0][1]</expression-string>
+        <expression-string>rospy.get_time()</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data[0][&quot;name&quot;]</expression-string>
+        <expression-string>print rospy.get_time()</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>sum(link)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>len(arms)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>path = os.environ['HOME'] + &quot;/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z&quot;</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>path = os.environ['HOME'] + &quot;/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/roll_z_pitch_y_pitch_y_pitch_y_pitch_z_roll_z/&quot;</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rostopic/__init__.py">
+    <entry file="file://$PROJECT_DIR$/ros1.py" />
+    <entry file="file://$PROJECT_DIR$/main1.py" />
+    <entry file="file://$PROJECT_DIR$/simulator1.py" />
+    <entry file="file://$PROJECT_DIR$/archive/bashhelp.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/archive/simulator.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="1777" column="26" lean-forward="true" selection-start-line="1777" selection-start-column="26" selection-end-line="1777" selection-end-column="26" />
+        <state relative-caret-position="-165" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/archive/test.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rospy/rostime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="170" column="31" selection-start-line="170" selection-start-column="21" selection-end-line="170" selection-end-column="31" />
+          <folding>
+            <element signature="e#1878#1888#0" expanded="true" />
+            <element signature="e#5038#5485#0" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/config.py">
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-1247972723/__builtin__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="458" selection-start-line="458" selection-end-line="458" />
+        <state relative-caret-position="183">
+          <caret line="940" column="8" selection-start-line="940" selection-start-column="8" selection-end-line="940" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rospy/impl/tcpros_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="162" selection-start-line="162" selection-end-line="162" />
         </state>
       </provider>
     </entry>
     <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/moveit_commander/move_group.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
+        <state relative-caret-position="175">
           <caret line="51" selection-start-line="51" selection-end-line="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/archive/move_group_python_interface_tutorial.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-85">
-          <caret line="220" selection-start-line="220" selection-end-line="220" />
+        <state relative-caret-position="285">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
           <folding>
-            <element signature="n#!!doc" />
-            <element signature="e#2314#3056#0" />
-            <element signature="e#3179#6191#0" />
-            <element signature="e#6234#7648#0" />
-            <element signature="e#7689#9115#0" />
-            <element signature="e#9170#10909#0" />
-            <element signature="e#10960#12180#0" />
-            <element signature="e#12225#12922#0" />
-            <element signature="e#13024#14963#0" />
-            <element signature="e#15009#16233#0" />
-            <element signature="e#16644#16679#0" />
-            <element signature="e#19386#20287#0" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/archive/SimFilesCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="302" column="6" lean-forward="true" selection-start-line="302" selection-start-column="6" selection-end-line="302" selection-end-column="19" />
-          <folding>
-            <element signature="e#435#10295#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/pmon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="545" selection-start-line="545" selection-end-line="545" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="1751" selection-start-line="1751" selection-end-line="1751" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ros.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="621" column="22" selection-start-line="621" selection-start-column="22" selection-end-line="621" selection-end-column="22" />
+        <state relative-caret-position="398">
+          <caret line="141" column="39" selection-start-line="141" selection-start-column="39" selection-end-line="141" selection-end-column="39" />
           <folding>
-            <element signature="n#!!doc" />
-            <element signature="e#500#4105#0" />
-            <element signature="e#582#863#0" />
-            <element signature="e#782#863#0" />
-            <element signature="e#936#1522#0" />
-            <element signature="e#1567#1738#0" />
-            <element signature="e#1584#1626#0" />
-            <element signature="e#1666#1738#0" />
-            <element signature="e#1809#2176#0" />
-            <element signature="e#2192#2531#0" />
-            <element signature="e#2209#2391#0" />
-            <element signature="e#2431#2531#0" />
-            <element signature="e#2571#2751#0" />
-            <element signature="e#2946#3296#0" />
-            <element signature="e#3333#3503#0" />
-            <element signature="e#3557#4118#0" />
-            <element signature="e#4233#13557#0" />
-            <element signature="e#4303#6199#0" />
-            <element signature="e#6254#7024#0" />
-            <element signature="e#7083#8827#0" />
-            <element signature="e#7083#7338#1" />
-            <element signature="e#8883#10046#0" />
-            <element signature="e#10090#10181#0" />
-            <element signature="e#10282#11584#0" />
-            <element signature="e#11674#12814#0" />
-            <element signature="e#12886#13549#0" />
-            <element signature="e#13755#14512#0" />
-            <element signature="e#14547#18729#0" />
-            <element signature="e#14554#14952#0" />
-            <element signature="e#18781#20887#0" />
-            <element signature="e#18781#19231#1" />
-            <element signature="e#20915#22229#0" />
-            <element signature="e#21000#21931#0" />
-            <element signature="e#21381#21931#0" />
-            <element signature="e#21971#22241#0" />
-            <element signature="e#22270#23926#0" />
-            <element signature="e#22413#22548#0" />
-            <element signature="e#22618#22691#0" />
-            <element signature="e#22802#23224#0" />
-            <element signature="e#23251#23917#0" />
-            <element signature="e#24027#24112#0" />
-            <element signature="e#24182#24368#0" />
-            <element signature="e#24420#24772#0" />
-            <element signature="e#25858#27129#0" />
-            <element signature="e#25917#26124#0" />
-            <element signature="e#25038#25721#0" />
-            <element signature="e#26913#27141#0" />
-            <element signature="e#26115#26763#0" />
+            <element signature="e#33#49#0" expanded="true" />
+            <element signature="e#243#298#0" />
+            <element signature="e#523#4959#0" />
+            <element signature="e#605#970#0" />
+            <element signature="e#1043#1599#0" />
+            <element signature="e#1092#1486#0" />
+            <element signature="e#1656#1827#0" />
+            <element signature="e#1885#2252#0" />
+            <element signature="e#4581#4959#0" />
+            <element signature="e#5006#14397#0" />
+            <element signature="e#9567#9632#0" />
+            <element signature="e#14500#25630#0" />
+            <element signature="e#25663#26945#0" />
+            <element signature="e#26975#27684#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="149" column="117" selection-start-line="149" selection-start-column="117" selection-end-line="149" selection-end-column="117" />
+        <state relative-caret-position="287">
+          <caret line="162" column="61" lean-forward="true" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
           <folding>
             <element signature="e#0#67#0" expanded="true" />
-            <element signature="e#1802#4550#0" />
-            <element signature="e#4606#5060#0" />
-            <element signature="e#5125#6552#0" />
-            <element signature="e#5603#6499#0" />
-            <element signature="e#6588#6888#0" />
-            <element signature="e#6945#7020#0" />
-            <element signature="e#7669#8817#0" />
+            <element signature="e#1916#4664#0" />
+            <element signature="e#4720#5174#0" />
+            <element signature="e#5239#6751#0" />
+            <element signature="e#6787#7099#0" />
+            <element signature="e#7156#7231#0" />
+            <element signature="e#7974#9038#0" />
+            <element signature="e#9509#9926#0" />
           </folding>
         </state>
       </provider>
