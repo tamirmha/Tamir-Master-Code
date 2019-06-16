@@ -31,10 +31,9 @@ class Simulator(object):
 
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        # self.main_launch = self.ros.ter_command("x-terminal-emulator -e roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=false")
-        time.sleep(2)  # need time to upload
+        time.sleep(1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        time.sleep(2)  # need time to upload
+        time.sleep(1)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
         time.sleep(1)
@@ -160,72 +159,9 @@ class Simulator(object):
         # self.ros.start_launch("replace_model", "man_gazebo", fil)
         replace_command = "x-terminal-emulator -e roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        # self.ros.ter_command("rosservice call /gazebo/reset_world")
-        # self.ros.ter_command("rosservice call /gazebo/delete_model \"model_name: 'robot'\"")
-
-        # path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined3/"
-        # command = "rosrun xacro xacro -o" + path + "tamir.urdf " + path + self.arms[arm + 1][
-        #     "name"] + ".urdf.xacro"  # "manipulator.urdf.xacro"
-        # self.ros.ter_command(command)
-        # time.sleep(1)
-        # command = "rosrun gazebo_ros spawn_model -file " + path + "tamir.urdf -urdf -model robot"
-        # self.ros.ter_command(command)
-        time.sleep(2)
+        time.sleep(1.5)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(2)
-
-#     def change_world(self, time="6"):
-#         data = """<sdf version='1.6'>
-#   <world name='default'>
-#     <model name='ground_plane'>
-#       <static>1</static>
-#       <link name='link'>
-#         <collision name='collision'>
-#           <geometry>
-#             <plane>
-#               <normal>0 0 1</normal>
-#               <size>5 5</size>
-#             </plane>
-#           </geometry>
-#           <surface>
-#             <contact>
-#               <ode/>
-#             </contact>
-#             <bounce/>
-#           </surface>
-#           <max_contacts>2</max_contacts>
-#         </collision>
-#         <self_collide>0</self_collide>
-#         <enable_wind>0</enable_wind>
-#         <kinematic>0</kinematic>
-#       </link>
-#     </model>
-#     <gravity>0 0 -9.8</gravity>
-#     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
-#     <physics name='default_physics' default='0' type='ode'>
-#       <max_step_size>0.001</max_step_size>
-#       <real_time_factor>1</real_time_factor>
-#       <real_time_update_rate>1000</real_time_update_rate>
-#     </physics>
-#     <state world_name='default'>
-#       <sim_time>""" + time + """ 0</sim_time>
-#       <real_time>0 0</real_time>
-#       <wall_time>0 0</wall_time>
-#       <iterations>0</iterations>
-#       <model name='ground_plane'>
-#         <pose frame=''>0 0 0 0 -0 0</pose>
-#         <scale>1 1 1</scale>
-#         <link name='link'>
-#           <pose frame=''>0 0 0 0 -0 0</pose>
-#           <velocity>0 0 0 0 0 0</velocity>
-#           <acceleration>0 0 0 0 -0 0</acceleration>
-#           <wrench>0 0 0 0 -0 0</wrench>
-#         </link>
-#       </model>
-#     </state>
-#   </world>
-# </sdf>"""
-#         return data
+        time.sleep(1)
 
     def run_simulation(self,  k=0, len_arm=1638):
         # if len(arms) > 0:
@@ -234,9 +170,6 @@ class Simulator(object):
         all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
             print "arm " + str((arm + 1)*(k+1)) + " of " + str(len_arm) + " arms"
-            # if arm % 20 == 0:  # save every x iterations
-            #     HandleCSV().save_data(all_data, save_name)
-            #     all_data = []
             data = []
             for i in range(len(self.poses)):  # send the manipulator to the selected points
                 data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
@@ -257,22 +190,25 @@ if __name__ == '__main__':
     tic = datetime.datetime.now()
     dofe = 6
     ros = Ros()
-    ros.ter_command("kill -9 " + str(ros.checkroscorerun()))
+    roscore = ros.checkroscorerun()
+    if roscore:
+        ros.ter_command("kill -9 " + str(roscore))
     ros.ros_core_start()
     rospy.init_node('arl_python', anonymous=True)
     foldere = "combined"
     sim = Simulator(dofe, foldere, True)
     arms = sim.arms
 
-    for i in range(len(arms) / 50 + 1):
-        if i == len(arms) / 50:
-            sim = Simulator(dofe, foldere, False, arms[i * 50:])
+    nums = 40  # how many arms to send to simulator each time
+    for i in range(len(arms) / nums + 1):
+        if i == len(arms) / nums:
+            sim = Simulator(dofe, foldere, False, arms[i * nums:])
             sim.run_simulation(i, len(arms))
         elif i != 0:
-            sim = Simulator(dofe, foldere, False, arms[i * 50:(i + 1) * 50])
+            sim = Simulator(dofe, foldere, False, arms[i * nums:(i + 1) * nums])
             sim.run_simulation(i, len(arms))
         else:
-            sim.arms = arms[:50]
+            sim.arms = arms[:nums]
             sim.run_simulation(i, len(arms))
         time.sleep(1.5)
     ros.ros_core_stop()

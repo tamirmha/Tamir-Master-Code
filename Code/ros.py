@@ -331,9 +331,6 @@ class MoveGroupPythonInterface(object):
                     return False
         return True
 
-    def stop_moveit(self):
-        moveit_commander.roscpp_shutdown()
-
 
 class UrdfClass(object):
     """ this class create URDF files """
