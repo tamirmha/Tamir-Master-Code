@@ -19,7 +19,7 @@ class Simulator(object):
         if create:  # all the configuration of the arms
             self.create_urdf_from_csv(str(self.dof) + "dof_configs")
         else:
-            if arms:
+            if not arms:
                 self.arms_exist()
             else:
                 self.arms = arms
@@ -169,10 +169,10 @@ class Simulator(object):
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = [["Date", "Time ", "Arm ", "Results "]]
         for arm in range(0, len(self.arms)):
-            print "arm " + str((arm + 1)*(k+1)) + " of " + str(len_arm) + " arms"
+            print "arm " + str((arm + 1)+(k)) + " of " + str(len_arm) + " arms"
             data = []
-            for i in range(len(self.poses)):  # send the manipulator to the selected points
-                data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
+            # for i in range(len(self.poses)):  # send the manipulator to the selected points
+            #     data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
             # inserting the data into array
             all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"),
                              self.arms[arm]["name"], ",".join(data)])
@@ -203,13 +203,13 @@ if __name__ == '__main__':
     for i in range(len(arms) / nums + 1):
         if i == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[i * nums:])
-            sim.run_simulation(i, len(arms))
+            sim.run_simulation(nums*i, len(arms))
         elif i != 0:
             sim = Simulator(dofe, foldere, False, arms[i * nums:(i + 1) * nums])
-            sim.run_simulation(i, len(arms))
+            sim.run_simulation(nums*i, len(arms))
         else:
             sim.arms = arms[:nums]
-            sim.run_simulation(i, len(arms))
+            sim.run_simulation(nums*i, len(arms))
         time.sleep(1.5)
     ros.ros_core_stop()
     toc = datetime.datetime.now()
