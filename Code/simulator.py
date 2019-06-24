@@ -31,12 +31,12 @@ class Simulator(object):
 
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        time.sleep(0.1)  # need time to upload
+        #time.sleep(0.1)  # need time to upload
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        time.sleep(0.1)  # need time to upload
+        #time.sleep(0.1)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
-        time.sleep(1)
+        #time.sleep(1)
         self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -167,12 +167,12 @@ class Simulator(object):
         # if len(arms) > 0:
         #     self.arms = arms
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
-        all_data = [["Date", "Time ", "Arm ", "Results "]]
+        all_data = []
         for arm in range(0, len(self.arms)):
             print "arm " + str((arm + 1)+(k)) + " of " + str(len_arm) + " arms"
             data = []
-            # for i in range(len(self.poses)):  # send the manipulator to the selected points
-            #     data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
+            for i in range(len(self.poses)):  # send the manipulator to the selected points
+                data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
             # inserting the data into array
             all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"),
                              self.arms[arm]["name"], ",".join(data)])
