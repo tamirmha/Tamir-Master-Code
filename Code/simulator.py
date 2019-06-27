@@ -159,9 +159,9 @@ class Simulator(object):
         # self.ros.start_launch("replace_model", "man_gazebo", fil)  x-terminal-emulator -e
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        time.sleep(1.5)
+        time.sleep(1.4)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(1)
+        time.sleep(0.5)
 
     def run_simulation(self,  k=0, len_arm=1638):
         # if len(arms) > 0:
