@@ -161,7 +161,7 @@ class Simulator(object):
         self.ros.ter_command(replace_command)
         time.sleep(1.4)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(0.5)
+        time.sleep(0.8)
 
     def run_simulation(self,  k=0, len_arm=1638):
         # if len(arms) > 0:
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     ros.ros_core_start()
     rospy.init_node('arl_python', anonymous=True)
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True)
+    sim = Simulator(dofe, foldere, False)
     arms = sim.arms
 
     nums = 40  # how many arms to send to simulator each time
