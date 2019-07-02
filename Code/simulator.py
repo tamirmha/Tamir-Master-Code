@@ -161,7 +161,7 @@ class Simulator(object):
         self.ros.ter_command(replace_command)
         time.sleep(1.4)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(0.8)
+        time.sleep(0.85)
 
     def run_simulation(self,  k=0, len_arm=1638):
         # if len(arms) > 0:
