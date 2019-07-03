@@ -161,7 +161,7 @@ class Simulator(object):
         self.ros.ter_command(replace_command)
         time.sleep(1.4)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        time.sleep(0.85)
+        time.sleep(1)
 
     def run_simulation(self,  k=0, len_arm=1638):
         # if len(arms) > 0:
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         else:
             sim.arms = arms[:nums]
             sim.run_simulation(nums*i, len(arms))
-        time.sleep(1.5)
+        time.sleep(1)
     ros.ros_core_stop()
     toc = datetime.datetime.now()
     print('Time of Run (seconds): ' + str((toc - tic).seconds))

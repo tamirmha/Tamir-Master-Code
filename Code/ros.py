@@ -640,9 +640,9 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     manipulator = MoveGroupPythonInterface()
     time.sleep(2)
-    manipulator.add_obstacles()  # add floor
-    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 6.86], [0.5, -0.15, 6.45],
-         [0.5, 0.15, 6.45]]  # desired positions of the EE in world frame
+    manipulator.add_obstacles(height=0.75)  # add floor
+    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 0.86], [0.5, -0.15, 0.45],
+         [0.5, 0.15, 0.45]]  # desired positions of the EE in world frame
     oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],
               [0.9, 0.02, 0]]  # desired orientaions of the EE in world frame
     for j in range(6):
@@ -650,6 +650,7 @@ def main_move_group():
             pose = poses[i]
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
+            time.sleep(1)
         raw_input("press enter")
 
 # main_move_group()
