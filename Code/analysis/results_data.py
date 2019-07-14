@@ -1,5 +1,5 @@
-import xlrd
-import xlwt
+# import xlrd
+# import xlwt
 import os
 import matplotlib.pyplot as plt
 import numpy as np
@@ -98,11 +98,9 @@ def autolabel(rects, ax, xpos='center'):
 
         ha = {'center': 'center', 'right': 'left', 'left': 'right'}
         offset = {'center': 0, 'right': 1, 'left': -1}
-
         for rect in rects:
             height = rect.get_height()
-            ax.annotate('{}'.format(height),
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
+            ax.annotate('{}'.format(height), xy=(rect.get_x() + rect.get_width() / 2, height),
                         xytext=(offset[xpos] * 3, 3),  # use 3 points offset
                         textcoords="offset points",  # in both directions
                         ha=ha[xpos], va='bottom')
@@ -111,12 +109,12 @@ def autolabel(rects, ax, xpos='center'):
 def data_plot(plot_data):
     width = 1  # the width of the bars
     fig, ax = plt.subplots()
-    tickets_labels = [""]
+    tickets_labels = []
     data = []
     for i in range(0, len(plot_data)):
         first = (plot_data[i][0])
         avarage_data = round((first / 3.0), 2)
-        av = ax.bar(i, first, width / 4)
+        av = ax.bar(i, first, width / 4, label=plot_data[i][1])
         autolabel(av, ax, "center")
         av = ax.bar(i, avarage_data, width/20, color="blue")
         autolabel(av, ax, "center")
@@ -124,13 +122,13 @@ def data_plot(plot_data):
         data.append(first)
     avg_data = np.average(data)
     std_data = np.std(data)
-    av = ax.bar(i+1, avg_data, width / 4, color="cyan", yerr=std_data)
+    av = ax.bar(i+1, avg_data, width / 4, color="cyan", yerr=std_data, label="Total")
     autolabel(av, ax, "center")
     av = ax.bar(i+1,  round(avg_data/3, 2), width / 20, color="blue")
     autolabel(av, ax, "center")
     tickets_labels.append("Total")
-    ax.set_xticklabels(tickets_labels)
-    # ax.legend()
+    plt.xticks(range(0, len(plot_data)+1), tickets_labels)
+    # ax.legend(frameon=False)
     fig.tight_layout()
     plt.show()
 
