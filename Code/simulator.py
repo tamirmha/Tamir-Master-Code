@@ -13,7 +13,6 @@ class Simulator(object):
         self.dof = dof
         self.folder = folder
         self.ros = Ros()  # for work with Ros
-        # self.ros.ros_core_start()
         self.arm_control = 0
         self.arms = []
         if create:  # all the configuration of the arms
@@ -26,17 +25,13 @@ class Simulator(object):
         # desired positions and orientaions of the EE in world frame
         self.poses = [[0.5, 0.15, 6.86], [0.5, 0.0, 6.89], [0.5, -0.15, 6.86], [0.5, -0.15, 6.45], [0.5, 0.15, 6.45]]
         self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-        # set the obstacles and initiliaze the manipulator
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
-
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
-        #time.sleep(0.1)  # need time to upload
+        # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
-        #time.sleep(0.1)  # need time to upload
         # add floor and plant to the planning model
         self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
-        #time.sleep(1)
         self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -114,34 +109,24 @@ class Simulator(object):
         configs = HandleCSV().read_data(csv_name)
         # Create the urdf files
         data = []
-        # folder = ""
-        # c = 0
         base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
-        # folder = "combined3"
-        self.create_folder(base_path + "6dof/" + self.folder)
+        self.create_folder(base_path + "6dof/" + self.folder)  # Todo change from 6dof to variable
         links = self.set_links_length()
         index = 0
         for config in configs:
             for arm in config:
-                # for i in range(len(arm["joint"])):
-                #     folder = folder + arm["joint"][i] + "_" + arm["axe"][i] + "_"
-                # self.create_folder(base_path + str(len(arm["axe"])) + "dof/" + folder)
                 for link in links:
                     self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, self.folder))
                     path = base_path + str(len(arm["axe"])) + "dof/" + self.folder + "/"
-                    # index = config.index(arm) + links.index(link) + c
                     self.arms[index]["arm"].urdf_write(self.arms[index]["arm"].urdf_data(),
                                                        path + self.arms[index]["name"])
                     data.append([self.arms[index]["name"], self.folder, datetime.datetime.now().strftime("%d_%m_%y")])
                     index = index+1
-                # folder = ""
-            # c = c + len(config) * len(links)
         HandleCSV().save_data(data, "created files")
 
     def arms_exist(self):
         path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + str(self.dof) \
                + "dof/" + self.folder
-
         for fil in os.listdir(path):
             fol = self.folder.split("/")
             self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[0]})
@@ -156,7 +141,6 @@ class Simulator(object):
         fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + " dof:=" + str(self.dof) + "dof"
         if self.arm_control != 0:
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
-        # self.ros.start_launch("replace_model", "man_gazebo", fil)  x-terminal-emulator -e
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         time.sleep(1.4)
@@ -164,15 +148,13 @@ class Simulator(object):
         time.sleep(1)
 
     def run_simulation(self,  k=0, len_arm=1638):
-        # if len(arms) > 0:
-        #     self.arms = arms
         save_name = 'results_file' + datetime.datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
         for arm in range(0, len(self.arms)):
-            print "arm " + str((arm + 1)+(k)) + " of " + str(len_arm) + " arms"
+            print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
-            for i in range(len(self.poses)):  # send the manipulator to the selected points
-                data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[i], self.oriens[i])))
+            for p in range(len(self.poses)):  # send the manipulator to the selected points
+                data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p])))
             # inserting the data into array
             all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"),
                              self.arms[arm]["name"], ",".join(data)])
@@ -190,6 +172,7 @@ if __name__ == '__main__':
     tic = datetime.datetime.now()
     dofe = 6
     ros = Ros()
+    ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
     if roscore:
         ros.ter_command("kill -9 " + str(roscore))
@@ -210,7 +193,6 @@ if __name__ == '__main__':
         else:
             sim.arms = arms[:nums]
             sim.run_simulation(nums*i, len(arms))
-        time.sleep(1)
     ros.ros_core_stop()
     toc = datetime.datetime.now()
     print('Time of Run (seconds): ' + str((toc - tic).seconds))
