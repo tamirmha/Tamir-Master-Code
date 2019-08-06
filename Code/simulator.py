@@ -5,6 +5,7 @@ import numpy as np
 import itertools
 import time
 import rospy
+import tf
 
 
 class Simulator(object):
@@ -23,7 +24,8 @@ class Simulator(object):
             else:
                 self.arms = arms
         # desired positions and orientaions of the EE in world frame
-        self.poses = [[0.5, 0.15, 6.86], [0.5, 0.0, 6.89], [0.5, -0.15, 6.86], [0.5, -0.15, 6.45], [0.5, 0.15, 6.45]]
+        z = 3  # height from ground
+        self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86], [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
         self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
@@ -31,7 +33,12 @@ class Simulator(object):
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         # add floor and plant to the planning model
-        self.manipulator_move.add_obstacles(height=6.75, radius=0.1, pose=[0.5, 0])
+        time.sleep(0.13)
+        self.manipulator_move.add_obstacles(height=0.75, radius=0.1, pose=[0.5, 0])
+        # pos = self.manipulator_move.move_group.get_current_pose().pose.position
+        # a = self.manipulator_move.move_group.get_current_pose().pose.orientation
+        # orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])) - 2 * np.pi) % (2 * np.pi)
+        # self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], orien)
         self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -110,7 +117,7 @@ class Simulator(object):
         # Create the urdf files
         data = []
         base_path = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
-        self.create_folder(base_path + "6dof/" + self.folder)  # Todo change from 6dof to variable
+        self.create_folder(base_path + str(self.dof) + "dof/" + self.folder)
         links = self.set_links_length()
         index = 0
         for config in configs:
@@ -154,10 +161,16 @@ class Simulator(object):
             print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             for p in range(len(self.poses)):  # send the manipulator to the selected points
-                data.append(str(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p])))
+                data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p]))
             # inserting the data into array
-            all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"),
-                             self.arms[arm]["name"], ",".join(data)])
+            data_res = str([i[0] for i in data])
+            suc_res = "False"
+            if data_res.count("True") >= 3:  # if the arm arrived to 3 or more point than success
+                suc_res = "True"
+            data_time = [i[1] for i in data]
+            avg_time = np.mean(data_time)
+            all_data.append([datetime.datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],#",".join(data),
+                            data_res, str(data_time), suc_res,  str(avg_time)])
             if arm == len(self.arms) - 1:
                 break
             self.replace_model(arm)
@@ -169,7 +182,7 @@ class Simulator(object):
 
 if __name__ == '__main__':
 
-    tic = datetime.datetime.now()
+    tic_main = datetime.datetime.now()
     dofe = 6
     ros = Ros()
     ros.ter_command("rosclean purge -y")
@@ -179,11 +192,11 @@ if __name__ == '__main__':
     ros.ros_core_start()
     rospy.init_node('arl_python', anonymous=True)
     foldere = "combined"
-    sim = Simulator(dofe, foldere, False)
+    sim = Simulator(dofe, foldere, True)
     arms = sim.arms
-
     nums = 40  # how many arms to send to simulator each time
     for i in range(len(arms) / nums + 1):
+
         if i == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[i * nums:])
             sim.run_simulation(nums*i, len(arms))
@@ -194,5 +207,12 @@ if __name__ == '__main__':
             sim.arms = arms[:nums]
             sim.run_simulation(nums*i, len(arms))
     ros.ros_core_stop()
-    toc = datetime.datetime.now()
-    print('Time of Run (seconds): ' + str((toc - tic).seconds))
+    toc_main = datetime.datetime.now()
+    print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
+
+# Done - set for first joint the current location as target.
+# Todo check to change tolerance for detection point z-orientaion
+# todo change planner
+# toDo calculate indicies
+# tOdo finish workspace
+# todO change links weight according length
