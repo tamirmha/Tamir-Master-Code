@@ -662,19 +662,20 @@ class UrdfClass(object):
         head = '''<?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro"  name="arm">
   <xacro:include filename="$(find man_gazebo)/urdf/common.gazebo.xacro" />
-
 <link name="world" />
-
   <joint name="world_joint" type="fixed">
     <parent link="world" />
     <child link = "base_link" />
     <origin xyz="0 -0.5 0" rpy="0.0 0.0 0.0" />
   </joint>
+<<<<<<< HEAD
 
   <xacro:include filename="$(find man_gazebo)/urdf/''' + str(self.links_number) + '''dof/transmission_''' + str(
             self.links_number) + '''dof.xacro" />
+=======
+  <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
+>>>>>>> 574aad638f0fd7842822ba3d76771133799778a5
   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
-
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
@@ -684,7 +685,6 @@ class UrdfClass(object):
         izz="${0.5 * mass * radius * radius}" />
     </inertial>
   </xacro:macro>
-
 <xacro:macro name="joint_limit" params="joint_type link_length ">
 	<xacro:if value="${joint_type == 'revolute'}"  >
 		<xacro:property name="joint_upper_limit" value="${pi}" />
@@ -696,8 +696,6 @@ class UrdfClass(object):
 	</xacro:unless>
 	<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="150.0" velocity="3.15"/>
 </xacro:macro>
-
-
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
         <xacro:property name="base_length" value="6.1"/>
@@ -710,7 +708,6 @@ class UrdfClass(object):
         <xacro:property name="link4_mass" value="1.219" />
         <xacro:property name="link5_mass" value="1.219" />
         <xacro:property name="link6_mass" value="0.1879" />
-
         <xacro:property name="link0_radius" value="0.060" /> 
         <xacro:property name="base_radius" value="0.060" />
         <xacro:property name="link1_radius" value="0.060" />
@@ -720,7 +717,6 @@ class UrdfClass(object):
         <xacro:property name="link5_radius" value="0.030" />
         <xacro:property name="link6_radius" value="0.025" /> '''
         base_link = '''
-
         	<!--   Base Link -->
     <link name="${prefix}base_link" >
       <visual>
@@ -752,7 +748,6 @@ class UrdfClass(object):
 	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>-->
-
 <!--  link 0  
     <link name="${prefix}link0">
       <visual>
@@ -771,8 +766,12 @@ class UrdfClass(object):
         <origin xyz="0.0 0.0 ${link0_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>-->
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> 574aad638f0fd7842822ba3d76771133799778a5
     '''
         data = ''
 
@@ -785,7 +784,6 @@ class UrdfClass(object):
       <child link = "${prefix}ee_link" />
       <origin xyz="0.0  0.0 ${link''' + str(self.links_number) + '''_length}" rpy="0.0 0.0 0" />
     </joint>
-
 <!-- ee link -->
     <link name="${prefix}ee_link">
       <collision>
@@ -795,10 +793,8 @@ class UrdfClass(object):
         <origin rpy="0 0 0" xyz="0 0 0.005"/>
       </collision>
     </link>
-
     <xacro:arm_transmission prefix="${prefix}" />
     <xacro:arm_gazebo prefix="${prefix}" />
-
   </xacro:macro>
   <xacro:arm_robot prefix=""/>
 </robot>  '''
