@@ -214,11 +214,14 @@ class MoveGroupPythonInterface(object):
         pose_goal.position.x = pose[0]
         pose_goal.position.y = pose[1]
         pose_goal.position.z = pose[2]
-
         self.move_group.set_pose_target(pose_goal)
         # we call the planner to compute the plan and execute it.
+        tic = rospy.get_time()
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
-
+        if not plan:
+            plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
+        toc = rospy.get_time()
+        sim_time = round(toc -tic,2)
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
@@ -232,7 +235,7 @@ class MoveGroupPythonInterface(object):
         accuracy = self.all_close(goal, current, self.tolerance)
         # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
         # print accuracy, plan, diff
-        return accuracy and plan
+        return accuracy and plan, sim_time
 
     def plan_cartesian_path(self, scale=0.5):
         # Cartesian Paths
@@ -357,18 +360,14 @@ class UrdfClass(object):
         head = '''<?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro"  name="arm">
   <xacro:include filename="$(find man_gazebo)/urdf/common.gazebo.xacro" />
-
 <link name="world" />
-
   <joint name="world_joint" type="fixed">
     <parent link="world" />
     <child link = "base_link" />
-    <origin xyz="0 0 0" rpy="0.0 0.0 0.0" />
+    <origin xyz="0 -0.5 0" rpy="0.0 0.0 0.0" />
   </joint>
-
   <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
-
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
@@ -378,7 +377,6 @@ class UrdfClass(object):
         izz="${0.5 * mass * radius * radius}" />
     </inertial>
   </xacro:macro>
-
 <xacro:macro name="joint_limit" params="joint_type link_length ">
 	<xacro:if value="${joint_type == 'revolute'}"  >
 		<xacro:property name="joint_upper_limit" value="${pi}" />
@@ -390,21 +388,20 @@ class UrdfClass(object):
 	</xacro:unless>
 	<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="150.0" velocity="3.15"/>
 </xacro:macro>
-
-
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
-        <xacro:property name="base_length" value="6.25"/>
+        <xacro:property name="base_length" value="3.1"/>
             <!-- Inertia parameters -->
-        <xacro:property name="base_mass" value="4.0" />
+        <xacro:property name="base_mass" value="1.0" />
+        <xacro:property name="link0_mass" value="40.7" />
         <xacro:property name="link1_mass" value="3.7" />
         <xacro:property name="link2_mass" value="8.393" />
         <xacro:property name="link3_mass" value="2.275" />
         <xacro:property name="link4_mass" value="1.219" />
         <xacro:property name="link5_mass" value="1.219" />
         <xacro:property name="link6_mass" value="0.1879" />
-
-	    <xacro:property name="base_radius" value="0.060" />
+        <xacro:property name="link0_radius" value="0.060" /> 
+        <xacro:property name="base_radius" value="0.060" />
         <xacro:property name="link1_radius" value="0.060" />
         <xacro:property name="link2_radius" value="0.060" />
         <xacro:property name="link3_radius" value="0.060" />
@@ -412,7 +409,6 @@ class UrdfClass(object):
         <xacro:property name="link5_radius" value="0.030" />
         <xacro:property name="link6_radius" value="0.025" /> '''
         base_link = '''
-
         	<!--   Base Link -->
     <link name="${prefix}base_link" >
       <visual>
@@ -431,6 +427,38 @@ class UrdfClass(object):
         <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
+    
+    <xacro:property name="joint0_type" value="prismatic" /> 
+    <xacro:property name="joint0_axe" value="0 0 1" /> 
+    <xacro:property name="link0_length" value="0.25" />
+<!--  joint 0	
+    <joint name="${prefix}joint0" type="${joint0_type}">
+      <parent link="${prefix}base_link" />
+      <child link = "${prefix}link0" />
+      <origin xyz="0.0 ${base_radius} ${base_length + link0_radius}" rpy="${-pi/2} 0.0 0" />
+      <axis xyz="${joint0_axe}" />
+	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length}"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>-->
+<!--  link 0  
+    <link name="${prefix}link0">
+      <visual>
+		<origin xyz="0 0 ${link0_radius} " rpy="0 0 0" /> 
+        <geometry>
+			<cylinder radius="${link0_radius}" length="${link0_length}"/>	 
+        </geometry>
+      </visual>
+      <collision>
+		 <origin xyz="0 0 ${link0_length/2}" rpy="0 0 0" /> 
+        <geometry>
+			<cylinder radius="${link0_radius}" length="${link0_length}"  mass="${link0_mass}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${link0_radius}" length="${link0_length}" mass="${link0_mass}">
+        <origin xyz="0.0 0.0 ${link0_length/2}" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>-->
+    
     '''
         data = ''
 
@@ -443,7 +471,6 @@ class UrdfClass(object):
       <child link = "${prefix}ee_link" />
       <origin xyz="0.0  0.0 ${link''' + str(self.links_number) + '''_length}" rpy="0.0 0.0 0" />
     </joint>
-
 <!-- ee link -->
     <link name="${prefix}ee_link">
       <collision>
@@ -453,10 +480,8 @@ class UrdfClass(object):
         <origin rpy="0 0 0" xyz="0 0 0.005"/>
       </collision>
     </link>
-
     <xacro:arm_transmission prefix="${prefix}" />
     <xacro:arm_gazebo prefix="${prefix}" />
-
   </xacro:macro>
   <xacro:arm_robot prefix=""/>
 </robot>  '''
@@ -549,7 +574,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}base_link" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${base_length}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
@@ -640,12 +665,12 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     manipulator = MoveGroupPythonInterface()
     time.sleep(2)
-    manipulator.add_obstacles(height=0.75)  # add floor
-    poses = [[0.5, 0.15, 0.86], [0.5, 0.0, 0.89], [0.5, -0.15, 0.86], [0.5, -0.15, 0.45],
-         [0.5, 0.15, 0.45]]  # desired positions of the EE in world frame
-    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],
-              [0.9, 0.02, 0]]  # desired orientaions of the EE in world frame
-    for j in range(6):
+    manipulator.add_obstacles(height=3.75)  # add floor
+    # desired positions of the EE in world frame
+    poses = [[0.5, 0.15, 3.86], [0.5, 0.0, 3.89], [0.5, -0.15, 3.86], [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
+    # desired orientaions of the EE in world frame
+    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],[0.9, 0.02, 0]]
+    for j in range(3):
         for i in range(len(poses)):
             pose = poses[i]
             orientaion = oriens[i]
@@ -653,4 +678,6 @@ def main_move_group():
             time.sleep(1)
         raw_input("press enter")
 
-# main_move_group()
+
+if __name__ == '__main__':
+    main_move_group()
