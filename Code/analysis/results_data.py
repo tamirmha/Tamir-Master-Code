@@ -5,14 +5,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 import itertools
-import platform
 
 
 class HandleCSV(object):
 
     def save_data(self, data, file_name):
         """Save to csv format"""
-        # with open(file_name + ".csv", 'w', newline='') as file_n:
         with open(file_name + ".csv", 'w', newline='') as file_n:
             writer = csv.writer(file_n, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             data0csv = [[]]
@@ -142,10 +140,7 @@ def sim2csv():
     tests = []
     handle = HandleCSV()
     current_loc = os.getcwd()
-    if platform.system() == 'Linux':
-        files = os.listdir(current_loc + "/csv_data_first simulations")
-    if platform.system() == 'Windows':
-        files = os.listdir(current_loc + "\csv_data_first simulations")
+    files = os.listdir(current_loc + "\csv_data_first simulations")
     for file in files:
         if file.endswith(".csv"):
             res_files.append([os.path.splitext(file)[0], os.path.splitext(file)[1]])
