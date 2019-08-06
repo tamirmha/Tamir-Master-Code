@@ -195,7 +195,7 @@ if __name__ == '__main__':
     sim = Simulator(dofe, foldere, True)
     arms = sim.arms
     nums = 40  # how many arms to send to simulator each time
-    for i in range(len(arms) / nums + 1):
+    for i in range(2):  # len(arms) / nums + 1):
 
         if i == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[i * nums:])
