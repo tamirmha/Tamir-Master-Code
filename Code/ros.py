@@ -390,7 +390,8 @@ class UrdfClass(object):
     <origin xyz="0 -0.5 0" rpy="0.0 0.0 0.0" />
   </joint>
 
-  <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
+  <xacro:include filename="$(find man_gazebo)/urdf/''' + str(self.links_number) + '''dof/transmission_''' + str(
+            self.links_number) + '''dof.xacro" />
   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
@@ -418,7 +419,7 @@ class UrdfClass(object):
 
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
-        <xacro:property name="base_length" value="3.1"/>
+        <xacro:property name="base_length" value="3.25"/>
             <!-- Inertia parameters -->
         <xacro:property name="base_mass" value="1.0" />
         <xacro:property name="link0_mass" value="40.7" />
@@ -457,11 +458,11 @@ class UrdfClass(object):
         <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-    
+
     <xacro:property name="joint0_type" value="prismatic" /> 
     <xacro:property name="joint0_axe" value="0 0 1" /> 
     <xacro:property name="link0_length" value="0.25" />
-<!--  joint 0	
+<!--  joint 0	-->
     <joint name="${prefix}joint0" type="${joint0_type}">
       <parent link="${prefix}base_link" />
       <child link = "${prefix}link0" />
@@ -469,9 +470,9 @@ class UrdfClass(object):
       <axis xyz="${joint0_axe}" />
 	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
-    </joint>-->
+    </joint>
 
-<!--  link 0  
+<!--  link 0  -->
     <link name="${prefix}link0">
       <visual>
 		<origin xyz="0 0 ${link0_radius} " rpy="0 0 0" /> 
@@ -488,9 +489,9 @@ class UrdfClass(object):
       <xacro:cylinder_inertial radius="${link0_radius}" length="${link0_length}" mass="${link0_mass}">
         <origin xyz="0.0 0.0 ${link0_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
-    </link>-->
+    </link>
 
-    
+
     '''
         data = ''
 
@@ -576,24 +577,26 @@ class UrdfClass(object):
     def calc_origin(self, n):
         # if n == 2:
 
-        if self.joint_data[n-1] == "revolute":
+        if self.joint_data[n - 1] == "revolute":
             if self.axis[n - 1] == '0 0 1':  # roll
-                if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
-                    return "0 0 ${link" + str(n-1) + "_length}"
+                if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+                    return "0 0 ${link" + str(n - 1) + "_length}"
                 else:  # the links are perpendiculars
-                    return "0 ${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
+                    return "0 ${link" + str(n - 1) + "_radius} ${link" + str(n - 1) + "_length}"
             else:  # pitch
-                if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
-                    return "0 ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} ${link" + str(n-1) + "_length}"
-                elif self.rpy[n-1] == ['0 ', '0 ', '${-pi/2} ']:  # links in the same directoin
-                    return " ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(n-1) + "_length}"
+                if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+                    return "0 ${link" + str(n - 1) + "_radius+link" + str(n) + "_radius} ${link" + str(
+                        n - 1) + "_length}"
+                elif self.rpy[n - 1] == ['0 ', '0 ', '${-pi/2} ']:  # links in the same directoin
+                    return " ${link" + str(n - 1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(
+                        n - 1) + "_length}"
                 else:  # the links are perpendiculars
-                    return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
+                    return "0 0 ${link" + str(n - 1) + "_length + link" + str(n) + "_radius}"
         else:  # prismatic
-            if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+            if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
                 return "0 0 ${link" + str(n - 1) + "_length}"
             else:  # the links are perpendiculars
-                return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
+                return "0 0 ${link" + str(n - 1) + "_length + link" + str(n) + "_radius}"
 
     def joint_create(self, n):
         jointname = 'joint' + str(n)
@@ -607,7 +610,7 @@ class UrdfClass(object):
         if n == 1:
             joint = joint + '''<!--  joint 1	-->
     <joint name="${prefix}joint1" type="${joint1_type}">
-      <parent link="${prefix}base_link" />
+      <parent link="${prefix}link0" />
       <child link="${prefix}link1" />
       <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
       <axis xyz="${joint1_axe}"/>
@@ -718,3 +721,304 @@ def main_move_group():
 
 if __name__ == '__main__':
     main_move_group()
+
+# class UrdfClass(object):
+#     """ this class create URDF files """
+#
+#     def __init__(self, links=[], joints=[], joints_axis=[], rpy=[]):
+#         """
+#         :param joints: array of joints types- can be 'revolute' or 'prismatic'
+#         :param links: array of the links lengths in meters [must be positive float]
+#         the first link will be the base link, who is always the same(connected to the world and link1  - his joint is limited to 0)
+#         """
+#         if not joints:
+#             joints = ['revolute', 'prismatic', 'revolute', 'revolute', 'revolute', 'revolute']
+#         if not joints_axis:
+#             joints_axis = ['z', 'y', 'y', 'y', 'z', 'y']
+#         if not links:
+#             links = [1, 1, 1, 1, 1, 1]
+#         self.links = links
+#         self.joint_data = joints
+#         self.axis = self.init_calc(joints, joints_axis)
+#         self.links_number = len(self.links)
+#         self.rpy = rpy
+#
+#     def urdf_data(self):
+#         head = '''<?xml version="1.0"?>
+# <robot xmlns:xacro="http://wiki.ros.org/xacro"  name="arm">
+#   <xacro:include filename="$(find man_gazebo)/urdf/common.gazebo.xacro" />
+#
+# <link name="world" />
+#
+#   <joint name="world_joint" type="fixed">
+#     <parent link="world" />
+#     <child link = "base_link" />
+#     <origin xyz="0 -0.5 0" rpy="0.0 0.0 0.0" />
+#   </joint>
+#
+#   <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
+#   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
+#
+#   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+#     <inertial>
+#       <mass value="${mass}" />
+#       <xacro:insert_block name="origin" />
+#       <inertia ixx="${0.0833333 * mass * (3 * radius * radius + length * length)}" ixy="0.0" ixz="0.0"
+#         iyy="${0.0833333 * mass * (3 * radius * radius + length * length)}" iyz="0.0"
+#         izz="${0.5 * mass * radius * radius}" />
+#     </inertial>
+#   </xacro:macro>
+#
+# <xacro:macro name="joint_limit" params="joint_type link_length ">
+# 	<xacro:if value="${joint_type == 'revolute'}"  >
+# 		<xacro:property name="joint_upper_limit" value="${pi}" />
+# 		<xacro:property name="joint_lower_limit" value="${-pi}" />
+# 	</xacro:if>
+# 	<xacro:unless value="${joint_type == 'revolute'}"  >
+# 		<xacro:property name="joint_upper_limit" value="${2*link_length}" />
+# 		<xacro:property name="joint_lower_limit" value="${0}" />
+# 	</xacro:unless>
+# 	<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="150.0" velocity="3.15"/>
+# </xacro:macro>
+#
+#
+#   <xacro:macro name="arm_robot" params="prefix ">'''
+#         inertia_parameters = '''
+#         <xacro:property name="base_length" value="3.1"/>
+#             <!-- Inertia parameters -->
+#         <xacro:property name="base_mass" value="1.0" />
+#         <xacro:property name="link0_mass" value="40.7" />
+#         <xacro:property name="link1_mass" value="3.7" />
+#         <xacro:property name="link2_mass" value="8.393" />
+#         <xacro:property name="link3_mass" value="2.275" />
+#         <xacro:property name="link4_mass" value="1.219" />
+#         <xacro:property name="link5_mass" value="1.219" />
+#         <xacro:property name="link6_mass" value="0.1879" />
+#
+#         <xacro:property name="link0_radius" value="0.060" />
+#         <xacro:property name="base_radius" value="0.060" />
+#         <xacro:property name="link1_radius" value="0.060" />
+#         <xacro:property name="link2_radius" value="0.060" />
+#         <xacro:property name="link3_radius" value="0.060" />
+#         <xacro:property name="link4_radius" value="0.040" />
+#         <xacro:property name="link5_radius" value="0.030" />
+#         <xacro:property name="link6_radius" value="0.025" /> '''
+#         base_link = '''
+#
+#         	<!--   Base Link -->
+#     <link name="${prefix}base_link" >
+#       <visual>
+# 		<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
+#         <geometry>
+#  			<cylinder radius="${base_radius}" length="${base_length}"/>
+#         </geometry>
+#       </visual>
+#       <collision>
+# 			<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${base_radius}" length="${base_length}"/>
+#         </geometry>
+#       </collision>
+#       <xacro:cylinder_inertial radius="${base_radius}" length="${base_length}" mass="${base_mass}">
+#         <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
+#       </xacro:cylinder_inertial>
+#     </link>
+#
+#     <xacro:property name="joint0_type" value="prismatic" />
+#     <xacro:property name="joint0_axe" value="0 0 1" />
+#     <xacro:property name="link0_length" value="0.25" />
+# <!--  joint 0
+#     <joint name="${prefix}joint0" type="${joint0_type}">
+#       <parent link="${prefix}base_link" />
+#       <child link = "${prefix}link0" />
+#       <origin xyz="0.0 ${base_radius} ${base_length + link0_radius}" rpy="${-pi/2} 0.0 0" />
+#       <axis xyz="${joint0_axe}" />
+# 	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length}"/>
+#       <dynamics damping="0.0" friction="0.0"/>
+#     </joint>-->
+#
+# <!--  link 0
+#     <link name="${prefix}link0">
+#       <visual>
+# 		<origin xyz="0 0 ${link0_radius} " rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${link0_radius}" length="${link0_length}"/>
+#         </geometry>
+#       </visual>
+#       <collision>
+# 		 <origin xyz="0 0 ${link0_length/2}" rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${link0_radius}" length="${link0_length}"  mass="${link0_mass}"/>
+#         </geometry>
+#       </collision>
+#       <xacro:cylinder_inertial radius="${link0_radius}" length="${link0_length}" mass="${link0_mass}">
+#         <origin xyz="0.0 0.0 ${link0_length/2}" rpy="0 0 0" />
+#       </xacro:cylinder_inertial>
+#     </link>-->
+#
+#
+#     '''
+#         data = ''
+#
+#         for i in range(self.links_number):
+#             data = data + self.joint_create(i + 1) + self.link_create(i + 1)
+#
+#         tail = '''
+#     <joint name="${prefix}ee_fixed_joint" type="fixed">
+#       <parent link="${prefix}link''' + str(self.links_number) + '''" />
+#       <child link = "${prefix}ee_link" />
+#       <origin xyz="0.0  0.0 ${link''' + str(self.links_number) + '''_length}" rpy="0.0 0.0 0" />
+#     </joint>
+#
+# <!-- ee link -->
+#     <link name="${prefix}ee_link">
+#       <collision>
+#         <geometry>
+#           <box size="0.01 0.01 0.01"/>
+#         </geometry>
+#         <origin rpy="0 0 0" xyz="0 0 0.005"/>
+#       </collision>
+#     </link>
+#
+#     <xacro:arm_transmission prefix="${prefix}" />
+#     <xacro:arm_gazebo prefix="${prefix}" />
+#
+#   </xacro:macro>
+#   <xacro:arm_robot prefix=""/>
+# </robot>  '''
+#
+#         txt = head + inertia_parameters + base_link + data + tail
+#         return txt
+#
+#     @staticmethod
+#     def link_create(n):
+#         """link- data about specific link. it buit from :
+#                 *inertia - inertail data of the link -Mass, moment of inertia, pose in the frame
+#                 *collision - the collision properties of a link.
+#                 *visual - > the visual properties of the link. This element specifies the shape of the object (box, cylinder, etc.) for visualization purposes
+#                 *velocity_decay - exponential damping of the link's velocity"""
+#         linkname = 'link' + str(n)
+#         link = ''
+#         if n == 1:
+#             link = link + '''<!--  link 1  -->
+#     <link name="${prefix}link1">
+#       <visual>
+# 		<origin xyz="0 0 ${link1_length / 2} " rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
+#         </geometry>
+#       </visual>
+#       <collision>
+# 		 <origin xyz="0 0 ${link1_length / 2}" rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
+#         </geometry>
+#       </collision>
+#       <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass}">
+#         <origin xyz="0.0 0.0 ${link1_length / 2}" rpy="0 0 0" />
+#       </xacro:cylinder_inertial>
+#     </link>'''
+#         else:
+#             link = link + '''<!-- link ''' + str(n) + '''	-->
+#     <link name="${prefix}''' + linkname + '''">
+#       <visual>
+# 		<origin xyz="0 0 ${''' + linkname + '''_length / 2}" rpy="0 0 0" />
+#         <geometry>
+# 			<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
+#         </geometry>
+#       </visual>
+#       <collision>
+# 	    <origin xyz="0 0 ${''' + linkname + '''_length / 2 }" rpy="0 0 0" />
+#         <geometry>
+# 		<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
+#         </geometry>
+#       </collision>
+#       <xacro:cylinder_inertial radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}" mass="${''' + linkname + '''_mass}">
+#         <origin xyz="0.0 0.0 ${''' + linkname + '''_length / 2 }" rpy="0 0 0" />
+#       </xacro:cylinder_inertial>
+#     </link>'''
+#         return link
+#
+#     def calc_origin(self, n):
+#         # if n == 2:
+#
+#         if self.joint_data[n-1] == "revolute":
+#             if self.axis[n - 1] == '0 0 1':  # roll
+#                 if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+#                     return "0 0 ${link" + str(n-1) + "_length}"
+#                 else:  # the links are perpendiculars
+#                     return "0 ${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
+#             else:  # pitch
+#                 if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+#                     return "0 ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} ${link" + str(n-1) + "_length}"
+#                 elif self.rpy[n-1] == ['0 ', '0 ', '${-pi/2} ']:  # links in the same directoin
+#                     return " ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(n-1) + "_length}"
+#                 else:  # the links are perpendiculars
+#                     return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
+#         else:  # prismatic
+#             if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+#                 return "0 0 ${link" + str(n - 1) + "_length}"
+#             else:  # the links are perpendiculars
+#                 return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
+#
+#     def joint_create(self, n):
+#         jointname = 'joint' + str(n)
+#
+#         joint = '\n<xacro:property name="' + jointname + '_type" value="' + self.joint_data[n - 1] + '"/>\n' \
+#                                                                                                      '<xacro:property name="' + jointname + '_axe" value="' + \
+#                 self.axis[n - 1] + '"/>\n' \
+#                                    '<xacro:property name="link' + str(n) + '_length" value="' + str(
+#             self.links[n - 1]) + '"/>\n'
+#
+#         if n == 1:
+#             joint = joint + '''<!--  joint 1	-->
+#     <joint name="${prefix}joint1" type="${joint1_type}">
+#       <parent link="${prefix}base_link" />
+#       <child link="${prefix}link1" />
+#       <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
+#       <axis xyz="${joint1_axe}"/>
+# 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
+#       <dynamics damping="0.0" friction="0.0"/>
+#     </joint>
+#     '''
+#         else:
+#             orgin = self.calc_origin(n)
+#             rpy = self.rpy[n - 1][0] + self.rpy[n - 1][1] + self.rpy[n - 1][2]
+#             joint = joint + '''<!--  joint ''' + str(n) + '''	-->
+#     <joint name="${prefix}''' + jointname + '''" type="${''' + jointname + '''_type}">
+#       <parent link="${prefix}link''' + str(n - 1) + '''"/>
+#       <child link="${prefix}link''' + str(n) + '''" />
+#       <origin xyz="''' + orgin + '''" rpy="''' + rpy + '''"/>
+#       <axis xyz="${''' + jointname + '''_axe}"/>
+# 	  <xacro:joint_limit joint_type="${''' + jointname + '''_type}" link_length="${link''' + str(n) + '''_length}"/>
+#       <dynamics damping="0.0" friction="0.0"/>
+#     </joint>
+#     '''
+#         return joint
+#
+#     @staticmethod
+#     def urdf_write(data, filename=str(datetime.datetime.now().minute)):
+#         fil = open(filename + '.urdf.xacro', 'w')
+#         fil.write(data)
+#         fil.close()
+#
+#     def init_calc(self, joints, joints_axis):
+#         axis = []
+#         a = 0
+#         for j in joints:  # make calculations for all the joints
+#             axis.append(self.axis_calc(joints_axis[a]))
+#             a = a + 1
+#         return axis
+#
+#     @staticmethod
+#     def axis_calc(axe):
+#         if axe == 'x':
+#             return '1 0 0'
+#         elif axe == 'y':
+#             return '0 1 0'
+#         elif axe == 'z':
+#             return '0 0 1'
+#         else:
+#             warning('wrong axe input.' + axe + ' entered. returning [0 0 0] ' + str(
+#                 datetime.datetime.now()))  # will print a message to the console
+#             return '0 0 0'

@@ -35,10 +35,7 @@ class Simulator(object):
         # add floor and plant to the planning model
         time.sleep(0.13)
         self.manipulator_move.add_obstacles(height=0.75, radius=0.1, pose=[0.5, 0])
-        # pos = self.manipulator_move.move_group.get_current_pose().pose.position
-        # a = self.manipulator_move.move_group.get_current_pose().pose.orientation
-        # orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])) - 2 * np.pi) % (2 * np.pi)
-        # self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], orien)
+
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
@@ -199,7 +196,7 @@ if __name__ == '__main__':
     sim = Simulator(dofe, foldere, True)
     arms = sim.arms
     nums = 40  # how many arms to send to simulator each time
-    for i in range(2):  # len(arms) / nums + 1):
+    for i in range(len(arms) / nums + 1):
 
         if i == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[i * nums:])
