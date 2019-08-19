@@ -39,7 +39,11 @@ class Simulator(object):
         # a = self.manipulator_move.move_group.get_current_pose().pose.orientation
         # orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])) - 2 * np.pi) % (2 * np.pi)
         # self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], orien)
-        self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
+        pos = self.manipulator_move.get_current_position()
+        orien = self.manipulator_move.get_current_orientain()
+        self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
+
+        # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
     @staticmethod
