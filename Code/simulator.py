@@ -102,7 +102,7 @@ class Simulator(object):
     def set_links_length(self, min_length=1):
         link_min = 0.1
         link_interval = 0.3
-        link_max = 0.41
+        link_max = 0.71
         links = []
         lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
         links_length = [[0.1] + list(tup) for tup in
@@ -162,7 +162,11 @@ class Simulator(object):
             print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             for p in range(len(self.poses)):  # send the manipulator to the selected points
-                data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p]))
+                if self.dof == 3:
+
+                    data.append(self.manipulator_move.go_to_position_goal(self.poses[p]))
+                else:
+                    data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p]))
             # inserting the data into array
             data_res = str([i[0] for i in data])
             suc_res = "False"
@@ -184,7 +188,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.datetime.now()
-    dofe = 6
+    dofe = 3
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
