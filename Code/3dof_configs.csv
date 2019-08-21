@@ -1,29 +1,142 @@
-joint ,axe,,joint ,axe,,joint ,axe,,,,,,,,,,,,,,,,,,
-roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,,,,
-pris,z,,pris,z,,pris,z,,,,,,,,,,,,,,,,,,
-roll,y,,pitch,y,,pris,y,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,,,,,,,,,,,,,,
-roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
-roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
-<<<<<<< HEAD
-pitch ,y,,pris,y,,pris,z,,roll,y,,,,,,,,,,,,,,,
-=======
-pitch,y,,pris,y,,pris,z,,roll,y,,,,,,,,,,,,,,,
->>>>>>> 9bc61e95e625c9459e74a713b846a3d78f11d221
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe
-roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z
-pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y
-roll,z,,roll,y,,roll,x,,pitch,z,,pitch,x,,pitch,y,,pris,z,,pris,x,,pris,y
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,
-joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,joint ,axe,,,
-roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,,
-pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,pris,y,,,
-roll,z,,roll,y,,roll,x,,pitch,z,,pitch,x,,pitch,y,,pris,y,,pris,x,,,
+joint ,axe
+roll,z
+pris,z
+roll,y
+,
+,
+joint ,axe
+roll,z
+pris,z
+pitch,y
+,
+,
+joint ,axe
+roll,z
+pris,z
+pris,y
+,
+,
+joint ,axe
+roll,z
+roll,y
+pitch ,y
+,
+,
+joint ,axe
+roll,z
+roll,y
+pris,y
+,
+,
+joint ,axe
+roll,z
+roll,y
+pris,z
+,
+,
+joint ,axe
+roll,z
+roll,y
+roll,y
+,
+,
+joint ,axe
+roll,z
+pitch,y
+roll,y
+,
+,
+joint ,axe
+roll,z
+pitch,y
+roll,z
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pitch,z
+,
+,
+joint ,axe
+roll,z
+pitch,y
+roll,x
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pitch,x
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pris,y
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pris,z
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pitch,y
+,
+,
+joint ,axe
+roll,z
+pitch,y
+pris,x
+,
+,
+joint ,axe
+roll,z
+pris,y
+pitch,z
+,
+,
+joint ,axe
+roll,z
+pris,y
+roll,x
+,
+,
+joint ,axe
+roll,z
+pris,y
+pitch,x
+,
+,
+joint ,axe
+roll,z
+pris,y
+roll,z
+,
+,
+joint ,axe
+roll,z
+pris,y
+pris,x
+,
+,
+joint ,axe
+roll,z
+pris,y
+roll,y
+,
+,
+joint ,axe
+roll,z
+pris,y
+pitch,y
+,
+,
+joint ,axe
+roll,z
+pris,y
+pris,y
