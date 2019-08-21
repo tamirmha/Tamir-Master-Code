@@ -228,6 +228,36 @@ class MoveGroupPythonInterface(object):
         # print accuracy, plan, diff
         return accuracy and plan, sim_time
 
+    def go_to_position_goal(self, pose_goal):
+        """send position and orientaion of the desired point
+        pose - x,y,z poistion - in world frame
+
+        return true if the movement succeeded and reach at the desired accuracy
+        """
+
+        self.move_group.set_position_target(pose_goal)
+        # we call the planner to compute the plan and execute it.
+
+        tic = rospy.get_time()
+        plan = self.move_group.go(wait=True)  # return true if succeed false if not
+        if not plan:
+            plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
+        toc = rospy.get_time()
+        sim_time = round(toc - tic, 2)
+        # Calling `stop()` ensures that there is no residual movement
+        self.move_group.stop()
+        self.move_group.clear_pose_targets()
+
+        self.jacobian = self.move_group.get_jacobian_matrix(self.move_group.get_current_joint_values())
+
+        goal = [pose_goal[0], pose_goal[1], pose_goal[2], 0, 0, 0]
+        pos = self.get_current_position()
+        current = [pos.x, pos.y, pos.z, 0, 0, 0]
+        accuracy = self.all_close(goal, current, self.tolerance)
+        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
+        # print accuracy, plan, diff
+        return accuracy and plan, sim_time
+
     def add_obstacles(self, height=6.75, radius=0.1, pose=[0.5, 0], timeout=4):
         floor = {'name': 'floor', 'pose': [0, 0, -0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
@@ -708,13 +738,18 @@ def main_move_group():
     # desired positions of the EE in world frame
     poses = [[0.5, 0.15, 3.86], [0.5, 0.0, 3.89], [0.5, -0.15, 3.86], [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
-    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0],[0.9, 0.02, 0]]
+    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    # poses = [[0.5199, -0.0695, 3.9418], [0.51999, 0.20548, 3.8102], [0.5200, 0.0041, 3.88]]
+    # oriens = [[-9.45996653172e-05,0.707113265991, 9.45979336393e-05,0.707100272179 ],
+    #           [-3.44003383361e-05, 0.707126617432,3.43984102074e-05, 0.707086920738],
+    #           [-3.29655886162e-05, 0.707009792328, 3.29746326315e-05,0.707203745842 ]]
 
     for j in range(3):
         for i in range(len(poses)):
             pose = poses[i]
             orientaion = oriens[i]
-            print manipulator.go_to_pose_goal(pose, orientaion)
+            # print manipulator.go_to_pose_goal(pose, orientaion)
+            print manipulator.go_to_position_goal(pose)
             time.sleep(1)
         raw_input("press enter")
 
