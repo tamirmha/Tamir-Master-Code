@@ -99,10 +99,7 @@ class Simulator(object):
         arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
-    def set_links_length(self, min_length=1):
-        link_min = 0.1
-        link_interval = 0.3
-        link_max = 0.71
+    def set_links_length(self, min_length=1, link_max=0.41, link_min=0.1, link_interval=0.3):
         links = []
         lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
         links_length = [[0.1] + list(tup) for tup in
@@ -188,7 +185,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.datetime.now()
-    dofe = 3
+    dofe = 6
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -216,8 +213,10 @@ if __name__ == '__main__':
     print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
 
 # Done - set for first joint the current location as target.
-# Todo check to change tolerance for detection point z-orientaion
 # todo change planner
 # toDo calculate indicies
-# tOdo finish workspace
 # todO change links weight according length
+# done delete base link visuality and change link0 to box
+# todo change link0 to the platform -
+# Done add roll for each manipulator in last joint
+# TodO add floor at 3 meter
