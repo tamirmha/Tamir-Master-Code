@@ -2,7 +2,7 @@
 # Ros Libs
 import roslaunch
 import rospy
-from std_msgs.msg import String
+# from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import rosgraph
 # Moveit libs
@@ -10,21 +10,18 @@ import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 import tf
-# from moveit_commander.conversions import pose_to_list
 
 # System Libs
 import subprocess
 import shlex
 import os
 import time
-import sys
-import copy
 from math import pi
 import datetime
 from logging import warning
 import numpy as np
 import csv
-import socket
+from socket import error
 
 
 class Ros(object):
@@ -41,8 +38,10 @@ class Ros(object):
             rospy.loginfo('Error occurred at init')  # shows warning message
             pass
 
-    def start_launch(self, launch_name, launch_path, args=[]):
+    def start_launch(self, launch_name, launch_path, args=None):
         """Start launch file"""
+        if args is None:
+            args = []
         try:
             uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
             path = self.pathname+launch_path+"/launch/"+launch_name+".launch"
@@ -91,64 +90,63 @@ class Ros(object):
             rospy.loginfo('Error occurred at ros_core_stop function')  # shows warning message
             pass
 
-    def checkroscorerun(self):
+    @staticmethod
+    def checkroscorerun():
         try:
             roscore_pid = rosgraph.Master('/rostopic').getPid()
             return roscore_pid
-            # self.CheckRosCore.set(roscore_pid)
-        except socket.error as e:
-            # self.CheckRosCore.set("None")
+        except error as e:
             pass
 
-    def send_tf(self, point, child="/Goal", parent="/base", orien=[0,0,0,1]):
-        # br = tf.TransformBroadcaster()
-        self.br.sendTransform((point[0], point[1], point[2]), orien, rospy.Time.now(), child, parent)
+    # def send_tf(self, point, child="/Goal", parent="/base", orien=[0,0,0,1]):
+    #     # br = tf.TransformBroadcaster()
+    #     self.br.sendTransform((point[0], point[1], point[2]), orien, rospy.Time.now(), child, parent)
+    #
+    # def distance_between_tfs(self, base_tf="/world", goal_tf="/ee_link"):
+    #     try:
+    #         # listener = tf.TransformListener()
+    #         self.listener.waitForTransform(base_tf, goal_tf, rospy.Time(0), rospy.Duration(2))
+    #         object_pos = self.listener.lookupTransform(base_tf, goal_tf, rospy.Time(0))
+    #         # x = object_pos[0][0]
+    #         # y = object_pos[0][1]
+    #         # z = object_pos[0][2]
+    #         # roll = object_pos[1][0]
+    #         # pitch = object_pos[1][1]
+    #         # yaw = object_pos[1][2]
+    #         return object_pos[0], object_pos[1]
+    #     except:
+    #         print("No detection of the object")
+    #         return 0, 0, 0
 
-    def distance_between_tfs(self, base_tf="/world", goal_tf="/ee_link"):
-        try:
-            # listener = tf.TransformListener()
-            self.listener.waitForTransform(base_tf, goal_tf, rospy.Time(0), rospy.Duration(2))
-            object_pos = self.listener.lookupTransform(base_tf, goal_tf, rospy.Time(0))
-            # x = object_pos[0][0]
-            # y = object_pos[0][1]
-            # z = object_pos[0][2]
-            # roll = object_pos[1][0]
-            # pitch = object_pos[1][1]
-            # yaw = object_pos[1][2]
-            return object_pos[0], object_pos[1]
-        except:
-            print("No detection of the object")
-            return 0, 0, 0
-
-    """ pub sub functions need further checking"""
-    def pub_sub_init(self, pub_name='sub_pyt', pub_type=String, sub_name='Sub_pyt', sub_type=String):
-        """Initiliaze the topics that are published and subscribed"""
-        try:
-            self.pub = rospy.Publisher(pub_name, pub_type, queue_size=1000)
-            rospy.Subscriber(sub_name, sub_type, self.callback)
-        except ValueError:
-            rospy.loginfo('Error occurred at pub_sub_init function')  # shows warning message
-            pass
-
-    def talker(self, msg):
-        try:
-            self.pub.publish(msg)
-        except ValueError:
-            rospy.loginfo('Error occurred at talker function')  # shows warning message
-            pass
-
-    def callback(self, data):
-        """ callback function when recive msg"""
-        self.data_back = "No data inserted, check msg type"
-        if data._type == "geometry_msgs/Twist":
-            self.data_back = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
-                data.linear.y) + "     z_ linear: " + str('%.2f' % data.linear.z) + '\n' + \
-                   "x_ angular: " + str(data.angular.x) + "      y_ angular: " + str(
-                data.angular.y) + "     z_ angular: " + str('%.2f' % data.angular.z)
-        if data._type == "std_msgs/String":
-            self.data_back = data.data
-        return self.data_back
-        # Todo add types of msgs
+    # """ pub sub functions need further checking"""
+    # def pub_sub_init(self, pub_name='sub_pyt', pub_type=String, sub_name='Sub_pyt', sub_type=String):
+    #     """Initiliaze the topics that are published and subscribed"""
+    #     try:
+    #         self.pub = rospy.Publisher(pub_name, pub_type, queue_size=1000)
+    #         rospy.Subscriber(sub_name, sub_type, self.callback)
+    #     except ValueError:
+    #         rospy.loginfo('Error occurred at pub_sub_init function')  # shows warning message
+    #         pass
+    #
+    # def talker(self, msg):
+    #     try:
+    #         self.pub.publish(msg)
+    #     except ValueError:
+    #         rospy.loginfo('Error occurred at talker function')  # shows warning message
+    #         pass
+    #
+    # def callback(self, data):
+    #     """ callback function when recive msg"""
+    #     self.data_back = "No data inserted, check msg type"
+    #     if data._type == "geometry_msgs/Twist":
+    #         self.data_back = "x_ linear: " + str(data.linear.x) + "      y_ linear: " + str(
+    #             data.linear.y) + "     z_ linear: " + str('%.2f' % data.linear.z) + '\n' + \
+    #                "x_ angular: " + str(data.angular.x) + "      y_ angular: " + str(
+    #             data.angular.y) + "     z_ angular: " + str('%.2f' % data.angular.z)
+    #     if data._type == "std_msgs/String":
+    #         self.data_back = data.data
+    #     return self.data_back
+    #     # Todo add types of msgs
 
 
 class MoveGroupPythonInterface(object):
@@ -167,44 +165,53 @@ class MoveGroupPythonInterface(object):
         self.move_group.set_goal_orientation_tolerance(0.05)
         self.move_group.set_goal_position_tolerance(0.01)
 
-        self.jacobian = self.move_group.get_jacobian_matrix(self.move_group.get_current_joint_values())
-
         # Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                         moveit_msgs.msg.DisplayTrajectory, queue_size=20)
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
-        # self.move_group.set_planner_id("RRTkConfigDefault")
         # self.eef_link = self.move_group.get_end_effector_link()
         # # a list of all the groups in the robot:
         # self.group_names = self.robot.get_group_names()
-
-        # self.move_group.set_planning_time(2)
-        # self.move_group.set_num_planning_attempts(3)
+        # todO - check those settings
+        # self.move_group.set_planner_id("RRTkConfigDefault")
+        # self.move_group.set_planning_time(10)
+        # self.move_group.set_num_planning_attempts(10)
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
-    def go_to_pose_goal(self, pose, orientaion):
+    def indices_calc(self, joints):
+        cur_pos = self.move_group.get_current_joint_values()
+        jacobian = self.move_group.get_jacobian_matrix(cur_pos)
+        cur_pos = np.asarray(cur_pos)
+        # Manipulability index
+        mu = round(np.linalg.det(jacobian * np.transpose(jacobian)) ** 0.5, 3)
+        # Local Conditioning Index
+        lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+        # Joint Mid-Range Proximity
+        theta_mean = [0.75]
+        for joint in joints:
+            if joint == "revolute":
+                theta_mean.append(np.pi)
+            else:
+                theta_mean.append(1)  # Todo fix with length
+        w = np.identity(len(joints)+1)*(cur_pos-theta_mean)  # weghted diagonal matrix
+        z = np.around(0.5*np.transpose(cur_pos-theta_mean)*w, 3)
+        return mu, lci, np.diag(z)
+
+    def go_to_pose_goal(self, pose, orientaion, joints=None):
         """send position and orientaion of the desired point
         pose - x,y,z poistion - in world frame
         orientaion - roll, pitch, yaw position - in world frame
         return true if the movement succeeded and reach at the desired accuracy
         """
-        # quaternion = tf.transformations.quaternion_from_euler(orientaion[0], orientaion[1], orientaion[2])
-        # # Planning to a Pose Goal
-        # pose_goal = geometry_msgs.msg.Pose()
-        # pose_goal.orientation.x = quaternion[0]
-        # pose_goal.orientation.y = quaternion[1]
-        # pose_goal.orientation.z = quaternion[2]
-        # pose_goal.orientation.w = quaternion[3]
-        # pose_goal.position.x = pose[0]
-        # pose_goal.position.y = pose[1]
-        # pose_goal.position.z = pose[2]
         pose_goal = pose + orientaion
         self.move_group.set_pose_target(pose_goal)
-        # we call the planner to compute the plan and execute it.
-
+        ind = 1
+        if joints is None:
+            joints = ["revolute", "revolute", "revolute", "revolute", "revolute", "revolute"]
         tic = rospy.get_time()
+        # we call the planner to compute the plan and execute it.
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
         if not plan:
             plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
@@ -213,51 +220,20 @@ class MoveGroupPythonInterface(object):
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
-
-        self.jacobian = self.move_group.get_jacobian_matrix(self.move_group.get_current_joint_values())
-        # a = self.move_group.get_current_pose().pose.orientation
-        # orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w]))-2 * np.pi) % (2 * np.pi)
-        # pos = self.move_group.get_current_pose().pose.position
+        if plan:
+            ind = self.indices_calc(joints)
         orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
         goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
         pos = self.get_current_position()
         orien = self.get_current_orientain()
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         accuracy = self.all_close(goal, current, self.tolerance)
-        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        # print accuracy, plan, diff
-        return accuracy and plan, sim_time
+        return accuracy and plan, sim_time, ind
 
-    def go_to_position_goal(self, pose_goal):
-        """send position and orientaion of the desired point
-        pose - x,y,z poistion - in world frame
-        return true if the movement succeeded and reach at the desired accuracy
-        """
-
-        self.move_group.set_position_target(pose_goal)
-        # we call the planner to compute the plan and execute it.
-        tic = rospy.get_time()
-        plan = self.move_group.go(wait=True)  # return true if succeed false if not
-        if not plan:
-            plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
-        toc = rospy.get_time()
-        sim_time = round(toc - tic, 2)
-        # Calling `stop()` ensures that there is no residual movement
-        self.move_group.stop()
-        self.move_group.clear_pose_targets()
-
-        self.jacobian = self.move_group.get_jacobian_matrix(self.move_group.get_current_joint_values())
-
-        goal = [pose_goal[0], pose_goal[1], pose_goal[2], 0, 0, 0]
-        pos = self.get_current_position()
-        current = [pos.x, pos.y, pos.z, 0, 0, 0]
-        accuracy = self.all_close(goal, current, self.tolerance)
-        # diff = [abs(current[j] - goal[j]) for j in range(len(current))]
-        # print accuracy, plan, diff
-        return accuracy and plan, sim_time
-
-    def add_obstacles(self, height=6.75, radius=0.1, pose=[0.5, 0], timeout=4):
-        floor = {'name': 'floor', 'pose': [0, 0, -0.01], 'size': (3, 3, 0.02)}
+    def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
+        if pose is None:
+            pose = [0.5, 0]
+        # floor = {'name': 'floor', 'pose': [0, 0, 3-0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
         # box_pose = geometry_msgs.msg.PoseStamped()
         # box_pose.header.frame_id = self.robot.get_planning_frame()
@@ -269,6 +245,7 @@ class MoveGroupPythonInterface(object):
         # self.scene.add_box(self.box_name, box_pose, size=floor['size'])
         # self.scene.attach_box('base_link', self.box_name)
         # add plant
+
         cylinder_pose = geometry_msgs.msg.PoseStamped()
         cylinder_pose.header.frame_id = self.robot.get_planning_frame()
         cylinder_pose.pose.orientation.w = 1.0
@@ -334,18 +311,21 @@ class MoveGroupPythonInterface(object):
 class UrdfClass(object):
     """ this class create URDF files """
 
-    def __init__(self, links=[], joints=[], joints_axis=[], rpy=[]):
+    def __init__(self, links=None, joints=None, joints_axis=None, rpy=None):
         """
         :param joints: array of joints types- can be 'revolute' or 'prismatic'
         :param links: array of the links lengths in meters [must be positive float]
         the first link will be the base link, who is always the same(connected to the world and link1  - his joint is limited to 0)
         """
-        if not joints:
-            joints = ['revolute', 'prismatic', 'revolute', 'revolute', 'revolute', 'revolute']
-        if not joints_axis:
+        if rpy is None:
+            rpy = []
+        if joints_axis is None:
             joints_axis = ['z', 'y', 'y', 'y', 'z', 'y']
-        if not links:
+        if joints is None:
+            joints = ['revolute', 'prismatic', 'revolute', 'revolute', 'revolute', 'revolute']
+        if links is None:
             links = [1, 1, 1, 1, 1, 1]
+
         self.links = links
         self.joint_data = joints
         self.axis = self.init_calc(joints, joints_axis)
@@ -362,11 +342,10 @@ class UrdfClass(object):
   <joint name="world_joint" type="fixed">
     <parent link="world" />
     <child link = "base_link" />
-    <origin xyz="0 -0.5 0" rpy="0.0 0.0 0.0" />
+    <origin xyz="0 -1 0" rpy="0.0 0.0 0.0" />
   </joint>
 
-  <xacro:include filename="$(find man_gazebo)/urdf/''' + str(self.links_number) + '''dof/transmission_''' + str(
-            self.links_number) + '''dof.xacro" />
+  <xacro:include filename="$(find man_gazebo)/urdf/'''+str(self.links_number)+'''dof/transmission_'''+str(self.links_number)+'''dof.xacro" />
   <xacro:include filename="$(find man_gazebo)/urdf/gazebo.xacro" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
@@ -394,19 +373,20 @@ class UrdfClass(object):
 
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
-        <xacro:property name="base_length" value="3.25"/>
-            <!-- Inertia parameters -->
+        <xacro:property name="base_length" value="3.1"/>
         <xacro:property name="base_mass" value="1.0" />
+        <xacro:property name="base_radius" value="0.060" />
         <xacro:property name="link0_mass" value="40.7" />
+        <xacro:property name="link0_radius" value="0.060" /> 
+            <!-- Inertia parameters -->
+        
         <xacro:property name="link1_mass" value="3.7" />
         <xacro:property name="link2_mass" value="8.393" />
         <xacro:property name="link3_mass" value="2.275" />
         <xacro:property name="link4_mass" value="1.219" />
         <xacro:property name="link5_mass" value="1.219" />
         <xacro:property name="link6_mass" value="0.1879" />
-
-        <xacro:property name="link0_radius" value="0.060" /> 
-        <xacro:property name="base_radius" value="0.060" />
+        
         <xacro:property name="link1_radius" value="0.060" />
         <xacro:property name="link2_radius" value="0.060" />
         <xacro:property name="link3_radius" value="0.060" />
@@ -417,12 +397,7 @@ class UrdfClass(object):
 
         	<!--   Base Link -->
     <link name="${prefix}base_link" >
-      <!--<visual>
-		<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
-        <geometry>
- 			<cylinder radius="${base_radius}" length="${base_length}"/>
-        </geometry>
-      </visual> -->
+
       <collision>
 			<origin xyz="0 0 ${base_length/2}" rpy="0 0 0" />
         <geometry>
@@ -433,7 +408,7 @@ class UrdfClass(object):
         <origin xyz="0.0 0.0 ${base_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
+    
     <xacro:property name="joint0_type" value="prismatic" /> 
     <xacro:property name="joint0_axe" value="0 0 1" /> 
     <xacro:property name="link0_length" value="0.25" />
@@ -443,7 +418,7 @@ class UrdfClass(object):
       <child link = "${prefix}link0" />
       <origin xyz="0.0 ${base_radius} ${base_length + link0_radius}" rpy="${-pi/2} 0.0 0" />
       <axis xyz="${joint0_axe}" />
-	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length}"/>
+	  <xacro:joint_limit joint_type="${joint0_type}" link_length="${link0_length*6}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -453,13 +428,12 @@ class UrdfClass(object):
 		<origin xyz="0 0 ${link0_radius} " rpy="0 0 0" /> 
         <geometry>
             <box size="0.1 0.1 0.2"/>
-			<!--<cylinder radius="${link0_radius}" length="${link0_length}"/>	--> 
         </geometry>
       </visual>
       <collision>
 		 <origin xyz="0 0 ${link0_length/2}" rpy="0 0 0" /> 
         <geometry>
-			<cylinder radius="${link0_radius}" length="${link0_length}"  mass="${link0_mass}"/>
+			 <box size="0.1 0.1 0.2"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${link0_radius}" length="${link0_length}" mass="${link0_mass}">
@@ -467,7 +441,7 @@ class UrdfClass(object):
       </xacro:cylinder_inertial>
     </link>
 
-
+    
     '''
         data = ''
 
@@ -475,15 +449,10 @@ class UrdfClass(object):
             data = data + self.joint_create(i + 1) + self.link_create(i + 1)
 
         tail = '''
-        
-    <joint name="${prefix}ee_joint" type="revolute">
+    <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}link''' + str(self.links_number) + '''" />
       <child link = "${prefix}ee_link" />
       <origin xyz="0.0  0.0 ${link''' + str(self.links_number) + '''_length}" rpy="0.0 0.0 0" />
-      <axis xyz="0 0 1"/>
-      <xacro:joint_limit joint_type="revolute" link_length="0.1"/>
-      <dynamics damping="0.0" friction="0.0"/>
-
     </joint>
 
 <!-- ee link -->
@@ -494,9 +463,6 @@ class UrdfClass(object):
         </geometry>
         <origin rpy="0 0 0" xyz="0 0 0.005"/>
       </collision>
-      <xacro:cylinder_inertial radius="0.01" length="0.01" mass="0.01">
-        <origin xyz="0.0 0.0 0.005" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
     </link>
 
     <xacro:arm_transmission prefix="${prefix}" />
@@ -559,28 +525,25 @@ class UrdfClass(object):
         return link
 
     def calc_origin(self, n):
-        # if n == 2:
 
-        if self.joint_data[n - 1] == "revolute":
+        if self.joint_data[n-1] == "revolute":
             if self.axis[n - 1] == '0 0 1':  # roll
-                if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
-                    return "0 0 ${link" + str(n - 1) + "_length}"
+                if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+                    return "0 0 ${link" + str(n-1) + "_length}"
                 else:  # the links are perpendiculars
-                    return "0 ${link" + str(n - 1) + "_radius} ${link" + str(n - 1) + "_length}"
+                    return "0 ${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
             else:  # pitch
-                if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
-                    return "0 ${link" + str(n - 1) + "_radius+link" + str(n) + "_radius} ${link" + str(
-                        n - 1) + "_length}"
-                elif self.rpy[n - 1] == ['0 ', '0 ', '${-pi/2} ']:  # links in the same directoin
-                    return " ${link" + str(n - 1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(
-                        n - 1) + "_length}"
-                else:  # the links are perpendiculars
-                    return "0 0 ${link" + str(n - 1) + "_length + link" + str(n) + "_radius}"
+                if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # around y: links are in the same directoin
+                    return "0 ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} ${link" + str(n-1) + "_length}"
+                elif self.rpy[n-1] == ['0 ', '0 ', '${-pi/2} ']:  # around x: links are not in the same directoin
+                    return " ${link" + str(n-1) + "_radius+link" + str(n) + "_radius} 0 ${link" + str(n-1) + "_length}"
+                else:  # round x:  the links are perpendiculars
+                    return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
         else:  # prismatic
-            if self.rpy[n - 1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
+            if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
                 return "0 0 ${link" + str(n - 1) + "_length}"
             else:  # the links are perpendiculars
-                return "0 0 ${link" + str(n - 1) + "_length + link" + str(n) + "_radius}"
+                return "0 0 ${link" + str(n-1) + "_length + link" + str(n) + "_radius}"
 
     def joint_create(self, n):
         jointname = 'joint' + str(n)
@@ -596,7 +559,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}link0" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${link0_length}" rpy="${pi/2} 0.0 0.0 " />
+      <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
@@ -685,7 +648,7 @@ class HandleCSV(object):
 
 def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
-    ros = Ros()
+    Ros()
     manipulator = MoveGroupPythonInterface()
     time.sleep(2)
     manipulator.add_obstacles(height=3.75)  # add floor
@@ -693,21 +656,15 @@ def main_move_group():
     poses = [[0.5, 0.15, 3.86], [0.5, 0.0, 3.89], [0.5, -0.15, 3.86], [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
     oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-    # poses = [[0.5199, -0.0695, 3.9418], [0.51999, 0.20548, 3.8102], [0.5200, 0.0041, 3.88]]
-    # oriens = [[-9.45996653172e-05,0.707113265991, 9.45979336393e-05,0.707100272179 ],
-    #           [-3.44003383361e-05, 0.707126617432,3.43984102074e-05, 0.707086920738],
-    #           [-3.29655886162e-05, 0.707009792328, 3.29746326315e-05,0.707203745842 ]]
 
     for j in range(3):
         for i in range(len(poses)):
             pose = poses[i]
             orientaion = oriens[i]
-            # print manipulator.go_to_pose_goal(pose, orientaion)
-            print manipulator.go_to_position_goal(pose)
+            print manipulator.go_to_pose_goal(pose, orientaion)
             time.sleep(1)
         raw_input("press enter")
 
 
 if __name__ == '__main__':
     main_move_group()
-

@@ -2,114 +2,61 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Code.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_6dof_configs.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/3dof_configs.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/4dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/4dof_configs.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/5dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/5dof_configs.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/5dof_configs_all.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/6dof_co.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/manips_4_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/manips_4_2.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results_file19_08_19.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/ros.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Simulator/results0.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Simulator/results01.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Simulator/results0101.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Simulator/results1.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Simulator/results1_4.xlsx" beforeDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.idea/shelf/" />
-    <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/simulator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="162" column="61" lean-forward="true" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
-              <folding>
-                <element signature="e#0#67#0" expanded="true" />
-                <element signature="e#1916#4664#0" />
-                <element signature="e#4720#5174#0" />
-                <element signature="e#5239#6751#0" />
-                <element signature="e#6787#7099#0" />
-                <element signature="e#7156#7231#0" />
-                <element signature="e#7974#9038#0" />
-                <element signature="e#9509#9926#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ros.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
-              <caret line="141" column="39" selection-start-line="141" selection-start-column="39" selection-end-line="141" selection-end-column="39" />
-              <folding>
-                <element signature="e#33#49#0" expanded="true" />
-                <element signature="e#243#298#0" />
-                <element signature="e#523#4959#0" />
-                <element signature="e#605#970#0" />
-                <element signature="e#1043#1599#0" />
-                <element signature="e#1092#1486#0" />
-                <element signature="e#1656#1827#0" />
-                <element signature="e#1885#2252#0" />
-                <element signature="e#4581#4959#0" />
-                <element signature="e#5006#14397#0" />
-                <element signature="e#9567#9632#0" />
-                <element signature="e#14500#25630#0" />
-                <element signature="e#25663#26945#0" />
-                <element signature="e#26975#27684#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>path</find>
-      <find>Time</find>
-    </findStrings>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/main1.py" />
-        <option value="$PROJECT_DIR$/simulator1.py" />
-        <option value="$PROJECT_DIR$/ros.py" />
-        <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/simulator.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="33" />
-    <option name="y" value="26" />
-    <option name="width" value="806" />
-    <option name="height" value="513" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Code" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Code" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
+  <component name="ProjectId" id="1OaHc8Dg1IhlVuTuc5IN52GzuJq" />
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/simulator.py" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.spelling" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/simulator.py" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/results" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -124,6 +71,28 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.simulator">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -136,6 +105,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -157,7 +127,30 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="results_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/analysis" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analysis/results_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -178,28 +171,8 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ros.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ros1" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ros1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -220,6 +193,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulator.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -232,13 +206,14 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.simulator" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.ros" />
+        <item itemvalue="Python.results_data" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.main1" />
-        <item itemvalue="Python.ros1" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" BundledDictionaries="32" BundledDictionary0="@types.dic" BundledDictionary1="lodash.dic" BundledDictionary2="pythonExtras.dic" BundledDictionary3="eslint-config-airbnb.dic" BundledDictionary4="jetbrains.dic" BundledDictionary5="firebase.dic" BundledDictionary6="english.dic" BundledDictionary7="vuex.dic" BundledDictionary8="django.dic" BundledDictionary9="eslint.dic" BundledDictionary10="redux.dic" BundledDictionary11="less.dic" BundledDictionary12="core-js.dic" BundledDictionary13="express.dic" BundledDictionary14="prettier.dic" BundledDictionary15="angular.dic" BundledDictionary16="rxjs.dic" BundledDictionary17="vuetify.dic" BundledDictionary18="css.dic" BundledDictionary19="request.dic" BundledDictionary20="zone.js.dic" BundledDictionary21="@angular.dic" BundledDictionary22="async.dic" BundledDictionary23="bluebird.dic" BundledDictionary24="_javascript.dic" BundledDictionary25="cloudfront.dic" BundledDictionary26="python.dic" BundledDictionary27="graphql.dic" BundledDictionary28="javascript.dic" BundledDictionary29="heroku.dic" BundledDictionary30="vue.dic" BundledDictionary31="debug.dic" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="project-level" UseSingleDictionary="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="" />
@@ -246,6 +221,54 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1559474997572</updated>
+      <workItem from="1565267277994" duration="247000" />
+      <workItem from="1565267537494" duration="53000" />
+      <workItem from="1565416989971" duration="653000" />
+      <workItem from="1565506224973" duration="11462000" />
+      <workItem from="1565586049487" duration="5266000" />
+      <workItem from="1565637527896" duration="53000" />
+      <workItem from="1565698922725" duration="115000" />
+      <workItem from="1565699059231" duration="541000" />
+      <workItem from="1565700911515" duration="121000" />
+      <workItem from="1565760138777" duration="3341000" />
+      <workItem from="1565844717243" duration="1257000" />
+      <workItem from="1565845989428" duration="2421000" />
+      <workItem from="1565865857690" duration="1833000" />
+      <workItem from="1565939594178" duration="1224000" />
+      <workItem from="1565951388980" duration="627000" />
+      <workItem from="1565961687277" duration="627000" />
+      <workItem from="1566032885144" duration="811000" />
+      <workItem from="1566104012958" duration="360000" />
+      <workItem from="1566104394823" duration="1704000" />
+      <workItem from="1566137065613" duration="140000" />
+      <workItem from="1566200599933" duration="35000" />
+      <workItem from="1566200717148" duration="1065000" />
+      <workItem from="1566217963732" duration="5390000" />
+      <workItem from="1566276910645" duration="14824000" />
+      <workItem from="1566310733326" duration="22000" />
+      <workItem from="1566448673401" duration="7350000" />
+      <workItem from="1566481687188" duration="536000" />
+      <workItem from="1566482493228" duration="219000" />
+      <workItem from="1566482892992" duration="10000" />
+      <workItem from="1566483065933" duration="370000" />
+      <workItem from="1566536770015" duration="3557000" />
+      <workItem from="1566543487975" duration="31000" />
+      <workItem from="1566546582160" duration="11000" />
+      <workItem from="1566709780683" duration="327000" />
+      <workItem from="1566794516180" duration="1577000" />
+      <workItem from="1566829777222" duration="266000" />
+      <workItem from="1566830444849" duration="1553000" />
+      <workItem from="1566883269584" duration="1439000" />
+      <workItem from="1566885008439" duration="661000" />
+      <workItem from="1566969273070" duration="95000" />
+      <workItem from="1566969440550" duration="8000" />
+      <workItem from="1567056690840" duration="13878000" />
+      <workItem from="1567092085787" duration="10288000" />
+      <workItem from="1567158804642" duration="179000" />
+      <workItem from="1567162525295" duration="16000" />
+      <workItem from="1567228469580" duration="274000" />
+      <workItem from="1567228777810" duration="12155000" />
+      <workItem from="1567246715755" duration="10000" />
     </task>
     <task id="LOCAL-00001" summary="close and reopen gazebo - working">
       <created>1560433283028</created>
@@ -261,180 +284,67 @@
       <option name="project" value="LOCAL" />
       <updated>1560538701428</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="close and reopen gazebo - working">
+      <created>1562145140853</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1562145140853</updated>
+    </task>
+    <task id="LOCAL-00004" summary="cosmetics fixing">
+      <created>1563179414586</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1563179414586</updated>
+    </task>
+    <task id="LOCAL-00005" summary="cosmetics fixing">
+      <created>1566217550691</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1566217550691</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16229509" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3725702" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956802" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50054646" side_tool="true" weight="0.3298279" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49945354" weight="0.32937366" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24972677" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3298279" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39961758" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="close and reopen gazebo - working" />
-    <option name="LAST_COMMIT_MESSAGE" value="close and reopen gazebo - working" />
+    <MESSAGE value="cosmetics fixing" />
+    <option name="LAST_COMMIT_MESSAGE" value="cosmetics fixing" />
   </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="evaluateCodeFragment">
-      <expression>
-        <expression-string>32*50</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>len(arms)/50</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>len(arms)/51</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>rospy.get_time()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>print rospy.get_time()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-    </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ros1.py" />
-    <entry file="file://$PROJECT_DIR$/main1.py" />
-    <entry file="file://$PROJECT_DIR$/simulator1.py" />
-    <entry file="file://$PROJECT_DIR$/archive/bashhelp.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/archive/simulator.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-165" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/archive/test.sh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rospy/rostime.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="170" column="31" selection-start-line="170" selection-start-column="21" selection-end-line="170" selection-end-column="31" />
-          <folding>
-            <element signature="e#1878#1888#0" expanded="true" />
-            <element signature="e#5038#5485#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-1247972723/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="940" column="8" selection-start-line="940" selection-start-column="8" selection-end-line="940" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/rospy/impl/tcpros_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="162" selection-start-line="162" selection-end-line="162" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///opt/ros/melodic/lib/python2.7/dist-packages/moveit_commander/move_group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ros.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
-          <caret line="141" column="39" selection-start-line="141" selection-start-column="39" selection-end-line="141" selection-end-column="39" />
-          <folding>
-            <element signature="e#33#49#0" expanded="true" />
-            <element signature="e#243#298#0" />
-            <element signature="e#523#4959#0" />
-            <element signature="e#605#970#0" />
-            <element signature="e#1043#1599#0" />
-            <element signature="e#1092#1486#0" />
-            <element signature="e#1656#1827#0" />
-            <element signature="e#1885#2252#0" />
-            <element signature="e#4581#4959#0" />
-            <element signature="e#5006#14397#0" />
-            <element signature="e#9567#9632#0" />
-            <element signature="e#14500#25630#0" />
-            <element signature="e#25663#26945#0" />
-            <element signature="e#26975#27684#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/simulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="162" column="61" lean-forward="true" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#67#0" expanded="true" />
-            <element signature="e#1916#4664#0" />
-            <element signature="e#4720#5174#0" />
-            <element signature="e#5239#6751#0" />
-            <element signature="e#6787#7099#0" />
-            <element signature="e#7156#7231#0" />
-            <element signature="e#7974#9038#0" />
-            <element signature="e#9509#9926#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1567240872470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1567243036086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
