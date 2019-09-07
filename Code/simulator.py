@@ -192,7 +192,7 @@ class Simulator(object):
         suc_res = "False"
         mu_min = -1
         lci_min = -1
-        z_min = -1
+        z_max = -1
         data_time = [-1, -1, -1, -1, -1]
         avg_time = -1
         if data_res.count(True) >= 3:
@@ -207,10 +207,11 @@ class Simulator(object):
             # choose only the min values because those are the "worst grade"
             mu_min = mu[mu > 0].min()
             lci_min = lci[lci > 0].min()
-            z_min = z[z > 0].min()
+            # choose only the max value because this is the "worst grade"
+            z_max = z[z > 0].max()
         # return  data_res, data_time, suc_res, avg_time, mu_min, z_min, lci_min
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
-                data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_min), str(lci_min)]
+                data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
 
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
@@ -219,9 +220,10 @@ class Simulator(object):
             print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             joints = self.arms[arm]["arm"].joint_data
+            links = self.arms[arm]["arm"].links
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
-                data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints))
+                data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
             # calculate relavent data from data array
             # data_res, data_time, suc_res, avg_time, mu_min, z_min, LCI_min = self.assign_data(data)
             # all_data.append([datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
@@ -250,7 +252,7 @@ if __name__ == '__main__':
     foldere = "combined"
     sim = Simulator(dofe, foldere, True)
     arms = sim.arms
-    nums = 40  # how many arms to send to simulator each time
+    nums = 30  # how many arms to send to simulator each time
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[t * nums:])
@@ -270,5 +272,5 @@ if __name__ == '__main__':
 # todO change links weight according length
 # done delete base link visuality and change link0 to box
 # todo change link0 to the platform -
-# todo - to check it -add roll for each manipulator in last joint
+# done -add roll for each manipulator in last joint
 # TodO add floor at 3 meter --disabled
