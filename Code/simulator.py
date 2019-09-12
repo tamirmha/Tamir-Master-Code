@@ -6,10 +6,12 @@ from itertools import product
 from time import sleep
 from rospy import init_node
 
+import getpass, sys
+
 
 class Simulator(object):
 
-    def __init__(self, dof, folder, create=False, arms=None):
+    def __init__(self, dof, folder, create=False, arms=None, wait1=1.7, wait2=1.2):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -17,6 +19,8 @@ class Simulator(object):
         self.ros = Ros()  # for work with Ros
         self.arm_control = 0
         self.arms = []
+        self.wait1 = wait1
+        self.wait2 = wait2
         if create:  # all the configuration of the arms
             self.create_urdf_from_csv(str(self.dof) + "dof_configs")
         else:
@@ -164,9 +168,9 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        sleep(1.7)
+        sleep(self.wait1)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        sleep(1.2)
+        sleep(self.wait2)
 
     def assign_data(self, data, arm):
         """
@@ -243,9 +247,31 @@ class Simulator(object):
 
 
 if __name__ == '__main__':
-
+    # set parametrs from terminal
+    args = sys.argv
+    if len(args) >1:
+        dofe = args[1]
+    else:
+        dofe = 6
+    # get pc name for specific configuration
+    username = getpass.getuser()
+    if username == "tamir":  # tamir laptop
+        nums = 30  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.2
+    elif username == "arl_main":  # lab
+        nums = 30  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.2
+    elif username == "tamirm":  # VM
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2
+        wait2_replace = 1.6
+    else:  # tamir laptop
+        nums = 30  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.2
     tic_main = datetime.now()
-    dofe = 6
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -254,20 +280,18 @@ if __name__ == '__main__':
     ros.ros_core_start()
     init_node('arl_python', anonymous=True)
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True)
+    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace)
     arms = sorted(sim.arms, reverse=True)
     # arms =[]
     # for a in sim.arms:
     #     if "roll_z_0_1pitch_y_0_4pitch_y_0_4" in a["name"]:
     #         arms.append(a)
-
-    nums = 30  # how many arms to send to simulator each time
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:])
+            sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums])
+            sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:
             sim.arms = arms[:nums]
@@ -288,7 +312,7 @@ if __name__ == '__main__':
 # todo check planner parameters
 # TODo how accuracy in go to pose effect
 
-# Todo get pc name for specific configuration
-# Todo set parametrs from terminal
+# done get pc name for specific configuration
+# done set parametrs from terminal
 
 
