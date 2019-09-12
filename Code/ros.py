@@ -175,18 +175,20 @@ class MoveGroupPythonInterface(object):
         self.move_group.clear_pose_targets()
         if plan:
             ind = self.indices_calc(joints, links)
-        orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
-        goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
-        pos = self.get_current_position()
-        orien = self.get_current_orientain()
-        current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        accuracy = self.all_close(goal, current, self.tolerance)
+        # orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
+        # goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
+        # pos = self.get_current_position()
+        # orien = self.get_current_orientain()
+        # current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
+        # accuracy = self.all_close(goal, current, self.tolerance)
+        # print(goal, current)
+        accuracy = True
         return accuracy and plan, sim_time, ind
 
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
         if pose is None:
             pose = [0.5, 0]
-        floor = {'name': 'floor', 'pose': [0, 0, 3-0.01], 'size': (3, 3, 0.02)}
+        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
@@ -629,19 +631,20 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()
     manipulator = MoveGroupPythonInterface()
-    time.sleep(2)
-    manipulator.add_obstacles(height=3.75)  # add floor
+    time.sleep(0.2)
+    manipulator.add_obstacles(height=0.75)  # add floor
     # desired positions of the EE in world frame
-    poses = [[0.5, 0.15, 3.86], [0.5, 0.0, 3.89], [0.5, -0.15, 3.86], [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
+    poses = [[0.2, 0, 0.9], [0.2, 0.0, 0.65], [0.2, 0, 0.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
-    oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    oriens = [[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.25, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    # 0.864246189594, -0.264724522829, 0.406788229942, 0.132373735309
 
     for j in range(3):
         for i in range(len(poses)):
             pose = poses[i]
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
-            # time.sleep(1)
+            time.sleep(1.5)
         raw_input("press enter")
 
 
