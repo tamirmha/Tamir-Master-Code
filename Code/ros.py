@@ -536,7 +536,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}link0" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
+      <origin xyz="0.0 0.0 ${link0_length}" rpy="${pi/2} 0.0 0.0" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>

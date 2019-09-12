@@ -40,7 +40,6 @@ class Simulator(object):
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
-
         # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -99,7 +98,7 @@ class Simulator(object):
         arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
-    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
+    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.41):
         """
         set all the possible links lengths in the defind interval
         :param min_length: the minimum length of all the links
@@ -244,7 +243,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.now()
-    dofe = 5
+    dofe = 4
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -254,7 +253,12 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     foldere = "combined"
     sim = Simulator(dofe, foldere, True)
-    arms = sim.arms
+    arms = sorted(sim.arms, reverse=True)
+    # arms =[]
+    # for a in sim.arms:
+    #     if "roll_z_0_1pitch_y_0_4pitch_y_0_4" in a["name"]:
+    #         arms.append(a)
+
     nums = 30  # how many arms to send to simulator each time
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
@@ -276,4 +280,12 @@ if __name__ == '__main__':
 # done delete base link visuality and change link0 to box
 # todo change link0 to the platform -
 # done -add roll for each manipulator in last joint
-# TodO add floor at 3 meter --disabled
+# done add floor at 3 meter
+# todo change detection points
+# todo change the base_link to 0 meters
+# todo check planner parameters
+
+# Todo get pc name for specific configuration
+# Todo set parametrs from terminal
+
+
