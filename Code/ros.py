@@ -604,6 +604,8 @@ class HandleCSV(object):
                 while "" in row:
                     row.remove("")
                 if len(row) > 0:
+                    if len(row) == 1:
+                        row = row[0].split(",")
                     data.append(row)
                     empty = False
                 else:
@@ -616,7 +618,7 @@ class HandleCSV(object):
 
     @staticmethod
     def read_data_action(data):
-        manip = map(list, zip(*data[1:]))
+        manip = map(list, zip(*data))
         manip_array_of_dict = []
         for i in range(0, len(manip) - 1, 2):
             manip_array_of_dict.append({"joint": manip[i], "axe": manip[i + 1]})

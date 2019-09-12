@@ -244,7 +244,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.now()
-    dofe = 3
+    dofe = 5
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
