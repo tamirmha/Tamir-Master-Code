@@ -26,9 +26,11 @@ class Simulator(object):
                 self.arms = arms
         # desired positions and orientaions of the EE in world frame
         z = 3  # height from ground
-        self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
-                      [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
-        self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+        # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
+        #               [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
+        # self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+        self.poses = [[0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]
+        self.oriens = [[0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
@@ -243,7 +245,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.now()
-    dofe = 4
+    dofe = 6
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -281,9 +283,10 @@ if __name__ == '__main__':
 # todo change link0 to the platform -
 # done -add roll for each manipulator in last joint
 # done add floor at 3 meter
-# todo change detection points
-# todo change the base_link to 0 meters
+# done change detection points
+# todo change the base_link to 0 meters - check difference
 # todo check planner parameters
+# TODo how accuracy in go to pose effect
 
 # Todo get pc name for specific configuration
 # Todo set parametrs from terminal
