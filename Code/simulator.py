@@ -99,7 +99,7 @@ class Simulator(object):
         arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
-    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.41):
+    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
         """
         set all the possible links lengths in the defind interval
         :param min_length: the minimum length of all the links
@@ -163,7 +163,7 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        sleep(1.6)
+        sleep(1.7)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
         sleep(1.2)
 
@@ -208,7 +208,10 @@ class Simulator(object):
             mu_min = mu[mu > 0].min()
             lci_min = lci[lci > 0].min()
             # choose only the max value because this is the "worst grade"
-            z_max = z[z > 0].max()
+            try:
+                z_max = z[z > 0].max()
+            except:
+                z_max = 0
         # return  data_res, data_time, suc_res, avg_time, mu_min, z_min, lci_min
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
                 data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
@@ -241,7 +244,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.now()
-    dofe = 6
+    dofe = 3
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
