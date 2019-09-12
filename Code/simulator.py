@@ -40,7 +40,6 @@ class Simulator(object):
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
-
         # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
@@ -163,7 +162,7 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        sleep(1.6)
+        sleep(1.7)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
         sleep(1.2)
 
@@ -208,7 +207,10 @@ class Simulator(object):
             mu_min = mu[mu > 0].min()
             lci_min = lci[lci > 0].min()
             # choose only the max value because this is the "worst grade"
-            z_max = z[z > 0].max()
+            try:
+                z_max = z[z > 0].max()
+            except:
+                z_max = 0
         # return  data_res, data_time, suc_res, avg_time, mu_min, z_min, lci_min
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
                 data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
@@ -241,7 +243,7 @@ class Simulator(object):
 if __name__ == '__main__':
 
     tic_main = datetime.now()
-    dofe = 6
+    dofe = 4
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -251,7 +253,12 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     foldere = "combined"
     sim = Simulator(dofe, foldere, True)
-    arms = sim.arms
+    arms = sorted(sim.arms, reverse=True)
+    # arms =[]
+    # for a in sim.arms:
+    #     if "roll_z_0_1pitch_y_0_4pitch_y_0_4" in a["name"]:
+    #         arms.append(a)
+
     nums = 30  # how many arms to send to simulator each time
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
@@ -273,4 +280,12 @@ if __name__ == '__main__':
 # done delete base link visuality and change link0 to box
 # todo change link0 to the platform -
 # done -add roll for each manipulator in last joint
-# TodO add floor at 3 meter --disabled
+# done add floor at 3 meter
+# todo change detection points
+# todo change the base_link to 0 meters
+# todo check planner parameters
+
+# Todo get pc name for specific configuration
+# Todo set parametrs from terminal
+
+

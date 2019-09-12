@@ -1,4 +1,3 @@
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,,,,,,,,,,,,,,
 roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
 roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,,,,,,,,,,,,,,
@@ -8,7 +7,6 @@ pitch,y,,roll,y,,pris,y,,pris,z,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,,,,,,,,,,,,,,
 roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
 roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,,,,,,,,,,,,,,
@@ -18,7 +16,6 @@ roll,y,,pitch,y,,pris,y,,pris,z,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,,,,,,,,,,,,,,
 roll,z,,roll,z,,roll,z,,roll,z,,,,,,,,,,,,,,,
 roll,y,,roll,y,,roll,y,,roll,y,,,,,,,,,,,,,,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,,,,,,,,,,,,,,
@@ -28,7 +25,6 @@ roll,y,,pitch,y,,pris,z,,pris,y,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y
@@ -38,7 +34,6 @@ roll,z,,roll,y,,roll,x,,pitch,y,,pitch,x,,pitch,z,,pris,x,,pris,y,,pris,z
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y
@@ -48,7 +43,6 @@ roll,z,,roll,y,,roll,x,,pitch,y,,pitch,x,,pitch,z,,pris,x,,pris,y,,pris,z
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y
@@ -58,7 +52,6 @@ roll,z,,roll,y,,roll,x,,pitch,y,,pitch,x,,pitch,z,,pris,x,,pris,y,,pris,z
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,,joint,axe,,joint,axe,,
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,,roll,z,,roll,z,,
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,,roll,y,,roll,y,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,,pitch,y,,pitch,y,,
@@ -68,7 +61,6 @@ roll,z,,roll,y,,roll,x,,pitch,y,,pitch,x,,pitch,z,,,pris,x,,pris,y,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,,joint,axe,,joint,axe,,
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,,roll,z,,roll,z,,
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,,roll,y,,roll,y,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,,pitch,y,,pitch,y,,
@@ -78,7 +70,6 @@ roll,z,,roll,y,,roll,x,,pitch,y,,pitch,x,,pitch,z,,,pris,x,,pris,y,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,joint,axe,,,joint,axe,,joint,axe,,
 roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,roll,z,,,roll,z,,roll,z,,
 roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,roll,y,,,roll,y,,roll,y,,
 pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,pitch,y,,,pitch,y,,pitch,y,,

@@ -157,11 +157,12 @@ class MoveGroupPythonInterface(object):
         """
         pose_goal = pose + orientaion
         self.move_group.set_pose_target(pose_goal)
+
         ind = 1
         if joints is None:
-            joints = ["revolute", "revolute", "revolute", "revolute", "revolute", "revolute"]
+            joints = ["revolute"] * (len(self.move_group.get_active_joints())-2)
         if links is None:
-            links = [0.1, 0.4, 0.4, 0.4, 0.4, 0.4]
+            links = [0.1] * (len(self.move_group.get_active_joints())-2)
         tic = rospy.get_time()
         # we call the planner to compute the plan and execute it.
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
@@ -187,15 +188,15 @@ class MoveGroupPythonInterface(object):
             pose = [0.5, 0]
         floor = {'name': 'floor', 'pose': [0, 0, 3-0.01], 'size': (3, 3, 0.02)}
         # Adding Objects to the Planning Scene
-        # box_pose = geometry_msgs.msg.PoseStamped()
-        # box_pose.header.frame_id = self.robot.get_planning_frame()
-        # box_pose.pose.orientation.w = 1.0
-        # box_pose.pose.position.x = floor['pose'][0]
-        # box_pose.pose.position.y = floor['pose'][1]
-        # box_pose.pose.position.z = floor['pose'][2]
-        # self.box_name = floor['name']
-        # self.scene.add_box(self.box_name, box_pose, size=floor['size'])
-        # self.scene.attach_box('base_link', self.box_name)
+        box_pose = geometry_msgs.msg.PoseStamped()
+        box_pose.header.frame_id = self.robot.get_planning_frame()
+        box_pose.pose.orientation.w = 1.0
+        box_pose.pose.position.x = floor['pose'][0]
+        box_pose.pose.position.y = floor['pose'][1]
+        box_pose.pose.position.z = floor['pose'][2]
+        self.box_name = floor['name']
+        self.scene.add_box(self.box_name, box_pose, size=floor['size'])
+        self.scene.attach_box('base_link', self.box_name)
 
         # add plant
         cylinder_pose = geometry_msgs.msg.PoseStamped()
@@ -535,7 +536,7 @@ class UrdfClass(object):
     <joint name="${prefix}joint1" type="${joint1_type}">
       <parent link="${prefix}link0" />
       <child link="${prefix}link1" />
-      <origin xyz="0.0 0.0 ${link0_length}" rpy="0.0 0.0 -${pi/2}" />
+      <origin xyz="0.0 0.0 ${link0_length}" rpy="${pi/2} 0.0 0.0" />
       <axis xyz="${joint1_axe}"/>
 	  <xacro:joint_limit joint_type="${joint1_type}" link_length="${link1_length}"/>
       <dynamics damping="0.0" friction="0.0"/>
@@ -603,6 +604,8 @@ class HandleCSV(object):
                 while "" in row:
                     row.remove("")
                 if len(row) > 0:
+                    if len(row) == 1:
+                        row = row[0].split(",")
                     data.append(row)
                     empty = False
                 else:
@@ -615,7 +618,7 @@ class HandleCSV(object):
 
     @staticmethod
     def read_data_action(data):
-        manip = map(list, zip(*data[1:]))
+        manip = map(list, zip(*data))
         manip_array_of_dict = []
         for i in range(0, len(manip) - 1, 2):
             manip_array_of_dict.append({"joint": manip[i], "axe": manip[i + 1]})

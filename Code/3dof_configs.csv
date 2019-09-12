@@ -1,142 +1,118 @@
-joint ,axe
 roll,z
 pris,z
 roll,y
 ,
 ,
-joint ,axe
 roll,z
 pris,z
 pitch,y
 ,
 ,
-joint ,axe
 roll,z
 pris,z
 pris,y
 ,
 ,
-joint ,axe
 roll,z
 roll,y
 pitch ,y
 ,
 ,
-joint ,axe
 roll,z
 roll,y
 pris,y
 ,
 ,
-joint ,axe
 roll,z
 roll,y
 pris,z
 ,
 ,
-joint ,axe
 roll,z
 roll,y
 roll,y
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 roll,y
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 roll,z
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pitch,z
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 roll,x
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pitch,x
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pris,y
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pris,z
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pitch,y
 ,
 ,
-joint ,axe
 roll,z
 pitch,y
 pris,x
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 pitch,z
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 roll,x
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 pitch,x
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 roll,z
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 pris,x
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 roll,y
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 pitch,y
 ,
 ,
-joint ,axe
 roll,z
 pris,y
 pris,y
