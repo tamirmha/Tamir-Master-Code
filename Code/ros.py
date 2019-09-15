@@ -206,9 +206,9 @@ class MoveGroupPythonInterface(object):
         cylinder_pose.pose.orientation.w = 1.0
         cylinder_pose.pose.position.x = pose[0]
         cylinder_pose.pose.position.y = pose[1]
-        cylinder_pose.pose.position.z = height/2.0
+        cylinder_pose.pose.position.z =floor['pose'][2]+0.75/2# height/2.0
         self.cylinder_name = 'plant'
-        self.scene.add_cylinder(self.cylinder_name, cylinder_pose, height, radius)
+        self.scene.add_cylinder(self.cylinder_name, cylinder_pose, 0.75, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
     @staticmethod
@@ -632,11 +632,11 @@ def main_move_group():
     Ros()
     manipulator = MoveGroupPythonInterface()
     time.sleep(0.2)
-    manipulator.add_obstacles(height=0.75)  # add floor
+    manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame
-    poses = [[0.2, 0, 0.9], [0.2, 0.0, 0.65], [0.2, 0, 0.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
+    poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
-    oriens = [[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.25, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    oriens = [[-3.1459, 0, 0],[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.5, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
     # 0.864246189594, -0.264724522829, 0.406788229942, 0.132373735309
 
     for j in range(3):
