@@ -11,7 +11,7 @@ import json
 
 class Simulator(object):
 
-    def __init__(self, dof, folder, create=False, arms=None, wait1=1.7, wait2=1.2):
+    def __init__(self, dof, folder, create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -22,7 +22,7 @@ class Simulator(object):
         self.wait1 = wait1
         self.wait2 = wait2
         if create:  # all the configuration of the arms
-            self.create_urdf_from_csv(str(self.dof) + "dof_configs")
+            self.create_urdf_from_csv(str(self.dof) + "dof_configs",  link_max)
         else:
             if not arms:
                 self.arms_exist()
@@ -131,14 +131,14 @@ class Simulator(object):
                 links.append([str(x) for x in link])
         return links
 
-    def create_urdf_from_csv(self, csv_name="manips"):
+    def create_urdf_from_csv(self, csv_name="manips", link_max=0.41):
         # read from csv file with all the possible configuration for manipulators
         configs = HandleCSV().read_data(csv_name)
         # Create the urdf files
         data = []
         base_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
         self.create_folder(base_path + str(self.dof) + "dof/" + self.folder)
-        links = self.set_links_length()
+        links = self.set_links_length(link_max=link_max)
         index = 0
         for config in configs:
             for arm in config:
@@ -163,22 +163,6 @@ class Simulator(object):
         if not path.exists(name):
             mkdir(name)
         return name
-
-    def replace_model(self, arm):
-        """
-        replace configuration in the simulation
-        :param arm: the new configuration tho simulate
-        :return:
-        """
-        fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + \
-              " dof:=" + str(self.dof) + "dof"
-        if self.arm_control != 0:
-            self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
-        replace_command = "roslaunch man_gazebo replace_model.launch " + fil
-        self.ros.ter_command(replace_command)
-        sleep(self.wait1)
-        self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        sleep(self.wait2)
 
     def assign_data(self, data, arm):
         """
@@ -230,6 +214,22 @@ class Simulator(object):
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
                 data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
 
+    def replace_model(self, arm):
+        """
+        replace configuration in the simulation
+        :param arm: the new configuration tho simulate
+        :return:
+        """
+        fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + \
+              " dof:=" + str(self.dof) + "dof"
+        if self.arm_control != 0:
+            self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
+        replace_command = "roslaunch man_gazebo replace_model.launch " + fil
+        self.ros.ter_command(replace_command)
+        sleep(self.wait1)
+        self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
+        sleep(self.wait2)
+
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
@@ -260,8 +260,13 @@ if __name__ == '__main__':
     args = sys.argv
     if len(args) >1:
         dofe = int(args[1])
+        if len(args) > 2:
+            link_max = float(args[2]) + 0.1
     else:
         dofe = 6
+        link_max = 0.41
+
+    print type(link_max)
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
@@ -289,7 +294,7 @@ if __name__ == '__main__':
     ros.ros_core_start()
     init_node('arl_python', anonymous=True)
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace)
+    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     arms = sorted(sim.arms, reverse=True)
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
@@ -320,6 +325,7 @@ if __name__ == '__main__':
 # done save to JSON file
 # done change defination of success
 # done delete created files
+# done change length from terminal
 
 # done get pc name for specific configuration
 # done set parametrs from terminal
