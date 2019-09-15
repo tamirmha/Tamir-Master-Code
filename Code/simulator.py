@@ -49,11 +49,13 @@ class Simulator(object):
         # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
 
-    def save_json(self, name="data_file", data=None):
+    @staticmethod
+    def save_json(name="data_file", data=None):
         with open(name + ".json", "w") as write_file:
             json.dump(data, write_file, indent=2)
 
-    def load_json(self, name="data_file"):
+    @staticmethod
+    def load_json(name="data_file"):
         with open(name + ".json", "r") as read_file:
             return json.load(read_file)
 
@@ -173,24 +175,28 @@ class Simulator(object):
         :return: array of the results
         """
         data_res = []
-        mu = []  # Manipulability index
+        mu = []   # Manipulability index
         lci = []  # Local Conditioning Index
-        z = []  # Joint Mid-Range Proximity
+        z = []    # Joint Mid-Range Proximity
+        ri = []   # Relative Manipulability Index
         for j in data:
             data_res.append(j[0])
             if j[0]:
                 mu.append(j[2][0])
                 lci.append(j[2][1])
                 z.append(j[2][2].min())
+                ri.append(j[2][3])
             else:
                 mu.append(-1)
                 lci.append(-1)
                 z.append(-1)
+                ri.append(-1)
         self.json_data.append({self.arms[arm]["name"]: [{"results": data_res}, {"mu": mu},
-                                                        {"LCI": lci}, {"z": z}]})
+                                                        {"LCI": lci}, {"z": z}, {"ri": ri}]})
         suc_res = "False"
         mu_min = -1
         lci_min = -1
+        ri_min = -1
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
@@ -203,16 +209,18 @@ class Simulator(object):
             mu = np.asarray(mu)
             lci = np.asarray(lci)
             z = np.asarray(z)
+            ri_min = np.asarray(ri_min)
             # choose only the min values because those are the "worst grade"
-            mu_min = mu[mu > 0].min()
-            lci_min = lci[lci > 0].min()
+            mu_min = mu[mu >= 0].min()
+            lci_min = lci[lci >= 0].min()
+            ri_min = ri[ri >= 0].min()
             # choose only the max value because this is the "worst grade"
             try:
                 z_max = z[z > 0].max()
             except:
                 z_max = 0
-        return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
-                data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
+        return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
+                str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
 
     def replace_model(self, arm):
         """
@@ -326,7 +334,6 @@ if __name__ == '__main__':
 # done change defination of success
 # done delete created files
 # done change length from terminal
-
 # done get pc name for specific configuration
 # done set parametrs from terminal
 

@@ -130,12 +130,19 @@ class MoveGroupPythonInterface(object):
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
+    def manipulability_index(self, jacobian):
+        return round(np.linalg.det(jacobian * np.transpose(jacobian)) ** 0.5, 3)
+
     def indices_calc(self, joints, links):
-        cur_pos = self.move_group.get_current_joint_values()
-        jacobian = self.move_group.get_jacobian_matrix(cur_pos)
+        # ignoring the final joint which is a roll
+        cur_pos = self.move_group.get_current_joint_values()[:-1]
+        jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
         cur_pos = np.asarray(cur_pos)
         # Manipulability index
-        mu = round(np.linalg.det(jacobian * np.transpose(jacobian)) ** 0.5, 3)
+        mu = self.manipulability_index(jacobian)
+        if mu == 0:
+            # manipulator doesnt move
+            return 1
         # Local Conditioning Index
         lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
         # Joint Mid-Range Proximity
@@ -145,9 +152,15 @@ class MoveGroupPythonInterface(object):
                 theta_mean.append(np.pi)
             else:
                 theta_mean.append(float(links[joints.index(joint)]))
-        w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-        z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
-        return mu, lci, np.diag(z)
+        w = np.identity(len(joints)+1)*(cur_pos-theta_mean)  # weighted diagonal matrix
+        z = np.around(0.5*np.transpose(cur_pos-theta_mean)*w, 3)
+        # Relative Manipulability Index
+        ri = 1.1
+        for i in range(len(cur_pos)):
+            r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
+            if r < ri:
+                ri = r
+        return mu, lci, np.diag(z), ri
 
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point
