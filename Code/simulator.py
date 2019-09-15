@@ -209,7 +209,7 @@ class Simulator(object):
             mu = np.asarray(mu)
             lci = np.asarray(lci)
             z = np.asarray(z)
-            ri_min = np.asarray(ri_min)
+            ri = np.asarray(ri)
             # choose only the min values because those are the "worst grade"
             mu_min = mu[mu >= 0].min()
             lci_min = lci[lci >= 0].min()
@@ -266,15 +266,12 @@ class Simulator(object):
 if __name__ == '__main__':
     # set parametrs from terminal
     args = sys.argv
+    dofe = 4
+    link_max = 0.41
     if len(args) >1:
         dofe = int(args[1])
         if len(args) > 2:
             link_max = float(args[2]) + 0.1
-    else:
-        dofe = 6
-        link_max = 0.41
-
-    print type(link_max)
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop

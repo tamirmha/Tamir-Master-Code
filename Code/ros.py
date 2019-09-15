@@ -130,8 +130,13 @@ class MoveGroupPythonInterface(object):
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
-    def manipulability_index(self, jacobian):
-        return round(np.linalg.det(jacobian * np.transpose(jacobian)) ** 0.5, 3)
+    @staticmethod
+    def manipulability_index(jacobian):
+        det_j = np.linalg.det(jacobian * np.transpose(jacobian))
+        if det_j > 0.00001:  # preventing numeric problems
+            return round(det_j ** 0.5, 3)
+        else:
+            return 0
 
     def indices_calc(self, joints, links):
         # ignoring the final joint which is a roll
@@ -140,9 +145,6 @@ class MoveGroupPythonInterface(object):
         cur_pos = np.asarray(cur_pos)
         # Manipulability index
         mu = self.manipulability_index(jacobian)
-        if mu == 0:
-            # manipulator doesnt move
-            return 1
         # Local Conditioning Index
         lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
         # Joint Mid-Range Proximity
@@ -157,9 +159,10 @@ class MoveGroupPythonInterface(object):
         # Relative Manipulability Index
         ri = 1.1
         for i in range(len(cur_pos)):
-            r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
-            if r < ri:
-                ri = r
+            if mu != 0:
+                r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
+                if r < ri:
+                    ri = r
         return mu, lci, np.diag(z), ri
 
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
