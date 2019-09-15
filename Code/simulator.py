@@ -5,11 +5,13 @@ import numpy as np
 from itertools import product
 from time import sleep
 from rospy import init_node
+import getpass, sys
+import json
 
 
 class Simulator(object):
 
-    def __init__(self, dof, folder, create=False, arms=None):
+    def __init__(self, dof, folder, create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -17,8 +19,10 @@ class Simulator(object):
         self.ros = Ros()  # for work with Ros
         self.arm_control = 0
         self.arms = []
+        self.wait1 = wait1
+        self.wait2 = wait2
         if create:  # all the configuration of the arms
-            self.create_urdf_from_csv(str(self.dof) + "dof_configs")
+            self.create_urdf_from_csv(str(self.dof) + "dof_configs",  link_max)
         else:
             if not arms:
                 self.arms_exist()
@@ -29,8 +33,8 @@ class Simulator(object):
         # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
         #               [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
         # self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-        self.poses = [[0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]
-        self.oriens = [[0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
+        self.poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]
+        self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
@@ -44,6 +48,16 @@ class Simulator(object):
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
         # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
         self.replace_model(0)  # set the first arm
+
+    @staticmethod
+    def save_json(name="data_file", data=None):
+        with open(name + ".json", "w") as write_file:
+            json.dump(data, write_file, indent=2)
+
+    @staticmethod
+    def load_json(name="data_file"):
+        with open(name + ".json", "r") as read_file:
+            return json.load(read_file)
 
     @staticmethod
     def create_arm(interface_joints, joint_parent_axis, links, folder):
@@ -100,7 +114,7 @@ class Simulator(object):
         arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
-    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.41):
+    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
         """
         set all the possible links lengths in the defind interval
         :param min_length: the minimum length of all the links
@@ -119,14 +133,14 @@ class Simulator(object):
                 links.append([str(x) for x in link])
         return links
 
-    def create_urdf_from_csv(self, csv_name="manips"):
+    def create_urdf_from_csv(self, csv_name="manips", link_max=0.41):
         # read from csv file with all the possible configuration for manipulators
         configs = HandleCSV().read_data(csv_name)
         # Create the urdf files
         data = []
         base_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/"
         self.create_folder(base_path + str(self.dof) + "dof/" + self.folder)
-        links = self.set_links_length()
+        links = self.set_links_length(link_max=link_max)
         index = 0
         for config in configs:
             for arm in config:
@@ -137,7 +151,7 @@ class Simulator(object):
                                                        path + self.arms[index]["name"])
                     data.append([self.arms[index]["name"], self.folder, datetime.now().strftime("%d_%m_%y")])
                     index = index+1
-        HandleCSV().save_data(data, "created files")
+        self.save_json("created arms", data)
 
     def arms_exist(self):
         path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + str(self.dof) \
@@ -152,6 +166,62 @@ class Simulator(object):
             mkdir(name)
         return name
 
+    def assign_data(self, data, arm):
+        """
+        Calculate the manipulaot indices(Manipulability, Local Conditioning Index, Joint Mid-Range Proximity)
+        if the manipulator succed and the time that take
+        :param data: array of the result of the configuration about each detection point
+        :param arm: which configuration
+        :return: array of the results
+        """
+        data_res = []
+        mu = []   # Manipulability index
+        lci = []  # Local Conditioning Index
+        z = []    # Joint Mid-Range Proximity
+        ri = []   # Relative Manipulability Index
+        for j in data:
+            data_res.append(j[0])
+            if j[0]:
+                mu.append(j[2][0])
+                lci.append(j[2][1])
+                z.append(j[2][2].min())
+                ri.append(j[2][3])
+            else:
+                mu.append(-1)
+                lci.append(-1)
+                z.append(-1)
+                ri.append(-1)
+        self.json_data.append({self.arms[arm]["name"]: [{"results": data_res}, {"mu": mu},
+                                                        {"LCI": lci}, {"z": z}, {"ri": ri}]})
+        suc_res = "False"
+        mu_min = -1
+        lci_min = -1
+        ri_min = -1
+        z_max = -1
+        data_time = [-1, -1, -1, -1]
+        avg_time = -1
+        if data_res.count(True) >= 3 and data_res[3] and (data_res[0] or data_res[1]):
+            # if the arm arrived to 3 or more point and get to the lower point or one of the two
+            # top points --> it success and calc indices
+            suc_res = "True"
+            data_time = [d[1] for d in data]
+            avg_time = np.mean(data_time).round(2)
+            mu = np.asarray(mu)
+            lci = np.asarray(lci)
+            z = np.asarray(z)
+            ri = np.asarray(ri)
+            # choose only the min values because those are the "worst grade"
+            mu_min = mu[mu >= 0].min()
+            lci_min = lci[lci >= 0].min()
+            ri_min = ri[ri >= 0].min()
+            # choose only the max value because this is the "worst grade"
+            try:
+                z_max = z[z > 0].max()
+            except:
+                z_max = 0
+        return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
+                str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
+
     def replace_model(self, arm):
         """
         replace configuration in the simulation
@@ -164,62 +234,14 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
-        sleep(1.7)
+        sleep(self.wait1)
         self.arm_control = self.ros.start_launch("arm_controller", "man_gazebo", ["dof:=" + str(self.dof) + "dof"])
-        sleep(1.2)
-
-    def assign_data(self, data, arm):
-        """
-        Calculate the manipulaot indices(Manipulability, Local Conditioning Index, Joint Mid-Range Proximity)
-        if the manipulator succed and the time that take
-        :param data: array of the result of the configuration about each detection point
-        :param arm: which configuration
-        :return: array of the results
-        """
-        data_res = []
-        mu = []  # Manipulability index
-        lci = []  # Local Conditioning Index
-        z = []  # Joint Mid-Range Proximity
-        for j in data:
-            data_res.append(j[0])
-            if j[0]:
-                mu.append(j[2][0])
-                lci.append(j[2][1])
-                z.append(j[2][2].min())
-            else:
-                mu.append(-1)
-                lci.append(-1)
-                z.append(-1)
-        suc_res = "False"
-        mu_min = -1
-        lci_min = -1
-        z_max = -1
-        data_time = [-1, -1, -1, -1, -1]
-        avg_time = -1
-        if data_res.count(True) >= 3:
-            # if the arm arrived to 3 or more point it success and calc indices
-            suc_res = "True"
-            # data_time = []
-            data_time = [d[1] for d in data]
-            avg_time = np.mean(data_time).round(2)
-            mu = np.asarray(mu)
-            lci = np.asarray(lci)
-            z = np.asarray(z)
-            # choose only the min values because those are the "worst grade"
-            mu_min = mu[mu > 0].min()
-            lci_min = lci[lci > 0].min()
-            # choose only the max value because this is the "worst grade"
-            try:
-                z_max = z[z > 0].max()
-            except:
-                z_max = 0
-        # return  data_res, data_time, suc_res, avg_time, mu_min, z_min, lci_min
-        return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
-                data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
+        sleep(self.wait2)
 
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
+        self.json_data = []
         for arm in range(0, len(self.arms)):
             print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
@@ -229,23 +251,46 @@ class Simulator(object):
                 # inserting the data into array
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
             # calculate relavent data from data array
-            # data_res, data_time, suc_res, avg_time, mu_min, z_min, LCI_min = self.assign_data(data)
-            # all_data.append([datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"],
-            #     data_res, str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_min), str(LCI_min)])
             all_data.append(self.assign_data(data, arm))
+
             if arm == len(self.arms) - 1:
                 break
             self.replace_model(arm)
         # save the remaining data and close all the launch files
+        self.save_json(save_name, self.json_data)
         HandleCSV().save_data(all_data, save_name)
         self.ros.stop_launch(self.arm_control)
         self.ros.stop_launch(self.main)
 
 
 if __name__ == '__main__':
-
+    # set parametrs from terminal
+    args = sys.argv
+    dofe = 4
+    link_max = 0.41
+    if len(args) >1:
+        dofe = int(args[1])
+        if len(args) > 2:
+            link_max = float(args[2]) + 0.1
+    # get pc name for specific configuration
+    username = getpass.getuser()
+    if username == "tamir":  # tamir laptop
+        nums = 2  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.4
+    elif username == "arl_main":  # lab
+        nums = 30  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.2
+    elif username == "tamirm":  # VM
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2
+        wait2_replace = 1.7
+    else:  # tamir laptop
+        nums = 30  # how many arms to send to simulator each time
+        wait1_replace = 1.7
+        wait2_replace = 1.2
     tic_main = datetime.now()
-    dofe = 6
     ros = Ros()
     ros.ter_command("rosclean purge -y")
     roscore = ros.checkroscorerun()
@@ -254,20 +299,14 @@ if __name__ == '__main__':
     ros.ros_core_start()
     init_node('arl_python', anonymous=True)
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True)
+    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     arms = sorted(sim.arms, reverse=True)
-    # arms =[]
-    # for a in sim.arms:
-    #     if "roll_z_0_1pitch_y_0_4pitch_y_0_4" in a["name"]:
-    #         arms.append(a)
-
-    nums = 30  # how many arms to send to simulator each time
     for t in range(len(arms) / nums + 1):
         if t == len(arms) / nums:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:])
+            sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums])
+            sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:
             sim.arms = arms[:nums]
@@ -287,8 +326,12 @@ if __name__ == '__main__':
 # todo change the base_link to 0 meters - check difference
 # todo check planner parameters
 # TODo how accuracy in go to pose effect
-
-# Todo get pc name for specific configuration
-# Todo set parametrs from terminal
+# Todo fix obstacle parameters
+# done save to JSON file
+# done change defination of success
+# done delete created files
+# done change length from terminal
+# done get pc name for specific configuration
+# done set parametrs from terminal
 
 
