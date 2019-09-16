@@ -33,7 +33,7 @@ class Simulator(object):
         # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
         #               [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
         # self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-        self.poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]
+        self.poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
         self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
@@ -266,9 +266,9 @@ class Simulator(object):
 if __name__ == '__main__':
     # set parametrs from terminal
     args = sys.argv
-    dofe = 4
+    dofe = 6
     link_max = 0.41
-    if len(args) >1:
+    if len(args) > 1:
         dofe = int(args[1])
         if len(args) > 2:
             link_max = float(args[2]) + 0.1
