@@ -169,16 +169,17 @@ class MoveGroupPythonInterface(object):
             # if there numeric error like one of the values is NaN or Inf or divided by zero
             return -1, -1, np.asarray([-1]*len(joints)), -1
 
-
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point
         pose - x,y,z poistion - in world frame
         orientaion - roll, pitch, yaw position - in world frame
         return true if the movement succeeded and reach at the desired accuracy
         """
+        # orientaion = self.get_current_orientain()
+        # orientaion = [orientaion[0], orientaion[1], orientaion[2]]
         pose_goal = pose + orientaion
         self.move_group.set_pose_target(pose_goal)
-
+        # self.move_group.set_position_target(pose)
         ind = 1
         if joints is None:
             joints = ["revolute"] * (len(self.move_group.get_active_joints())-2)

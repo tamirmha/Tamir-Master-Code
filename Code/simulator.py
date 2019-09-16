@@ -51,7 +51,7 @@ class Simulator(object):
 
     @staticmethod
     def save_json(name="data_file", data=None):
-        with open(name + ".json", "w") as write_file:
+        with open(name + ".json", "a") as write_file:
             json.dump(data, write_file, indent=2)
 
     @staticmethod
@@ -275,7 +275,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 2  # how many arms to send to simulator each time
+        nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.4
     elif username == "arl_main":  # lab
@@ -286,7 +286,7 @@ if __name__ == '__main__':
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 1.7
-    else:  # tamir laptop
+    else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.2
