@@ -243,7 +243,7 @@ class Simulator(object):
         all_data = []
         self.json_data = []
         for arm in range(0, len(self.arms)):
-            print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             joints = self.arms[arm]["arm"].joint_data
             links = self.arms[arm]["arm"].links
@@ -308,7 +308,7 @@ if __name__ == '__main__':
         elif t != 0:
             sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
-        else:
+        else:  # first run
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()

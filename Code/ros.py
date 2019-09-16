@@ -210,7 +210,7 @@ class MoveGroupPythonInterface(object):
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
         if pose is None:
             pose = [0.5, 0]
-        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (3, 3, 0.02)}
+        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (6, 6, 0.02)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
