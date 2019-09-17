@@ -70,28 +70,33 @@ class Tree:
         self.G1 = nx.Graph()  # 5&6 DOF tree - part1
         self.G2 = nx.Graph()  # 5&6 DOF tree - part2
         self.G3 = nx.Graph()  # 5&6 DOF tree - part3
+        self.G4 = nx.Graph()  # 1-3 DOF tree
+        self.colors = ["r", "b", "g", "navy", "k", "c", "m", "olive", "teal"]
 
-    def tree_create(self, n_from=0, n_to=2, all_trees=True, plot=False, save=True):
+    def tree_create(self, n_from=0, n_to=1, all_trees=True, plot=False, save=True):
         dofs = self.dofs
+        x3_pos = 0
         if all_trees:
             n_from = 0
             n_to = len(dofs)
         for i in range(n_from, n_to):
-            self.G = nx.Graph()  # 4&5 DOF tree
-            self.G1 = nx.Graph()  # 5&6 DOF tree - part1
-            self.G2 = nx.Graph()  # 5&6 DOF tree - part2
-            self.G3 = nx.Graph()  # 5&6 DOF tree - part3
+            self.G.clear() #= nx.Graph()  # 4&5 DOF tree
+            self.G1.clear() #= nx.Graph()  # 5&6 DOF tree - part1
+            self.G2.clear() #= nx.Graph()  # 5&6 DOF tree - part2
+            self.G3.clear() #= nx.Graph()  # 5&6 DOF tree - part3
             conf4number = len(dofs[i][1])
+            self.create_3dof_tree(dofs[i][0], x3_pos)
+            x3_pos = x3_pos + 2000
             conf4_width = 4000
             x4_pos = [(conf4_width * (k - conf4number / 2)) for k in range(conf4number)]
             t = 0
             for j in range(conf4number):
-                self.G.add_node(dofs[i][1][j], pos=(x4_pos[j], 80))
+                self.G.add_node(dofs[i][1][j], pos=(x4_pos[j], 80), node_color=self.colors[j])
                 conf5number = len(dofs[i][2][j])
                 conf5_width = conf4_width // conf5number
                 x5_pos = [(x4_pos[j] + conf5_width * (k - conf5number / 2)) for k in range(conf5number)]
                 for z in range(conf5number):
-                    self.G.add_node(dofs[i][2][j][z], pos=(x5_pos[z], 50))
+                    self.G.add_node(dofs[i][2][j][z], pos=(x5_pos[z], 50), node_color=self.colors[j])
                     if j < conf4number//3:
                         self.nodes_arrange(self.G1, self.G, x5_pos, conf5_width, i, j, z, t)
                     elif j > 2*conf4number//3-1:
@@ -111,14 +116,13 @@ class Tree:
         indices = [[], []]
         dof_flags = []
         i = 0
-
         configs = sorted(configs)
         for config in configs:
-            dof_flag = ".".join(config[0].split("+")[:3])
+            dof_flag = "->".join(config[0].split("+")[:3])
             if dof_flag not in dof3:
                 dof3.append(dof_flag)
                 indices[0].append(i)
-            dof_flag = ".".join(config[0].split("+")[:4])
+            dof_flag = "->".join(config[0].split("+")[:4])
             if dof_flag not in dof4:
                 new4conf = True
                 dof4.append(dof_flag)
@@ -127,7 +131,7 @@ class Tree:
                 dof5.append(dof_flags)
                 dof_flags = []
                 new4conf = False
-            dof_flag = ".".join(config[0].split("+")[:5])
+            dof_flag = "->".join(config[0].split("+")[:5])
             dof_flags.append(dof_flag)
             i = i + 1
 
@@ -142,20 +146,27 @@ class Tree:
                         configs[indices[0][i]:indices[0][i + 1]][:]])
 
         dof4_indices = [j for j in range(indices[1].index(indices[0][i + 1]), indices[1].index(indices[1][-1]) + 1)]
-        dof.append([[dof3[i]], dof4[dof4_indices[0]:dof4_indices[-1] + 1], dof5[dof4_indices[0]:dof4_indices[-1] + 1],
+        dof.append([[dof3[i+1]], dof4[dof4_indices[0]:dof4_indices[-1] + 1], dof5[dof4_indices[0]:dof4_indices[-1] + 1],
                     configs[indices[0][i + 1]:]])
 
         for i in range(len(dof)):
             for j in range(len(dof[i][3])):
                 for k in range(len(dof[i][3][j])):
-                    dof[i][3][j][k] = ".".join(dof[i][3][j][k].split("+"))[:-1]
+                    dof[i][3][j][k] = "->".join(dof[i][3][j][k].split("+"))[:-1]
         self.dofs = dof
         return dof
 
-    def tree_visuality(self, g):
+    def tree_visuality(self, g, all_text=False):
         nodelabeldict = {}
+        node_colors =[]
+        f_size = 10
         for n in g.nodes():
-            nodelabeldict[n] = n.split(".")[-1]
+            if all_text:
+                f_size =12
+                nodelabeldict[n] = "\n".join(n.split("->"))
+            else:
+                nodelabeldict[n] = n.split("->")[-1]
+            node_colors.append(g.nodes()[n]["node_color"])
         pos = nx.get_node_attributes(g, 'pos')
         pos_node = nx.get_node_attributes(g, 'pos')
         for p in pos:
@@ -163,29 +174,33 @@ class Tree:
                 pos[p] = (pos[p][0] + self.x_offset, pos[p][1] + self.y_offset)
             elif pos[p][1] == self.pos_low:
                 pos[p] = (pos[p][0] + self.x_offset, pos[p][1] - self.y_offset*2)
+            elif pos[p][1] == 150:
+                pos[p] = (pos[p][0] + self.x_offset, pos[p][1] - self.y_offset-1)
+            elif pos[p][1] == 220:
+                pos[p] = (pos[p][0] + self.x_offset-1400, pos[p][1] + 0*self.y_offset)
             else:
                 pos[p] = (pos[p][0] + self.x_offset, pos[p][1] + self.y_offset)
-        labeldescr = nx.draw_networkx_labels(g, pos=pos, font_size=9, labels=nodelabeldict)
+        labeldescr = nx.draw_networkx_labels(g, pos=pos, font_size=f_size, labels=nodelabeldict)
         for n, l in labeldescr.items():
             if labeldescr[n]._y == self.pos_low-2*self.y_offset:
                 l.set_rotation(self.findegree)
-        nx.draw_networkx(g, pos_node, node_size=80,  with_labels=False, alpha=0.5)
+        nx.draw_networkx(g, pos_node, node_size=80,  with_labels=False, alpha=0.5, node_color=node_colors)
 
     def nodes_arrange(self, g1, g, x5_pos, conf5_width, i, j, z, t):
         dofs = self.dofs
-        g1.add_node(dofs[i][2][j][z], pos=(x5_pos[z], self.pos_high))
+        g1.add_node(dofs[i][2][j][z], pos=(x5_pos[z], self.pos_high), node_color=self.colors[j])
         if dofs[i][1][j] in dofs[i][2][j][z]:
             g.add_edge(dofs[i][1][j], dofs[i][2][j][z])
             conf6number = len(dofs[i][3][t])
             conf6_width = conf5_width // conf6number
             x6_pos = [(x5_pos[z] + conf6_width * (k - conf6number / 2)) for k in range(conf6number)]
             for r in range(len(dofs[i][3][t])):
-                g1.add_node(dofs[i][3][t][r], pos=(x6_pos[r], self.pos_low))
+                g1.add_node(dofs[i][3][t][r], pos=(x6_pos[r], self.pos_low), node_color=self.colors[j])
                 if dofs[i][2][j][z] in dofs[i][3][t][r]:
                     g1.add_edge(dofs[i][2][j][z], dofs[i][3][t][r])
 
     def tree_plot(self, i, save=True):
-        plt.figure(i, figsize=(24.0, 10.0))
+        plt.figure(self.dofs[i][0][0], figsize=(24.0, 10.0))
         plt.subplots_adjust(0.01, 0.01, 0.99, 0.96, 0.2, 0.16)
         gs = gridspec.GridSpec(4, 1, height_ratios=[1, 1, 1, 1])
         self.subplot_arrange(self.G, gs[0], self.dofs[i][0][0])
@@ -193,15 +208,16 @@ class Tree:
         self.subplot_arrange(self.G2, gs[2], self.dofs[i][0][0])
         self.subplot_arrange(self.G3, gs[3], self.dofs[i][0][0])
         if save:
-            plt.savefig("combinations/" + str(i) + ".png", format='png')
+            plt.savefig("combinations/" + "".join(self.dofs[i][0][0].split(">")) + ".png", format='png')
+            plt.close()
 
     def subplot_arrange(self, g, gs, conf_name):
         plt.subplot(gs)
         self.tree_visuality(g)
         if gs.num1 == 0:
-            plt.title("All possible 4&5 DOF combination for the 3DOF configuration: " + conf_name)
+            plt.title(r"All possible 4&5 DOF combinations for the 3DOF configuration: $\bf{x}$".format(x=conf_name), fontsize=18)
         else:
-            plt.title("All possible 5&6 DOF combination for the 3DOF configuration: " + conf_name)
+            plt.title(r" All possible 5&6 DOF combinations for the 3DOF configuration: $\bf{x}$".format(x=conf_name), fontsize=16)
         pos = nx.get_node_attributes(g, 'pos')
         min_x = 100000
         max_x = -100000
@@ -212,6 +228,32 @@ class Tree:
                 max_x = pos[p][0]
         plt.ylim(35, 90)
         plt.xlim(min_x-150, max_x + 150)
+
+    def create_3dof_tree(self, dof, pos):
+        plt.figure("until3",figsize=(20.0, 15.0))
+        self.G4.add_node("roll_z", pos=(30000, 250), node_color="c")
+        self.G4.add_node("roll_z->pitch_y", pos=(10000, 220), node_color="r")
+        self.G4.add_node("roll_z->pris_z", pos=(35000, 220), node_color="r")
+        self.G4.add_node("roll_z->roll_y", pos=(42000, 220), node_color="r")
+        self.G4.add_node("roll_z->pris_y", pos=(25000, 220), node_color="r")
+        self.G4.add_edge("roll_z", "roll_z->roll_y")
+        self.G4.add_edge("roll_z", "roll_z->pris_z")
+        self.G4.add_edge("roll_z", "roll_z->pitch_y")
+        self.G4.add_edge("roll_z", "roll_z->pris_y")
+        self.G4.add_node(dof[0], pos=(pos, 150), node_color="b")
+        if "roll_z->pitch_y" in dof[0]:
+            self.G4.add_edge("roll_z->pitch_y", dof[0])
+        elif "roll_z->pris_z" in dof[0]:
+            self.G4.add_edge("roll_z->pris_z", dof[0])
+        elif "roll_z->pris_y" in dof[0]:
+            self.G4.add_edge("roll_z->pris_y", dof[0])
+        elif "roll_z->roll_y" in dof[0]:
+            self.G4.add_edge("roll_z->roll_y", dof[0])
+        self.tree_visuality(self.G4, True)
+        plt.ylim(140, 260)
+        plt.xlim(-1000, 47000)
+        plt.title("All the possible combinations 1-3 DOF")
+        plt.savefig("combinations/until3dof.png", format='png')
 
 
 def save_json(name="data_file", data=None):
@@ -228,7 +270,7 @@ def filter_configs(config, dof=6):
     """"
     check if the specific config is oass the assumptions
     """
-    a = [config.split("+")[i].split(",") for i in range(dof)]
+    a = [config.split("+")[i].split("_") for i in range(dof)]
     joint = [a[i][0] for i in range(dof)]
     axe = [a[i][1] for i in range(dof)]
     dof = len(joint) - 1
@@ -282,8 +324,8 @@ def calc_configs(file_name="5dof_configs", dof=6):
             for k in range(len(to_add[0])):
                 conf = ""
                 for z in range(len(dat[j]["joint"])):
-                    conf = conf + dat[j]["joint"][z] + "," + dat[j]["axe"][z] + "+"
-                conf = conf + to_add[0][k] + "," + to_add[1][k] + "+"
+                    conf = conf + dat[j]["joint"][z] + "_" + dat[j]["axe"][z] + "+"
+                conf = conf + to_add[0][k] + "_" + to_add[1][k] + "+"
                 if filter_configs(conf, dof):
                     all_data.append(conf)
             if len(all_data)>0:
