@@ -289,7 +289,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 2  # how many arms to send to simulator each time
+        nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.3
     elif username == "arl_main":  # lab

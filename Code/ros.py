@@ -132,8 +132,13 @@ class MoveGroupPythonInterface(object):
 
     @staticmethod
     def manipulability_index(jacobian):
-        det_j = np.linalg.det(jacobian * np.transpose(jacobian))
+        n = jacobian.size / len(jacobian)
+        if n == 5:
+            det_j = np.linalg.det(np.transpose(jacobian)*jacobian)
+        else:
+            det_j = np.linalg.det(jacobian * np.transpose(jacobian))
         if det_j > 0.00001:  # preventing numeric problems
+            # return round(det_j ** (1/n), 3)
             return round(det_j ** 0.5, 3)
         else:
             return 0
@@ -156,8 +161,9 @@ class MoveGroupPythonInterface(object):
                     theta_mean.append(np.pi)
                 else:
                     theta_mean.append(float(links[joints.index(joint)]))
-            w = np.identity(len(joints)+1)*(cur_pos-theta_mean)  # weighted diagonal matrix
-            z = np.around(0.5*np.transpose(cur_pos-theta_mean)*w, 3)
+            # theta_mean.append(np.pi)
+            w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+            z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index
             ri = 1.1
             for i in range(len(cur_pos)):
@@ -654,6 +660,7 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()
     manipulator = MoveGroupPythonInterface()
+    a=manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
     time.sleep(0.2)
     manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame
