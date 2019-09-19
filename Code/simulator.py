@@ -114,7 +114,7 @@ class Simulator(object):
         arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
-    def set_links_length(self, min_length=0.5, link_min=0.1, link_interval=0.3, link_max=0.71):
+    def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
         """
         set all the possible links lengths in the defind interval
         :param min_length: the minimum length of all the links
@@ -214,23 +214,23 @@ class Simulator(object):
             try:
                 mu_min = mu[mu >= 0].min()
             except:
-                print(mu)
+                self.save_json("mu_err", mu)
                 mu_min = -16
             try:
                 lci_min = lci[lci >= 0].min()
             except:
-                print(lci)
+                self.save_json("lci_err", lci)
                 lci_min = -16
             try:
                 ri_min = ri[ri >= 0].min()
             except:
-                print(ri)
+                self.save_json("ri_err", ri)
                 ri_min = -16
                 # choose only the max value because this is the "worst grade"
             try:
                 z_max = z[z > 0].max()
             except:
-                print(z)
+                self.save_json("z_err", z)
                 z_max = -16
 
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
@@ -289,7 +289,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 30  # how many arms to send to simulator each time
+        nums = 2  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.3
     elif username == "arl_main":  # lab
