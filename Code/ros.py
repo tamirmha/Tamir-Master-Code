@@ -132,8 +132,13 @@ class MoveGroupPythonInterface(object):
 
     @staticmethod
     def manipulability_index(jacobian):
-        det_j = np.linalg.det(jacobian * np.transpose(jacobian))
+        n = jacobian.size / len(jacobian)
+        if n == 5:
+            det_j = np.linalg.det(np.transpose(jacobian)*jacobian)
+        else:
+            det_j = np.linalg.det(jacobian * np.transpose(jacobian))
         if det_j > 0.00001:  # preventing numeric problems
+            # return round(det_j ** (1/n), 3)
             return round(det_j ** 0.5, 3)
         else:
             return 0
@@ -141,8 +146,9 @@ class MoveGroupPythonInterface(object):
     def indices_calc(self, joints, links):
         try:
             # ignoring the final joint which is a roll
-            cur_pos = self.move_group.get_current_joint_values()[:-1]
-            jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
+            cur_pos = self.move_group.get_current_joint_values()  # [:-1]
+            # jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
+            jacobian = self.move_group.get_jacobian_matrix(cur_pos)
             cur_pos = np.asarray(cur_pos)
             # Manipulability index
             mu = self.manipulability_index(jacobian)
@@ -155,8 +161,9 @@ class MoveGroupPythonInterface(object):
                     theta_mean.append(np.pi)
                 else:
                     theta_mean.append(float(links[joints.index(joint)]))
-            w = np.identity(len(joints)+1)*(cur_pos-theta_mean)  # weighted diagonal matrix
-            z = np.around(0.5*np.transpose(cur_pos-theta_mean)*w, 3)
+            # theta_mean.append(np.pi)
+            w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+            z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index
             ri = 1.1
             for i in range(len(cur_pos)):
@@ -169,16 +176,17 @@ class MoveGroupPythonInterface(object):
             # if there numeric error like one of the values is NaN or Inf or divided by zero
             return -1, -1, np.asarray([-1]*len(joints)), -1
 
-
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point
         pose - x,y,z poistion - in world frame
         orientaion - roll, pitch, yaw position - in world frame
         return true if the movement succeeded and reach at the desired accuracy
         """
+        # orientaion = self.get_current_orientain()
+        # orientaion = [orientaion[0], orientaion[1], orientaion[2]]
         pose_goal = pose + orientaion
         self.move_group.set_pose_target(pose_goal)
-
+        # self.move_group.set_position_target(pose)
         ind = 1
         if joints is None:
             joints = ["revolute"] * (len(self.move_group.get_active_joints())-2)
@@ -209,7 +217,7 @@ class MoveGroupPythonInterface(object):
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
         if pose is None:
             pose = [0.5, 0]
-        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (3, 3, 0.02)}
+        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (6, 6, 0.02)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
@@ -652,6 +660,7 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()
     manipulator = MoveGroupPythonInterface()
+    a=manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
     time.sleep(0.2)
     manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame

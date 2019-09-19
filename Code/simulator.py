@@ -51,7 +51,7 @@ class Simulator(object):
 
     @staticmethod
     def save_json(name="data_file", data=None):
-        with open(name + ".json", "w") as write_file:
+        with open(name + ".json", "a") as write_file:
             json.dump(data, write_file, indent=2)
 
     @staticmethod
@@ -211,14 +211,28 @@ class Simulator(object):
             z = np.asarray(z)
             ri = np.asarray(ri)
             # choose only the min values because those are the "worst grade"
-            mu_min = mu[mu >= 0].min()
-            lci_min = lci[lci >= 0].min()
-            ri_min = ri[ri >= 0].min()
-            # choose only the max value because this is the "worst grade"
+            try:
+                mu_min = mu[mu >= 0].min()
+            except:
+                self.save_json("mu_err", mu)
+                mu_min = -16
+            try:
+                lci_min = lci[lci >= 0].min()
+            except:
+                self.save_json("lci_err", lci)
+                lci_min = -16
+            try:
+                ri_min = ri[ri >= 0].min()
+            except:
+                self.save_json("ri_err", ri)
+                ri_min = -16
+                # choose only the max value because this is the "worst grade"
             try:
                 z_max = z[z > 0].max()
             except:
-                z_max = 0
+                self.save_json("z_err", z)
+                z_max = -16
+
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
                 str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
 
@@ -243,7 +257,7 @@ class Simulator(object):
         all_data = []
         self.json_data = []
         for arm in range(0, len(self.arms)):
-            print "arm " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             joints = self.arms[arm]["arm"].joint_data
             links = self.arms[arm]["arm"].links
@@ -275,9 +289,9 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 2  # how many arms to send to simulator each time
+        nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
-        wait2_replace = 1.4
+        wait2_replace = 1.3
     elif username == "arl_main":  # lab
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
@@ -286,7 +300,7 @@ if __name__ == '__main__':
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 1.7
-    else:  # tamir laptop
+    else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.2
@@ -308,7 +322,7 @@ if __name__ == '__main__':
         elif t != 0:
             sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
-        else:
+        else:  # first run
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
@@ -333,5 +347,3 @@ if __name__ == '__main__':
 # done change length from terminal
 # done get pc name for specific configuration
 # done set parametrs from terminal
-
-
