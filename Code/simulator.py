@@ -277,7 +277,7 @@ if __name__ == '__main__':
     if username == "tamir":  # tamir laptop
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
-        wait2_replace = 1.4
+        wait2_replace = 1.3
     elif username == "arl_main":  # lab
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7

@@ -73,7 +73,7 @@ class Tree:
         self.G4 = nx.Graph()  # 1-3 DOF tree
         self.colors = ["r", "b", "g", "navy", "k", "c", "m", "olive", "teal"]
 
-    def tree_create(self, n_from=0, n_to=1, all_trees=True, plot=False, save=True):
+    def tree_create(self, n_from=0, n_to=1, all_trees=True, plot=True, save=False):
         dofs = self.dofs
         x3_pos = 0
         if all_trees:
@@ -137,9 +137,6 @@ class Tree:
 
         dof5.append(dof_flags)
         dof5.remove(dof5[0])
-        # for d in range(len(dof5)):
-        #     for do in dof5[d]:
-        #         do.count(dof5[d])
         for i in range(len(indices[0]) - 1):
             dof4_indices = [j for j in range(indices[1].index(indices[0][i]), indices[1].index(indices[0][i + 1]))]
             dof.append([[dof3[i]], dof4[dof4_indices[0]:dof4_indices[-1] + 1], dof5[dof4_indices[0]:dof4_indices[-1] + 1],
@@ -175,9 +172,15 @@ class Tree:
             elif pos[p][1] == self.pos_low:
                 pos[p] = (pos[p][0] + self.x_offset, pos[p][1] - self.y_offset*2)
             elif pos[p][1] == 150:
-                pos[p] = (pos[p][0] + self.x_offset, pos[p][1] - self.y_offset-1)
+                pos[p] = (pos[p][0] + self.x_offset, pos[p][1] - self.y_offset-8)
             elif pos[p][1] == 220:
                 pos[p] = (pos[p][0] + self.x_offset-1400, pos[p][1] + 0*self.y_offset)
+            elif pos[p][1] == 101:
+                pos[p] = (pos[p][0] + self.x_offset+1400, pos[p][1] + 0*self.y_offset)
+            elif pos[p][1] == 55:
+                pos[p] = (pos[p][0] + self.x_offset-1400, pos[p][1] + 0*self.y_offset)
+            elif pos[p][1] == 5:
+                pos[p] = (pos[p][0] + self.x_offset+1400, pos[p][1] + self.y_offset)
             else:
                 pos[p] = (pos[p][0] + self.x_offset, pos[p][1] + self.y_offset)
         labeldescr = nx.draw_networkx_labels(g, pos=pos, font_size=f_size, labels=nodelabeldict)
@@ -230,7 +233,7 @@ class Tree:
         plt.xlim(min_x-150, max_x + 150)
 
     def create_3dof_tree(self, dof, pos):
-        plt.figure("until3",figsize=(20.0, 15.0))
+        plt.figure("until3", figsize=(20.0, 15.0))
         self.G4.add_node("roll_z", pos=(30000, 250), node_color="c")
         self.G4.add_node("roll_z->pitch_y", pos=(10000, 220), node_color="r")
         self.G4.add_node("roll_z->pris_z", pos=(35000, 220), node_color="r")
@@ -249,10 +252,18 @@ class Tree:
             self.G4.add_edge("roll_z->pris_y", dof[0])
         elif "roll_z->roll_y" in dof[0]:
             self.G4.add_edge("roll_z->roll_y", dof[0])
+        self.G4.add_node("roll_z \n pris_y \n pitch_y \n roll_z", pos=(22000, 101), node_color="brown")
+        self.G4.add_node("roll_z \n pris_y \n pitch_y \n roll_z \n pitch_y", pos=(18000, 55), node_color="m")
+        self.G4.add_node("roll_z \n pris_y \n pitch_y \n roll_z \n pitch_y \n pris_z", pos=(25500, 5), node_color="g")
+        if "roll_z->pris_y->pitch_y" in dof[0]:
+            self.G4.add_edge("roll_z \n pris_y \n pitch_y \n roll_z", "roll_z->pris_y->pitch_y")
+        self.G4.add_edge("roll_z \n pris_y \n pitch_y \n roll_z", "roll_z \n pris_y \n pitch_y \n roll_z \n pitch_y")
+        self.G4.add_edge("roll_z \n pris_y \n pitch_y \n roll_z \n pitch_y \n pris_z",
+                         "roll_z \n pris_y \n pitch_y \n roll_z \n pitch_y")
         self.tree_visuality(self.G4, True)
-        plt.ylim(140, 260)
+        plt.ylim(-10, 260)
         plt.xlim(-1000, 47000)
-        plt.title("All the possible combinations 1-3 DOF")
+        plt.title("All the possible combinations 1-3 DOF and 1 combination until 6 DOF", fontsize=16)
         plt.savefig("combinations/until3dof.png", format='png')
 
 
