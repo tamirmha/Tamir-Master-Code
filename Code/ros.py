@@ -141,8 +141,9 @@ class MoveGroupPythonInterface(object):
     def indices_calc(self, joints, links):
         try:
             # ignoring the final joint which is a roll
-            cur_pos = self.move_group.get_current_joint_values()[:-1]
-            jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
+            cur_pos = self.move_group.get_current_joint_values()  # [:-1]
+            # jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
+            jacobian = self.move_group.get_jacobian_matrix(cur_pos)
             cur_pos = np.asarray(cur_pos)
             # Manipulability index
             mu = self.manipulability_index(jacobian)
