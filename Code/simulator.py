@@ -149,7 +149,7 @@ class Simulator(object):
                     path = base_path + str(len(arm["axe"])) + "dof/" + self.folder + "/"
                     self.arms[index]["arm"].urdf_write(self.arms[index]["arm"].urdf_data(),
                                                        path + self.arms[index]["name"])
-                    data.append([self.arms[index]["name"], self.folder, datetime.now().strftime("%d_%m_%y")])
+                    data.append([self.arms[index]["name"].replace(" ", ""), self.folder, datetime.now().strftime("%d_%m_%y")])
                     index = index+1
         self.save_json("created arms", data)
 
