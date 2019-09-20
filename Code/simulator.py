@@ -74,7 +74,7 @@ class Simulator(object):
         rpy = []
         file_name = ""
         for i in range(len(joint_parent_axis)):
-            file_name += interface_joints[i] + "_" + joint_parent_axis[i] + "_" + links[i].replace(".", "_")
+            file_name += interface_joints[i] + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
             if interface_joints[i].replace(" ", "") == "roll":
                 joints.append("revolute")
                 joint_axis.append('z')
