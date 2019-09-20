@@ -75,16 +75,16 @@ class Simulator(object):
         file_name = ""
         for i in range(len(joint_parent_axis)):
             file_name += interface_joints[i] + "_" + joint_parent_axis[i] + "_" + links[i].replace(".", "_")
-            if interface_joints[i].strip() == "roll":
+            if interface_joints[i].replace(" ", "") == "roll":
                 joints.append("revolute")
                 joint_axis.append('z')
-                if joint_parent_axis[i].strip() == "y":
+                if joint_parent_axis[i].replace(" ", "") == "y":
                     rpy.append(['${-pi/2} ', '0 ', '0 '])
-                elif joint_parent_axis[i].strip() == "x":
+                elif joint_parent_axis[i].replace(" ", "")== "x":
                     rpy.append(['0 ', '${pi/2} ', '0 '])
-                elif joint_parent_axis[i].strip() == "z":
+                elif joint_parent_axis[i].replace(" ", "") == "z":
                     rpy.append(['0 ', '0 ', '0 '])
-            elif interface_joints[i].strip() == "pitch":
+            elif interface_joints[i].replace(" ", "") == "pitch":
                 joints.append("revolute")
                 joint_axis.append('y')
                 if joint_parent_axis[i].strip() == "y":
@@ -102,7 +102,7 @@ class Simulator(object):
             #         rpy.append(['0 ', '0 ', '${-pi/2} '])
             #     elif joint_parent_axis[i].strip() == "z":
             #         rpy.append(['0 ', '${-pi/2} ', '0 '])
-            elif interface_joints[i].strip() == "pris":
+            elif interface_joints[i].replace(" ", "") == "pris":
                 joints.append("prismatic")
                 joint_axis.append('z')
                 if joint_parent_axis[i].strip() == "y":
@@ -280,7 +280,7 @@ class Simulator(object):
 if __name__ == '__main__':
     # set parametrs from terminal
     args = sys.argv
-    dofe = 6
+    dofe = 4
     link_max = 0.41
     if len(args) > 1:
         dofe = int(args[1])
