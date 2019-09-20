@@ -166,8 +166,8 @@ class MoveGroupPythonInterface(object):
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index
             ri = 1.1
-            for i in range(len(cur_pos)):
-                if mu != 0:
+            if mu != 0:
+                for i in range(len(cur_pos)):
                     r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
                     if r < ri:
                         ri = r
