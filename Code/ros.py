@@ -662,12 +662,15 @@ def main_move_group():
     manipulator = MoveGroupPythonInterface()
     a=manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
     time.sleep(0.2)
-    manipulator.add_obstacles(height=3.75)  # add floor
+    # manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame
-    poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
+    # poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
-    oriens = [[-3.1459, 0, 0],[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.5, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
+    # oriens = [[-3.1459, 0, 0],[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.5, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
     # 0.864246189594, -0.264724522829, 0.406788229942, 0.132373735309
+    z = 3
+    poses = [[0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
+    oriens = [[0, 3.1459 * 0.75, 0], [0, 3.1459 * 0.5, 0], [0, 3.1459 * 0.25, 0]]
 
     for j in range(3):
         for i in range(len(poses)):

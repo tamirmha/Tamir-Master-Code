@@ -74,7 +74,7 @@ class Simulator(object):
         rpy = []
         file_name = ""
         for i in range(len(joint_parent_axis)):
-            file_name += interface_joints[i] + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
+            file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
             if interface_joints[i].replace(" ", "") == "roll":
                 joints.append("revolute")
                 joint_axis.append('z')
@@ -191,8 +191,8 @@ class Simulator(object):
                 lci.append(-1)
                 z.append(-1)
                 ri.append(-1)
-        self.json_data.append({self.arms[arm]["name"]: [{"results": data_res}, {"mu": mu},
-                                                        {"LCI": lci}, {"z": z}, {"ri": ri}]})
+        # self.json_data.append({self.arms[arm]["name"]: [{"results": data_res}, {"mu": mu},
+        #                                                 {"LCI": lci}, {"z": z}, {"ri": ri}]})
         suc_res = "False"
         mu_min = -1
         lci_min = -1
@@ -271,7 +271,7 @@ class Simulator(object):
                 break
             self.replace_model(arm)
         # save the remaining data and close all the launch files
-        self.save_json(save_name, self.json_data)
+        # self.save_json(save_name, self.json_data)
         HandleCSV().save_data(all_data, save_name)
         self.ros.stop_launch(self.arm_control)
         self.ros.stop_launch(self.main)
