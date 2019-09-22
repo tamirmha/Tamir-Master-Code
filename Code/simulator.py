@@ -278,14 +278,6 @@ class Simulator(object):
 
 
 if __name__ == '__main__':
-    # set parametrs from terminal
-    args = sys.argv
-    dofe = 4
-    link_max = 0.41
-    if len(args) > 1:
-        dofe = int(args[1])
-        if len(args) > 2:
-            link_max = float(args[2]) + 0.1
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
@@ -295,7 +287,7 @@ if __name__ == '__main__':
     elif username == "arl_main":  # lab
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
-        wait2_replace = 1.2
+        wait2_replace = 1.3
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2
@@ -304,18 +296,32 @@ if __name__ == '__main__':
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.2
+    # set parametrs from terminal
+    args = sys.argv
+    dofe = 4  # number degrees of freedom of the manipulator
+    link_max = 0.41  # max link length to check
+    start_arm = 0  # from which set of arms to start
+    if len(args) > 1:
+        dofe = int(args[1])
+        if len(args) > 2:
+            link_max = float(args[2]) + 0.1
+            if len(args) > 3:
+                start_arm = int(args[3])/nums
     tic_main = datetime.now()
     ros = Ros()
     ros.ter_command("rosclean purge -y")
+    # check if there is roscore running if there is stop it
     roscore = ros.checkroscorerun()
     if roscore:
         ros.ter_command("kill -9 " + str(roscore))
+    # start roscore
     ros.ros_core_start()
     init_node('arl_python', anonymous=True)
+    # folder to save the file to
     foldere = "combined"
     sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     arms = sorted(sim.arms, reverse=True)
-    for t in range(len(arms) / nums + 1):
+    for t in range(start_arm, len(arms) / nums + 1):
         if t == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
@@ -341,7 +347,7 @@ if __name__ == '__main__':
 # todo check planner parameters
 # TODo how accuracy in go to pose effect
 # Todo fix obstacle parameters
-# done save to JSON file
+# done save to JSON file  - disabled
 # done change defination of success
 # done delete created files
 # done change length from terminal

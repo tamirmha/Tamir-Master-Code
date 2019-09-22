@@ -533,7 +533,7 @@ class UrdfClass(object):
         return link
 
     def calc_origin(self, n):
-
+        # calc the origin of the link according to the previuos joint
         if self.joint_data[n-1] == "revolute":
             if self.axis[n - 1] == '0 0 1':  # roll
                 if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
@@ -660,9 +660,9 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()
     manipulator = MoveGroupPythonInterface()
-    a=manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
-    time.sleep(0.2)
-    # manipulator.add_obstacles(height=3.75)  # add floor
+    a = manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
+    time.sleep(0.13)
+    manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame
     # poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
     # desired orientaions of the EE in world frame
