@@ -134,9 +134,9 @@ class MoveGroupPythonInterface(object):
     def manipulability_index(jacobian):
         n = jacobian.size / len(jacobian)
         if n == 5:
-            det_j = np.linalg.det(np.transpose(jacobian)*jacobian)
+            det_j = np.linalg.det(np.matmul(np.transpose(jacobian)*jacobian))
         else:
-            det_j = np.linalg.det(jacobian * np.transpose(jacobian))
+            det_j = np.linalg.det(np.matmul(jacobian * np.transpose(jacobian)))
         if det_j > 0.00001:  # preventing numeric problems
             # return round(det_j ** (1/n), 3)
             return round(det_j ** 0.5, 3)
@@ -661,6 +661,7 @@ def main_move_group():
     Ros()
     manipulator = MoveGroupPythonInterface()
     a = manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
+    u = manipulator.manipulability_index(a)
     time.sleep(0.13)
     manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame

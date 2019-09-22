@@ -321,7 +321,7 @@ if __name__ == '__main__':
     foldere = "combined"
     sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     arms = sorted(sim.arms, reverse=True)
-    for t in range(start_arm, len(arms) / nums + 1):
+    for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
