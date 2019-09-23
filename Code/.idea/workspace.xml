@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Code.iml" afterDir="false" />
+    <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="fix the run problem in main for loop">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_6dof_configs.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/3dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/3dof_configs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/4dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/4dof_configs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/5dof_configs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/5dof_configs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/5dof_configs_all.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/6dof_co.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/manips_4_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/manips_4_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results_file19_08_19.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/created arms.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results_file15_09_19.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Simulator/results0.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Simulator/results01.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Simulator/results0101.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Simulator/results1.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Simulator/results1_4.xlsx" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -269,6 +255,11 @@
       <workItem from="1567228469580" duration="274000" />
       <workItem from="1567228777810" duration="12155000" />
       <workItem from="1567246715755" duration="10000" />
+      <workItem from="1568712062025" duration="49000" />
+      <workItem from="1568802955520" duration="14000" />
+      <workItem from="1568926258746" duration="60000" />
+      <workItem from="1569149521124" duration="4322000" />
+      <workItem from="1569158574746" duration="5941000" />
     </task>
     <task id="LOCAL-00001" summary="close and reopen gazebo - working">
       <created>1560433283028</created>
@@ -305,7 +296,21 @@
       <option name="project" value="LOCAL" />
       <updated>1566217550691</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="add - enter from terminal from which arm to start">
+      <created>1569151113419</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1569151113419</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix the run problem in main for loop">
+      <created>1569167778595</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1569167778595</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -341,10 +346,28 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="close and reopen gazebo - working" />
     <MESSAGE value="cosmetics fixing" />
-    <option name="LAST_COMMIT_MESSAGE" value="cosmetics fixing" />
+    <MESSAGE value="add - enter from terminal from which arm to start" />
+    <MESSAGE value="fix the run problem in main for loop" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix the run problem in main for loop" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ros.py</url>
+          <line>664</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/simulator.py</url>
+          <line>258</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1567240872470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1567243036086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1569169717999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1569159812291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
