@@ -171,10 +171,10 @@ class MoveGroupPythonInterface(object):
                     r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
                     if r < ri:
                         ri = r
-            return mu, lci, np.diag(z), ri
+            return mu, lci, np.diag(z), ri, jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
-            return -1, -1, np.asarray([-1]*len(joints)), -1
+            return -1, -1, np.asarray([-1]*len(joints)), -1, jacobian, cur_pos
 
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point

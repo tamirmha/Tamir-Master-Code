@@ -177,6 +177,8 @@ class Simulator(object):
         :return: array of the results
         """
         data_res = []
+        jacobian = []
+        curr_pos =[]
         mu = []   # Manipulability index
         lci = []  # Local Conditioning Index
         z = []    # Joint Mid-Range Proximity
@@ -188,13 +190,16 @@ class Simulator(object):
                 lci.append(j[2][1])
                 z.append(j[2][2].min())
                 ri.append(j[2][3])
+                jacobian.append(j[2][4].tolist())
+                curr_pos.append(j[2][5].tolist())
             else:
                 mu.append(-1)
                 lci.append(-1)
                 z.append(-1)
                 ri.append(-1)
-        # self.json_data.append({self.arms[arm]["name"]: [{"results": data_res}, {"mu": mu},
-        #                                                 {"LCI": lci}, {"z": z}, {"ri": ri}]})
+                jacobian.append(-1)
+                curr_pos.append(-1)
+        self.json_data.append({self.arms[arm]["name"]: [jacobian, curr_pos]})
         suc_res = "False"
         mu_min = -1
         lci_min = -1
@@ -273,7 +278,7 @@ class Simulator(object):
                 break
             self.replace_model(arm)
         # save the remaining data and close all the launch files
-        # self.save_json(save_name, self.json_data)
+        self.save_json(save_name, self.json_data)
         HandleCSV().save_data(all_data, save_name)
         self.ros.stop_launch(self.arm_control)
         self.ros.stop_launch(self.main)
@@ -322,6 +327,9 @@ if __name__ == '__main__':
     # folder to save the file to
     foldere = "combined"
     sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    if start_arm > 0:
+        ros.stop_launch(sim.arm_control)
+        ros.stop_launch(sim.main)
     arms = sorted(sim.arms, reverse=True)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
