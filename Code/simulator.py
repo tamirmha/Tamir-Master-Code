@@ -1,6 +1,6 @@
 from ros import Ros, MoveGroupPythonInterface, UrdfClass, HandleCSV
 from datetime import datetime
-from os import environ, listdir, path, mkdir
+from os import environ, listdir, path, mkdir, rename
 import numpy as np
 from itertools import product
 from time import sleep
@@ -35,6 +35,8 @@ class Simulator(object):
         # self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
         self.poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
         self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
+        self.save_name = 'results_file' + datetime.now().strftime("%d_%m_") + str(dof) + "dof_" \
+                        + str(len(self.poses)) + "d_"
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
@@ -151,7 +153,7 @@ class Simulator(object):
                                                        path + self.arms[index]["name"])
                     data.append([self.arms[index]["name"].replace(" ", ""), self.folder, datetime.now().strftime("%d_%m_%y")])
                     index = index+1
-        self.save_json("created arms", data)
+        # self.save_json("created arms", data)
 
     def arms_exist(self):
         path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/" + str(self.dof) \
@@ -253,7 +255,7 @@ class Simulator(object):
         sleep(self.wait2)
 
     def run_simulation(self,  k=0, len_arm=1638):
-        save_name = 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
+        save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
         self.json_data = []
         for arm in range(0, len(self.arms)):
@@ -281,15 +283,15 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 30  # how many arms to send to simulator each time
+        nums = 35  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.3
     elif username == "arl_main":  # lab
-        nums = 30  # how many arms to send to simulator each time
+        nums = 35  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.3
     elif username == "tamirm":  # VM
-        nums = 25  # how many arms to send to simulator each time
+        nums = 30  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 1.7
     else:
@@ -334,7 +336,9 @@ if __name__ == '__main__':
     ros.ros_core_stop()
     toc_main = datetime.now()
     print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
+    rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
 
+# todo add to rename the total of success
 # Done - set for first joint the current location as target.
 # done  calculate indicies
 # todO change links weight according length
