@@ -660,8 +660,8 @@ def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()
     manipulator = MoveGroupPythonInterface()
-    a = manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
-    u = manipulator.manipulability_index(a)
+    # a = manipulator.move_group.get_jacobian_matrix(manipulator.move_group.get_current_joint_values() )
+    # u = manipulator.manipulability_index(a)
     time.sleep(0.13)
     manipulator.add_obstacles(height=3.75)  # add floor
     # desired positions of the EE in world frame

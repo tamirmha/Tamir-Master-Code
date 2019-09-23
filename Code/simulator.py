@@ -221,23 +221,23 @@ class Simulator(object):
             try:
                 mu_min = mu[mu >= 0].min()
             except:
-                self.save_json("mu_err", mu)
+                self.save_json("mu_err", mu.tolist())
                 mu_min = -16
             try:
                 lci_min = lci[lci >= 0].min()
             except:
-                self.save_json("lci_err", lci)
+                self.save_json("lci_err", lci.tolist())
                 lci_min = -16
             try:
                 ri_min = ri[ri >= 0].min()
             except:
-                self.save_json("ri_err", ri)
+                self.save_json("ri_err", ri.tolist())
                 ri_min = -16
                 # choose only the max value because this is the "worst grade"
             try:
                 z_max = z[z > 0].max()
             except:
-                self.save_json("z_err", z)
+                self.save_json("z_err", z.tolist())
                 z_max = -16
 
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
@@ -305,7 +305,7 @@ if __name__ == '__main__':
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 4  # number degrees of freedom of the manipulator
+    dofe = 5  # number degrees of freedom of the manipulator
     link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
