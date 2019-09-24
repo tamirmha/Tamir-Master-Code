@@ -305,7 +305,7 @@ if __name__ == '__main__':
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 5  # number degrees of freedom of the manipulator
+    dofe = 4  # number degrees of freedom of the manipulator
     link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
@@ -346,6 +346,7 @@ if __name__ == '__main__':
     print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
     rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
 
+# todo the file name wont change when date change
 # todo add to rename the total of success
 # Done - set for first joint the current location as target.
 # done  calculate indicies

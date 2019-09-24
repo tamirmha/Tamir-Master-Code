@@ -134,9 +134,9 @@ class MoveGroupPythonInterface(object):
     def manipulability_index(jacobian):
         n = jacobian.size / len(jacobian)
         if n == 5:
-            det_j = np.linalg.det(np.matmul(np.transpose(jacobian)*jacobian))
+            det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
         else:
-            det_j = np.linalg.det(np.matmul(jacobian * np.transpose(jacobian)))
+            det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
         if det_j > 0.00001:  # preventing numeric problems
             # return round(det_j ** (1/n), 3)
             return round(det_j ** 0.5, 3)
@@ -164,9 +164,10 @@ class MoveGroupPythonInterface(object):
             # theta_mean.append(np.pi)
             w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
-            # Relative Manipulability Index
-            ri = 1.1
-            if mu != 0:
+            # Relative Manipulability Index - calculate only for redundent manipulators
+            ri = -50
+            if mu != 0 and len(joints) > 4:  # can't divide in zero and
+                ri = 1.1
                 for i in range(len(cur_pos)):
                     r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
                     if r < ri:
