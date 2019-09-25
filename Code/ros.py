@@ -165,7 +165,7 @@ class MoveGroupPythonInterface(object):
             w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index - calculate only for redundent manipulators
-            ri = -50
+            ri = 50
             if mu != 0 and len(joints) > 4:  # can't divide in zero and
                 ri = 1.1
                 for i in range(len(cur_pos)):
@@ -416,7 +416,7 @@ class UrdfClass(object):
         </geometry>
       </visual>
       <collision>
-		 <origin xyz="0 0 ${link0_length/2}" rpy="0 0 0" /> 
+		 <origin xyz="0 0 ${link0_radius}" rpy="0 0 0" /> 
         <geometry>
 			 <box size="0.1 0.1 0.2"/>
         </geometry>
@@ -646,6 +646,7 @@ class HandleCSV(object):
                         data = []
                     empty = True
             manip.append(self.read_data_action(data))  # append the last session
+            _filehandler.close()
             return manip
 
     @staticmethod

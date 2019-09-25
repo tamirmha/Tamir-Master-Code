@@ -23,6 +23,7 @@ class Simulator(object):
         self.wait2 = wait2
         if create:  # all the configuration of the arms
             self.create_urdf_from_csv(str(self.dof) + "dof_configs",  link_max)
+            # sleep(10)
         else:
             if not arms:
                 self.arms_exist()
@@ -217,29 +218,29 @@ class Simulator(object):
             lci = np.asarray(lci)
             z = np.asarray(z)
             ri = np.asarray(ri)
+            # print(str(mu), str(lci), str(z))
             # choose only the min values because those are the "worst grade"
             try:
-                mu_min = mu[mu >= 0].min()
+                mu_min = mu[mu >= 0.0].min()
             except:
                 self.save_json("mu_err", mu.tolist())
                 mu_min = -16
             try:
-                lci_min = lci[lci >= 0].min()
+                lci_min = lci[lci >= 0.0].min()
             except:
                 self.save_json("lci_err", lci.tolist())
                 lci_min = -16
             try:
-                ri_min = ri[ri >= 0].min()
+                ri_min = ri[ri >= 0.0].min()
             except:
                 self.save_json("ri_err", ri.tolist())
                 ri_min = -16
                 # choose only the max value because this is the "worst grade"
             try:
-                z_max = z[z > 0].max()
+                z_max = z[z > 0.0].max()
             except:
                 self.save_json("z_err", z.tolist())
                 z_max = -16
-
         return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
                 str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
 
@@ -266,8 +267,12 @@ class Simulator(object):
         for arm in range(0, len(self.arms)):
             print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
-            joints = self.arms[arm]["arm"].joint_data
-            links = self.arms[arm]["arm"].links
+            try:
+                joints = self.arms[arm]["arm"].joint_data
+                links = self.arms[arm]["arm"].links
+            except:
+                joints = ["revolute"] * self.dof
+                links = [0.4] * self.dof
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
@@ -296,7 +301,7 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.3
     elif username == "tamirm":  # VM
-        nums = 30  # how many arms to send to simulator each time
+        nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 1.7
     else:
@@ -305,8 +310,8 @@ if __name__ == '__main__':
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 4  # number degrees of freedom of the manipulator
-    link_max = 0.41  # max link length to check
+    dofe = 6  # number degrees of freedom of the manipulator
+    link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
         dofe = int(args[1])
@@ -326,11 +331,13 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     # folder to save the file to
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    sim = Simulator(dofe, foldere, False, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
     arms = sorted(sim.arms, reverse=True)
+    # sim.arms = arms[:nums]
+    # sim.run_simulation(nums*0, len(arms))
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
             sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
@@ -345,6 +352,16 @@ if __name__ == '__main__':
     toc_main = datetime.now()
     print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
     rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
+
+
+# import multiprocessing as mp
+# def map_simulator(t, nums=35):
+#     sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
+#     sim.run_simulation(nums * t, len(arms))
+#
+# n_cpu = 8
+# if __name__ == '__main__':
+#     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
 
 # todo the file name wont change when date change
 # todo add to rename the total of success
