@@ -44,7 +44,7 @@ class Simulator(object):
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         # add floor and plant to the planning model
-        sleep(0.14)
+        sleep(0.15)
         self.manipulator_move.add_obstacles(height=z + 0.75, radius=0.1, pose=[0.5, 0])
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
@@ -77,22 +77,18 @@ class Simulator(object):
         rpy = []
         file_name = ""
         rolly_number = -1
-        rolly_originy = []
         pitchz_number = 1
         prisy_number = 1
         for i in range(len(joint_parent_axis)):
-            rolly_originy.append(1)
             file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
             if interface_joints[i].replace(" ", "") == "roll":
                 joints.append("revolute")
                 joint_axis.append('z')
                 if joint_parent_axis[i].replace(" ", "") == "y":
                     # rpy.append(['${-pi/2} ', '0 ', '0 '])
-                    # todo -- to check!!
                     rolly_rot = '${' + str(rolly_number) + '/2*pi} '
                     rpy.append([rolly_rot, '0 ', '0 '])
                     rolly_number = rolly_number * -1
-                    rolly_originy[i] = rolly_number
                 elif joint_parent_axis[i].replace(" ", "") == "x":
                     rpy.append(['0 ', '${pi/2} ', '0 '])
                 elif joint_parent_axis[i].replace(" ", "") == "z":
@@ -106,7 +102,6 @@ class Simulator(object):
                     rpy.append(['0 ', '0 ', '${-pi/2} '])
                 elif joint_parent_axis[i].strip() == "z":
                     # rpy.append(['${pi/2} ', '0 ', '0 '])
-                    # todo -- to check!!
                     pitchz = '${' + str(pitchz_number) + '/2*pi} '
                     rpy.append([pitchz, '0 ', '0 '])
                     pitchz_number = pitchz_number * -1
@@ -122,7 +117,7 @@ class Simulator(object):
                     rpy.append(['0 ', '${-pi/2} ', '0 '])
                 elif joint_parent_axis[i].strip() == "z":
                     rpy.append(['0 ', '0 ', '0 '])
-        arm = UrdfClass(links, joints, joint_axis, rpy, rolly_originy)
+        arm = UrdfClass(links, joints, joint_axis, rpy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
     def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
@@ -371,7 +366,7 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
 
-# todo - change rpy!!!!!!!
+# done - change rpy!!!!!!!
 # todO - get errors from terminal
 # todo the file name wont change when date change
 # todo add to rename the total of success
