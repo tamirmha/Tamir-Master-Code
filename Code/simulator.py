@@ -44,7 +44,7 @@ class Simulator(object):
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         # add floor and plant to the planning model
-        sleep(0.13)
+        sleep(0.14)
         self.manipulator_move.add_obstacles(height=z + 0.75, radius=0.1, pose=[0.5, 0])
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
@@ -76,14 +76,24 @@ class Simulator(object):
         joint_axis = []
         rpy = []
         file_name = ""
+        rolly_number = -1
+        rolly_originy = []
+        pitchz_number = 1
+        prisy_number = 1
         for i in range(len(joint_parent_axis)):
+            rolly_originy.append(1)
             file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
             if interface_joints[i].replace(" ", "") == "roll":
                 joints.append("revolute")
                 joint_axis.append('z')
                 if joint_parent_axis[i].replace(" ", "") == "y":
-                    rpy.append(['${-pi/2} ', '0 ', '0 '])
-                elif joint_parent_axis[i].replace(" ", "")== "x":
+                    # rpy.append(['${-pi/2} ', '0 ', '0 '])
+                    # todo -- to check!!
+                    rolly_rot = '${' + str(rolly_number) + '/2*pi} '
+                    rpy.append([rolly_rot, '0 ', '0 '])
+                    rolly_number = rolly_number * -1
+                    rolly_originy[i] = rolly_number
+                elif joint_parent_axis[i].replace(" ", "") == "x":
                     rpy.append(['0 ', '${pi/2} ', '0 '])
                 elif joint_parent_axis[i].replace(" ", "") == "z":
                     rpy.append(['0 ', '0 ', '0 '])
@@ -95,26 +105,24 @@ class Simulator(object):
                 elif joint_parent_axis[i].strip() == "x":
                     rpy.append(['0 ', '0 ', '${-pi/2} '])
                 elif joint_parent_axis[i].strip() == "z":
-                    rpy.append(['${pi/2} ', '0 ', '0 '])
-            # elif interface_joints[i].strip() == "yaw":
-            #     joints.append("revolute")
-            #     joint_axis.append('x')
-            #     if joint_parent_axis[i].strip() == "y":
-            #         rpy.append(['0 ', '0 ', '0 '])
-            #     elif joint_parent_axis[i].strip() == "x":
-            #         rpy.append(['0 ', '0 ', '${-pi/2} '])
-            #     elif joint_parent_axis[i].strip() == "z":
-            #         rpy.append(['0 ', '${-pi/2} ', '0 '])
+                    # rpy.append(['${pi/2} ', '0 ', '0 '])
+                    # todo -- to check!!
+                    pitchz = '${' + str(pitchz_number) + '/2*pi} '
+                    rpy.append([pitchz, '0 ', '0 '])
+                    pitchz_number = pitchz_number * -1
             elif interface_joints[i].replace(" ", "") == "pris":
                 joints.append("prismatic")
                 joint_axis.append('z')
                 if joint_parent_axis[i].strip() == "y":
-                    rpy.append(['${pi/2} ', '0 ', '0 '])
+                    # rpy.append(['${pi/2} ', '0 ', '0 '])
+                    prisy = '${' + str(prisy_number) + '/2*pi} '
+                    rpy.append([prisy, '0 ', '0 '])
+                    prisy_number = prisy_number * -1
                 elif joint_parent_axis[i].strip() == "x":
                     rpy.append(['0 ', '${-pi/2} ', '0 '])
                 elif joint_parent_axis[i].strip() == "z":
                     rpy.append(['0 ', '0 ', '0 '])
-        arm = UrdfClass(links, joints, joint_axis, rpy)
+        arm = UrdfClass(links, joints, joint_axis, rpy, rolly_originy)
         return {"arm": arm, "name": file_name, "folder": folder}
 
     def set_links_length(self, min_length=1, link_min=0.1, link_interval=0.3, link_max=0.71):
@@ -294,24 +302,24 @@ if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         nums = 35  # how many arms to send to simulator each time
-        wait1_replace = 1.7
-        wait2_replace = 1.3
+        wait1_replace = 2
+        wait2_replace = 2
     elif username == "arl_main":  # lab
         nums = 35  # how many arms to send to simulator each time
-        wait1_replace = 1.7
-        wait2_replace = 1.3
+        wait1_replace = 2
+        wait2_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2
-        wait2_replace = 1.7
+        wait2_replace = 2
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 6  # number degrees of freedom of the manipulator
-    link_max = 0.71  # max link length to check
+    dofe = 5  # number degrees of freedom of the manipulator
+    link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
         dofe = int(args[1])
@@ -331,7 +339,7 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     # folder to save the file to
     foldere = "combined"
-    sim = Simulator(dofe, foldere, False, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
@@ -363,6 +371,8 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
 
+# todo - change rpy!!!!!!!
+# todO - get errors from terminal
 # todo the file name wont change when date change
 # todo add to rename the total of success
 # Done - set for first joint the current location as target.

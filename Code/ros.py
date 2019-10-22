@@ -296,7 +296,7 @@ class MoveGroupPythonInterface(object):
 class UrdfClass(object):
     """ this class create URDF files """
 
-    def __init__(self, links=None, joints=None, joints_axis=None, rpy=None):
+    def __init__(self, links=None, joints=None, joints_axis=None, rpy=None, rolly_originy=None):
         """
         :param joints: array of joints types- can be 'revolute' or 'prismatic'
         :param links: array of the links lengths in meters [must be positive float]
@@ -310,12 +310,15 @@ class UrdfClass(object):
             joints = ['revolute', 'prismatic', 'revolute', 'revolute', 'revolute', 'revolute']
         if links is None:
             links = [1, 1, 1, 1, 1, 1]
+        if rolly_originy is None:
+            rolly_originy = [1, 1, 1, 1, 1, 1]
 
         self.links = links
         self.joint_data = joints
         self.axis = self.init_calc(joints, joints_axis)
         self.links_number = len(self.links)
         self.rpy = rpy
+        self.rolly_originy = rolly_originy
 
     def urdf_data(self):
         head = '''<?xml version="1.0"?>
@@ -370,7 +373,7 @@ class UrdfClass(object):
         <xacro:property name="link3_mass" value="2.275" />
         <xacro:property name="link4_mass" value="1.219" />
         <xacro:property name="link5_mass" value="1.219" />
-        <xacro:property name="link6_mass" value="0.1879" />
+        <xacro:property name="link6_mass" value="1.1879" />
         
         <xacro:property name="link1_radius" value="0.060" />
         <xacro:property name="link2_radius" value="0.060" />
@@ -539,6 +542,8 @@ class UrdfClass(object):
             if self.axis[n - 1] == '0 0 1':  # roll
                 if self.rpy[n-1] == ['0 ', '0 ', '0 ']:  # links in the same directoin
                     return "0 0 ${link" + str(n-1) + "_length}"
+                elif self.rpy[n-1] == ['${1/2*pi} ', '0 ', '0 ']:  # links in the same directoin
+                    return "0 -${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
                 else:  # the links are perpendiculars
                     return "0 ${link" + str(n-1) + "_radius} ${link" + str(n-1) + "_length}"
             else:  # pitch
