@@ -4,7 +4,7 @@ from os import environ, listdir, path, mkdir, rename
 import numpy as np
 from itertools import product
 from time import sleep
-from rospy import init_node
+from rospy import init_node, logerr
 import getpass, sys
 import json
 
@@ -23,7 +23,6 @@ class Simulator(object):
         self.wait2 = wait2
         if create:  # all the configuration of the arms
             self.create_urdf_from_csv(str(self.dof) + "dof_configs",  link_max)
-            # sleep(10)
         else:
             if not arms:
                 self.arms_exist()
@@ -44,7 +43,7 @@ class Simulator(object):
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
         # add floor and plant to the planning model
-        sleep(0.15)
+        sleep(0.12)
         self.manipulator_move.add_obstacles(height=z + 0.75, radius=0.1, pose=[0.5, 0])
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
@@ -268,7 +267,8 @@ class Simulator(object):
         all_data = []
         self.json_data = []
         for arm in range(0, len(self.arms)):
-            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            # print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            logerr(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
             try:
                 joints = self.arms[arm]["arm"].joint_data
