@@ -316,7 +316,6 @@ class UrdfClass(object):
         self.links_number = len(self.links)
         self.rpy = rpy
 
-
     def urdf_data(self):
         head = '''<?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro"  name="arm">
@@ -364,13 +363,13 @@ class UrdfClass(object):
         <xacro:property name="link0_mass" value="40.7" />
         <xacro:property name="link0_radius" value="0.060" /> 
             <!-- Inertia parameters -->
-        
-        <xacro:property name="link1_mass" value="3.7" />
-        <xacro:property name="link2_mass" value="8.393" />
-        <xacro:property name="link3_mass" value="2.275" />
-        <xacro:property name="link4_mass" value="1.219" />
-        <xacro:property name="link5_mass" value="1.219" />
-        <xacro:property name="link6_mass" value="1.1879" />
+        <!-- weight * length according to ur5 data --> 
+        <xacro:property name="link1_mass" value="${3.7*0.089}" />
+        <xacro:property name="link2_mass" value="${8.393*0.425}" />
+        <xacro:property name="link3_mass" value="${2.275*0.392}" />
+        <xacro:property name="link4_mass" value="${1.219*0.093}" />
+        <xacro:property name="link5_mass" value="${1.219*0.095}" />
+        <xacro:property name="link6_mass" value="${0.1879*0.082}" />
         
         <xacro:property name="link1_radius" value="0.060" />
         <xacro:property name="link2_radius" value="0.060" />
@@ -508,7 +507,7 @@ class UrdfClass(object):
 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass}">
+      <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass/link1_length}">
         <origin xyz="0.0 0.0 ${link1_length / 2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>'''
@@ -527,7 +526,8 @@ class UrdfClass(object):
 		<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}" mass="${''' + linkname + '''_mass}">
+      <xacro:cylinder_inertial radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}" 
+        mass="${''' + linkname + '''_mass/''' + linkname + '''_length}">
         <origin xyz="0.0 0.0 ${''' + linkname + '''_length / 2 }" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>'''

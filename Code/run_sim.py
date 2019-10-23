@@ -15,12 +15,10 @@ def run(cmd):
         if line != "":
             stdout.append(line)
             # print(line, end='')
-
         line = proc.stderr.readline()
         if line != "":
             stderr.append(line)
             print(line, end='')
-
     return proc.returncode, stdout, stderr
 
 if __name__ == '__main__':

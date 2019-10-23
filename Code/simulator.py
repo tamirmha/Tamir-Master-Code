@@ -366,8 +366,9 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
 
+# Todo - save URDFS in several files
 # done - change rpy!!!!!!!
-# todO - get errors from terminal
+# done - get errors from terminal
 # todo the file name wont change when date change
 # todo add to rename the total of success
 # Done - set for first joint the current location as target.
