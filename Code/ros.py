@@ -66,6 +66,7 @@ class Ros(object):
     @staticmethod
     def ter_command(command):
         """Write Command to the terminal"""
+        # with
         try:
             command = shlex.split(command)
             ter_command_proc = subprocess.Popen(command, stdout=subprocess.PIPE, preexec_fn=os.setsid)

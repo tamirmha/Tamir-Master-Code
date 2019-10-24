@@ -11,7 +11,7 @@ import json
 
 class Simulator(object):
 
-    def __init__(self, dof, folder, create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
+    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -77,7 +77,7 @@ class Simulator(object):
         file_name = ""
         rolly_number = -1
         pitchz_number = 1
-        prisy_number = 1
+        prisy_number = -1
         for i in range(len(joint_parent_axis)):
             file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + links[i].replace(".", "_")
             if interface_joints[i].replace(" ", "") == "roll":
@@ -147,14 +147,19 @@ class Simulator(object):
         self.create_folder(base_path + str(self.dof) + "dof/" + self.folder)
         links = self.set_links_length(link_max=link_max)
         index = 0
+        folder_num = 0
         for config in configs:
             for arm in config:
+                if index%10==0:
+                    folder = self.folder + "/conf_" + str(folder_num)
+                    self.create_folder(base_path + str(self.dof) + "dof/" + folder)
+                    folder_num = folder_num + 1
                 for link in links:
-                    self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, self.folder))
-                    path = base_path + str(len(arm["axe"])) + "dof/" + self.folder + "/"
+                    self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, folder))
+                    path = base_path + str(len(arm["axe"])) + "dof/" + folder + "/"
                     self.arms[index]["arm"].urdf_write(self.arms[index]["arm"].urdf_data(),
                                                        path + self.arms[index]["name"])
-                    data.append([self.arms[index]["name"].replace(" ", ""), self.folder, datetime.now().strftime("%d_%m_%y")])
+                    data.append([self.arms[index]["name"].replace(" ", ""), folder, datetime.now().strftime("%d_%m_%y")])
                     index = index+1
         # self.save_json("created arms", data)
 
@@ -267,8 +272,8 @@ class Simulator(object):
         all_data = []
         self.json_data = []
         for arm in range(0, len(self.arms)):
-            # print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
-            logerr(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
+            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            # logerr(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
             try:
                 joints = self.arms[arm]["arm"].joint_data
@@ -313,7 +318,7 @@ if __name__ == '__main__':
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 3  # number degrees of freedom of the manipulator
+    dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
@@ -334,7 +339,7 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     # folder to save the file to
     foldere = "combined"
-    sim = Simulator(dofe, foldere, True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    sim = Simulator(dof=dofe, folder=foldere, create=True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
@@ -343,10 +348,10 @@ if __name__ == '__main__':
     # sim.run_simulation(nums*0, len(arms))
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:  # first run
             sim.arms = arms[:nums]
