@@ -315,6 +315,24 @@ class UrdfClass(object):
         self.axis = self.init_calc(joints, joints_axis)
         self.links_number = len(self.links)
         self.rpy = rpy
+        self.weights = self.calc_weight()
+
+    def calc_weight(self):
+        """
+        this function calculate the weight of the links according to accumilated weight and length of arm
+        :return: weigths- the weight [kg] of each link - list of strings  (from the 2nd link)
+        """
+        coeffs = [11.709, 1.5113]  # the coeffs of the linear eauation (found according UR5 and motoman)
+        weights = [0]  # the wieght of each link
+        acc_length = 0  # accumelated length
+        acc_weight = 0  # accumelated weight
+        for link in self.links[1:]:
+            acc_length = acc_length+float(link)
+            weights.append(round(acc_length*coeffs[0]+coeffs[1]-acc_weight,2))
+            acc_weight = acc_weight + weights[-1]
+        while len(weights) < 7:
+            weights.append(1)
+        return [str(weight) for weight in weights]
 
     def urdf_data(self):
         head = '''<?xml version="1.0"?>
@@ -358,18 +376,17 @@ class UrdfClass(object):
   <xacro:macro name="arm_robot" params="prefix ">'''
         inertia_parameters = '''
         <xacro:property name="base_length" value="3.25"/>
-        <xacro:property name="base_mass" value="1.0" />
         <xacro:property name="base_radius" value="0.060" />
-        <xacro:property name="link0_mass" value="40.7" />
         <xacro:property name="link0_radius" value="0.060" /> 
             <!-- Inertia parameters -->
-        <!-- weight * length according to ur5 data --> 
-        <xacro:property name="link1_mass" value="${3.7*0.089}" />
-        <xacro:property name="link2_mass" value="${8.393*0.425}" />
-        <xacro:property name="link3_mass" value="${2.275*0.392}" />
-        <xacro:property name="link4_mass" value="${1.219*0.093}" />
-        <xacro:property name="link5_mass" value="${1.219*0.095}" />
-        <xacro:property name="link6_mass" value="${0.1879*0.082}" />
+        <xacro:property name="base_mass" value="1.0" />
+        <xacro:property name="link0_mass" value="40.7" />
+        <xacro:property name="link1_mass" value="3.7" />
+        <xacro:property name="link2_mass" value="''' + self.weights[1] + '''" />
+        <xacro:property name="link3_mass" value="''' + self.weights[2] + '''" />
+        <xacro:property name="link4_mass" value="''' + self.weights[3] + '''" />
+        <xacro:property name="link5_mass" value="''' + self.weights[4] + '''" />
+        <xacro:property name="link6_mass" value="''' + self.weights[5] + '''" />
         
         <xacro:property name="link1_radius" value="0.060" />
         <xacro:property name="link2_radius" value="0.060" />
@@ -507,7 +524,7 @@ class UrdfClass(object):
 			<cylinder radius="${link1_radius}" length="${link1_length}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass/link1_length}">
+      <xacro:cylinder_inertial radius="${link1_radius}" length="${link1_length}" mass="${link1_mass}">
         <origin xyz="0.0 0.0 ${link1_length / 2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>'''
@@ -523,11 +540,10 @@ class UrdfClass(object):
       <collision>
 	    <origin xyz="0 0 ${''' + linkname + '''_length / 2 }" rpy="0 0 0" />
         <geometry>
-		<cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
+		    <cylinder radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}" 
-        mass="${''' + linkname + '''_mass/''' + linkname + '''_length}">
+      <xacro:cylinder_inertial radius="${''' + linkname + '''_radius}" length="${''' + linkname + '''_length}" mass="${''' + linkname + '''_mass}">
         <origin xyz="0.0 0.0 ${''' + linkname + '''_length / 2 }" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>'''

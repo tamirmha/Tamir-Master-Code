@@ -313,8 +313,8 @@ if __name__ == '__main__':
         wait2_replace = 1.2
     # set parametrs from terminal
     args = sys.argv
-    dofe = 5  # number degrees of freedom of the manipulator
-    link_max = 0.41  # max link length to check
+    dofe = 3  # number degrees of freedom of the manipulator
+    link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
     if len(args) > 1:
         dofe = int(args[1])
@@ -355,6 +355,7 @@ if __name__ == '__main__':
     toc_main = datetime.now()
     print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
     rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
+    rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
 # import multiprocessing as mp
@@ -373,7 +374,7 @@ if __name__ == '__main__':
 # todo add to rename the total of success
 # Done - set for first joint the current location as target.
 # done  calculate indicies
-# todO change links weight according length
+# done change links weight according length
 # done delete base link visuality and change link0 to box
 # todo change link0 to the platform -
 # done -add roll for each manipulator in last joint
