@@ -323,7 +323,7 @@ class UrdfClass(object):
         this function calculate the weight of the links according to accumilated weight and length of arm
         :return: weigths- the weight [kg] of each link - list of strings  (from the 2nd link)
         """
-        coeffs = [11.709, 1.5113]  # the coeffs of the linear eauation (found according UR5 and motoman)
+        coeffs = [8.79055, 4.2928]  # the coeffs of the linear eauation (found according UR5 and motoman)
         weights = [0]  # the wieght of each link
         acc_length = 0  # accumelated length
         acc_weight = 0  # accumelated weight
@@ -389,10 +389,10 @@ class UrdfClass(object):
         <xacro:property name="link5_mass" value="''' + self.weights[4] + '''" />
         <xacro:property name="link6_mass" value="''' + self.weights[5] + '''" />
         
-        <xacro:property name="link1_radius" value="0.060" />
-        <xacro:property name="link2_radius" value="0.060" />
-        <xacro:property name="link3_radius" value="0.060" />
-        <xacro:property name="link4_radius" value="0.040" />
+        <xacro:property name="link1_radius" value="0.049" />
+        <xacro:property name="link2_radius" value="0.045" />
+        <xacro:property name="link3_radius" value="0.040" />
+        <xacro:property name="link4_radius" value="0.035" />
         <xacro:property name="link5_radius" value="0.030" />
         <xacro:property name="link6_radius" value="0.025" /> '''
         base_link = '''
@@ -693,15 +693,15 @@ def main_move_group():
     # oriens = [[-3.1459, 0, 0],[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.5, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
     # 0.864246189594, -0.264724522829, 0.406788229942, 0.132373735309
     z = 3
-    poses = [[0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
-    oriens = [[0, 3.1459 * 0.75, 0], [0, 3.1459 * 0.5, 0], [0, 3.1459 * 0.25, 0]]
+    poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
+    oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
 
     for j in range(3):
         for i in range(len(poses)):
             pose = poses[i]
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
-            time.sleep(1.5)
+            # time.sleep(1.5)
         raw_input("press enter")
 
 

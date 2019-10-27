@@ -28,6 +28,7 @@ class Simulator(object):
                 self.arms_exist()
             else:
                 self.arms = arms
+        # self.arms =  self.arms[:100]
         # desired positions and orientaions of the EE in world frame
         z = 3  # height from ground
         # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
@@ -148,12 +149,13 @@ class Simulator(object):
         links = self.set_links_length(link_max=link_max)
         index = 0
         folder_num = 0
+        folder = self.folder
         for config in configs:
             for arm in config:
-                if index%10==0:
-                    folder = self.folder + "/conf_" + str(folder_num)
-                    self.create_folder(base_path + str(self.dof) + "dof/" + folder)
-                    folder_num = folder_num + 1
+                # if index % 10 == 0:
+                #     folder = self.folder + "/conf_" + str(folder_num)
+                #     self.create_folder(base_path + str(self.dof) + "dof/" + folder)
+                #     folder_num = folder_num + 1
                 for link in links:
                     self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, folder))
                     path = base_path + str(len(arm["axe"])) + "dof/" + folder + "/"
@@ -286,7 +288,6 @@ class Simulator(object):
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
             # calculate relavent data from data array
             all_data.append(self.assign_data(data, arm))
-
             if arm == len(self.arms) - 1:
                 break
             self.replace_model(arm)
@@ -301,7 +302,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 35  # how many arms to send to simulator each time
+        nums = 30  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 2
     elif username == "arl_main":  # lab
@@ -310,17 +311,18 @@ if __name__ == '__main__':
         wait2_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2
-        wait2_replace = 2
+        wait1_replace = 2.5
+        wait2_replace = 2.5
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
         wait2_replace = 1.2
-    # set parametrs from terminal
-    args = sys.argv
+    # default values
     dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
+    # set parametrs from terminal
+    args = sys.argv
     if len(args) > 1:
         dofe = int(args[1])
         if len(args) > 2:
@@ -329,6 +331,7 @@ if __name__ == '__main__':
                 start_arm = int(args[3])/nums
     tic_main = datetime.now()
     ros = Ros()
+    # clean ros log file
     ros.ter_command("rosclean purge -y")
     # check if there is roscore running if there is stop it
     roscore = ros.checkroscorerun()
@@ -372,7 +375,7 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
 
-# Todo - save URDFS in several files
+# done - save URDFS in several files -disabled
 # done - change rpy!!!!!!!
 # done - get errors from terminal
 # todo the file name wont change when date change
