@@ -10,7 +10,6 @@ import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 import tf
-
 # System Libs
 import subprocess
 import shlex
@@ -147,12 +146,13 @@ class MoveGroupPythonInterface(object):
     def indices_calc(self, joints, links):
         try:
             # ignoring the final joint which is a roll
-            cur_pos = self.move_group.get_current_joint_values()  # [:-1]
-            # jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
-            jacobian = self.move_group.get_jacobian_matrix(cur_pos)
+            cur_pos = self.move_group.get_current_joint_values()
+            jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
             cur_pos = np.asarray(cur_pos)
+            # Jacobian eighen values
+            # j_ev = np.linalg.svd(jacobian)[1]
             # Manipulability index
-            mu = self.manipulability_index(jacobian)
+            mu = self.manipulability_index(jacobian) # np.product(j_ev)  # self.manipulability_index(jacobian)
             # Local Conditioning Index
             lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
             # Joint Mid-Range Proximity
@@ -167,7 +167,7 @@ class MoveGroupPythonInterface(object):
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index - calculate only for redundent manipulators
             ri = 50
-            if mu != 0 and len(joints) > 4:  # can't divide in zero and
+            if mu != 0 and len(joints) > 4:  # can't divide in zero and must have redundancy
                 ri = 1.1
                 for i in range(len(cur_pos)):
                     r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
@@ -707,4 +707,3 @@ def main_move_group():
 
 if __name__ == '__main__':
     main_move_group()
-
