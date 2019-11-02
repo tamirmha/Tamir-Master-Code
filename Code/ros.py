@@ -151,10 +151,13 @@ class MoveGroupPythonInterface(object):
             cur_pos = np.asarray(cur_pos)
             # Jacobian eighen values
             # j_ev = np.linalg.svd(jacobian)[1]
+            # mu = np.product(j_ev)
             # Manipulability index
-            mu = self.manipulability_index(jacobian) # np.product(j_ev)  # self.manipulability_index(jacobian)
+            mu = self.manipulability_index(jacobian)
+            # print mu
             # Local Conditioning Index
             lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+            # print lci
             # Joint Mid-Range Proximity
             theta_mean = [0.75]
             for joint in joints:
@@ -166,13 +169,15 @@ class MoveGroupPythonInterface(object):
             w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index - calculate only for redundent manipulators
+            # print np.diag(z)
             ri = 50
             if mu != 0 and len(joints) > 4:  # can't divide in zero and must have redundancy
                 ri = 1.1
-                for i in range(len(cur_pos)):
+                for i in range(len(cur_pos)-1):
                     r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
                     if r < ri:
                         ri = r
+            # print ri
             return mu, lci, np.diag(z), ri, jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero

@@ -4,8 +4,9 @@ from os import environ, listdir, path, mkdir, rename
 import numpy as np
 from itertools import product
 from time import sleep
-from rospy import init_node, logerr
-import getpass, sys
+from rospy import init_node  # , logerr
+import getpass
+import sys
 import json
 
 
@@ -178,7 +179,7 @@ class Simulator(object):
             mkdir(name)
         return name
 
-    def assign_data(self, data, arm):
+    def assign_data(self, data, arm, k):
         """
         Calculate the manipulaot indices(Manipulability, Local Conditioning Index, Joint Mid-Range Proximity)
         if the manipulator succed and the time that take
@@ -188,11 +189,12 @@ class Simulator(object):
         """
         data_res = []
         jacobian = []
-        curr_pos =[]
+        curr_pos = []
         mu = []   # Manipulability index
         lci = []  # Local Conditioning Index
         z = []    # Joint Mid-Range Proximity
         ri = []   # Relative Manipulability Index
+        arm_number = str(arm + 1 + k)
         for j in data:
             data_res.append(j[0])
             if j[0]:
@@ -217,6 +219,7 @@ class Simulator(object):
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
+        # print ri
         if data_res.count(True) >= 3 and data_res[3] and (data_res[0] or data_res[1]):
             # if the arm arrived to 3 or more point and get to the lower point or one of the two
             # top points --> it success and calc indices
@@ -241,6 +244,7 @@ class Simulator(object):
                 lci_min = -16
             try:
                 ri_min = ri[ri >= 0.0].min()
+                # print ri_min
             except:
                 self.save_json("ri_err", ri.tolist())
                 ri_min = -16
@@ -250,7 +254,7 @@ class Simulator(object):
             except:
                 self.save_json("z_err", z.tolist())
                 z_max = -16
-        return [datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
+        return [arm_number, datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
                 str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
 
     def replace_model(self, arm):
@@ -285,9 +289,11 @@ class Simulator(object):
                 links = [0.4] * self.dof
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
+                # print("sent to positio")
+                # sleep(1)
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
             # calculate relavent data from data array
-            all_data.append(self.assign_data(data, arm))
+            all_data.append(self.assign_data(data, arm, k))
             if arm == len(self.arms) - 1:
                 break
             self.replace_model(arm)
@@ -302,7 +308,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 30  # how many arms to send to simulator each time
+        nums = 35  # how many arms to send to simulator each time
         wait1_replace = 2
         wait2_replace = 2
     elif username == "arl_main":  # lab
@@ -318,8 +324,8 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 4  # number degrees of freedom of the manipulator
-    link_max = 0.71  # max link length to check
+    dofe = 6  # number degrees of freedom of the manipulator
+    link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
     # set parametrs from terminal
     args = sys.argv
@@ -342,13 +348,15 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     # folder to save the file to
     foldere = "combined"
-    sim = Simulator(dof=dofe, folder=foldere, create=True, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    sim = Simulator(dof=dofe, folder=foldere, create=False, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
     arms = sorted(sim.arms, reverse=True)
     # sim.arms = arms[:nums]
     # sim.run_simulation(nums*0, len(arms))
+    if len(arms) < nums:
+        nums = len(arms)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
             sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
