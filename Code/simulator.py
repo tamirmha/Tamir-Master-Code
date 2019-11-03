@@ -308,7 +308,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 35  # how many arms to send to simulator each time
+        nums = 35  # how many arms to send to simu lator each time
         wait1_replace = 2
         wait2_replace = 2
     elif username == "arl_main":  # lab
@@ -324,7 +324,7 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 6  # number degrees of freedom of the manipulator
+    dofe = 4  # number degrees of freedom of the manipulator
     link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
     # set parametrs from terminal
@@ -352,9 +352,9 @@ if __name__ == '__main__':
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
-    arms = sorted(sim.arms, reverse=True)
+    arms = sim.arms
+    # arms = sorted(sim.arms, reverse=True)
     # sim.arms = arms[:nums]
-    # sim.run_simulation(nums*0, len(arms))
     if len(arms) < nums:
         nums = len(arms)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
@@ -374,15 +374,7 @@ if __name__ == '__main__':
     rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-# import multiprocessing as mp
-# def map_simulator(t, nums=35):
-#     sim = Simulator(dofe, foldere, False, arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
-#     sim.run_simulation(nums * t, len(arms))
-#
-# n_cpu = 8
-# if __name__ == '__main__':
-#     mp.Pool(n_cpu).imap(map_simulator, range(start_arm, int(np.ceil(1.0*len(arms) / nums))))
-
+# todo - fix the Json save format
 # done - save URDFS in several files -disabled
 # done - change rpy!!!!!!!
 # done - get errors from terminal
