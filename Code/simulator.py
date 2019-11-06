@@ -29,7 +29,6 @@ class Simulator(object):
                 self.arms_exist()
             else:
                 self.arms = arms
-        # self.arms =  self.arms[:100]
         # desired positions and orientaions of the EE in world frame
         z = 3  # height from ground
         # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
@@ -327,6 +326,7 @@ if __name__ == '__main__':
     dofe = 4  # number degrees of freedom of the manipulator
     link_max = 0.41  # max link length to check
     start_arm = 0  # from which set of arms to start
+    create_urdf = True
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:
@@ -335,6 +335,7 @@ if __name__ == '__main__':
             link_max = float(args[2]) + 0.1
             if len(args) > 3:
                 start_arm = int(args[3])/nums
+                create_urdf = False
     tic_main = datetime.now()
     ros = Ros()
     # clean ros log file
@@ -348,7 +349,7 @@ if __name__ == '__main__':
     init_node('arl_python', anonymous=True)
     # folder to save the file to
     foldere = "combined"
-    sim = Simulator(dof=dofe, folder=foldere, create=False, wait1=wait1_replace,  wait2=wait2_replace, link_max=link_max)
+    sim = Simulator(dof=dofe, folder=foldere, create=create_urdf, wait1=wait1_replace, wait2=wait2_replace, link_max=link_max)
     if start_arm > 0:
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
