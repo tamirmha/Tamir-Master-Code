@@ -323,8 +323,8 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 4  # number degrees of freedom of the manipulator
-    link_max = 0.41  # max link length to check
+    dofe = 6  # number degrees of freedom of the manipulator
+    link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
     create_urdf = True
     # set parametrs from terminal
