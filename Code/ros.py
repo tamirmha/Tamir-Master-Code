@@ -21,6 +21,7 @@ from logging import warning
 import numpy as np
 import csv
 from socket import error
+import sys
 
 
 class Ros(object):
@@ -103,7 +104,7 @@ class MoveGroupPythonInterface(object):
     """MoveGroupPythonIntefaceTutorial"""
     def __init__(self):
         super(MoveGroupPythonInterface, self).__init__()
-
+        # moveit_commander.roscpp_initialize(sys.argv)
         #  Provides information such as the robot's kinematic model and the robot's current joint states
         self.robot = moveit_commander.RobotCommander()
         self.scene = moveit_commander.PlanningSceneInterface()

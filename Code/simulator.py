@@ -5,6 +5,7 @@ import numpy as np
 from itertools import product
 from time import sleep
 from rospy import init_node  # , logerr
+from rosnode import get_node_names
 import getpass
 import sys
 import json
@@ -266,6 +267,8 @@ class Simulator(object):
               " dof:=" + str(self.dof) + "dof"
         if self.arm_control != 0:
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
+        else:
+            self.ros.ter_command("rosnode kill /robot_state_publisher")
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         sleep(self.wait1)
@@ -288,8 +291,6 @@ class Simulator(object):
                 links = [0.4] * self.dof
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
-                # print("sent to positio")
-                # sleep(1)
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
             # calculate relavent data from data array
             all_data.append(self.assign_data(data, arm, k))
@@ -308,7 +309,7 @@ if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         nums = 35  # how many arms to send to simu lator each time
-        wait1_replace = 2
+        wait1_replace = 2.3
         wait2_replace = 2
     elif username == "arl_main":  # lab
         nums = 35  # how many arms to send to simulator each time
@@ -323,10 +324,10 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 5  # number degrees of freedom of the manipulator
+    dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
-    create_urdf = True
+    create_urdf = False
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:
@@ -358,6 +359,12 @@ if __name__ == '__main__':
     # sim.arms = arms[:nums]
     if len(arms) < nums:
         nums = len(arms)
+    nodes = get_node_names()
+    for node in nodes:
+        if "/moveit_python_wrappers" in node:
+            # moveit_arg = "call --wait " + node + """set_logger_level &quot; {logger: 'ros', level: 'Warn'} &quot;" """
+            command = "roslaunch man_gazebo logging_level.launch moveit_log:=" + node
+            ros.ter_command(command)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
             sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
@@ -375,6 +382,7 @@ if __name__ == '__main__':
     rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
+# todo - when not creating an urdf  dont use defualt!!!
 # todo - fix the Json save format
 # done - save URDFS in several files -disabled
 # done - change rpy!!!!!!!
