@@ -382,6 +382,7 @@ if __name__ == '__main__':
     rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
+#todO -  failed with error PATH_TOLERANCE_VIOLATED:?
 # todo - when not creating an urdf  dont use defualt!!!
 # todo - fix the Json save format
 # done - save URDFS in several files -disabled
