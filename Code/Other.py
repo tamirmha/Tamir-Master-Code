@@ -1,6 +1,8 @@
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
+import tkFileDialog
+from Tkinter import *
 
 
 def split_files_to_several_folders(files_in_folder=5000):
@@ -47,29 +49,34 @@ def load_csv(file_name):
         return result
 
 
-res_files = ["test_6dof_4d_",  "test2_6dof_4d_"]
-# data = [{"name": "", "time": 0.0, "mu": 0.0, "LCI": 0.0, "Z": 0.0, "dof": 0., "vars": [[], [], []]}]
-data =[]
-first = load_csv("test3_6dof_4d_ ")
-if len(data) == 0:
-    for fir in first:
-        data.append(fir)
+def sun_data():
+    root = Tk()
+    root.update()
+    res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+    data = []
 
-
-for res_file in res_files:
-    V = load_csv(res_file)
-    for v in V:
-        in_data = False
-        if v["Z"] == -1:
-            v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"], "vars": v["vars"]}
-        for dat in data:
-            if v["name"] in dat["name"]:
-                dat_index = data[data.index(dat)]
-                dat_index["Z"] = (dat_index["Z"] + v["Z"]) / 2.0
-                dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
-                dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
-                dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
-                in_data = True
-                break
-        if not in_data:
-            data.append(v)
+    for res_file in res_files:
+        V = load_csv(res_file[:-4])
+        if len(data) == 0:
+            first = load_csv(res_file[:-4])
+            for fir in first:
+                if fir["Z"] == -1:
+                    fir = {"name": fir["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0,
+                           "Z": 15, "dof": fir["dof"], "vars": fir["vars"]}
+                data.append(fir)
+        for v in V:
+            in_data = False
+            if v["Z"] == -1:
+                v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"], "vars": v["vars"]}
+            for dat in data:
+                if v["name"] in dat["name"]:
+                    dat_index = data[data.index(dat)]
+                    dat_index["Z"] = (dat_index["Z"] + v["Z"]) / 2.0
+                    dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
+                    dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
+                    dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
+                    in_data = True
+                    break
+            if not in_data:
+                data.append(v)
+    root.destroy()

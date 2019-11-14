@@ -1,5 +1,7 @@
 import csv
 import tkFileDialog
+from Tkinter import *
+
 import json
 
 
@@ -60,9 +62,12 @@ def fix_json(file_name):
 
 
 if __name__ == '__main__':
+    root = Tk()
+    root.update()
     files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     new_file_name = "results" + files[0][-13:-5]
     for i in range(len(files)):
         save_csv(read_csv(files[i][:-4]), new_file_name)
         fix_json(files[i][:-4])
         save_json(data=load_json(files[i][:-4] + "_fixed"), name=new_file_name)
+    root.destroy()
