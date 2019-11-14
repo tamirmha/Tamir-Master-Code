@@ -172,13 +172,13 @@ class MoveGroupPythonInterface(object):
             # Relative Manipulability Index - calculate only for redundent manipulators
             # print np.diag(z)
             ri = 50
-            if mu != 0 and len(joints) > 4:  # can't divide in zero and must have redundancy
-                ri = 1.1
-                for i in range(len(cur_pos)-1):
-                    r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
-                    if r < ri:
-                        ri = r
-            # print ri
+            # todo - disabled the RI calculation
+            # if mu != 0 and len(joints) > 4:  # can't divide in zero and must have redundancy
+            #     ri = 1.1
+            #     for i in range(len(cur_pos)-1):
+            #         r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
+            #         if r < ri:
+            #             ri = r
             return mu, lci, np.diag(z), ri, jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
@@ -243,7 +243,7 @@ class MoveGroupPythonInterface(object):
         cylinder_pose.pose.orientation.w = 1.0
         cylinder_pose.pose.position.x = pose[0]
         cylinder_pose.pose.position.y = pose[1]
-        cylinder_pose.pose.position.z =floor['pose'][2]+0.75/2# height/2.0
+        cylinder_pose.pose.position.z = floor['pose'][2]+0.75/2# height/2.0
         self.cylinder_name = 'plant'
         self.scene.add_cylinder(self.cylinder_name, cylinder_pose, 0.75, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)

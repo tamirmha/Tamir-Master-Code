@@ -1,6 +1,6 @@
 from ros import Ros, MoveGroupPythonInterface, UrdfClass, HandleCSV
 from datetime import datetime
-from os import environ, listdir, path, mkdir, rename
+from os import environ, listdir, path, mkdir  # , rename
 import numpy as np
 from itertools import product
 from time import sleep
@@ -23,6 +23,7 @@ class Simulator(object):
         self.arms = []
         self.wait1 = wait1
         self.wait2 = wait2
+        self.json_data = []
         if create:  # all the configuration of the arms
             self.create_urdf_from_csv(str(self.dof) + "dof_configs",  link_max)
         else:
@@ -295,10 +296,9 @@ class Simulator(object):
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
-        self.json_data = []
+        # self.json_data = []
         for arm in range(0, len(self.arms)):
             print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
-            # logerr(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
             # try:
             joints = self.arms[arm]["arm"].joint_data
@@ -334,8 +334,8 @@ if __name__ == '__main__':
         wait2_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.5
-        wait2_replace = 2.5
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
@@ -354,7 +354,7 @@ if __name__ == '__main__':
             if len(args) > 3:
                 start_arm = int(args[3])/nums
                 create_urdf = False
-    tic_main = datetime.now()
+    # tic_main = datetime.now()
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
@@ -393,36 +393,36 @@ if __name__ == '__main__':
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
-    toc_main = datetime.now()
-    print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
-    rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
-    rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
+    # toc_main = datetime.now()
+    # print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
+    # rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
+    # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-# done - check the prismatic limits
+# Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# Done - when not creating an urdf dont use defualt!!!
 # todo - fix the Json save format
-# done - save URDFS in several files -disabled
-# done - change rpy!!!!!!!
-# done - get errors from terminal
 # todo the file name wont change when date change
-# todo add to rename the total of success
-# Done - set for first joint the current location as target.
-# done  calculate indicies
-# done change links weight according length
-# done delete base link visuality and change link0 to box
 # todo change link0 to the platform -
-# done -add roll for each manipulator in last joint
-# done add floor at 3 meter
-# done change detection points
 # todo change the base_link to 0 meters - check difference
 # todo check planner parameters
 # TODo how accuracy in go to pose effect
 # Todo fix obstacle parameters
+# todo? add to rename the total of success
+# Done - when not creating an urdf dont use defualt!!!
+# done - check the prismatic limits
+# done - save URDFS in several files -disabled
 # done save to JSON file  - disabled
+# done - change rpy!!!!!!!
 # done change defination of success
 # done delete created files
 # done change length from terminal
 # done get pc name for specific configuration
 # done set parametrs from terminal
+# done -add roll for each manipulator in last joint
+# done add floor at 3 meter
+# done change detection points
+# Done - set for first joint the current location as target.
+# # done  calculate indicies
+# # done change links weight according length
+# # done delete base link visuality and change link0 to box
