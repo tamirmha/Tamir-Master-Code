@@ -2,8 +2,8 @@ from os import environ, listdir, mkdir, path
 import shutil
 
 
-files_in_folder = 10000
-name = environ['HOME'] + "/urdf_5dof/"
+files_in_folder = 5000
+name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
 if not path.exists(name):
     mkdir(name)
 

@@ -373,7 +373,7 @@ class UrdfClass(object):
 		<xacro:property name="joint_lower_limit" value="${-pi}" />
 	</xacro:if>
 	<xacro:unless value="${joint_type == 'revolute'}"  >
-		<xacro:property name="joint_upper_limit" value="${2*link_length}" />
+		<xacro:property name="joint_upper_limit" value="${link_length}" />
 		<xacro:property name="joint_lower_limit" value="${0}" />
 	</xacro:unless>
 	<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="150.0" velocity="3.15"/>

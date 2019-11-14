@@ -327,7 +327,7 @@ if __name__ == '__main__':
     dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
-    create_urdf = False
+    create_urdf = True
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:
@@ -356,7 +356,7 @@ if __name__ == '__main__':
         ros.stop_launch(sim.main)
     arms = sim.arms
     # arms = sorted(sim.arms, reverse=True)
-    # sim.arms = arms[:nums]
+    # sim.arms1 = arms[:nums]
     if len(arms) < nums:
         nums = len(arms)
     nodes = get_node_names()
@@ -382,8 +382,9 @@ if __name__ == '__main__':
     rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-#todO -  failed with error PATH_TOLERANCE_VIOLATED:?
-# todo - when not creating an urdf  dont use defualt!!!
+# todo - check the prismatic limits
+# todO - failed with error PATH_TOLERANCE_VIOLATED:?
+# todo - when not creating an urdf dont use defualt!!!
 # todo - fix the Json save format
 # done - save URDFS in several files -disabled
 # done - change rpy!!!!!!!
