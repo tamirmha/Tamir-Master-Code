@@ -161,11 +161,11 @@ class MoveGroupPythonInterface(object):
             # print lci
             # Joint Mid-Range Proximity
             theta_mean = [0.75]
-            for joint in joints:
+            for joint in joints[1:]:
                 if joint == "revolute":
                     theta_mean.append(np.pi)
                 else:
-                    theta_mean.append(float(links[joints.index(joint)]))
+                    theta_mean.append(float(links[joints.index(joint)])/2)
             # theta_mean.append(np.pi)
             w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)

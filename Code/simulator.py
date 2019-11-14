@@ -171,7 +171,24 @@ class Simulator(object):
                + "dof/" + self.folder
         for fil in listdir(path):
             fol = self.folder.split("/")
-            self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[0]})
+            data = self.get_urdf(name=fil.replace(".urdf.xacro", ""))
+            self.arms.append(self.create_arm(data[0], data[1], data[2], fol[0]))
+            # self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[0]})
+
+    @staticmethod
+    def get_urdf(name="roll_z_0_1pris_y_0_7pris_y_0_7pitch_x_0_7pitch_x_0_7pris_x_0_7"):
+        joints = ["roll"]
+        prev_axe = ["z"]
+        link_length = ["0.1"]
+        arm = name.split("_")
+        for a in range(3, len(arm) - 1):
+            if a % 3 == 0:
+                joints.append(arm[a][1:])
+            elif a % 3 == 1:
+                prev_axe.append(arm[a])
+            elif a % 3 == 2:
+                link_length.append(arm[a] + "." + arm[a + 1][:1])
+        return [joints, prev_axe, link_length]
 
     @staticmethod
     def create_folder(name):
@@ -283,12 +300,12 @@ class Simulator(object):
             print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             # logerr(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
-            try:
-                joints = self.arms[arm]["arm"].joint_data
-                links = self.arms[arm]["arm"].links
-            except:
-                joints = ["revolute"] * self.dof
-                links = [0.4] * self.dof
+            # try:
+            joints = self.arms[arm]["arm"].joint_data
+            links = self.arms[arm]["arm"].links
+            # except:
+            #     joints = ["revolute"] * self.dof
+            #     links = [0.4] * self.dof
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
@@ -310,7 +327,7 @@ if __name__ == '__main__':
     if username == "tamir":  # tamir laptop
         nums = 35  # how many arms to send to simu lator each time
         wait1_replace = 2.3
-        wait2_replace = 2
+        wait2_replace = 1.5
     elif username == "arl_main":  # lab
         nums = 35  # how many arms to send to simulator each time
         wait1_replace = 2
@@ -324,10 +341,10 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 6  # number degrees of freedom of the manipulator
+    dofe = 5  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
     start_arm = 0  # from which set of arms to start
-    create_urdf = True
+    create_urdf = False
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:
@@ -382,9 +399,9 @@ if __name__ == '__main__':
     rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-# todo - check the prismatic limits
+# done - check the prismatic limits
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# todo - when not creating an urdf dont use defualt!!!
+# Done - when not creating an urdf dont use defualt!!!
 # todo - fix the Json save format
 # done - save URDFS in several files -disabled
 # done - change rpy!!!!!!!
