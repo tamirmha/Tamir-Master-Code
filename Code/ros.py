@@ -161,7 +161,7 @@ class MoveGroupPythonInterface(object):
             # print lci
             # Joint Mid-Range Proximity
             theta_mean = [0.75]
-            for joint in joints[1:]:
+            for joint in joints:
                 if joint == "revolute":
                     theta_mean.append(np.pi)
                 else:

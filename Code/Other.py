@@ -59,8 +59,9 @@ if len(data) == 0:
 for res_file in res_files:
     V = load_csv(res_file)
     for v in V:
-        if v["z"] == -1:
-            v = {"name": v["name"], "time": 0.0, "mu": 0.0, "LCI": 0.0, "Z": 0.0, "dof": 0., "vars": v["vars"]}
+        in_data = False
+        if v["Z"] == -1:
+            v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"], "vars": v["vars"]}
         for dat in data:
             if v["name"] in dat["name"]:
                 dat_index = data[data.index(dat)]
@@ -68,4 +69,7 @@ for res_file in res_files:
                 dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
                 dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
                 dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
-
+                in_data = True
+                break
+        if not in_data:
+            data.append(v)
