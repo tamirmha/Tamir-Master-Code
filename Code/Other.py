@@ -4,6 +4,7 @@ import csv
 import tkFileDialog
 from Tkinter import *
 import json
+import matplotlib.pyplot as plt
 
 
 class MyCsv(object):
@@ -56,24 +57,29 @@ class MyCsv(object):
                 #     writer.writerow(str_dat)
 
     @staticmethod
-    def read_csv(file_name):
+    def read_csv(file_name, csv_type="list"):
         with open(file_name + ".csv", 'r') as _filehandler:
-            csv_file_reader = csv.reader(_filehandler)
             data = []
-            empty = True
-            for row in csv_file_reader:
-                while "" in row:
-                    row.remove("")
-                if len(row) > 0:
-                    if len(row) == 1:
-                        row = row[0].split(",")
+            if csv_type == "list":
+                csv_file_reader = csv.reader(_filehandler)
+                empty = True
+                for row in csv_file_reader:
+                    while "" in row:
+                        row.remove("")
+                    if len(row) > 0:
+                        if len(row) == 1:
+                            row = row[0].split(",")
+                        data.append(row)
+                        empty = False
+                    else:
+                        if not empty:
+                            data = []
+                        empty = True
+            elif csv_type == "dict":
+                csv_file_reader = csv.DictReader(_filehandler)
+                for row in csv_file_reader:
                     data.append(row)
-                    empty = False
-                else:
-                    if not empty:
-                        data = []
-                    empty = True
-            return data
+        return data
 
 
 class MergeData(object):
@@ -178,9 +184,91 @@ def sum_data():
     return data
 
 
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all_15_11"):
+    all_data = MyCsv.read_csv(result_file, "dict")
+    mu = []
+    time = []
+    z = []
+    lci = []
+    dof =[]
+    for dat in all_data:
+        if dat["mu"] != "-1.0" and dat["mu"] != "mu":
+            mu.append(float(dat["mu"]))
+            time .append(float(dat["time"]))
+            z.append(float(dat["Z"]))
+            lci.append(float(dat["LCI"]))
+            dof.append(float(dat["dof"]))
+    plt.subplot(551)
+    plt.title("Manipulability")
+    # plt.scatter([], [])
+    plt.ylabel("Manipulability")
+    plt.subplot(556)
+    plt.scatter(mu, lci, color="g")
+    plt.ylabel("Local condion number")
+    plt.subplot(5,5,11)
+    plt.scatter(mu, time, color="black")
+    plt.ylabel("Time (sec)")
+    plt.subplot(5,5,16)
+    plt.scatter(mu, z, color="cyan")
+    plt.ylabel("Mid-joint state")
+    plt.subplot(5,5,21)
+    plt.scatter(mu, dof, color="magenta")
+    plt.ylabel("Degree of Freedom")
+    #
+    plt.subplot(552)
+    plt.title("Local condion number")
+    plt.scatter(lci, mu, color="g")
+    # plt.subplot(557)
+    # plt.scatter([], [])
+    plt.subplot(5,5,12)
+    plt.scatter(lci, time, color="r")
+    plt.subplot(5,5,17)
+    plt.scatter(lci, z, color="brown")
+    plt.subplot(5,5, 22)
+    plt.scatter(lci, dof, color="orange")
+
+    plt.subplot(553)
+    plt.title("Time (sec)")
+    plt.scatter(time, mu, color="black")
+    plt.subplot(558)
+    plt.scatter(time, lci, color="r")
+    # plt.subplot(5,5,13)
+    # plt.scatter([], [])
+    plt.subplot(5,5,18)
+    plt.scatter(time, z, color="pink")
+    plt.subplot(5,5, 23)
+    plt.scatter(time, dof)
+
+    plt.subplot(554)
+    plt.title("Mid-joint state")
+    plt.scatter(z, mu, color="cyan")
+    plt.subplot(559)
+    plt.scatter(z, lci, color="brown")
+    plt.subplot(5,5,14)
+    plt.scatter(z, time, color="pink")
+    # plt.subplot(5,5,19)
+    # plt.scatter([], [])
+    plt.subplot(5,5, 24)
+    plt.scatter(z, dof, color="y")
+
+    plt.subplot(555)
+    plt.title("Degree of Freedom")
+    plt.scatter(dof, mu, color="magenta")
+    plt.subplot(5,5,10)
+    plt.scatter(dof, lci, color="orange")
+    plt.subplot(5,5,15)
+    plt.scatter(dof, time)
+    plt.subplot(5,5,20)
+    plt.scatter(dof, z, color="y")
+    plt.subplot(5,5, 24)
+    # plt.scatter([], [])
+    plt.show()
+
+
 split = False
 sumdata = False
-to_merge = True
+to_merge = False
+plotdata = True
 if to_merge:
     merge_data = MergeData()
     merge_data.merge()
@@ -188,3 +276,7 @@ if split:
     split_files_to_several_folders(5000)
 if sumdata:
     summed_data = sum_data()
+if plotdata:
+    plot_data()
+
+# todo - in other.py: calulate from json for ones with problems

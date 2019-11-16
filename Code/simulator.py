@@ -398,7 +398,6 @@ if __name__ == '__main__':
     # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-# todo - in other.py: calulate from json for ones with problems
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
 # todo - fix the Json save format
