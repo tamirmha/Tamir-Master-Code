@@ -47,7 +47,7 @@ class MyCsv(object):
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
             elif csv_type == "dict":  # for dictionary
-                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "LCI", "Z"]
+                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "Z", "LCI"]
                 writer = csv.DictWriter(name, fieldnames=headers, delimiter=',')
                 writer.writeheader()
                 writer.writerows(data)
@@ -135,68 +135,66 @@ class MergeData(object):
 
 class FixFromJson(object):
 
-    def __init__(self):
+    def __init__(self, all=False):
         root = Tk()
         root.update()
         files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         root.destroy()
+        self.all = all
         for fil in files:
             self.fix(fil[:-4])
 
     def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
         file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
-        i = 0
+        MergeData.fix_json(file2fix)
+        original_data = MergeData.load_json(file_fixed)
         for row in to_fix:
             if row[5] == "True":
-                if row[8] == "-16":
-                    MergeData.fix_json(file2fix)
-                    original_data = MergeData.load_json(file_fixed)
-                    for dat in original_data:
-                        if dat.keys()[0] == row[2] and dat[row[2]][1] != [-1, -1, -1, -1]:
-                            jacobians, curr_poss = dat[row[2]]
-                            mu = 1.1
-                            z = 0
-                            lci = 1.1
-                            for jacobian, curr_pos in zip(jacobians, curr_poss):
-                                if jacobian != -1:
-                                    mu_new, lci_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
-                                    if mu > mu_new:
-                                        mu = mu_new
-                                    if z < z_new:
-                                        z = z_new
-                                    if lci > lci_new:
-                                        lci = lci_new
-                            to_fix[to_fix.index(row)][7] = mu
-                            to_fix[to_fix.index(row)][9] = lci
-                            to_fix[to_fix.index(row)][8] = z
+                if row[8] == "-16" and not self.all:
+                    to_fix = self.calc(file2fix, file_fixed, row, to_fix, original_data)
+                elif self.all:
+                    to_fix = self.calc(file2fix, file_fixed, row, to_fix, original_data)
         MyCsv.save_csv(to_fix, file_fixed)
 
+    def calc(self, file2fix, file_fixed, row, to_fix, original_data):
+        for dat in original_data:
+            if dat.keys()[0] == row[2] and dat[row[2]][1] != [-1, -1, -1, -1]:
+                jacobians, curr_poss = dat[row[2]]
+                mu = 1.1
+                z = 0
+                lci = 1.1
+                for jacobian, curr_pos in zip(jacobians, curr_poss):
+                    if jacobian != -1:
+                        mu_new, lci_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
+                        if mu > mu_new:
+                            mu = mu_new
+                        if z < z_new:
+                            z = z_new
+                        if lci > lci_new:
+                            lci = lci_new
+                to_fix[to_fix.index(row)][7] = mu
+                to_fix[to_fix.index(row)][8] = z
+                to_fix[to_fix.index(row)][9] = lci
+        return to_fix
+
     def indices_calc(self, names, jacobian, cur_pos):
-        joints = ["roll"]
-        prev_axe = ["z"]
-        link_length = ["0.1"]
-        name = names.split("_")
-        for a in range(3, len(name) - 1):
-            if a % 3 == 0:
-                joints.append(name[a][1:] + "_")
-            elif a % 3 == 2:
-                link_length.append(name[a] + "." + name[a + 1][:1] )
         cur_pos = np.asarray(cur_pos)
         jacobian = np.asarray(jacobian)
         # Manipulability index
         mu = self.manipulability_index(jacobian)
         # Local Conditioning Index
-        lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+        lci = self.local_conditioning_index(jacobian)
         # Joint Mid-Range Proximity
-        theta_mean = [0.75]
-        for joint in joints:
-            if joint == "revolute":
-                theta_mean.append(np.pi)
-            else:
-                theta_mean.append(float(link_length[joints.index(joint)])/2)
-        w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-        z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
+        z = self.mid_joint_proximity(cur_pos, names)
+        # theta_mean = [0.75]
+        # for joint in joints:
+        #     if joint == "revolute":
+        #         theta_mean.append(np.pi)
+        #     else:
+        #         theta_mean.append(float(link_length[joints.index(joint)])/2)
+        # w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+        # z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
         return mu, lci, np.diag(z).max()
 
     @staticmethod
@@ -207,10 +205,36 @@ class FixFromJson(object):
         else:
             det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
         if det_j > 0.00001:  # preventing numeric problems
-            # return round(det_j ** (1/n), 3)
-            return round(det_j ** 0.5, 3)
+            return round(det_j ** (1/float(n)), 3)
+            # return round(det_j ** 0.5, 3)
         else:
             return 0
+
+    @staticmethod
+    def mid_joint_proximity(cur_pos, names):
+        joints = ["roll"]
+
+        link_length = ["0.1"]
+        name = names.split("_")
+        for a in range(3, len(name) - 1):
+            if a % 3 == 0:
+                joints.append(name[a][1:] + "_")
+            elif a % 3 == 2:
+                link_length.append(name[a] + "." + name[a + 1][:1])
+        theta_mean = [0.75]
+        for joint in joints:
+            if "pris" not in joint:
+                theta_mean.append(0)
+            else:
+                theta_mean.append(float(link_length[joints.index(joint)])/2)
+        # print(name)
+        w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+        z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
+        return z
+
+    @staticmethod
+    def local_conditioning_index(jacobian):
+        return round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
 
 
 def split_files_to_several_folders(files_in_folder=5000):
@@ -234,7 +258,7 @@ def sum_data():
     root.update()
     res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     root.destroy()
-    new_file_name = "/".join(res_files[0].split("/")[:7]) + "/" + res_files[0].split("/")[7] + "_all"
+    new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
     data = []
     for res_file in res_files:
         csv_file = MyCsv.load_csv(res_file[:-4])
@@ -274,7 +298,7 @@ def sum_data():
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all_success"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all_success"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -293,63 +317,63 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all_suc
     # plt.scatter([], [])
     plt.ylabel("Manipulability")
     plt.subplot(556)
-    plt.scatter(mu, lci, color="g")
+    plt.scatter(mu, lci, color="g", s=4)
     plt.ylabel("Local condion number")
     plt.subplot(5,5,11)
-    plt.scatter(mu, time, color="black")
+    plt.scatter(mu, time, color="black", s=4)
     plt.ylabel("Time (sec)")
     plt.subplot(5,5,16)
-    plt.scatter(mu, z, color="cyan")
+    plt.scatter(mu, z, color="cyan", s=4)
     plt.ylabel("Mid-joint state")
     plt.subplot(5,5,21)
-    plt.scatter(mu, dof, color="magenta")
+    plt.scatter(mu, dof, color="magenta", s=4)
     plt.ylabel("Degree of Freedom")
     #
     plt.subplot(552)
     plt.title("Local condion number")
-    plt.scatter(lci, mu, color="g")
+    plt.scatter(lci, mu, color="g", s=4)
     # plt.subplot(557)
     # plt.scatter([], [])
     plt.subplot(5,5,12)
-    plt.scatter(lci, time, color="r")
+    plt.scatter(lci, time, color="r", s=4)
     plt.subplot(5,5,17)
-    plt.scatter(lci, z, color="brown")
+    plt.scatter(lci, z, color="brown", s=4)
     plt.subplot(5,5, 22)
-    plt.scatter(lci, dof, color="orange")
+    plt.scatter(lci, dof, color="orange", s=4)
 
     plt.subplot(553)
     plt.title("Time (sec)")
-    plt.scatter(time, mu, color="black")
+    plt.scatter(time, mu, color="black", s=4)
     plt.subplot(558)
-    plt.scatter(time, lci, color="r")
+    plt.scatter(time, lci, color="r", s=4)
     # plt.subplot(5,5,13)
     # plt.scatter([], [])
     plt.subplot(5,5,18)
-    plt.scatter(time, z, color="pink")
+    plt.scatter(time, z, color="pink", s=4)
     plt.subplot(5,5, 23)
-    plt.scatter(time, dof)
+    plt.scatter(time, dof, s=4)
 
     plt.subplot(554)
     plt.title("Mid-joint state")
-    plt.scatter(z, mu, color="cyan")
+    plt.scatter(z, mu, color="cyan", s=4)
     plt.subplot(559)
-    plt.scatter(z, lci, color="brown")
+    plt.scatter(z, lci, color="brown", s=4)
     plt.subplot(5,5,14)
-    plt.scatter(z, time, color="pink")
+    plt.scatter(z, time, color="pink", s=4)
     # plt.subplot(5,5,19)
     # plt.scatter([], [])
     plt.subplot(5,5, 24)
-    plt.scatter(z, dof, color="y")
+    plt.scatter(z, dof, color="y", s=4)
 
     plt.subplot(555)
     plt.title("Degree of Freedom")
-    plt.scatter(dof, mu, color="magenta")
+    plt.scatter(dof, mu, color="magenta", s=4)
     plt.subplot(5,5,10)
-    plt.scatter(dof, lci, color="orange")
+    plt.scatter(dof, lci, color="orange", s=4)
     plt.subplot(5,5,15)
-    plt.scatter(dof, time)
+    plt.scatter(dof, time, s=4)
     plt.subplot(5,5,20)
-    plt.scatter(dof, z, color="y")
+    plt.scatter(dof, z, color="y", s=4)
     plt.subplot(5,5, 24)
     # plt.scatter([], [])
     plt.show()
@@ -360,6 +384,7 @@ sumdata = False
 to_merge = False
 plotdata = True
 fix_from_json = False
+fix_all_from_json = False
 if to_merge:
     merge_data = MergeData()
     merge_data.merge()
@@ -368,8 +393,10 @@ if split:
 if sumdata:
     summed_data = sum_data()
 if plotdata:
-    plot_data()
+    plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_4dof_all")
 if fix_from_json:
     FixFromJson()
+if fix_all_from_json:
+    FixFromJson(all=True)
 
-# todo - calculate Z for all arms
+# todo - check why mu & LCI are 0
