@@ -5,6 +5,7 @@ import tkFileDialog
 from Tkinter import *
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class MyCsv(object):
@@ -39,14 +40,14 @@ class MyCsv(object):
             return result
 
     @staticmethod
-    def save_csv(data, file_name, is_list=True):
+    def save_csv(data, file_name, csv_type="list"):
         """Save to csv format"""
         with open(file_name + ".csv", 'ab') as name:
-            if is_list:
+            if csv_type == "list":
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
-            else:  # for dictionary
-                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "Z",	"LCI"]
+            elif csv_type == "dict":  # for dictionary
+                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "LCI", "Z"]
                 writer = csv.DictWriter(name, fieldnames=headers, delimiter=',')
                 writer.writeheader()
                 writer.writerows(data)
@@ -132,6 +133,86 @@ class MergeData(object):
             name.writelines(data)
 
 
+class FixFromJson(object):
+
+    def __init__(self):
+        root = Tk()
+        root.update()
+        files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+        root.destroy()
+        for fil in files:
+            self.fix(fil[:-4])
+
+    def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
+        file_fixed = file2fix + "_fixed"
+        to_fix = MyCsv.read_csv(file2fix)
+        i = 0
+        for row in to_fix:
+            if row[5] == "True":
+                if row[8] == "-16":
+                    MergeData.fix_json(file2fix)
+                    original_data = MergeData.load_json(file_fixed)
+                    for dat in original_data:
+                        if dat.keys()[0] == row[2] and dat[row[2]][1] != [-1, -1, -1, -1]:
+                            jacobians, curr_poss = dat[row[2]]
+                            mu = 1.1
+                            z = 0
+                            lci = 1.1
+                            for jacobian, curr_pos in zip(jacobians, curr_poss):
+                                if jacobian != -1:
+                                    mu_new, lci_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
+                                    if mu > mu_new:
+                                        mu = mu_new
+                                    if z < z_new:
+                                        z = z_new
+                                    if lci > lci_new:
+                                        lci = lci_new
+                            to_fix[to_fix.index(row)][7] = mu
+                            to_fix[to_fix.index(row)][9] = lci
+                            to_fix[to_fix.index(row)][8] = z
+        MyCsv.save_csv(to_fix, file_fixed)
+
+    def indices_calc(self, names, jacobian, cur_pos):
+        joints = ["roll"]
+        prev_axe = ["z"]
+        link_length = ["0.1"]
+        name = names.split("_")
+        for a in range(3, len(name) - 1):
+            if a % 3 == 0:
+                joints.append(name[a][1:] + "_")
+            elif a % 3 == 2:
+                link_length.append(name[a] + "." + name[a + 1][:1] )
+        cur_pos = np.asarray(cur_pos)
+        jacobian = np.asarray(jacobian)
+        # Manipulability index
+        mu = self.manipulability_index(jacobian)
+        # Local Conditioning Index
+        lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+        # Joint Mid-Range Proximity
+        theta_mean = [0.75]
+        for joint in joints:
+            if joint == "revolute":
+                theta_mean.append(np.pi)
+            else:
+                theta_mean.append(float(link_length[joints.index(joint)])/2)
+        w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+        z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
+        return mu, lci, np.diag(z).max()
+
+    @staticmethod
+    def manipulability_index(jacobian):
+        n = jacobian.size / len(jacobian)
+        if n == 5:
+            det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
+        else:
+            det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
+        if det_j > 0.00001:  # preventing numeric problems
+            # return round(det_j ** (1/n), 3)
+            return round(det_j ** 0.5, 3)
+        else:
+            return 0
+
+
 def split_files_to_several_folders(files_in_folder=5000):
     name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
     if not path.exists(name):
@@ -161,30 +242,39 @@ def sum_data():
             first = MyCsv.load_csv(res_file[:-4])
             for fir in first:
                 if fir["Z"] == -1:
-                    fir = {"name": fir["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": fir["dof"],
-                           "link_length": fir["link_length"], "joints": fir["joints"], "prev_axe": fir["prev_axe"]}
+                    continue
+                    # fir = {"name": fir["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": fir["dof"],
+                    #        "link_length": fir["link_length"], "joints": fir["joints"], "prev_axe": fir["prev_axe"]}
                 data.append(fir)
         for v in csv_file:
             in_data = False
             if v["Z"] == -1:
-                v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"],
-                     "link_length": v["link_length"], "joints": v["joints"], "prev_axe": v["prev_axe"]}
+                continue
+                # v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"],
+                #      "link_length": v["link_length"], "joints": v["joints"], "prev_axe": v["prev_axe"]}
             for dat in data:
                 if v["name"] in dat["name"]:
                     dat_index = data[data.index(dat)]
-                    dat_index["Z"] = (dat_index["Z"] + v["Z"]) / 2.0
-                    dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
-                    dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
-                    dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
+                    if dat_index["Z"] > v["Z"]:
+                        dat_index["Z"] = v["Z"]
+                    if dat_index["mu"] < v["mu"]:
+                        dat_index["mu"] = v["mu"]
+                    if dat_index["time"] > v["time"]:
+                        dat_index["time"] = v["time"]
+                    if dat_index["LCI"] < v["LCI"]:
+                        dat_index["LCI"] = v["LCI"]
+                    # dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
+                    # dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
+                    # dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
                     in_data = True
                     break
             if not in_data:
                 data.append(v)
-    MyCsv.save_csv(data, new_file_name, False)
+    MyCsv.save_csv(data, new_file_name, "dict")
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all_15_11"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all_success"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -269,6 +359,7 @@ split = False
 sumdata = False
 to_merge = False
 plotdata = True
+fix_from_json = False
 if to_merge:
     merge_data = MergeData()
     merge_data.merge()
@@ -278,5 +369,7 @@ if sumdata:
     summed_data = sum_data()
 if plotdata:
     plot_data()
+if fix_from_json:
+    FixFromJson()
 
-# todo - in other.py: calulate from json for ones with problems
+# todo - calculate Z for all arms
