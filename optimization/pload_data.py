@@ -322,23 +322,23 @@ def func_is_duplicate(pop, *other, **kwargs):
     return is_duplicate
 
 
-# results = load_csv("C:\\Tamir\\Personal\\master\\Master_git\\Master\\optimization\\results_file23_10_4dof_4d_1930")
-# passed_results = []
-# penalty = 1000
-# f = [[], [], [], []]
-# for i in range(len(results)):
-#     if results[i]["time"] == -1:
-#         results[i]["time"] = penalty
-#         results[i]["mu"] = penalty
-#         results[i]["LCI"] = penalty
-#         results[i]["Z"] = penalty
-#         results[i]["ri"] = penalty
-#     else:
-#         passed_results.append(results[i])
-#     f[0].append(results[i]["time"])
-#     f[1].append(results[i]["mu"])
-#     f[2].append(results[i]["Z"])
-#     f[3].append(results[i]["dof"])
+results = load_csv("C:\\Tamir\\Personal\\master\\Master_git\\Master\\optimization\\results_file23_10_4dof_4d_1930")
+passed_results = []
+penalty = 1000
+f = [[], [], [], []]
+for i in range(len(results)):
+    if results[i]["time"] == -1:
+        results[i]["time"] = penalty
+        results[i]["mu"] = penalty
+        results[i]["LCI"] = penalty
+        results[i]["Z"] = penalty
+        results[i]["ri"] = penalty
+    else:
+        passed_results.append(results[i])
+    f[0].append(results[i]["time"])
+    f[1].append(results[i]["mu"])
+    f[2].append(results[i]["Z"])
+    f[3].append(results[i]["dof"])
 
 # prob = MyProblem(results)
 algorithm = NSGA2(pop_size=50, sampling=MySampling(), crossover=MyCrossover(), mutation=MyMutation(),
