@@ -40,7 +40,7 @@ class Ros(object):
 
     def start_launch(self, launch_name, launch_path, args=None):
         """Start launch file"""
-        if args is None:
+        if args is Nonelocal_conditioning_index:
             args = []
         try:
             uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
@@ -155,10 +155,8 @@ class MoveGroupPythonInterface(object):
             # mu = np.product(j_ev)
             # Manipulability index
             mu = self.manipulability_index(jacobian)
-            # print mu
             # Local Conditioning Index
             lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
-            # print lci
             # Joint Mid-Range Proximity
             theta_mean = [0.75]
             for joint in joints:

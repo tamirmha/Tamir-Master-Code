@@ -34,8 +34,8 @@ class MyCsv(object):
                             prev_axe.append(arm[a] + "_")
                         elif a % 3 == 2:
                             link_length.append(arm[a] + "." + arm[a+1][:1] + "_")
-                    result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "LCI": float(row[8]),
-                        "Z": float(row[9]), "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
+                    result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "Z": float(row[8]),
+                        "LCI": float(row[9]), "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
                                    "link_length": "_".join(link_length)})
             return result
 
@@ -181,20 +181,13 @@ class FixFromJson(object):
     def indices_calc(self, names, jacobian, cur_pos):
         cur_pos = np.asarray(cur_pos)
         jacobian = np.asarray(jacobian)
+        j_ev = np.linalg.svd(jacobian)[1]  # eighen values
         # Manipulability index
-        mu = self.manipulability_index(jacobian)
+        mu = round(np.product(j_ev), 3)  # self.manipulability_index(jacobian)
         # Local Conditioning Index
-        lci = self.local_conditioning_index(jacobian)
+        lci = round(j_ev[-1] / j_ev[0], 3)  # self.local_conditioning_index(jacobian)
         # Joint Mid-Range Proximity
         z = self.mid_joint_proximity(cur_pos, names)
-        # theta_mean = [0.75]
-        # for joint in joints:
-        #     if joint == "revolute":
-        #         theta_mean.append(np.pi)
-        #     else:
-        #         theta_mean.append(float(link_length[joints.index(joint)])/2)
-        # w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-        # z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
         return mu, lci, np.diag(z).max()
 
     @staticmethod
@@ -204,7 +197,7 @@ class FixFromJson(object):
             det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
         else:
             det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-        if det_j > 0.00001:  # preventing numeric problems
+        if det_j > 1e-18:  # preventing numeric problems
             return round(det_j ** (1/float(n)), 3)
             # return round(det_j ** 0.5, 3)
         else:
@@ -267,15 +260,11 @@ def sum_data():
             for fir in first:
                 if fir["Z"] == -1:
                     continue
-                    # fir = {"name": fir["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": fir["dof"],
-                    #        "link_length": fir["link_length"], "joints": fir["joints"], "prev_axe": fir["prev_axe"]}
                 data.append(fir)
         for v in csv_file:
             in_data = False
             if v["Z"] == -1:
                 continue
-                # v = {"name": v["name"], "time": 10.0, "mu": -1.0, "LCI": -1.0, "Z": 15, "dof": v["dof"],
-                #      "link_length": v["link_length"], "joints": v["joints"], "prev_axe": v["prev_axe"]}
             for dat in data:
                 if v["name"] in dat["name"]:
                     dat_index = data[data.index(dat)]
@@ -287,9 +276,6 @@ def sum_data():
                         dat_index["time"] = v["time"]
                     if dat_index["LCI"] < v["LCI"]:
                         dat_index["LCI"] = v["LCI"]
-                    # dat_index["mu"] = (dat_index["mu"] + v["mu"]) / 2.0
-                    # dat_index["time"] = (dat_index["time"] + v["time"]) / 2.0
-                    # dat_index["LCI"] = (dat_index["LCI"] + v["LCI"]) / 2.0
                     in_data = True
                     break
             if not in_data:
@@ -379,24 +365,23 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.show()
 
 
-split = False
-sumdata = False
-to_merge = False
-plotdata = True
-fix_from_json = False
-fix_all_from_json = False
-if to_merge:
-    merge_data = MergeData()
-    merge_data.merge()
-if split:
-    split_files_to_several_folders(5000)
-if sumdata:
-    summed_data = sum_data()
-if plotdata:
-    plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_4dof_all")
-if fix_from_json:
-    FixFromJson()
-if fix_all_from_json:
-    FixFromJson(all=True)
-
-# todo - check why mu & LCI are 0
+if __name__ == '__main__':
+    split = False
+    sumdata = False
+    to_merge = False
+    plotdata = True
+    fix_from_json = False
+    fix_all_from_json = False
+    if to_merge:
+        merge_data = MergeData()
+        merge_data.merge()
+    if split:
+        split_files_to_several_folders(5000)
+    if sumdata:
+        summed_data = sum_data()
+    if plotdata:
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
+    if fix_from_json:
+        FixFromJson()
+    if fix_all_from_json:
+        FixFromJson(all=True)
