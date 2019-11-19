@@ -100,7 +100,7 @@ class MergeData(object):
             try:
                 self.fix_json(files[i][:-4])
                 self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
-            except:
+            except ValueError:
                 print("There are no Json files")
 
     @staticmethod
@@ -135,12 +135,12 @@ class MergeData(object):
 
 class FixFromJson(object):
 
-    def __init__(self, all=False):
+    def __init__(self, all_files=False):
         root = Tk()
         root.update()
         files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         root.destroy()
-        self.all = all
+        self.all = all_files
         for fil in files:
             self.fix(fil[:-4])
 
@@ -152,12 +152,12 @@ class FixFromJson(object):
         for row in to_fix:
             if row[5] == "True":
                 if row[8] == "-16" and not self.all:
-                    to_fix = self.calc(file2fix, file_fixed, row, to_fix, original_data)
+                    to_fix = self.calc(row, to_fix, original_data)
                 elif self.all:
-                    to_fix = self.calc(file2fix, file_fixed, row, to_fix, original_data)
+                    to_fix = self.calc(row, to_fix, original_data)
         MyCsv.save_csv(to_fix, file_fixed)
 
-    def calc(self, file2fix, file_fixed, row, to_fix, original_data):
+    def calc(self, row, to_fix, original_data):
         for dat in original_data:
             if dat.keys()[0] == row[2] and dat[row[2]][1] != [-1, -1, -1, -1]:
                 jacobians, curr_poss = dat[row[2]]
@@ -290,7 +290,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     time = []
     z = []
     lci = []
-    dof =[]
+    dof = []
     for dat in all_data:
         if dat["mu"] != "-1.0" and dat["mu"] != "mu":
             mu.append(float(dat["mu"]))
@@ -305,13 +305,13 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.subplot(556)
     plt.scatter(mu, lci, color="g", s=4)
     plt.ylabel("Local condion number")
-    plt.subplot(5,5,11)
+    plt.subplot(5, 5, 11)
     plt.scatter(mu, time, color="black", s=4)
     plt.ylabel("Time (sec)")
-    plt.subplot(5,5,16)
+    plt.subplot(5, 5, 16)
     plt.scatter(mu, z, color="cyan", s=4)
     plt.ylabel("Mid-joint state")
-    plt.subplot(5,5,21)
+    plt.subplot(5, 5, 21)
     plt.scatter(mu, dof, color="magenta", s=4)
     plt.ylabel("Degree of Freedom")
     #
@@ -320,11 +320,11 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.scatter(lci, mu, color="g", s=4)
     # plt.subplot(557)
     # plt.scatter([], [])
-    plt.subplot(5,5,12)
+    plt.subplot(5, 5, 12)
     plt.scatter(lci, time, color="r", s=4)
-    plt.subplot(5,5,17)
+    plt.subplot(5, 5, 17)
     plt.scatter(lci, z, color="brown", s=4)
-    plt.subplot(5,5, 22)
+    plt.subplot(5, 5, 22)
     plt.scatter(lci, dof, color="orange", s=4)
 
     plt.subplot(553)
@@ -332,11 +332,11 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.scatter(time, mu, color="black", s=4)
     plt.subplot(558)
     plt.scatter(time, lci, color="r", s=4)
-    # plt.subplot(5,5,13)
+    # plt.subplot(5, 5,13)
     # plt.scatter([], [])
-    plt.subplot(5,5,18)
+    plt.subplot(5, 5, 18)
     plt.scatter(time, z, color="pink", s=4)
-    plt.subplot(5,5, 23)
+    plt.subplot(5, 5, 23)
     plt.scatter(time, dof, s=4)
 
     plt.subplot(554)
@@ -344,23 +344,23 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.scatter(z, mu, color="cyan", s=4)
     plt.subplot(559)
     plt.scatter(z, lci, color="brown", s=4)
-    plt.subplot(5,5,14)
+    plt.subplot(5, 5, 14)
     plt.scatter(z, time, color="pink", s=4)
     # plt.subplot(5,5,19)
     # plt.scatter([], [])
-    plt.subplot(5,5, 24)
+    plt.subplot(5, 5, 24)
     plt.scatter(z, dof, color="y", s=4)
 
     plt.subplot(555)
     plt.title("Degree of Freedom")
     plt.scatter(dof, mu, color="magenta", s=4)
-    plt.subplot(5,5,10)
+    plt.subplot(5, 5, 10)
     plt.scatter(dof, lci, color="orange", s=4)
-    plt.subplot(5,5,15)
+    plt.subplot(5, 5, 15)
     plt.scatter(dof, time, s=4)
-    plt.subplot(5,5,20)
+    plt.subplot(5, 5, 20)
     plt.scatter(dof, z, color="y", s=4)
-    plt.subplot(5,5, 24)
+    plt.subplot(5, 5, 24)
     # plt.scatter([], [])
     plt.show()
 
@@ -369,7 +369,7 @@ if __name__ == '__main__':
     split = False
     sumdata = False
     to_merge = False
-    plotdata = True
+    plotdata = False
     fix_from_json = False
     fix_all_from_json = False
     if to_merge:
@@ -384,4 +384,4 @@ if __name__ == '__main__':
     if fix_from_json:
         FixFromJson()
     if fix_all_from_json:
-        FixFromJson(all=True)
+        FixFromJson(all_files=True)
