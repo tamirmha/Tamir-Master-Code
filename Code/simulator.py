@@ -211,7 +211,7 @@ class Simulator(object):
         mu = []   # Manipulability index
         lci = []  # Local Conditioning Index
         z = []    # Joint Mid-Range Proximity
-        ri = []   # Relative Manipulability Index
+
         arm_number = str(arm + 1 + k)
         for j in data:
             data_res.append(j[0])
@@ -219,21 +219,18 @@ class Simulator(object):
                 mu.append(j[2][0])
                 lci.append(j[2][1])
                 z.append(j[2][2].min())
-                ri.append(j[2][3])
-                jacobian.append(j[2][4].tolist())
-                curr_pos.append(j[2][5].tolist())
+                jacobian.append(j[2][3].tolist())
+                curr_pos.append(j[2][4].tolist())
             else:
                 mu.append(-1)
                 lci.append(-1)
                 z.append(-1)
-                ri.append(-1)
                 jacobian.append(-1)
                 curr_pos.append(-1)
         self.json_data.append({self.arms[arm]["name"]: [jacobian, curr_pos]})
         suc_res = "False"
         mu_min = -1
         lci_min = -1
-        ri_min = -1
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
@@ -247,8 +244,7 @@ class Simulator(object):
             mu = np.asarray(mu)
             lci = np.asarray(lci)
             z = np.asarray(z)
-            ri = np.asarray(ri)
-            # print(str(mu), str(lci), str(z))
+
             # choose only the min values because those are the "worst grade"
             try:
                 mu_min = mu[mu >= 0.0].min()
@@ -261,19 +257,12 @@ class Simulator(object):
                 self.save_json("lci_err", lci.tolist())
                 lci_min = -16
             try:
-                ri_min = ri[ri >= 0.0].min()
-                # print ri_min
-            except:
-                self.save_json("ri_err", ri.tolist())
-                ri_min = -16
-                # choose only the max value because this is the "worst grade"
-            try:
                 z_max = z[z > 0.0].max()
             except:
                 self.save_json("z_err", z.tolist())
                 z_max = -16
         return [arm_number, datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
-                str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min), str(ri_min)]
+                str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max), str(lci_min)]
 
     def replace_model(self, arm):
         """
@@ -331,10 +320,11 @@ if __name__ == '__main__':
     elif username == "arl_main":  # lab
         nums = 35  # how many arms to send to simulator each time
         wait1_replace = 2
-        wait2_replace = 2
+        wait2_replace = 1.5
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
+        wait2_replace = 2
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7

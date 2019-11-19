@@ -31,16 +31,13 @@ class Ros(object):
         try:
             self.pathname = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/"  # /Tamir_Ws
             self.data_back = "-5"
-            # self.listener = tf.TransformListener()
-            # self.br = tf.TransformBroadcaster()
-            # rospy.rostime.switch_to_wallclock()
         except ValueError:
             rospy.loginfo('Error occurred at init')  # shows warning message
             pass
 
     def start_launch(self, launch_name, launch_path, args=None):
         """Start launch file"""
-        if args is Nonelocal_conditioning_index:
+        if args is None:
             args = []
         try:
             uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
@@ -66,7 +63,6 @@ class Ros(object):
     @staticmethod
     def ter_command(command):
         """Write Command to the terminal"""
-        # with
         try:
             command = shlex.split(command)
             ter_command_proc = subprocess.Popen(command, stdout=subprocess.PIPE, preexec_fn=os.setsid)
@@ -121,9 +117,6 @@ class MoveGroupPythonInterface(object):
                                                         moveit_msgs.msg.DisplayTrajectory, queue_size=20)
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
-        # self.eef_link = self.move_group.get_end_effector_link()
-        # # a list of all the groups in the robot:
-        # self.group_names = self.robot.get_group_names()
         # todO - check those settings
         # self.move_group.set_planner_id("RRTkConfigDefault")
         # self.move_group.set_planning_time(10)
@@ -151,12 +144,13 @@ class MoveGroupPythonInterface(object):
             jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
             cur_pos = np.asarray(cur_pos)
             # Jacobian eighen values
-            # j_ev = np.linalg.svd(jacobian)[1]
-            # mu = np.product(j_ev)
+            j_ev = np.linalg.svd(jacobian)[1]
+            mu = round(np.product(j_ev), 3)
+            lci = round(j_ev[-1] / j_ev[0], 3)
             # Manipulability index
-            mu = self.manipulability_index(jacobian)
+            # mu = self.manipulability_index(jacobian)
             # Local Conditioning Index
-            lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+            # lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
             # Joint Mid-Range Proximity
             theta_mean = [0.75]
             for joint in joints:
@@ -169,18 +163,11 @@ class MoveGroupPythonInterface(object):
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index - calculate only for redundent manipulators
             # print np.diag(z)
-            ri = 50
-            # todo - disabled the RI calculation
-            # if mu != 0 and len(joints) > 4:  # can't divide in zero and must have redundancy
-            #     ri = 1.1
-            #     for i in range(len(cur_pos)-1):
-            #         r = self.manipulability_index(np.delete(jacobian, i, 1))/mu
-            #         if r < ri:
-            #             ri = r
-            return mu, lci, np.diag(z), ri, jacobian, cur_pos
+
+            return mu, lci, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
-            return -1, -1, np.asarray([-1]*len(joints)), -1, jacobian, cur_pos
+            return -1, -1, np.asarray([-1]*len(joints)), jacobian, cur_pos
 
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point
