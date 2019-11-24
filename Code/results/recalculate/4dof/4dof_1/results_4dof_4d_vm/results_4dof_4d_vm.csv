@@ -8284,22 +8284,6 @@
 8284,"06/11/19, 11:05",roll_z_0_1pitch_y_0_1pitch_x_0_1pitch_z_1_0,"[False, True, True, True]","[10.03,2.27,3.68, 3.49]",True,4.87,0.06,0.293,0.046,50
 8285,"06/11/19, 11:05",roll_z_0_1pitch_y_0_1pitch_x_0_1pitch_y_1_0,"[False, True, True, True]","[10.08,2.25,3.27, 5.91]",True,5.38,0.062,0.097,0.047,50
 8286,"06/11/19, 11:06",roll_z_0_1pitch_y_0_1pitch_x_0_1pitch_x_1_0,"[False, True, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8287,"06/11/19, 11:06",conf_9,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8288,"06/11/19, 11:06",conf_8,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8289,"06/11/19, 11:06",conf_7,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8290,"06/11/19, 11:06",conf_6,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8291,"06/11/19, 11:06",conf_5,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8292,"06/11/19, 11:06",conf_4,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8293,"06/11/19, 11:06",conf_3,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8294,"06/11/19, 11:07",conf_2,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8295,"06/11/19, 11:07",conf_15,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8296,"06/11/19, 11:07",conf_14,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8297,"06/11/19, 11:07",conf_13,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8298,"06/11/19, 11:07",conf_12,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8299,"06/11/19, 11:07",conf_11,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-8300,"06/11/19, 11:07",conf_10,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
 8303,"31/10/19, 22:06",roll_z_0_1roll_y_0_7pris_y_0_4pitch_y_0_7,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
 8304,"31/10/19, 22:07",roll_z_0_1pris_z_1_0roll_y_1_0roll_y_1_0,"[False, True, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1
 8305,"31/10/19, 22:07",roll_z_0_1pris_z_1_0roll_y_1_0roll_y_0_7,"[False, True, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1,-1,-1

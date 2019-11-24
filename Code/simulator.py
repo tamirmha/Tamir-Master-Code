@@ -4,7 +4,7 @@ from os import environ, listdir, path, mkdir  # , rename
 import numpy as np
 from itertools import product
 from time import sleep
-from rospy import init_node  # , logerr
+from rospy import init_node
 from rosnode import get_node_names
 import getpass
 import sys
@@ -343,7 +343,6 @@ if __name__ == '__main__':
             if len(args) > 3:
                 start_arm = int(args[3])/nums
                 create_urdf = False
-    # tic_main = datetime.now()
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
@@ -361,8 +360,6 @@ if __name__ == '__main__':
         ros.stop_launch(sim.arm_control)
         ros.stop_launch(sim.main)
     arms = sim.arms
-    # arms = sorted(sim.arms, reverse=True)
-    # sim.arms1 = arms[:nums]
     if len(arms) < nums:
         nums = len(arms)
     nodes = get_node_names()
@@ -382,8 +379,6 @@ if __name__ == '__main__':
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
-    # toc_main = datetime.now()
-    # print('Time of Run (seconds): ' + str((toc_main - tic_main).seconds))
     # rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
     # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 

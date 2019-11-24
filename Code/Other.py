@@ -90,7 +90,7 @@ class MergeData(object):
         root.update()
         self.files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         root.destroy()
-        self.new_file_name = "results" + self.files[0][-13:-5]
+        self.new_file_name = "results" + self.files[0][-18:-11]
 
     def merge(self):
         files = self.files
@@ -385,3 +385,36 @@ if __name__ == '__main__':
         FixFromJson()
     if fix_all_from_json:
         FixFromJson(all_files=True)
+
+    pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_pc_all", "dict")
+    vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_vm_all", "dict")
+    # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_pc", "dict")
+    # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_vm", "dict")
+    vm_time = []
+    pc_time = []
+    for p in pc:
+        for v in vm:
+            if v["name"] == p["name"]:
+                pc_time.append(float(p["time"]))
+                vm_time.append(float(v["time"]))
+                break
+    # plt.subplot(111)
+    plt.scatter(pc_time, vm_time)
+    plt.ylim(1, 6)
+    plt.xlim(1, 6)
+    plt.xlabel("pc")
+    plt.ylabel("vm")
+    plt.show()
+
+    import numpy as np
+    from scipy import stats
+    from sklearn.metrics import r2_score
+    x = np.asarray(pc_time)
+    y = np.asarray(vm_time)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    def linefitline(b):
+        return intercept + slope * b
+    line1 = linefitline(x)
+    plt.plot(x, line1, c='g')
+    r2 = r2_score(y, linefitline(x))
+    print(r2)
