@@ -44,3 +44,16 @@ Code/analysis/resultsold/res1_4.xlsx
 Code/analysis/resultsold/Total.csv
 Code/analysis/resultsold/Total.xlsx
 Code/analysis/workspace.py
+*.iml
+Code/__pycache__/ros.cpython-36.pyc
+Code/analysis/.idea/analysis.iml
+Code/analysis/.idea/other.xml
+optimization/.idea/dictionaries/Tamir.xml
+optimization/.idea/misc.xml
+optimization/.idea/optimization.iml
+Code/analysis/.idea/analysis.iml
+Code/analysis/.idea/other.xml
+optimization/.idea/misc.xml
+optimization/.idea/optimization.iml
+optimization/.idea/optimization.iml
+Code/analysis/.idea/other.xml

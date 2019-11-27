@@ -371,8 +371,8 @@ if __name__ == "__main__":
     dof = 6  # number of DOF to calculate all the possible combinations
     sav2csv = False
     calc_config = True  # calc from file or use saved configuration from json file
-    make_tree = True  # create tree
-    configs2tree = True  # when creating tree to calculate from scratch or using exiting json file
+    make_tree = False  # create tree
+    configs2tree = False  # when creating tree to calculate from scratch or using exiting json file
 
     if calc_config:
         # calculate config from csv file
