@@ -137,32 +137,36 @@ def save_data(data, file_name):
 
 
 def load_csv(file_name):
-    with open(file_name + ".csv", "r") as data_file:
-        csv_file_reader = csv.reader(data_file)
-        result = []
-        dof = int(data_file.name[data_file.name.find("dof")-1])
+    # with open(file_name + ".csv", "r") as data_file:
+    #     csv_file_reader = csv.reader(data_file)
+    #     result = []
+    #     dof = int(data_file.name[data_file.name.find("dof")-1])
+    #     for row in csv_file_reader:
+    #         while "" in row:
+    #             row.remove("")
+    #         if len(row) > 0:
+    #             if len(row) == 1:
+    #                 row = row[0].split(",")
+    #             name = row[1]
+    #             joints = ["roll"]
+    #             prev_axe = ["z"]
+    #             link_length = [0.1]
+    #             arm = name.split("_")
+    #             for a in range(3, len(arm)-1):
+    #                 if a % 3 == 0:
+    #                     joints.append(arm[a][1:])
+    #                 elif a % 3 == 1:
+    #                     prev_axe.append(arm[a])
+    #                 elif a % 3 == 2:
+    #                     link_length.append(float(arm[a] + "." + arm[a+1][:1]))
+    #             result.append({"name": row[1], "time": float(row[5]), "mu": float(row[6]), "LCI": float(row[7]),
+    #                  "Z": float(row[8]), "ri": float(row[9]), "dof": dof, "vars": [joints, prev_axe, link_length]})
+    with open(file_name + ".csv", 'r') as _filehandler:
+        csv_file_reader = csv.DictReader(_filehandler)
+        data = []
         for row in csv_file_reader:
-            while "" in row:
-                row.remove("")
-            if len(row) > 0:
-                if len(row) == 1:
-                    row = row[0].split(",")
-                name = row[1]
-                joints = ["roll"]
-                prev_axe = ["z"]
-                link_length = [0.1]
-                arm = name.split("_")
-                for a in range(3, len(arm)-1):
-                    if a % 3 == 0:
-                        joints.append(arm[a][1:])
-                    elif a % 3 == 1:
-                        prev_axe.append(arm[a])
-                    elif a % 3 == 2:
-                        link_length.append(float(arm[a] + "." + arm[a+1][:1]))
-                result.append({"name": row[1], "time": float(row[5]), "mu": float(row[6]), "LCI": float(row[7]),
-                     "Z": float(row[8]), "ri": float(row[9]), "dof": dof, "vars": [joints, prev_axe, link_length]})
-
-        return result
+            data.append(row)
+    return data
 
 
 from pymoo.model.problem import Problem
@@ -180,46 +184,23 @@ class MyProblem(Problem):
 
     def __init__(self, n_characters=10):
         super().__init__(n_var=1, n_obj=2, n_constr=0, elementwise_evaluation=True)
-        results = load_csv("C:\\Tamir\\Personal\\master\\Master_git\\Master\\optimization\\results_file23_10_4dof_4d_1930")
+        self.results = load_csv("C:\\Tamir\\Personal\\master\\Master_git\\Master\\optimization\\results_all")
         self.n_characters = n_characters
         self.ALPHABET = []
-        for arm in results:
+        for arm in self.results:
             self.ALPHABET.append(arm["name"])
         # self.ALPHABET = [c for c in string.ascii_lowercase]
 
-        self.passed_results = []
-        penalty = 1000
-        self.f_my = [[], [], [], []]
-        for i in range(len(results)):
-            if results[i]["time"] == -1:
-                results[i]["time"] = penalty
-                results[i]["mu"] = penalty
-                results[i]["LCI"] = penalty
-                results[i]["Z"] = penalty
-                results[i]["ri"] = penalty
-            else:
-                self.passed_results.append(results[i])
-            self.f_my[0].append(results[i]["time"])
-            self.f_my[1].append(results[i]["mu"])
-            self.f_my[2].append(results[i]["Z"])
-            self.f_my[3].append(results[i]["dof"])
-        # self.f_my = f
-
-
     def _evaluate(self, x, out, *args, **kwargs):
-        f1 = 1000
-        f2 = 1000
-        for res in self.passed_results:
+        f1 = []
+        f2 = []
+        for res in self.results:
             if x == res["name"]:
-                f1 = res["mu"]
-                f2 = res["time"]
-
-        # n_a, n_b = 80, 9
-        # for c in x:
-        #     if 'p' not in c:
-        #         n_a += 1
-        #     elif "o" not in c:
-        #         n_b += 1
+                f1.append(float(res["mu"]))
+                f2.append(float(res["time"]))
+            else:
+                f1.append(-5)
+                f2.append(-5)
 
         out["F"] = np.array([f1, f2], dtype=np.float)
 
@@ -322,31 +303,31 @@ def func_is_duplicate(pop, *other, **kwargs):
     return is_duplicate
 
 
-results = load_csv("C:\\Tamir\\Personal\\master\\Master_git\\Master\\optimization\\results_file23_10_4dof_4d_1930")
-passed_results = []
-penalty = 1000
-f = [[], [], [], []]
-for i in range(len(results)):
-    if results[i]["time"] == -1:
-        results[i]["time"] = penalty
-        results[i]["mu"] = penalty
-        results[i]["LCI"] = penalty
-        results[i]["Z"] = penalty
-        results[i]["ri"] = penalty
-    else:
-        passed_results.append(results[i])
-    f[0].append(results[i]["time"])
-    f[1].append(results[i]["mu"])
-    f[2].append(results[i]["Z"])
-    f[3].append(results[i]["dof"])
-
-# prob = MyProblem(results)
-algorithm = NSGA2(pop_size=50, sampling=MySampling(), crossover=MyCrossover(), mutation=MyMutation(),
-                  eliminate_duplicates=func_is_duplicate)
-res = minimize(MyProblem(), algorithm, ('n_gen', 30), seed=1)
-#
+# prob = MyProblem()
+# algorithm = NSGA2(pop_size=518700, sampling=MySampling(), crossover=MyCrossover(), mutation=MyMutation(),
+#                   eliminate_duplicates=func_is_duplicate)
+# res = minimize(MyProblem(), algorithm, ('n_gen', 1), seed=1, verbose=True)
+# #
 # rsults = res.X[np.argsort(res.F[:, 0])]
 # count = [np.sum([e == "a" for e in r]) for r in rsults[:, 0]]
 # print(np.column_stack([rsults, count]))
 #
-Scatter().add(res.F).show()
+# Scatter().add(res.F).show()
+#
+
+
+from pymoo.algorithms.nsga2 import NSGA2
+from pymoo.factory import get_problem
+from pymoo.optimize import minimize
+from pymoo.visualization.scatter import Scatter
+
+problem = get_problem("zdt1")
+# problem = MyProblem()
+algorithm = NSGA2(pop_size=300, eliminate_duplicates=True)
+
+res = minimize(problem, algorithm, ('n_gen', 150), seed=1, verbose=True)
+
+plot = Scatter()
+plot.add(problem.pareto_front(), plot_type="line", color="black", alpha=0.7)
+plot.add(res.F, color="red")
+plot.show()
