@@ -37,6 +37,7 @@ class MyCsv(object):
                     result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "Z": float(row[8]),
                         "LCI": float(row[9]), "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
                                    "link_length": "_".join(link_length)})
+            result.sort()
             return result
 
     @staticmethod
@@ -47,7 +48,7 @@ class MyCsv(object):
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
             elif csv_type == "dict":  # for dictionary
-                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "Z", "LCI"]
+                headers = ["name", "joints", "link_length", "prev_axe", "dof", "mu", "time", "Z", "LCI", "Passed"]
                 writer = csv.DictWriter(name, fieldnames=headers, delimiter=',')
                 writer.writeheader()
                 writer.writerows(data)
@@ -90,18 +91,18 @@ class MergeData(object):
         root.update()
         self.files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         root.destroy()
-        self.new_file_name = "results" + self.files[0][-18:-11]
+        self.new_file_name = "results_all" # + self.files[0][-18:-11]
 
     def merge(self):
         files = self.files
         new_file_name = self.new_file_name
         for i in range(len(files)):
             MyCsv.save_csv(MyCsv.read_csv(files[i][:-4]), new_file_name)
-            try:
-                self.fix_json(files[i][:-4])
-                self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
-            except ValueError:
-                print("There are no Json files")
+            # try:
+            #     self.fix_json(files[i][:-4])
+            #     self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
+            # except ValueError:
+            #     print("There are no Json files")
 
     @staticmethod
     def save_json(name="data_file", data=None):
@@ -252,18 +253,40 @@ def sum_data():
     res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
+    mu_penalty = 0
+    time_penalty = 20
+    z_penalty = 70
     data = []
+    data_no_success = []
     for res_file in res_files:
         csv_file = MyCsv.load_csv(res_file[:-4])
-        if len(data) == 0:
-            first = MyCsv.load_csv(res_file[:-4])
-            for fir in first:
-                if fir["Z"] == -1:
-                    continue
-                data.append(fir)
+        # if len(data) == 0:
+        #     first = MyCsv.load_csv(res_file[:-4])
+        #     for fir in first:
+        #         if fir["Z"] == -1:
+        #             data_no_success.append(fir)
+        #             continue
+        #         data.append(fir)
+        #     continue
         for v in csv_file:
             in_data = False
             if v["Z"] == -1:
+                if len(data_no_success) == 0:
+                    v["mu"] = mu_penalty
+                    v["LCI"] = mu_penalty
+                    v["Z"] = z_penalty
+                    v["time"] = time_penalty
+                    v["Passed"] = 0
+                    data_no_success.append(v)
+                    continue
+                else:
+                    v["mu"] = mu_penalty
+                    v["LCI"] = mu_penalty
+                    v["Z"] = z_penalty
+                    v["time"] = time_penalty
+                    v["Passed"] = 0
+                    data_no_success.append(v)
+                    # break
                 continue
             for dat in data:
                 if v["name"] in dat["name"]:
@@ -279,12 +302,17 @@ def sum_data():
                     in_data = True
                     break
             if not in_data:
+                v["Passed"] = 1
                 data.append(v)
+    data_no_success = [dict(t) for t in {tuple(d.items()) for d in data_no_success}]
     MyCsv.save_csv(data, new_file_name, "dict")
+    all_data = data + data_no_success
+    MyCsv.save_csv(all_data, new_file_name + "_with_failed", "dict")
     return data
 
 
 def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all_success"):
+    # todo - scale all in the same scale
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -368,7 +396,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 if __name__ == '__main__':
     split = False
     sumdata = False
-    to_merge = False
+    to_merge = True
     plotdata = False
     fix_from_json = False
     fix_all_from_json = False
@@ -386,35 +414,35 @@ if __name__ == '__main__':
     if fix_all_from_json:
         FixFromJson(all_files=True)
 
-    pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_pc_all", "dict")
-    vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_vm_all", "dict")
-    # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_pc", "dict")
-    # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_vm", "dict")
-    vm_time = []
-    pc_time = []
-    for p in pc:
-        for v in vm:
-            if v["name"] == p["name"]:
-                pc_time.append(float(p["time"]))
-                vm_time.append(float(v["time"]))
-                break
-    # plt.subplot(111)
-    plt.scatter(pc_time, vm_time)
-    plt.ylim(1, 6)
-    plt.xlim(1, 6)
-    plt.xlabel("pc")
-    plt.ylabel("vm")
-    plt.show()
-
-    import numpy as np
-    from scipy import stats
-    from sklearn.metrics import r2_score
-    x = np.asarray(pc_time)
-    y = np.asarray(vm_time)
-    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-    def linefitline(b):
-        return intercept + slope * b
-    line1 = linefitline(x)
-    plt.plot(x, line1, c='g')
-    r2 = r2_score(y, linefitline(x))
-    print(r2)
+    # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_pc_all", "dict")
+    # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_vm_all", "dict")
+    # # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_pc", "dict")
+    # # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_vm", "dict")
+    # vm_time = []
+    # pc_time = []
+    # for p in pc:
+    #     for v in vm:
+    #         if v["name"] == p["name"]:
+    #             pc_time.append(float(p["time"]))
+    #             vm_time.append(float(v["time"]))
+    #             break
+    # # plt.subplot(111)
+    # plt.scatter(pc_time, vm_time)
+    # plt.ylim(1, 6)
+    # plt.xlim(1, 6)
+    # plt.xlabel("pc")
+    # plt.ylabel("vm")
+    # plt.show()
+    #
+    # import numpy as np
+    # from scipy import stats
+    # from sklearn.metrics import r2_score
+    # x = np.asarray(pc_time)
+    # y = np.asarray(vm_time)
+    # slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    # def linefitline(b):
+    #     return intercept + slope * b
+    # line1 = linefitline(x)
+    # plt.plot(x, line1, c='g')
+    # r2 = r2_score(y, linefitline(x))
+    # print(r2)

@@ -163,7 +163,6 @@ class MoveGroupPythonInterface(object):
             z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
             # Relative Manipulability Index - calculate only for redundent manipulators
             # print np.diag(z)
-
             return mu, lci, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
@@ -190,8 +189,8 @@ class MoveGroupPythonInterface(object):
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
         if not plan:
             plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
-        toc = rospy.get_time()
-        sim_time = round(toc - tic, 2)
+        toc =  rospy.get_time()
+        sim_time = round(toc - tic, 3)
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         self.move_group.clear_pose_targets()
@@ -692,7 +691,7 @@ def main_move_group():
             pose = poses[i]
             orientaion = oriens[i]
             print manipulator.go_to_pose_goal(pose, orientaion)
-            # time.sleep(1.5)
+            time.sleep(0.1)
         raw_input("press enter")
 
 

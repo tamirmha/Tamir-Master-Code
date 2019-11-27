@@ -287,7 +287,7 @@ class Simulator(object):
         all_data = []
         # self.json_data = []
         for arm in range(0, len(self.arms)):
-            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            # print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
             # try:
             joints = self.arms[arm]["arm"].joint_data
@@ -330,10 +330,10 @@ if __name__ == '__main__':
         wait1_replace = 1.7
         wait2_replace = 1.2
     # default values
-    dofe = 5  # number degrees of freedom of the manipulator
-    link_max = 0.71  # max link length to check
+    dofe = 4  # number degrees of freedom of the manipulator
+    link_max = 1.1  # max link length to check
     start_arm = 0  # from which set of arms to start
-    create_urdf = False
+    create_urdf = True
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:
