@@ -220,7 +220,6 @@ class MoveGroupPythonInterface(object):
         self.box_name = floor['name']
         self.scene.add_box(self.box_name, box_pose, size=floor['size'])
         # self.scene.attach_box('base_link', self.box_name)
-
         # add plant
         cylinder_pose = geometry_msgs.msg.PoseStamped()
         cylinder_pose.header.frame_id = self.robot.get_planning_frame()

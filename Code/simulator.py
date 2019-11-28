@@ -388,10 +388,10 @@ if __name__ == '__main__':
 # todo - fix the Json save format
 # todo the file name wont change when date change
 # todo change link0 to the platform -
-# todo change the base_link to 0 meters - check difference
+# tod change the base_link to 0 meters - check difference
 # todo check planner parameters
 # TODo how accuracy in go to pose effect
-# Todo fix obstacle parameters
+# Todo fix obstacle parameters?
 # todo? add to rename the total of success
 # Done - when not creating an urdf dont use defualt!!!
 # done - check the prismatic limits

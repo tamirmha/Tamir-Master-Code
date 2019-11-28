@@ -182,7 +182,7 @@ class FixFromJson(object):
     def indices_calc(self, names, jacobian, cur_pos):
         cur_pos = np.asarray(cur_pos)
         jacobian = np.asarray(jacobian)
-        j_ev = np.linalg.svd(jacobian)[1]  # eighen values
+        j_ev = np.linalg.svd(jacobian, compute_uv=False)  # [1]  # singular (eighen) values
         # Manipulability index
         mu = round(np.product(j_ev), 3)  # self.manipulability_index(jacobian)
         # Local Conditioning Index
@@ -207,7 +207,6 @@ class FixFromJson(object):
     @staticmethod
     def mid_joint_proximity(cur_pos, names):
         joints = ["roll"]
-
         link_length = ["0.1"]
         name = names.split("_")
         for a in range(3, len(name) - 1):
@@ -311,7 +310,7 @@ def sum_data():
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all_success"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all"):
     # todo - scale all in the same scale
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
@@ -328,66 +327,98 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
             dof.append(float(dat["dof"]))
     plt.subplot(551)
     plt.title("Manipulability")
-    # plt.scatter([], [])
+    plt.xlim(0,1)
     plt.ylabel("Manipulability")
     plt.subplot(556)
     plt.scatter(mu, lci, color="g", s=4)
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
     plt.ylabel("Local condion number")
     plt.subplot(5, 5, 11)
+    plt.xlim(0, 1)
+    plt.ylim(0, 7)
     plt.scatter(mu, time, color="black", s=4)
     plt.ylabel("Time (sec)")
     plt.subplot(5, 5, 16)
+    plt.xlim(0, 1)
+    plt.ylim(0, 6)
     plt.scatter(mu, z, color="cyan", s=4)
     plt.ylabel("Mid-joint state")
     plt.subplot(5, 5, 21)
+    plt.xlim(0, 1)
     plt.scatter(mu, dof, color="magenta", s=4)
     plt.ylabel("Degree of Freedom")
     #
     plt.subplot(552)
     plt.title("Local condion number")
     plt.scatter(lci, mu, color="g", s=4)
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
     # plt.subplot(557)
     # plt.scatter([], [])
     plt.subplot(5, 5, 12)
     plt.scatter(lci, time, color="r", s=4)
+    plt.xlim(0, 1)
+    plt.ylim(0, 7)
     plt.subplot(5, 5, 17)
     plt.scatter(lci, z, color="brown", s=4)
+    plt.xlim(0, 1)
+    plt.ylim(0, 6)
     plt.subplot(5, 5, 22)
     plt.scatter(lci, dof, color="orange", s=4)
+    plt.xlim(0, 1)
 
     plt.subplot(553)
     plt.title("Time (sec)")
     plt.scatter(time, mu, color="black", s=4)
+    plt.xlim(0, 7)
+    plt.ylim(0, 1)
     plt.subplot(558)
     plt.scatter(time, lci, color="r", s=4)
+    plt.xlim(0, 7)
+    plt.ylim(0, 1)
     # plt.subplot(5, 5,13)
     # plt.scatter([], [])
     plt.subplot(5, 5, 18)
     plt.scatter(time, z, color="pink", s=4)
+    plt.xlim(0, 7)
+    plt.ylim(0, 6)
     plt.subplot(5, 5, 23)
     plt.scatter(time, dof, s=4)
+    plt.xlim(0, 7)
 
     plt.subplot(554)
     plt.title("Mid-joint state")
+    plt.xlim(0, 6)
+    plt.ylim(0, 1)
     plt.scatter(z, mu, color="cyan", s=4)
     plt.subplot(559)
+    plt.xlim(0, 6)
+    plt.ylim(0, 1)
     plt.scatter(z, lci, color="brown", s=4)
     plt.subplot(5, 5, 14)
     plt.scatter(z, time, color="pink", s=4)
+    plt.xlim(0, 6)
+    plt.ylim(0, 7)
     # plt.subplot(5,5,19)
     # plt.scatter([], [])
     plt.subplot(5, 5, 24)
     plt.scatter(z, dof, color="y", s=4)
+    plt.xlim(0, 6)
 
     plt.subplot(555)
     plt.title("Degree of Freedom")
+    plt.ylim(0, 1)
     plt.scatter(dof, mu, color="magenta", s=4)
     plt.subplot(5, 5, 10)
+    plt.ylim(0, 1)
     plt.scatter(dof, lci, color="orange", s=4)
     plt.subplot(5, 5, 15)
+    plt.ylim(0, 7)
     plt.scatter(dof, time, s=4)
     plt.subplot(5, 5, 20)
     plt.scatter(dof, z, color="y", s=4)
+    plt.ylim(0, 6)
     plt.subplot(5, 5, 24)
     # plt.scatter([], [])
     plt.show()
@@ -396,8 +427,8 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 if __name__ == '__main__':
     split = False
     sumdata = False
-    to_merge = True
-    plotdata = False
+    to_merge = False
+    plotdata = True
     fix_from_json = False
     fix_all_from_json = False
     if to_merge:
