@@ -117,9 +117,8 @@ class MoveGroupPythonInterface(object):
                                                         moveit_msgs.msg.DisplayTrajectory, queue_size=20)
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
-        # todO - check those settings
-        # self.move_group.set_planner_id("RRTkConfigDefault")
-        # self.move_group.set_planning_time(10)
+        self.move_group.set_planner_id("RRTkConfigDefault")
+        self.move_group.set_planning_time(10)
         # self.move_group.set_num_planning_attempts(10)
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
@@ -209,7 +208,8 @@ class MoveGroupPythonInterface(object):
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
         if pose is None:
             pose = [0.5, 0]
-        floor = {'name': 'floor', 'pose': [0, 0, height - 0.75 - 0.01], 'size': (10, 10, 0.02)}
+        plant_height = 0.75
+        floor = {'name': 'floor', 'pose': [0, 0, height - plant_height - 0.01], 'size': (7, 7, 0.02)}
         # Adding Objects to the Planning Scene
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
@@ -226,9 +226,9 @@ class MoveGroupPythonInterface(object):
         cylinder_pose.pose.orientation.w = 1.0
         cylinder_pose.pose.position.x = pose[0]
         cylinder_pose.pose.position.y = pose[1]
-        cylinder_pose.pose.position.z = floor['pose'][2]+0.75/2# height/2.0
+        cylinder_pose.pose.position.z = floor['pose'][2]+plant_height/2
         self.cylinder_name = 'plant'
-        self.scene.add_cylinder(self.cylinder_name, cylinder_pose, 0.75, radius)
+        self.scene.add_cylinder(self.cylinder_name, cylinder_pose, plant_height, radius)
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
     @staticmethod
@@ -695,4 +695,6 @@ def main_move_group():
 
 
 if __name__ == '__main__':
-    main_move_group()
+    # main_move_group()
+    mo = MoveGroupPythonInterface()
+    print(mo.move_group.get_current_joint_values())
