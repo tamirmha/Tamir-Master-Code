@@ -146,7 +146,7 @@ class FixFromJson(object):
             self.fix(fil[:-4])
 
     def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
-        file_fixed = file2fix + "_fixed"
+        file_fixed = file2fix  + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
         MergeData.fix_json(file2fix)
         original_data = MergeData.load_json(file_fixed)
@@ -215,14 +215,24 @@ class FixFromJson(object):
             elif a % 3 == 2:
                 link_length.append(name[a] + "." + name[a + 1][:1])
         theta_mean = [0.75]
+        to_norm = [1.5]
         for joint in joints:
             if "pris" not in joint:
                 theta_mean.append(0)
+                to_norm.append(2*np.pi)
             else:
                 theta_mean.append(float(link_length[joints.index(joint)])/2)
+                to_norm.append(float(link_length[joints.index(joint)]))
         # print(name)
-        w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-        z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
+        dis = (cur_pos[:-1]-theta_mean)
+        nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
+        while np.isin(nor_dis > 1, True).argmax():
+            # some simulations calculated with pris limit 2*length instead of length
+            ind_wrong = np.isin(nor_dis > 1, True).argmax()
+            to_norm[ind_wrong] = to_norm[ind_wrong] * 2
+            nor_dis = np.asarray(np.abs(dis)) / np.asarray(to_norm)
+        w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
+        z = np.around(0.5*np.transpose(nor_dis)*w, 3)
         return z
 
     @staticmethod
@@ -311,7 +321,6 @@ def sum_data():
 
 
 def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all"):
-    # todo - scale all in the same scale
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -341,7 +350,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.ylabel("Time (sec)")
     plt.subplot(5, 5, 16)
     plt.xlim(0, 1)
-    plt.ylim(0, 6)
+    plt.ylim(0, 1)
     plt.scatter(mu, z, color="cyan", s=4)
     plt.ylabel("Mid-joint state")
     plt.subplot(5, 5, 21)
@@ -363,7 +372,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.subplot(5, 5, 17)
     plt.scatter(lci, z, color="brown", s=4)
     plt.xlim(0, 1)
-    plt.ylim(0, 6)
+    plt.ylim(0, 1)
     plt.subplot(5, 5, 22)
     plt.scatter(lci, dof, color="orange", s=4)
     plt.xlim(0, 1)
@@ -382,29 +391,29 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.subplot(5, 5, 18)
     plt.scatter(time, z, color="pink", s=4)
     plt.xlim(0, 7)
-    plt.ylim(0, 6)
+    plt.ylim(0, 1)
     plt.subplot(5, 5, 23)
     plt.scatter(time, dof, s=4)
     plt.xlim(0, 7)
 
     plt.subplot(554)
     plt.title("Mid-joint state")
-    plt.xlim(0, 6)
+    plt.xlim(0, 1)
     plt.ylim(0, 1)
     plt.scatter(z, mu, color="cyan", s=4)
     plt.subplot(559)
-    plt.xlim(0, 6)
+    plt.xlim(0, 1)
     plt.ylim(0, 1)
     plt.scatter(z, lci, color="brown", s=4)
     plt.subplot(5, 5, 14)
     plt.scatter(z, time, color="pink", s=4)
-    plt.xlim(0, 6)
+    plt.xlim(0, 1)
     plt.ylim(0, 7)
     # plt.subplot(5,5,19)
     # plt.scatter([], [])
     plt.subplot(5, 5, 24)
     plt.scatter(z, dof, color="y", s=4)
-    plt.xlim(0, 6)
+    plt.xlim(0, 1)
 
     plt.subplot(555)
     plt.title("Degree of Freedom")
@@ -418,7 +427,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.scatter(dof, time, s=4)
     plt.subplot(5, 5, 20)
     plt.scatter(dof, z, color="y", s=4)
-    plt.ylim(0, 6)
+    plt.ylim(0, 1)
     plt.subplot(5, 5, 24)
     # plt.scatter([], [])
     plt.show()
@@ -477,3 +486,4 @@ if __name__ == '__main__':
     # plt.plot(x, line1, c='g')
     # r2 = r2_score(y, linefitline(x))
     # print(r2)
+
