@@ -385,14 +385,14 @@ if __name__ == '__main__':
 
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# todo - fix the Json save format
-# todo the file name wont change when date change
-# todo change link0 to the platform -
-# tod change the base_link to 0 meters - check difference
-# todo check planner parameters
+# todo change link0 to the platform - github
+# done check planner parameters
 # TODo how accuracy in go to pose effect
-# Todo fix obstacle parameters?
-# todo? add to rename the total of success
+# tod - fix the Json save format
+# tod the file name wont change when date change
+# tod change the base_link to 0 meters - check difference
+# tod add to rename the total of success
+# done fix obstacle parameters
 # Done - when not creating an urdf dont use defualt!!!
 # done - check the prismatic limits
 # done - save URDFS in several files -disabled
