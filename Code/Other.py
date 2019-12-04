@@ -6,6 +6,7 @@ from Tkinter import *
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+from itertools import product
 
 
 class MyCsv(object):
@@ -52,16 +53,12 @@ class MyCsv(object):
                 writer = csv.DictWriter(name, fieldnames=headers, delimiter=',')
                 writer.writeheader()
                 writer.writerows(data)
-                # for dat in data:
-                #     str_dat = []
-                #     # for d in dat:
-                #     #     str_dat.append(str(d))
-                #     writer.writerow(str_dat)
 
     @staticmethod
     def read_csv(file_name, csv_type="list"):
         with open(file_name + ".csv", 'r') as _filehandler:
             data = []
+            all_data = []
             if csv_type == "list":
                 csv_file_reader = csv.reader(_filehandler)
                 empty = True
@@ -75,13 +72,18 @@ class MyCsv(object):
                         empty = False
                     else:
                         if not empty:
+                            all_data.append(data)
                             data = []
                         empty = True
             elif csv_type == "dict":
                 csv_file_reader = csv.DictReader(_filehandler)
                 for row in csv_file_reader:
                     data.append(row)
-        return data
+        if len(all_data) == 0:
+            all_data = data
+        else:
+            all_data.append(data)
+        return all_data
 
 
 class MergeData(object):
@@ -91,7 +93,7 @@ class MergeData(object):
         root.update()
         self.files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         root.destroy()
-        self.new_file_name = "results_all" # + self.files[0][-18:-11]
+        self.new_file_name = "results_all"  # + self.files[0][-18:-11]
 
     def merge(self):
         files = self.files
@@ -146,7 +148,7 @@ class FixFromJson(object):
             self.fix(fil[:-4])
 
     def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
-        file_fixed = file2fix  + "_fixed"
+        file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
         MergeData.fix_json(file2fix)
         original_data = MergeData.load_json(file_fixed)
@@ -238,6 +240,253 @@ class FixFromJson(object):
     @staticmethod
     def local_conditioning_index(jacobian):
         return round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+
+
+class Concepts:
+    def __init__(self, file_name="/home/tamir/Tamir/Master/optimization/all_configs"):
+        self.concepts = []
+        self.joints_combs = []
+        self.links = []
+        self.configurations = []
+        self.set_possible_links_length(0.1, 0.71, 0.3, 1)
+        self.set_possible_joints_order(file_name)
+        self.concepts_with_configuration = []
+
+    def calc(self):
+        self.determine_combinations()
+        self.set_configurations()
+        self.assign_configuration2concept()
+        data = self.get_concepts_with_configuration()
+        concepts_with_values = [[k,v] for k,v in data.items() if v !=[]]
+        combs_in_concept = []
+        for c in concepts_with_values:
+            combs_in_concept.append([c[0], len(c[1])])
+        # MyCsv.save_csv(combs_in_concept, "concepts_sum")
+        # MergeData.save_json("concepts", data)
+
+    def determine_combinations(self):
+        concepts_general = self.assign_concepts_vars_values()
+        concept = self.concepts_combination(concepts_general)
+        possible_concepts = self.filter_combinations(concept, concepts_general)
+        self.set_concepts(self.concepts_to_dict(possible_concepts))
+
+    @staticmethod
+    def assign_concepts_vars_values():
+        """ set all the concepts variables and each variable range (unfiltered)"""
+        acc_length = [1.5, 2, 2.6, 3.1, 3.6]
+        concept_general = {"dof": range(4, 7), "pitch_joint": [], "#long_link": [], "par_axes_y": [], "acc_length": [],
+                           "par_axes_z": [], "long_link": [0.4, 0.7], "p/r_ratio": [[0.0, 0.33, 1.0, 3.0],
+                           [0.0, 0.25, 0.67, 1.5], [0.0, 0.2, 0.5, 1.0]]}
+        for c in concept_general["dof"]:
+            concept_general["pitch_joint"].append(range(0, c))
+            concept_general["#long_link"].append(range(0, c))
+            concept_general["par_axes_y"].append([0]+range(2, c))
+            if c != 6:
+                concept_general["par_axes_z"].append([0]+range(2, c))
+            else:
+                concept_general["par_axes_z"].append([0]+range(2, 5))
+            concept_general["acc_length"].append(acc_length[:c - 1])
+        return concept_general
+
+    @staticmethod
+    def concepts_combination(concept_general):
+        """set the specific range for each variable (unfiltered)"""
+        concepts = []  # all possible concepts
+        for c in concept_general["dof"]:
+            ind = concept_general["dof"].index(c)
+            concepts.append(list(product(concept_general["#long_link"][ind], concept_general["pitch_joint"][ind],
+                                concept_general["p/r_ratio"][ind], concept_general["par_axes_z"][ind],
+                                concept_general["par_axes_y"][ind], concept_general["acc_length"][ind],
+                                concept_general["long_link"], repeat=1)))
+        return concepts
+
+    @staticmethod
+    def filter_combinations(concepts, concept_general):
+        # filter to only possible concepts
+        possible_concepts = [[], [], []]
+        k = 0
+        for cs in concepts:
+            for c in cs:
+                # if there is longest link (c[0]) isn't possible to have longest link(c[6]) equal to 0.4
+                if c[6] == 0.4 and c[0] > 0:
+                    continue
+                # the sum of parallel axes in y and z must be at most as DOF
+                if c[3] + c[4] > k + 4:
+                    continue
+                # there is a realtion between the number of 'pitch_joint' and the 'p/r_ration'
+                pr_ratio = concept_general["p/r_ratio"][k]
+                if (c[1] == k + 1 and c[2] == pr_ratio[3]) or (
+                        c[1] == k + 2 and (c[2] == pr_ratio[3] or c[2] == pr_ratio[2])) \
+                        or (c[1] == k + 3 and c[2] != pr_ratio[0]):
+                    continue
+                possible_concepts[k].append(c)
+            k += 1
+        return possible_concepts
+
+    @staticmethod
+    def concepts_to_dict(concepts):
+        concepts_dict = []
+        for conc in concepts:
+            cons_dict = []
+            for c in conc:
+                con_dict = {"#long_link": c[0], "pitch_joint": c[1], "p/r_ratio": c[2],
+                            "par_axes_z": c[3], "par_axes_y": c[4], "acc_length": c[5], "long_link": c[6]}
+                cons_dict.append(con_dict)
+            concepts_dict.append(cons_dict)
+        return concepts_dict
+
+    def set_concepts(self, concepts):
+        self.concepts = concepts
+
+    def set_possible_links_length(self, link_min, link_max, link_interval, min_length):
+        links = [[], [], []]
+        dofs = [4, 5, 6]
+        lengths_2_check = np.arange(link_min, link_max, link_interval).round(2)
+        for dof in dofs:
+            links_length = [[0.1] + list(tup) for tup in list(product(lengths_2_check, repeat=(dof - 1)))]
+            for link in links_length:
+                if sum(link) > min_length:
+                    links[dof-4].append([str(x) for x in link])
+        self.links = links
+
+    def set_possible_joints_order(self, file_name="/home/tamir/Tamir/Master/optimization/all_configs"):
+        self.joints_combs = MyCsv.read_csv(file_name)
+
+    def set_configurations(self):
+        links = self.get_possible_links_length()
+        joints = self.get_possible_joints_order()
+        configs = [[], [], []]
+        k = 0
+        for link in links:
+            for length in link:
+                for joint in joints:
+                    if len(joint) == len(length):
+                        conf = []
+                        for i,j in zip(joint, length):
+                            conf.append([" ".join(i), j])
+                        configs[k].append(conf)
+            k += 1
+        self.configurations = configs
+
+    def get_configurations(self):
+        return self.configurations
+
+    def get_concepts(self):
+        return self.concepts
+
+    def get_possible_joints_order(self):
+        return self.joints_combs
+
+    def get_possible_links_length(self):
+        return self.links
+
+    def assign_configuration2concept(self):
+        concepts_with_configuration = {}
+        confs = self.get_configurations()
+        concepts = self.get_concepts()
+        for conf, concept in zip(confs, concepts):
+            concepts_with_configuration.update(dict((str(el), []) for el in concept))
+            for cf in conf:
+                # todo add par_axes_z par_axes_y
+                # self.calc_parallel_axes(cf)
+                conf_name = ""
+                dof = len(cf)
+                pitch = 0
+                long_links = 0
+                par_axes_z = 0
+                par_axes_y = 0
+                pris = 0
+                acc_length = 0
+                longest = 0.4
+                for c in cf:
+                    conf_name += c[0][1:-2]+"_"+c[0][-2] + "_" + c[1].replace(".", "_")
+                    acc_length += float(c[1])
+
+                    # if "y" in c[0]:
+                    #     about_y += 1
+                    if "0.7" in c[1]:
+                        long_links += 1
+                        longest = 0.7
+                    if "pitch" in c[0]:
+                        pitch += 1
+                    if "pris" in c[0]:
+                        pris += 1.0
+                if acc_length < 1.5:
+                    acc_length = 1.5
+                elif acc_length < 2:
+                    acc_length = 2
+                elif acc_length < 2.6:
+                    acc_length = 2.6
+                elif acc_length < 3.1:
+                    acc_length = 3.1
+                else:
+                    acc_length = 3.6
+                conf_concept = {'par_axes_y': par_axes_y, '#long_link': long_links, 'long_link': longest,
+                            'par_axes_z': par_axes_z, 'pitch_joint': pitch, 'p/r_ratio': round(pris/(dof-pris), 2),
+                            'acc_length': acc_length}
+                concepts_with_configuration[str(conf_concept)].append(conf_name)
+        self.set_concepts_with_configuration(concepts_with_configuration)
+
+    def set_concepts_with_configuration(self, concepts_with_configuration):
+        self.concepts_with_configuration = concepts_with_configuration
+
+    def get_concepts_with_configuration(self):
+        return self.concepts_with_configuration
+
+    def calc_parallel_axes(self, configuration):
+        rotation = np.eye(4)
+        all_rotaion = [np.eye(4)]
+        around_z = 0
+        around_y = 0
+        # around_x = 0
+        for conf in configuration[1:]:
+            joint_axe = "z"
+            if "roll" in "".join(conf[0]) and "z" in "".join(conf[0]):
+                theta = 0
+                ax = "z"
+            elif "roll" in "".join(conf[0]) and "y" in "".join(conf[0]):
+                theta = - np.pi / 2
+                ax = "x"
+            elif "roll" in "".join(conf[0]) and "x" in "".join(conf[0]):
+                theta = np.pi / 2
+                ax = "y"
+            elif "pitch" in "".join(conf[0]) and "z" in "".join(conf[0]):
+                theta = np.pi / 2
+                ax = "x"
+                joint_axe = "y"
+            elif "pitch" in "".join(conf[0]) and "y" in "".join(conf[0]):
+                theta = 0
+                ax = "x"
+                joint_axe = "y"
+            elif "pitch" in "".join(conf[0]) and "x" in "".join(conf[0]):
+                theta = -np.pi / 2
+                ax = "z"
+                joint_axe = "y"
+            elif "pris" in "".join(conf[0]) and "z" in "".join(conf[0]):
+                theta = 0
+                ax = "x"
+            elif "pris" in "".join(conf[0]) and "y" in "".join(conf[0]):
+                theta = np.pi / 2
+                ax = "x"
+            elif "pris" in "".join(conf[0]) and "x" in "".join(conf[0]):
+                theta = -np.pi / 2
+                ax = "y"
+            else:
+                print(conf[0])
+            rotation = np.matmul(rotation, self.roataion_matrix(theta=theta, axe=ax))
+            all_rotaion.append(rotation)
+
+    @staticmethod
+    def roataion_matrix(theta, axe):
+        c = round(np.cos(theta), 3)
+        s = round(np.sin(theta), 3)
+        if axe == "x":
+            r = np.mat([[1, 0, 0, 0], [0, c, -s, 0], [0, s, c, 0], [0, 0, 0, 1]])
+        elif axe == "y":
+            r = np.mat([[c, 0, s, 0], [0, 1, 0, 0], [-s, 0, c, 0], [0, 0, 0, 1]])
+        elif axe == "z":
+            r = np.mat([[c, -s, 0, 0], [s, c, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return r
 
 
 def split_files_to_several_folders(files_in_folder=5000):
@@ -336,7 +585,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
             dof.append(float(dat["dof"]))
     plt.subplot(551)
     plt.title("Manipulability")
-    plt.xlim(0,1)
+    plt.xlim(0, 1)
     plt.ylabel("Manipulability")
     plt.subplot(556)
     plt.scatter(mu, lci, color="g", s=4)
@@ -350,7 +599,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.ylabel("Time (sec)")
     plt.subplot(5, 5, 16)
     plt.xlim(0, 1)
-    plt.ylim(0, 1)
+    plt.ylim(0, 0.51)
     plt.scatter(mu, z, color="cyan", s=4)
     plt.ylabel("Mid-joint state")
     plt.subplot(5, 5, 21)
@@ -372,7 +621,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.subplot(5, 5, 17)
     plt.scatter(lci, z, color="brown", s=4)
     plt.xlim(0, 1)
-    plt.ylim(0, 1)
+    plt.ylim(0, 0.51)
     plt.subplot(5, 5, 22)
     plt.scatter(lci, dof, color="orange", s=4)
     plt.xlim(0, 1)
@@ -391,29 +640,29 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.subplot(5, 5, 18)
     plt.scatter(time, z, color="pink", s=4)
     plt.xlim(0, 7)
-    plt.ylim(0, 1)
+    plt.ylim(0, 0.51)
     plt.subplot(5, 5, 23)
     plt.scatter(time, dof, s=4)
     plt.xlim(0, 7)
 
     plt.subplot(554)
     plt.title("Mid-joint state")
-    plt.xlim(0, 1)
+    plt.xlim(0, 0.51)
     plt.ylim(0, 1)
     plt.scatter(z, mu, color="cyan", s=4)
     plt.subplot(559)
-    plt.xlim(0, 1)
+    plt.xlim(0, 0.51)
     plt.ylim(0, 1)
     plt.scatter(z, lci, color="brown", s=4)
     plt.subplot(5, 5, 14)
     plt.scatter(z, time, color="pink", s=4)
-    plt.xlim(0, 1)
+    plt.xlim(0, 0.51)
     plt.ylim(0, 7)
     # plt.subplot(5,5,19)
     # plt.scatter([], [])
     plt.subplot(5, 5, 24)
     plt.scatter(z, dof, color="y", s=4)
-    plt.xlim(0, 1)
+    plt.xlim(0, 0.51)
 
     plt.subplot(555)
     plt.title("Degree of Freedom")
@@ -427,7 +676,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.scatter(dof, time, s=4)
     plt.subplot(5, 5, 20)
     plt.scatter(dof, z, color="y", s=4)
-    plt.ylim(0, 1)
+    plt.ylim(0, 0.51)
     plt.subplot(5, 5, 24)
     # plt.scatter([], [])
     plt.show()
@@ -435,55 +684,25 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 if __name__ == '__main__':
     split = False
+    calc_concepts = False
+    fix_all_from_json = False
     sumdata = False
     to_merge = False
     plotdata = True
     fix_from_json = False
-    fix_all_from_json = False
+    if calc_concepts:
+        con = Concepts()
+        con.calc()
+    if split:
+        split_files_to_several_folders(5000)
     if to_merge:
         merge_data = MergeData()
         merge_data.merge()
-    if split:
-        split_files_to_several_folders(5000)
     if sumdata:
         summed_data = sum_data()
-    if plotdata:
-        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
     if fix_from_json:
         FixFromJson()
     if fix_all_from_json:
         FixFromJson(all_files=True)
-
-    # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_pc_all", "dict")
-    # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/results4d_5dof_vm_all", "dict")
-    # # pc = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_pc", "dict")
-    # # vm = MyCsv.read_csv("/home/tamir/Tamir/Master/Code/results/compare time/4dof_all_vm", "dict")
-    # vm_time = []
-    # pc_time = []
-    # for p in pc:
-    #     for v in vm:
-    #         if v["name"] == p["name"]:
-    #             pc_time.append(float(p["time"]))
-    #             vm_time.append(float(v["time"]))
-    #             break
-    # # plt.subplot(111)
-    # plt.scatter(pc_time, vm_time)
-    # plt.ylim(1, 6)
-    # plt.xlim(1, 6)
-    # plt.xlabel("pc")
-    # plt.ylabel("vm")
-    # plt.show()
-    #
-    # import numpy as np
-    # from scipy import stats
-    # from sklearn.metrics import r2_score
-    # x = np.asarray(pc_time)
-    # y = np.asarray(vm_time)
-    # slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-    # def linefitline(b):
-    #     return intercept + slope * b
-    # line1 = linefitline(x)
-    # plt.plot(x, line1, c='g')
-    # r2 = r2_score(y, linefitline(x))
-    # print(r2)
-
+    if plotdata:
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")

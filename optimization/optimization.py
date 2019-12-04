@@ -418,7 +418,7 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
             interface_joints- roll,pitch,yaw or prismatic
                              roll - revolute around own Z axe
                              pitch - revolute that not roll
-                             pris - prismatic along
+                             pris - prismatic along z
             links - length of links
             joint_parent_axis - the axe, in the parent frame, which each joint use
         """

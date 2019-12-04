@@ -383,6 +383,7 @@ if __name__ == '__main__':
     # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
+# todo - set manipulability index of 4dof to det(j)
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
 # todo change link0 to the platform - github
