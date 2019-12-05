@@ -36,7 +36,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/simulator.py" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.spelling" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/simulator.py" />
   </component>
   <component name="RecentsManager">
@@ -200,6 +200,9 @@
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" BundledDictionaries="32" BundledDictionary0="@types.dic" BundledDictionary1="lodash.dic" BundledDictionary2="pythonExtras.dic" BundledDictionary3="eslint-config-airbnb.dic" BundledDictionary4="jetbrains.dic" BundledDictionary5="firebase.dic" BundledDictionary6="english.dic" BundledDictionary7="vuex.dic" BundledDictionary8="django.dic" BundledDictionary9="eslint.dic" BundledDictionary10="redux.dic" BundledDictionary11="less.dic" BundledDictionary12="core-js.dic" BundledDictionary13="express.dic" BundledDictionary14="prettier.dic" BundledDictionary15="angular.dic" BundledDictionary16="rxjs.dic" BundledDictionary17="vuetify.dic" BundledDictionary18="css.dic" BundledDictionary19="request.dic" BundledDictionary20="zone.js.dic" BundledDictionary21="@angular.dic" BundledDictionary22="async.dic" BundledDictionary23="bluebird.dic" BundledDictionary24="_javascript.dic" BundledDictionary25="cloudfront.dic" BundledDictionary26="python.dic" BundledDictionary27="graphql.dic" BundledDictionary28="javascript.dic" BundledDictionary29="heroku.dic" BundledDictionary30="vue.dic" BundledDictionary31="debug.dic" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="project-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="" />
@@ -260,6 +263,7 @@
       <workItem from="1568926258746" duration="60000" />
       <workItem from="1569149521124" duration="4322000" />
       <workItem from="1569158574746" duration="5941000" />
+      <workItem from="1574858701799" duration="75000" />
     </task>
     <task id="LOCAL-00001" summary="close and reopen gazebo - working">
       <created>1560433283028</created>
@@ -358,16 +362,11 @@
           <line>664</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/simulator.py</url>
-          <line>258</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1569169717999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1569159812291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1569169717999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

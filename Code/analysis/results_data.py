@@ -91,21 +91,21 @@ class HandleCSV(object):
 
 
 def autolabel(rects, ax, xpos='center'):
-        """
-        Attach a text label above each bar in *rects*, displaying its height.
+    """
+    Attach a text label above each bar in *rects*, displaying its height.
 
-        *xpos* indicates which side to place the text w.r.t. the center of
-        the bar. It can be one of the following {'center', 'right', 'left'}.
-        """
+    *xpos* indicates which side to place the text w.r.t. the center of
+    the bar. It can be one of the following {'center', 'right', 'left'}.
+    """
 
-        ha = {'center': 'center', 'right': 'left', 'left': 'right'}
-        offset = {'center': 0, 'right': 1, 'left': -1}
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate('{}'.format(height), xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(offset[xpos] * 3, 3),  # use 3 points offset
-                        textcoords="offset points",  # in both directions
-                        ha=ha[xpos], va='bottom')
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{}'.format(height), xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos] * 3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
 
 
 def data_plot(plot_data):
@@ -141,10 +141,10 @@ def sim2csv():
     handle = HandleCSV()
     current_loc = os.getcwd()
     if platform.system() == 'Linux':
-        files = os.listdir(current_loc + "/csv_data_first simulations")
+        sim_files = os.listdir(current_loc + "/csv_data_first simulations")
     if platform.system() == 'Windows':
-        files = os.listdir(current_loc + "\csv_data_first simulations")
-    for file in files:
+        sim_files = os.listdir(current_loc + "\\csv_data_first simulations")
+    for file in sim_files:
         if file.endswith(".csv"):
             res_files.append([os.path.splitext(file)[0], os.path.splitext(file)[1]])
             name = os.path.splitext(file[21:])[0]
@@ -159,14 +159,14 @@ def sim2csv():
         while test in tests:
             ind = tests.index(test)
             tests[ind] = None
-            res_test.append(handle.read_data("csv_data_first simulations/" + files[ind]))
+            res_test.append(handle.read_data("csv_data_first simulations/" + sim_files[ind]))
         raeched_comb.append(handle.save_data(res_test, "res" + str(test)))
     return raeched_comb
 
 
-comb_reached = sim2csv()
-data_plot(comb_reached)
-
+# comb_reached = sim2csv()
+# data_plot(comb_reached)
+#
 
 def arms_combinations(number=6):
     joint_filtered = []
@@ -180,7 +180,7 @@ def arms_combinations(number=6):
     # joints_axis = [list(tup) for tup in list(itertools.product(['x', 'y', 'z'], repeat=number))]
     links_length = [list(tup) for tup in list(itertools.product(lengths_2_check, repeat=number))]
     combinations = len(joints) * len(links_length)
-    # print(combinations)
+    print(combinations)
     for joint in joints:
         pris_num = 0
         if joint[0] == 'Rollz':
@@ -192,7 +192,6 @@ def arms_combinations(number=6):
                         pris_num = 6
                     elif "Pz" == joint[j]:
                         pris_num = 6
-
             if pris_num < 4:
                 joint_filtered.append(joint)
 
@@ -201,51 +200,5 @@ def arms_combinations(number=6):
             if sum(link) > 1:
                 links_length_filtered.append(link)
     combinations_filtered = len(joint_filtered) * len(links_length_filtered)
-    # print(combinations_filtered)
+    print(combinations_filtered)
     return combinations_filtered
-
-
-# c = []
-# total = 0
-# for n in [3, 4, 5, 6]:
-#     c.append(arms_combinations(n))
-# for i in range(len(c)):
-#     total = total + c[i]
-
-
-# def data_from_excel():
-#     # get Excel files
-#     xlsx_files = []
-#     curr_loc = os.getcwd()
-#     exc_files = os.listdir(curr_loc)
-#     for exc_file in exc_files:
-#         if exc_file.endswith(".xlsx"):
-#             xlsx_files.append([os.path.splitext(exc_file)[0], os.path.splitext(exc_file)[1]])
-#
-#     data = ()
-#     for f in range(len(xlsx_files)):
-#         a = []
-#         temp_file = xlsx_files[f][0] + xlsx_files[f][1]
-#         # To open Workbook
-#         wb = xlrd.open_workbook(temp_file)
-#         sheet = wb.sheet_by_index(0)
-#         for j in range(3):
-#             a.append(sheet.cell_value(0, 17 + j))
-#         data = data + (xlsx_files[f][0], a)
-#     data_plot(data)
-#
-#
-# def write_excel():
-#     book = xlwt.Workbook()
-#     sheet1 = book.add_sheet("PySheet1")
-#
-#     cols = ["A", "B", "C", "D", "E"]
-#     txt = "Row %s, Col %s"
-#
-#     for num in range(5):
-#         row = sheet1.row(num)
-#         for index, col in enumerate(cols):
-#             value = txt % (num + 1, col)
-#             row.write(index, value)
-#
-#     book.save("test.xls")
