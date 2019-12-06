@@ -257,10 +257,12 @@ class Concepts:
         self.set_configurations()
         self.assign_configuration2concept()
         data = self.get_concepts_with_configuration()
-        concepts_with_values = [[k,v] for k,v in data.items() if v !=[]]
+        concepts_with_values = [[k, v] for k, v in data.items() if v != []]
+        concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         combs_in_concept = []
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
+        # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
         MyCsv.save_csv(combs_in_concept, "concepts_sum")
         MergeData.save_json("concepts", data)
 
@@ -301,8 +303,16 @@ class Concepts:
         k = 0
         for cs in concepts:
             for c in cs:
-                # if there is longest link (c[0]) isn't possible to have longest link(c[6]) equal to 0.4
+                # the sum of the links cant be more than the accumalated length
+                # if c[0]*0.7 > c[4] or (c[5] == 0.4 and c[5] * (k+3) < c[4] - 0.6):
+                #     continue
+                if c[0] * 0.7 + 0.4 * (k+3-c[0]) < c[4] - 0.6 or c[0]*0.7+0.1*(k+4-c[0]) > c[4]:
+                    continue
+                # if there is longest link (c[0]) isn't possible to have longest link(c[5]) equal to 0.4
                 if c[5] == 0.4 and c[0] > 0:
+                    continue
+                # doesnt posisble
+                if c[5] == 0.7 and c[0] == 0:
                     continue
                 # cant be more parallel in y than number of pitch joints
                 if c[3] > c[1]:
@@ -352,7 +362,7 @@ class Concepts:
                 for joint in joints:
                     if len(joint) == len(length):
                         conf = []
-                        for i,j in zip(joint, length):
+                        for i, j in zip(joint, length):
                             conf.append([" ".join(i), j])
                         configs[k].append(conf)
             k += 1
