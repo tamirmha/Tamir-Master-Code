@@ -258,13 +258,13 @@ class Concepts:
         self.assign_configuration2concept()
         data = self.get_concepts_with_configuration()
         concepts_with_values = [[k, v] for k, v in data.items() if v != []]
-        concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         combs_in_concept = []
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
-        # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
         MyCsv.save_csv(combs_in_concept, "concepts_sum")
         MergeData.save_json("concepts", data)
+        # concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
+        # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
 
     def determine_combinations(self):
         concepts_general = self.assign_concepts_vars_values()
@@ -376,6 +376,7 @@ class Concepts:
             concepts_with_configuration.update(dict((str(el), []) for el in concept))
             for cf in conf:
                 par_axes_y = 0
+                par_axes_y_temp = 0
                 conf_name = ""
                 dof = len(cf)
                 pitch = 0
@@ -385,12 +386,16 @@ class Concepts:
                 longest = 0.4
                 for c in cf:
                     if "pitch" in "".join(c[0]) and "y" in "".join(c[0]):
-                        par_axes_y += 1
+                        par_axes_y_temp += 1
                     elif "pris" in "".join(c[0]) and "z" in "".join(c[0]):
-                        par_axes_y = par_axes_y
+                        par_axes_y_temp = par_axes_y_temp
                     else:
-                        par_axes_y = 0
-                    conf_name += c[0][1:-2]+"_"+c[0][-2] + "_" + c[1].replace(".", "_")
+                        if par_axes_y_temp > par_axes_y:
+                            par_axes_y = par_axes_y_temp
+                        par_axes_y_temp = 0
+                    conf_name += c[0][:-2].strip() + "_".join(c[0][-2:]).strip() + "_" + c[1].replace(".", "_")
+                    # if conf_name == "roll_z_0_1pitch_y_0_4pitch_y_0_4pitch_x_0_4":
+                    #     print("s")
                     acc_length += float(c[1])
                     if "0.7" in c[1]:
                         long_links += 1
@@ -399,6 +404,8 @@ class Concepts:
                         pitch += 1
                     if "pris" in c[0]:
                         pris += 1.0
+                if par_axes_y_temp > par_axes_y:
+                    par_axes_y = par_axes_y_temp
                 if par_axes_y < 2:
                     par_axes_y = 0
                 if acc_length <= 1.5:
@@ -684,3 +691,9 @@ if __name__ == '__main__':
         FixFromJson(all_files=True)
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
+
+# a=MergeData.load_json("concepts")
+# for i in a.keys():
+#     if "6" in i:
+#        if "roll_z_0_1roll_y_0_4roll_y_0_4roll_y_0_4roll_y_0_4roll_y_0_1" in a[i]:
+#            print (i)
