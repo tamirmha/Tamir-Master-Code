@@ -118,7 +118,7 @@ class MoveGroupPythonInterface(object):
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
         self.move_group.set_planner_id("RRTkConfigDefault")
-        self.move_group.set_planning_time(10)
+        self.move_group.set_planning_time(2)
         # self.move_group.set_num_planning_attempts(10)
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
@@ -695,6 +695,6 @@ def main_move_group():
 
 
 if __name__ == '__main__':
-    # main_move_group()
-    mo = MoveGroupPythonInterface()
-    print(mo.move_group.get_current_joint_values())
+    main_move_group()
+    # mo = MoveGroupPythonInterface()
+    # print(mo.move_group.get_current_joint_values())

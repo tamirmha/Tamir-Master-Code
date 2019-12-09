@@ -234,7 +234,6 @@ class Simulator(object):
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
-        # print ri
         if data_res.count(True) >= 3 and data_res[3] and (data_res[0] or data_res[1]):
             # if the arm arrived to 3 or more point and get to the lower point or one of the two
             # top points --> it success and calc indices
@@ -244,7 +243,6 @@ class Simulator(object):
             mu = np.asarray(mu)
             lci = np.asarray(lci)
             z = np.asarray(z)
-
             # choose only the min values because those are the "worst grade"
             try:
                 mu_min = mu[mu >= 0.0].min()
@@ -383,7 +381,6 @@ if __name__ == '__main__':
     # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
 
-# todo - set manipulability index of 4dof to det(j)
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
 # todo change link0 to the platform - github
