@@ -447,32 +447,6 @@ class Concepts:
     def get_concepts_with_configuration(self):
         return self.concepts_with_configuration
 
-    # @staticmethod
-    # def calc_parallel_axes(configuration):
-    #     around_y = 0
-    #     for conf in configuration[1:]:
-    #         if "pitch" in "".join(conf[0]) and "y" in "".join(conf[0]):
-    #             around_y += 1
-    #         elif "pris" in "".join(conf[0]) and "z" in "".join(conf[0]):
-    #             continue
-    #         else:
-    #             around_y = 0
-    #     if around_y <2:
-    #         around_y = 0
-    #     return around_y
-    #
-    # @staticmethod
-    # def roataion_matrix(theta, axe):
-    #     c = round(np.cos(theta), 3)
-    #     s = round(np.sin(theta), 3)
-    #     if axe == "x":
-    #         r = np.mat([[1, 0, 0, 0], [0, c, -s, 0], [0, s, c, 0], [0, 0, 0, 1]])
-    #     elif axe == "y":
-    #         r = np.mat([[c, 0, s, 0], [0, 1, 0, 0], [-s, 0, c, 0], [0, 0, 0, 1]])
-    #     elif axe == "z":
-    #         r = np.mat([[c, -s, 0, 0], [s, c, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-    #     return r
-
 
 def split_files_to_several_folders(files_in_folder=5000):
     name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
@@ -691,9 +665,3 @@ if __name__ == '__main__':
         FixFromJson(all_files=True)
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
-
-# a=MergeData.load_json("concepts")
-# for i in a.keys():
-#     if "6" in i:
-#        if "roll_z_0_1roll_y_0_4roll_y_0_4roll_y_0_4roll_y_0_4roll_y_0_1" in a[i]:
-#            print (i)
