@@ -7,6 +7,8 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 from itertools import product
+from simulator import Simulator
+# from ros import UrdfClass
 
 
 class MyCsv(object):
@@ -252,6 +254,91 @@ class Concepts:
         self.set_possible_joints_order(file_name)
         self.concepts_with_configuration = []
 
+    @staticmethod
+    def confs2simulate(concepts_with_values, min_configurations=25,percent_from_concept=3.0):
+        percent_from_concept = percent_from_concept/100.0
+        confs2sim = []
+        # cons_of_sim = []
+        for k in concepts_with_values:
+            if len(k[1]) < min_configurations:  # 1352 configurations  & 129 concepts
+                confs2sim.append(k[1])
+            else:
+                number_of_confs2sim = int(len(k[1])*percent_from_concept)
+                # check if the minimum desired percent is enough
+                if number_of_confs2sim < min_configurations:  # 9875 confiurations & 395 concepts
+                    number_of_confs2sim = min_configurations
+                indices = np.arange(len(k[1]))                # 47970 confiurations & 270 concepts
+                np.random.shuffle(indices)
+                confs2sim.append(np.ndarray.tolist(np.take(k[1], indices[:number_of_confs2sim])))
+            # cons_of_sim.append(k[0])
+        return confs2sim  # , cons_of_sim
+
+    @staticmethod
+    def filter_confs(to_sim):
+        """ check if any of the selected configurations have been simulated before"""
+        simmed_results = MyCsv.read_csv("results/recalculate/results_all_with_failed", "dict")
+        sim_allready = []
+        results = []
+        for i in simmed_results:
+            for j in to_sim:
+                if i["name"] in j:
+                    sim_allready.append(i["name"])
+                    results.append(i)
+                    to_sim[to_sim.index(j)].remove(i["name"])
+                    break
+        to_sim.sort(key=len)
+        return [x for x in to_sim if x], results
+
+    @staticmethod
+    def arm2parts(arm):
+        joints = ["roll"]
+        prev_axe = ["z"]
+        link_length = ["0.1"]
+        for a in range(3, len(arm) - 1):
+            if a % 3 == 0:
+                joints.append(arm[a][1:])
+            elif a % 3 == 1:
+                prev_axe.append(arm[a])
+            elif a % 3 == 2:
+                link_length.append(arm[a] + "." + arm[a + 1][:1])
+        return joints, prev_axe, link_length
+
+    def create_files2sim(self, to_sim):
+        conf_5dof = [[] for i in range(20)]  # 54, 50
+        conf_6dof = [[] for i in range(20)]  # 60, 65
+        i6 = 0
+        i5 = 0
+        i5_length = 0
+        i6_length = 0
+        for conf in to_sim:
+            if 50 <= len(conf[0]) <= 54:
+                conf_5dof[i5].append(conf)
+                i5_length, i5 = self.create_urdfs(i5_length, i5, 5, conf)
+            elif 60 <= len(conf[0]) <= 65:
+                conf_6dof[i6].append(conf)
+                i6_length, i6 = self.create_urdfs(i6_length, i6, 6, conf)
+
+        conf_6dof = [x for x in conf_6dof if x]
+        conf_5dof = [x for x in conf_5dof if x]
+        for k in range(len(conf_5dof)):
+            MyCsv.save_csv(conf_5dof[k], "tests/5dof/to_simulate_5dof_" + str(k))
+        for k in range(len(conf_6dof)):
+            MyCsv.save_csv(conf_6dof[k], "tests/6dof/to_simulate_6dof_" + str(k))
+
+    @staticmethod
+    def create_urdfs(i_length, i, dof, conf):
+        i_length += len(conf)
+        for c in conf:
+            joints, prev_axe, link_length = con.arm2parts(c.split("_"))
+            arm = Simulator.create_arm(joints, prev_axe, link_length, "")
+            path = "tests/" + str(dof) + "dof/" + str(i) + "/"
+            Simulator.create_folder(path)
+            arm["arm"].urdf_write(arm["arm"].urdf_data(), path + arm["name"])
+        if i_length > 4000:
+            i += 1
+            i_length = 0
+        return i_length, i
+
     def calc(self):
         self.determine_combinations()
         self.set_configurations()
@@ -261,8 +348,9 @@ class Concepts:
         combs_in_concept = []
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
-        MyCsv.save_csv(combs_in_concept, "concepts_sum")
-        MergeData.save_json("concepts", data)
+        return concepts_with_values
+        # MyCsv.save_csv(combs_in_concept, "concepts_sum")
+        # MergeData.save_json("concepts", data)
         # concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
 
@@ -304,8 +392,6 @@ class Concepts:
         for cs in concepts:
             for c in cs:
                 # the sum of the links cant be more than the accumalated length
-                # if c[0]*0.7 > c[4] or (c[5] == 0.4 and c[5] * (k+3) < c[4] - 0.6):
-                #     continue
                 if c[0] * 0.7 + 0.4 * (k+3-c[0]) < c[4] - 0.6 or c[0]*0.7+0.1*(k+4-c[0]) > c[4]:
                     continue
                 # if there is longest link (c[0]) isn't possible to have longest link(c[5]) equal to 0.4
@@ -394,8 +480,6 @@ class Concepts:
                             par_axes_y = par_axes_y_temp
                         par_axes_y_temp = 0
                     conf_name += c[0][:-2].strip() + "_".join(c[0][-2:]).strip() + "_" + c[1].replace(".", "_")
-                    # if conf_name == "roll_z_0_1pitch_y_0_4pitch_y_0_4pitch_x_0_4":
-                    #     print("s")
                     acc_length += float(c[1])
                     if "0.7" in c[1]:
                         long_links += 1
@@ -477,14 +561,6 @@ def sum_data():
     data_no_success = []
     for res_file in res_files:
         csv_file = MyCsv.load_csv(res_file[:-4])
-        # if len(data) == 0:
-        #     first = MyCsv.load_csv(res_file[:-4])
-        #     for fir in first:
-        #         if fir["Z"] == -1:
-        #             data_no_success.append(fir)
-        #             continue
-        #         data.append(fir)
-        #     continue
         for v in csv_file:
             in_data = False
             if v["Z"] == -1:
@@ -651,7 +727,12 @@ if __name__ == '__main__':
     fix_from_json = False
     if calc_concepts:
         con = Concepts()
-        con.calc()
+        concepts_with_values = con.calc()
+        all_to_sim = con.confs2simulate(concepts_with_values)
+        filter2sim, res = con.filter_confs(all_to_sim)
+        con.create_files2sim(filter2sim)
+        MyCsv.save_csv(res, "tests/results", "dict")
+        # todo -  create file with prev simulations results
     if split:
         split_files_to_several_folders(5000)
     if to_merge:

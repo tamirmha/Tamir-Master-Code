@@ -33,9 +33,6 @@ class Simulator(object):
                 self.arms = arms
         # desired positions and orientaions of the EE in world frame
         z = 3  # height from ground
-        # self.poses = [[0.5, 0.15, z + 0.86], [0.5, 0.0, z + 0.89], [0.5, -0.15, z + 0.86],
-        #               [0.5, -0.15, z + 0.45], [0.5, 0.15, z + 0.45]]
-        # self.oriens = [[1.98, -0.83, 0], [-3.14, 0, 0], [-1.98, -0.83, 0], [-0.81, 0.52, 0], [0.9, 0.02, 0]]
         self.poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
         self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
         self.save_name = 'results_file' + datetime.now().strftime("%d_%m_") + str(dof) + "dof_" \
@@ -154,10 +151,6 @@ class Simulator(object):
         folder = self.folder
         for config in configs:
             for arm in config:
-                # if index % 10 == 0:
-                #     folder = self.folder + "/conf_" + str(folder_num)
-                #     self.create_folder(base_path + str(self.dof) + "dof/" + folder)
-                #     folder_num = folder_num + 1
                 for link in links:
                     self.arms.append(self.create_arm(arm["joint"], arm["axe"], link, folder))
                     path = base_path + str(len(arm["axe"])) + "dof/" + folder + "/"
