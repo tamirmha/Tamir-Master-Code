@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from itertools import product
 from simulator import Simulator
-# from ros import UrdfClass
 
 
 class MyCsv(object):
