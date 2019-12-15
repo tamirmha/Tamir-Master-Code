@@ -801,10 +801,12 @@ def plot_pareto(x_other, y_other, z_other, x_front, y_front, z_front):
     indices.sort(key=pareto[2].__getitem__)
     for i, sublist in enumerate(pareto):
         pareto[i] = [sublist[j] for j in indices]
+    plt.figure(figsize=(24.0, 10.0))
     ax = plt.axes(projection='3d')
     ax.plot_trisurf(pareto[0], pareto[1], pareto[2], color="cyan", shade=True)
     ax.scatter3D(x_other, y_other, z_other, cmap='Greens', c="blue", marker=".", alpha=0.15)
     ax.scatter3D(x_front, y_front, z_front, cmap='Greens', c="black", marker="o")
+    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
     # ax.view_init(azim=-90, elev=90)
     ax.set_zlabel("DOF")
     ax.set_ylabel("Munibulability")
