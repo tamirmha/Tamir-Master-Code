@@ -278,14 +278,10 @@ class Simulator(object):
         all_data = []
         # self.json_data = []
         for arm in range(0, len(self.arms)):
-            # print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
             data = []
-            # try:
             joints = self.arms[arm]["arm"].joint_data
             links = self.arms[arm]["arm"].links
-            # except:
-            #     joints = ["revolute"] * self.dof
-            #     links = [0.4] * self.dof
             for p in range(len(self.poses)):  # send the manipulator to the selected points
                 # inserting the data into array
                 data.append(self.manipulator_move.go_to_pose_goal(self.poses[p], self.oriens[p], joints, links))
@@ -315,7 +311,7 @@ if __name__ == '__main__':
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2
+        wait2_replace = 2.2
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
@@ -324,7 +320,7 @@ if __name__ == '__main__':
     dofe = 4  # number degrees of freedom of the manipulator
     link_max = 1.1  # max link length to check
     start_arm = 0  # from which set of arms to start
-    create_urdf = True
+    create_urdf = False
     # set parametrs from terminal
     args = sys.argv
     if len(args) > 1:

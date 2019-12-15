@@ -5,6 +5,7 @@ import tkFileDialog
 from Tkinter import *
 import json
 import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 import numpy as np
 from itertools import product
 from simulator import Simulator
@@ -718,7 +719,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 if __name__ == '__main__':
     split = False
-    calc_concepts = True
+    calc_concepts = False
     fix_all_from_json = False
     sumdata = False
     to_merge = False
@@ -731,7 +732,7 @@ if __name__ == '__main__':
         filter2sim, res = con.filter_confs(all_to_sim)
         con.create_files2sim(filter2sim)
         MyCsv.save_csv(res, "tests/results", "dict")
-        # todo -  create file with prev simulations results
+        # todo -  craete 3d plot
     if split:
         split_files_to_several_folders(5000)
     if to_merge:
@@ -745,3 +746,73 @@ if __name__ == '__main__':
         FixFromJson(all_files=True)
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
+
+
+def assign_results(res_name="tests/results"):
+    res = MyCsv.read_csv(res_name, "dict")
+    x = []
+    y = []
+    z = []
+    for r in res:
+        # add only points thats succeded to reach the point
+        if r["Z"] != '70':
+            z.append(float(r["dof"]))
+            y.append(1 - float(r["mu"]))
+            x.append(float(r["Z"]))
+    return x, y, z
+
+
+def domination_check(x_other, y_other, z_other):
+    x_front = [x_other[0]]
+    y_front = [y_other[0]]
+    z_front = [z_other[0]]
+    points = [[], [], []]
+    for i, j, k in zip(x_other[1:], y_other[1:], z_other[1:]):
+        # if k == 4 or k == 6:
+        #     continue
+        added = False
+        for i_front, j_front, k_front in zip(x_front, y_front, z_front):
+            # check if the point is dominated by the front
+            if i <= i_front and j <= j_front and k <= k_front:
+                if not added:
+                    x_front.append(i)
+                    y_front.append(j)
+                    z_front.append(k)
+                    added = True
+                x_front.remove(i_front)
+                y_front.remove(j_front)
+                z_front.remove(k_front)
+            # check if the front dominate the point
+            elif i > i_front and j > j_front and k >= k_front:
+                points[0].append(i)
+                points[1].append(j)
+                points[2].append(k)
+                added = True
+        if not added:
+            x_front.append(i)
+            y_front.append(j)
+            z_front.append(k)
+    return points[0], points[1], points[2], x_front, y_front, z_front
+
+
+def plot_pareto(x_other, y_other, z_other, x_front, y_front, z_front):
+    pareto = [front_x, front_y, front_z]
+    indices = range(len(pareto[0]))
+    indices.sort(key=pareto[2].__getitem__)
+    for i, sublist in enumerate(pareto):
+        pareto[i] = [sublist[j] for j in indices]
+    ax = plt.axes(projection='3d')
+    ax.plot_trisurf(pareto[0], pareto[1], pareto[2], color="cyan", shade=True)
+    ax.scatter3D(x_other, y_other, z_other, cmap='Greens', c="blue", marker=".", alpha=0.15)
+    ax.scatter3D(x_front, y_front, z_front, cmap='Greens', c="black", marker="o")
+    # ax.view_init(azim=-90, elev=90)
+    ax.set_zlabel("DOF")
+    ax.set_ylabel("Munibulability")
+    ax.set_xlabel("Mid Proximity Joint")
+
+
+x, y, z = assign_results()
+other_x, other_y, other_z, front_x, front_y, front_z = domination_check(x, y, z)
+plot_pareto(other_x, other_y, other_z, front_x, front_y, front_z)
+
+# Todo add to each point at which concept
