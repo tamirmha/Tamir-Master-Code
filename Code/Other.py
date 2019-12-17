@@ -102,11 +102,11 @@ class MergeData(object):
         new_file_name = self.new_file_name
         for i in range(len(files)):
             MyCsv.save_csv(MyCsv.read_csv(files[i][:-4]), new_file_name)
-            # try:
-            #     self.fix_json(files[i][:-4])
-            #     self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
-            # except ValueError:
-            #     print("There are no Json files")
+            try:
+                self.fix_json(files[i][:-4])
+                self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
+            except:
+                print("There are no Json files")
 
     @staticmethod
     def save_json(name="data_file", data=None):
@@ -254,8 +254,17 @@ class Concepts:
         self.set_possible_joints_order(file_name)
         self.concepts_with_configuration = []
 
+    ###
+    # for stage A - select random configurations from each concept and to simulate them
     @staticmethod
-    def confs2simulate(concepts_with_values, min_configurations=25,percent_from_concept=3.0):
+    def confs2simulate(concepts_with_values, min_configurations=25, percent_from_concept=3.0):
+        """ Choose random configurations from each concept. the number of configurations is
+        max(min_configurations, percent_from_concept * configurations in concept)
+        :param concepts_with_values: list of all the concepts. All concept contains all its configurations
+        :param min_configurations: minimum number of configurations to choose
+        :param percent_from_concept: percent from each concept configurations to choose
+        return: confs2sim- names of configurations to simulate
+        """
         percent_from_concept = percent_from_concept/100.0
         confs2sim = []
         # cons_of_sim = []
@@ -275,7 +284,11 @@ class Concepts:
 
     @staticmethod
     def filter_confs(to_sim):
-        """ check if any of the selected configurations have been simulated before"""
+        """ check if any of the selected configurations have been simulated before
+        :param to_sim: all the selected configuration thats need to be simulated
+        return: sorted array without the configurations that allready simulated
+                results: the results from the simulated configuration
+        """
         simmed_results = MyCsv.read_csv("results/recalculate/results_all_with_failed", "dict")
         sim_allready = []
         results = []
@@ -289,8 +302,16 @@ class Concepts:
         to_sim.sort(key=len)
         return [x for x in to_sim if x], results
 
+    ###
+    # get configs names and create urdf files
     @staticmethod
     def arm2parts(arm):
+        """ get arm name and disassemble it to (joints, axes, link length)
+        :param arm: arm name (like in the urdf file) (string)
+        return: joints: array with the joints type (array of string)
+                prev_axe: array of the axes (array of string)
+                link_length: array of the links lengths (array of string)
+        """
         joints = ["roll"]
         prev_axe = ["z"]
         link_length = ["0.1"]
@@ -303,7 +324,12 @@ class Concepts:
                 link_length.append(arm[a] + "." + arm[a + 1][:1])
         return joints, prev_axe, link_length
 
-    def create_files2sim(self, to_sim):
+    def create_files2sim(self, to_sim, confs_file5="tests/5dof/to_sim_5dof_", confs_file6="tests/dof/to_sim_6dof_"):
+        """ get configurations and save urdf files
+        :param to_sim: list og configurations to create urdfs
+        :param confs_file5: name of csv file with all 5dof configurations to create
+        :param confs_file6: name of csv file with all 6dof configurations to create
+        """
         conf_5dof = [[] for i in range(20)]  # 54, 50
         conf_6dof = [[] for i in range(20)]  # 60, 65
         i6 = 0
@@ -317,16 +343,15 @@ class Concepts:
             elif 60 <= len(conf[0]) <= 65:
                 conf_6dof[i6].append(conf)
                 i6_length, i6 = self.create_urdfs(i6_length, i6, 6, conf)
-
         conf_6dof = [x for x in conf_6dof if x]
         conf_5dof = [x for x in conf_5dof if x]
         for k in range(len(conf_5dof)):
-            MyCsv.save_csv(conf_5dof[k], "tests/5dof/to_simulate_5dof_" + str(k))
+            MyCsv.save_csv(conf_5dof[k], confs_file5 + str(k))
         for k in range(len(conf_6dof)):
-            MyCsv.save_csv(conf_6dof[k], "tests/6dof/to_simulate_6dof_" + str(k))
+            MyCsv.save_csv(conf_6dof[k], confs_file6 + str(k))
 
     @staticmethod
-    def create_urdfs(i_length, i, dof, conf):
+    def create_urdfs(i_length, i, dof, conf, confs_in_folder=4000):
         i_length += len(conf)
         for c in conf:
             joints, prev_axe, link_length = con.arm2parts(c.split("_"))
@@ -334,10 +359,11 @@ class Concepts:
             path = "tests/" + str(dof) + "dof/" + str(i) + "/"
             Simulator.create_folder(path)
             arm["arm"].urdf_write(arm["arm"].urdf_data(), path + arm["name"])
-        if i_length > 4000:
+        if i_length > confs_in_folder:
             i += 1
             i_length = 0
         return i_length, i
+    ###
 
     def calc(self):
         self.determine_combinations()
@@ -348,9 +374,9 @@ class Concepts:
         combs_in_concept = []
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
-        return concepts_with_values
         # MyCsv.save_csv(combs_in_concept, "concepts_sum")
         # MergeData.save_json("concepts", data)
+        return concepts_with_values
         # concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
 
@@ -717,22 +743,168 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
     plt.show()
 
 
+# for optimization
+def assign_results(res_name="tosim/results"):
+    """ assign results from csv file """
+    res = MyCsv.read_csv(res_name, "dict")
+    x = []
+    y = []
+    z = []
+    name = []
+    for r in res:
+        # add only points thats succeded to reach the point
+        if r["Z"] != '70' and r["name"] != "name":
+            name.append(r["name"])
+            z.append(float(r["dof"]))
+            y.append(1 - float(r["mu"]))
+            x.append(float(r["Z"]))
+    return [x, y, z, name]
+
+
+def domination_check(conf):
+    """ check domination in 3D"""
+    x_other = conf[0][1:]  # z index
+    y_other = conf[1][1:]  # mu
+    z_other = conf[2][1:]  # dof
+    conf_other = conf[3][1:]  # configuration name
+    x_front = [conf[0][0]]
+    y_front = [conf[1][0]]
+    z_front = [conf[2][0]]
+    conf_front = [conf[3][0]]
+    points = [[], [], [], []]
+    # for i, j, k in zip(x_other[1:], y_other[1:], z_other[1:]):
+    for i, j, k, l in zip(x_other, y_other, z_other, conf_other):
+        # if k == 4 or k == 6:
+        #     continue
+        added = False
+        for i_front, j_front, k_front, l_front in zip(x_front, y_front, z_front, conf_front):
+            # check if the point is dominated by the front
+            if i <= i_front and j <= j_front and k <= k_front:
+                if not added:
+                    x_front.append(i)
+                    y_front.append(j)
+                    z_front.append(k)
+                    conf_front.append(l)
+                    added = True
+                x_front.remove(i_front)
+                y_front.remove(j_front)
+                z_front.remove(k_front)
+                conf_front.remove(l_front)
+                if l_front not in points[0]:
+                    points[0].append(l_front)
+                    points[1].append(i_front)
+                    points[2].append(j_front)
+                    points[3].append(k_front)
+            # check if the front dominate the point
+            elif i > i_front and j > j_front and k >= k_front:
+                if l not in points[0]:
+                    points[0].append(l)
+                    points[1].append(i)
+                    points[2].append(j)
+                    points[3].append(k)
+                    added = True
+        if not added:
+            x_front.append(i)
+            y_front.append(j)
+            z_front.append(k)
+            conf_front.append(l)
+    front = [conf_front, x_front, y_front, z_front ]
+    return points, front
+
+
+def plot_pareto(other_points, pareto_with_concepts):
+    """ plot 3D with pareto front and  all other points"""
+    # indices = range(len(pareto[0]))
+    # indices.sort(key=pareto[3].__getitem__)
+    # for i, sublist in enumerate(pareto):
+    #     pareto[i] = [sublist[j] for j in indices]
+    # for_legend = []
+    # k = 0
+    # for conc in concepts_in_pareto:
+    #     for_legend.append(str(k) + " " + str(conc["concept"]).replace("{", "").replace("'", "").replace("}", ""))
+    #     k += 1
+    mu = []
+    z = []
+    dof = []
+    for_legend = []
+    plt.figure(figsize=(24.0, 10.0))
+    ax = plt.axes(projection='3d')
+    # add text to each point
+    for i in range(len(pareto_with_concepts)):
+        point = pareto_with_concepts[i]
+        mu.append(point["mu"])
+        z.append(point["z"])
+        dof.append(point["dof"])
+        for_legend.append(str(i) + " " + str(point["concept"]).replace("{", "").replace("'", "").replace("}", ""))
+        ax.text(point["z"], point["mu"], point["dof"], str(i))
+
+    pareto = [for_legend, z, mu, dof]
+    ax.plot_trisurf(pareto[1], pareto[2], pareto[3], shade=False, color=(1, 1, 1, 0.4), edgecolor='k')
+    ax.scatter3D(other_points[1], other_points[2], other_points[3], cmap='Greens', c="b", marker=".", alpha=0.15)
+    for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], for_legend):
+        ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
+    # ax.scatter3D(pareto[1], pareto[2], pareto[3], label=for_legend, cmap='Greens', c="r", marker="o")
+    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
+    ax.view_init(azim=-145, elev=15)
+    # ax.legend()
+    ax.set_zlabel("DOF")
+    ax.set_ylabel("Munibulability")
+    ax.set_xlabel("Mid Proximity Joint")
+
+    data = []
+    for p in pareto[0]:
+        data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:]])
+    data = np.ndarray.tolist(np.asarray(data).T)
+    rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
+    columns = [str(x) for x in range(len(pareto_with_concepts))]
+    # create text labels for the table
+    cell_text = []
+    for row in range(len(rows)):
+        cell_text.append(data[row])
+    colwidths = [0.03]*len(columns)
+    # Add a table at the bottom of the axes
+    plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
+    plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
+
+
+def assign_conf2concept(conf):
+    conf_name, z, mu, dof = conf
+    concepts = MergeData.load_json("tosim/concepts")
+    dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
+    res_data = []  # [[] for i in conf_name]
+    for k in range(len(conf_name)):
+        for concept in concepts:
+            if conf_name[k] in concepts[concept]:
+                dict_type["configuration"] = concept
+                dict_type["concept"] = concept
+                dict_type["mu"] = mu[k]
+                dict_type["z"] = z[k]
+                dict_type["dof"] = dof[k]
+                res_data.append(dict_type)
+                dict_type = {"configuration": "", "concept": "", "mu": 1, "z": 0.5, "dof": 7}
+                break
+    return res_data
+
+
 if __name__ == '__main__':
     split = False
     calc_concepts = False
+    create_urdf = False
     fix_all_from_json = False
     sumdata = False
     to_merge = False
     plotdata = False
     fix_from_json = False
+    pareto_plot = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
-        all_to_sim = con.confs2simulate(concepts_with_values)
-        filter2sim, res = con.filter_confs(all_to_sim)
-        con.create_files2sim(filter2sim)
-        MyCsv.save_csv(res, "tests/results", "dict")
-        # todo -  craete 3d plot
+        # create random urdf
+        if create_urdf:
+            all_to_sim = con.confs2simulate(concepts_with_values)
+            filter2sim, res = con.filter_confs(all_to_sim)
+            con.create_files2sim(filter2sim)
+            MyCsv.save_csv(res, "tests/results", "dict")
     if split:
         split_files_to_several_folders(5000)
     if to_merge:
@@ -746,75 +918,8 @@ if __name__ == '__main__':
         FixFromJson(all_files=True)
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
-
-
-def assign_results(res_name="tests/results"):
-    res = MyCsv.read_csv(res_name, "dict")
-    x = []
-    y = []
-    z = []
-    for r in res:
-        # add only points thats succeded to reach the point
-        if r["Z"] != '70':
-            z.append(float(r["dof"]))
-            y.append(1 - float(r["mu"]))
-            x.append(float(r["Z"]))
-    return x, y, z
-
-
-def domination_check(x_other, y_other, z_other):
-    x_front = [x_other[0]]
-    y_front = [y_other[0]]
-    z_front = [z_other[0]]
-    points = [[], [], []]
-    for i, j, k in zip(x_other[1:], y_other[1:], z_other[1:]):
-        # if k == 4 or k == 6:
-        #     continue
-        added = False
-        for i_front, j_front, k_front in zip(x_front, y_front, z_front):
-            # check if the point is dominated by the front
-            if i <= i_front and j <= j_front and k <= k_front:
-                if not added:
-                    x_front.append(i)
-                    y_front.append(j)
-                    z_front.append(k)
-                    added = True
-                x_front.remove(i_front)
-                y_front.remove(j_front)
-                z_front.remove(k_front)
-            # check if the front dominate the point
-            elif i > i_front and j > j_front and k >= k_front:
-                points[0].append(i)
-                points[1].append(j)
-                points[2].append(k)
-                added = True
-        if not added:
-            x_front.append(i)
-            y_front.append(j)
-            z_front.append(k)
-    return points[0], points[1], points[2], x_front, y_front, z_front
-
-
-def plot_pareto(x_other, y_other, z_other, x_front, y_front, z_front):
-    pareto = [front_x, front_y, front_z]
-    indices = range(len(pareto[0]))
-    indices.sort(key=pareto[2].__getitem__)
-    for i, sublist in enumerate(pareto):
-        pareto[i] = [sublist[j] for j in indices]
-    plt.figure(figsize=(24.0, 10.0))
-    ax = plt.axes(projection='3d')
-    ax.plot_trisurf(pareto[0], pareto[1], pareto[2], color="cyan", shade=True)
-    ax.scatter3D(x_other, y_other, z_other, cmap='Greens', c="blue", marker=".", alpha=0.15)
-    ax.scatter3D(x_front, y_front, z_front, cmap='Greens', c="black", marker="o")
-    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
-    # ax.view_init(azim=-90, elev=90)
-    ax.set_zlabel("DOF")
-    ax.set_ylabel("Munibulability")
-    ax.set_xlabel("Mid Proximity Joint")
-
-
-x, y, z = assign_results()
-other_x, other_y, other_z, front_x, front_y, front_z = domination_check(x, y, z)
-plot_pareto(other_x, other_y, other_z, front_x, front_y, front_z)
-
-# Todo add to each point at which concept
+    if pareto_plot:
+        conf = assign_results()
+        outer_points, pareto_front = domination_check(conf)
+        pareto_with_concepts = assign_conf2concept(pareto_front)
+        plot_pareto(outer_points, pareto_with_concepts)

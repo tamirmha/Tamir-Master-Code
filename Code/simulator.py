@@ -301,7 +301,7 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 35  # how many arms to send to simu lator each time
+        nums = 25  # how many arms to send to simu lator each time
         wait1_replace = 2.3
         wait2_replace = 1.5
     elif username == "arl_main":  # lab
@@ -311,7 +311,7 @@ if __name__ == '__main__':
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.2
+        wait2_replace = 2.3
     else:
         nums = 30  # how many arms to send to simulator each time
         wait1_replace = 1.7
