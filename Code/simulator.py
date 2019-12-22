@@ -301,24 +301,24 @@ if __name__ == '__main__':
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 25  # how many arms to send to simu lator each time
-        wait1_replace = 2.3
-        wait2_replace = 1.5
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     elif username == "arl_main":  # lab
-        nums = 35  # how many arms to send to simulator each time
-        wait1_replace = 2
-        wait2_replace = 1.5
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
     else:
-        nums = 30  # how many arms to send to simulator each time
-        wait1_replace = 1.7
-        wait2_replace = 1.2
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     # default values
     dofe = 4  # number degrees of freedom of the manipulator
-    link_max = 1.1  # max link length to check
+    link_max = 0.71 # max link length to check
     start_arm = 0  # from which set of arms to start
     create_urdf = False
     # set parametrs from terminal
@@ -326,10 +326,10 @@ if __name__ == '__main__':
     if len(args) > 1:
         dofe = int(args[1])
         if len(args) > 2:
-            link_max = float(args[2]) + 0.1
+            start_arm = int(args[3]) / nums
+            create_urdf = False
             if len(args) > 3:
-                start_arm = int(args[3])/nums
-                create_urdf = False
+                link_max = float(args[2]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")

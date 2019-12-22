@@ -579,7 +579,9 @@ def sum_data():
     root.update()
     res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     root.destroy()
-    new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
+    # new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
+    new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
+    # print(new_file_name)
     mu_penalty = 0
     time_penalty = 20
     z_penalty = 70
@@ -852,10 +854,17 @@ def plot_pareto(other_points, pareto_with_concepts):
     ax.set_xlabel("Mid Proximity Joint")
 
     data = []
+    k = 0
     for p in pareto[0]:
+        # data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:],
+        #                                                                       str(pareto[2][k]), str(pareto[1][k])])
+        p = p + "mu:" + str(pareto_front[2][k]) + "Z:" + str(pareto_front[1][k])
         data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:]])
+        k += 1
     data = np.ndarray.tolist(np.asarray(data).T)
-    rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
+    rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length",
+            "mu", "Z")
+    # rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
     columns = [str(x) for x in range(len(pareto_with_concepts))]
     # create text labels for the table
     cell_text = []
@@ -865,7 +874,7 @@ def plot_pareto(other_points, pareto_with_concepts):
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
     plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
-
+    plt.show()
 
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
@@ -887,6 +896,7 @@ def assign_conf2concept(conf):
 
 
 if __name__ == '__main__':
+    # while True:
     split = False
     calc_concepts = False
     create_urdf = False
