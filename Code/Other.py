@@ -9,6 +9,7 @@ from mpl_toolkits import mplot3d
 import numpy as np
 from itertools import product
 from simulator import Simulator
+from matplotlib.tri import Triangulation
 
 
 class MyCsv(object):
@@ -818,49 +819,76 @@ def domination_check(conf):
     return points, front
 
 
-def plot_pareto(other_points, pareto_with_concepts):
+def plot_pareto(other_points, pareto_concepts):
     """ plot 3D with pareto front and  all other points"""
+    # plot settings
+    plt.figure(figsize=(24.0, 10.0))
+    ax = plt.axes(projection='3d')
+    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
+    ax.view_init(azim=-145, elev=15)
+    ax.set_ylim(0, 1)
+    ax.set_xlim(0, 0.5)
+    ax.set_zticks(np.arange(4, 7, 1.0))
+    ax.set_zlabel("DOF")
+    ax.set_ylabel("Munibulability")
+    ax.set_xlabel("Mid Proximity Joint")
+    # add to each point in the front its number
+    pareto, ax = text2points(ax, pareto_concepts)
+    # add Table of the front points
+    add_table2plot(pareto)
+    # add 3d points of all the points that not on the front
+    ax.scatter3D(other_points[1], other_points[2], other_points[3], cmap='Greens', c="b", marker=".", alpha=0.15)
+    # add 3d points of all the points that on the front with their number
+    for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], pareto[0]):
+        ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
+    # Make 3D surface of the front
+    tri = Triangulation(pareto[1], pareto[3]).triangles
+    ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.1), edgecolor='')
+    # # Plot each dof points
+    # plt.figure(4)
+    # for x, y in zip(pareto[1][:5], pareto[2][:5]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x) + " " + str(y), (x, y))
+    # plt.show()
+    # plt.figure(5)
+    # for x, y in zip(pareto[1][5:10], pareto[2][5:10]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x) + " " + str(y), (x, y))
+    # plt.show()
+    # plt.figure(6)
+    # for x, y in zip(pareto[1][10:], pareto[2][10:]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x) + " " + str(y), (x, y))
+    # plt.show()
+
+
+def text2points(ax, points):
     mu = []
     z = []
     dof = []
     for_legend = []
-    plt.figure(figsize=(24.0, 10.0))
-    ax = plt.axes(projection='3d')
     # add text to each point
-    for i in range(len(pareto_with_concepts)):
-        point = pareto_with_concepts[i]
+    for i in range(len(points)):
+        point = points[i]
         mu.append(point["mu"])
         z.append(point["z"])
         dof.append(point["dof"])
         for_legend.append(str(i) + " " + str(point["concept"]).replace("{", "").replace("'", "").replace("}", ""))
         ax.text(point["z"], point["mu"], point["dof"], str(i))
+    # pareto = [for_legend, z, mu, dof]
+    return [for_legend, z, mu, dof], ax
 
-    pareto = [for_legend, z, mu, dof]
-    ax.plot_trisurf(pareto[1], pareto[2], pareto[3], shade=False, color=(1, 1, 1, 0.4), edgecolor='k')
-    ax.scatter3D(other_points[1], other_points[2], other_points[3], cmap='Greens', c="b", marker=".", alpha=0.15)
-    for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], for_legend):
-        ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
-    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
-    ax.view_init(azim=-145, elev=15)
-    ax.set_ylim(0, 1)
-    ax.set_xlim(0, 0.5)
-    ax.set_zlim(4, 6)
-    ax.set_zlabel("DOF")
-    ax.set_ylabel("Munibulability")
-    ax.set_xlabel("Mid Proximity Joint")
 
+def add_table2plot(pareto):
     data = []
     k = 0
     for p in pareto[0]:
-        # data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:],
-        #                                                                       str(pareto[2][k]), str(pareto[1][k])])
         p = p + "mu:" + str(pareto_front[2][k]) + "Z:" + str(pareto_front[1][k])
         data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:]])
         k += 1
     data = np.ndarray.tolist(np.asarray(data).T)
     rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length",
             "mu", "Z")
-    # rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
     columns = [str(x) for x in range(len(pareto_with_concepts))]
     # create text labels for the table
     cell_text = []
@@ -871,21 +899,6 @@ def plot_pareto(other_points, pareto_with_concepts):
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
     plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
     plt.show()
-    # plt.figure(2)
-    # for x, y in zip(pareto[1][:5], pareto[2][:5]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x)+" " + str(y), (x, y) )
-    # plt.show()
-    # plt.figure(3)
-    # for x, y in zip(pareto[1][5:10], pareto[2][5:10]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x)+" " + str(y), (x, y) )
-    # plt.show()
-    # plt.figure(4)
-    # for x, y in zip(pareto[1][10:], pareto[2][10:]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x)+" " + str(y), (x, y) )
-    # plt.show()
 
 
 def assign_conf2concept(conf):
