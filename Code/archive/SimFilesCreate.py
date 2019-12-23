@@ -490,7 +490,7 @@ def run_old():
                         rpy,rpy_name = assum.setrpy(rpy_sim[k], joints_sim[i])
                         urdf_name = link_path + '/' + str(rpy_name)
                         urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
-                        urdf.urdf_write(urdf.urdf_data(), urdf_name)
+                        # urdf.urdf_write(urdf.urdf_data(), urdf_name)
                         t = t + 1
         combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim) + combinations
     toc = datetime.datetime.now()
@@ -505,6 +505,7 @@ def run_old():
     print('Time of Run (seconds): ' + str(delta))
     print('Combinations per second: ' + str(1.0*combinations/delta))
 
+
 def run():
     tic = datetime.datetime.now()
     combinations = 0
@@ -516,7 +517,7 @@ def run():
     u = 0
     p = 0
     x = 0
-    for n in range(3, 6):
+    for n in range(3, 7):
         sim = ToSimulate(n)
         links_sim = sim.getlinks()  # create all possible links combinations
         joints_sim = sim.getjoints()  # create all possible joints combinations
@@ -540,10 +541,10 @@ def run():
                     #     if not assum.assume_6(joints_sim[i], axis_sim[a],rpy_sim[k]):  # check if the joint meets assumption 6
                     #         u = u+1
                     #         continue
-                        rpy,rpy_name = assum.joint_rpy(joints_sim[i], axis_sim[a])
-                        urdf_name = link_path + '/' + str(rpy_name)
-                        urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
-                        urdf.urdf_write(urdf.urdf_data(), urdf_name)
+                    #     rpy,rpy_name = assum.joint_rpy(joints_sim[i], axis_sim[a])
+                    #     urdf_name = link_path + '/' + str(rpy_name)
+                    #     urdf = UrdfClass(links_sim[j], joints_sim[i], axis_sim[a], rpy)
+                        # urdf.urdf_write(urdf.urdf_data(), urdf_name)
                         t = t + 1
         combinations = sim.get_combinations(links_sim, joints_sim, axis_sim, rpy_sim) + combinations
     toc = datetime.datetime.now()
@@ -560,4 +561,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run_old()
+    run()

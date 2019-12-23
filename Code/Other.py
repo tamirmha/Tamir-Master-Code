@@ -579,14 +579,18 @@ def sum_data():
     root.update()
     res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     root.destroy()
-    new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
+    # new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
+    new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = 0
     time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
     for res_file in res_files:
-        csv_file = MyCsv.load_csv(res_file[:-4])
+        try:
+            csv_file = MyCsv.load_csv(res_file[:-4])
+        except:
+            csv_file = MyCsv.read_csv(res_file[:-4], "dict")
         for v in csv_file:
             in_data = False
             if v["Z"] == -1:
@@ -744,14 +748,14 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 
 # for optimization
-def assign_results(res_name="tosim/results"):
+def assign_results(res_name="tosim/results_all"):
     """ assign results from csv file """
-    res = MyCsv.read_csv(res_name, "dict")
+    results = MyCsv.read_csv(res_name, "dict")
     x = []
     y = []
     z = []
     name = []
-    for r in res:
+    for r in results:
         # add only points thats succeded to reach the point
         if r["Z"] != '70' and r["name"] != "name":
             name.append(r["name"])
@@ -763,33 +767,26 @@ def assign_results(res_name="tosim/results"):
 
 def domination_check(conf):
     """ check domination in 3D"""
-    x_other = conf[0][1:]  # z index
-    y_other = conf[1][1:]  # mu
-    z_other = conf[2][1:]  # dof
-    conf_other = conf[3][1:]  # configuration name
-    x_front = [conf[0][0]]
-    y_front = [conf[1][0]]
-    z_front = [conf[2][0]]
-    conf_front = [conf[3][0]]
+    front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
     points = [[], [], [], []]
-    # for i, j, k in zip(x_other[1:], y_other[1:], z_other[1:]):
-    for i, j, k, l in zip(x_other, y_other, z_other, conf_other):
+    for i, j, k, l in zip(conf[0][1:], conf[1][1:], conf[2][1:], conf[3][1:]):  # z, mu, dof, configuration
         # if k == 4 or k == 6:
         #     continue
         added = False
-        for i_front, j_front, k_front, l_front in zip(x_front, y_front, z_front, conf_front):
-            # check if the point is dominated by the front
+        for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):  # zip(x_front, y_front, z_front, conf_front):
+            # check if the point is dominate the front
             if i <= i_front and j <= j_front and k <= k_front:
                 if not added:
-                    x_front.append(i)
-                    y_front.append(j)
-                    z_front.append(k)
-                    conf_front.append(l)
+                    front[0].append(i)
+                    front[1].append(j)
+                    front[2].append(k)
+                    front[3].append(l)
                     added = True
-                x_front.remove(i_front)
-                y_front.remove(j_front)
-                z_front.remove(k_front)
-                conf_front.remove(l_front)
+                ind = front[3].index(l_front)
+                del front[0][ind]
+                del front[1][ind]
+                del front[2][ind]
+                del front[3][ind]
                 if l_front not in points[0]:
                     points[0].append(l_front)
                     points[1].append(i_front)
@@ -803,26 +800,26 @@ def domination_check(conf):
                     points[2].append(j)
                     points[3].append(k)
                     added = True
+                if l in front[3]:
+                    ind = front[3].index(l_front)
+                    del front[0][ind]
+                    del front[1][ind]
+                    del front[2][ind]
+                    del front[3][ind]
         if not added:
-            x_front.append(i)
-            y_front.append(j)
-            z_front.append(k)
-            conf_front.append(l)
-    front = [conf_front, x_front, y_front, z_front ]
+            front[0].append(i)
+            front[1].append(j)
+            front[2].append(k)
+            front[3].append(l)
+
+    ind = np.ndarray.tolist(np.asarray(front[2]).argsort(axis=0))
+    front = [map(front[3].__getitem__, ind), map(front[0].__getitem__, ind), map(front[1].__getitem__, ind),
+             map(front[2].__getitem__, ind)]
     return points, front
 
 
 def plot_pareto(other_points, pareto_with_concepts):
     """ plot 3D with pareto front and  all other points"""
-    # indices = range(len(pareto[0]))
-    # indices.sort(key=pareto[3].__getitem__)
-    # for i, sublist in enumerate(pareto):
-    #     pareto[i] = [sublist[j] for j in indices]
-    # for_legend = []
-    # k = 0
-    # for conc in concepts_in_pareto:
-    #     for_legend.append(str(k) + " " + str(conc["concept"]).replace("{", "").replace("'", "").replace("}", ""))
-    #     k += 1
     mu = []
     z = []
     dof = []
@@ -843,19 +840,27 @@ def plot_pareto(other_points, pareto_with_concepts):
     ax.scatter3D(other_points[1], other_points[2], other_points[3], cmap='Greens', c="b", marker=".", alpha=0.15)
     for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], for_legend):
         ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
-    # ax.scatter3D(pareto[1], pareto[2], pareto[3], label=for_legend, cmap='Greens', c="r", marker="o")
     plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
     ax.view_init(azim=-145, elev=15)
-    # ax.legend()
+    ax.set_ylim(0, 1)
+    ax.set_xlim(0, 0.5)
+    ax.set_zlim(4, 6)
     ax.set_zlabel("DOF")
     ax.set_ylabel("Munibulability")
     ax.set_xlabel("Mid Proximity Joint")
 
     data = []
+    k = 0
     for p in pareto[0]:
+        # data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:],
+        #                                                                       str(pareto[2][k]), str(pareto[1][k])])
+        p = p + "mu:" + str(pareto_front[2][k]) + "Z:" + str(pareto_front[1][k])
         data.append([''.join(i for i in x if i.isdigit() or i == ".") for x in p.replace(" ", "").split(":")[1:]])
+        k += 1
     data = np.ndarray.tolist(np.asarray(data).T)
-    rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
+    rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length",
+            "mu", "Z")
+    # rows = ('# long links', 'longest link', 'DOF', 'Parallel axes about y', '# pitch joints', "P/R ratio", "Acc Length")
     columns = [str(x) for x in range(len(pareto_with_concepts))]
     # create text labels for the table
     cell_text = []
@@ -865,6 +870,22 @@ def plot_pareto(other_points, pareto_with_concepts):
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
     plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
+    plt.show()
+    # plt.figure(2)
+    # for x, y in zip(pareto[1][:5], pareto[2][:5]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x)+" " + str(y), (x, y) )
+    # plt.show()
+    # plt.figure(3)
+    # for x, y in zip(pareto[1][5:10], pareto[2][5:10]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x)+" " + str(y), (x, y) )
+    # plt.show()
+    # plt.figure(4)
+    # for x, y in zip(pareto[1][10:], pareto[2][10:]):
+    #     plt.scatter(x, y, c="r", marker="o")
+    #     plt.annotate(str(x)+" " + str(y), (x, y) )
+    # plt.show()
 
 
 def assign_conf2concept(conf):
@@ -875,7 +896,7 @@ def assign_conf2concept(conf):
     for k in range(len(conf_name)):
         for concept in concepts:
             if conf_name[k] in concepts[concept]:
-                dict_type["configuration"] = concept
+                dict_type["configuration"] = conf_name[k]
                 dict_type["concept"] = concept
                 dict_type["mu"] = mu[k]
                 dict_type["z"] = z[k]
@@ -887,6 +908,7 @@ def assign_conf2concept(conf):
 
 
 if __name__ == '__main__':
+    # while True:
     split = False
     calc_concepts = False
     create_urdf = False
@@ -923,3 +945,15 @@ if __name__ == '__main__':
         outer_points, pareto_front = domination_check(conf)
         pareto_with_concepts = assign_conf2concept(pareto_front)
         plot_pareto(outer_points, pareto_with_concepts)
+        # cmp = [[[], [], [], []], [[], [], [], []]]
+        # for i in range(len(pareto_front[0])):
+        #     p = pareto_front[0][i]
+        #     ind = conf[3].index(p)
+        #     cmp[0][0].append(conf[3][ind])  # conf name
+        #     cmp[1][0].append(pareto_front[0][i])          # pareto name
+        #     cmp[0][1].append(conf[0][ind])  # conf z
+        #     cmp[1][1].append(pareto_front[1][i])          # pareto z
+        #     cmp[0][2].append(conf[1][ind])  # conf mu
+        #     cmp[1][2].append(pareto_front[2][i])          # pareto mu
+        #     cmp[0][3].append(conf[2][ind])  # conf dof
+        #     cmp[1][3].append(pareto_front[3][i])          # pareto dof
