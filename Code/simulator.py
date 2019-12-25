@@ -326,10 +326,10 @@ if __name__ == '__main__':
     if len(args) > 1:
         dofe = int(args[1])
         if len(args) > 2:
-            start_arm = int(args[3]) / nums
+            start_arm = int(args[2]) / nums
             create_urdf = False
             if len(args) > 3:
-                link_max = float(args[2]) + 0.1
+                link_max = float(args[3]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
