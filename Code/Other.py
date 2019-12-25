@@ -105,19 +105,19 @@ class MergeData(object):
             MyCsv.save_csv(MyCsv.read_csv(files[i][:-4]), new_file_name)
             try:
                 self.fix_json(files[i][:-4])
-                self.save_json(data=self.load_json(files[i][:-4] + "_fixed"), name=new_file_name)
+                save_json(data=load_json(files[i][:-4] + "_fixed"), name=new_file_name)
             except:
                 print("There are no Json files")
 
-    @staticmethod
-    def save_json(name="data_file", data=None):
-        with open(name + ".json", "a") as write_file:
-            json.dump(data, write_file, indent=2)
-
-    @staticmethod
-    def load_json(name="data_file"):
-        with open(name + ".json", "r") as read_file:
-            return json.load(read_file)
+    # @staticmethod
+    # def save_json(name="data_file", data=None):
+    #     with open(name + ".json", "a") as write_file:
+    #         json.dump(data, write_file, indent=2)
+    #
+    # @staticmethod
+    # def load_json(name="data_file"):
+    #     with open(name + ".json", "r") as read_file:
+    #         return json.load(read_file)
 
     @staticmethod
     def fix_json(file_name):
@@ -154,7 +154,7 @@ class FixFromJson(object):
         file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
         MergeData.fix_json(file2fix)
-        original_data = MergeData.load_json(file_fixed)
+        original_data = load_json(file_fixed)
         for row in to_fix:
             if row[5] == "True":
                 if row[8] == "-16" and not self.all:
@@ -376,7 +376,7 @@ class Concepts:
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
         # MyCsv.save_csv(combs_in_concept, "concepts_sum")
-        # MergeData.save_json("concepts", data)
+        # save_json("concepts", data)
         return concepts_with_values
         # concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
@@ -766,6 +766,25 @@ def assign_results(res_name="tosim/results_all"):
     return [x, y, z, name]
 
 
+def assign_conf2concept(conf):
+    conf_name, z, mu, dof = conf
+    concepts = load_json("tosim/concepts")
+    dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
+    res_data = []  # [[] for i in conf_name]
+    for k in range(len(conf_name)):
+        for concept in concepts:
+            if conf_name[k] in concepts[concept]:
+                dict_type["configuration"] = conf_name[k]
+                dict_type["concept"] = concept
+                dict_type["mu"] = mu[k]
+                dict_type["z"] = z[k]
+                dict_type["dof"] = dof[k]
+                res_data.append(dict_type)
+                dict_type = {"configuration": "", "concept": "", "mu": 1, "z": 0.5, "dof": 7}
+                break
+    return res_data
+
+
 def domination_check(conf):
     """ check domination in 3D"""
     front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
@@ -801,12 +820,12 @@ def domination_check(conf):
                     points[2].append(j)
                     points[3].append(k)
                     added = True
-                if l in front[3]:
-                    ind = front[3].index(l_front)
-                    del front[0][ind]
-                    del front[1][ind]
-                    del front[2][ind]
-                    del front[3][ind]
+                # if l in front[3]:
+                #     ind = front[3].index(l_front)
+                #     del front[0][ind]
+                #     del front[1][ind]
+                #     del front[2][ind]
+                #     del front[3][ind]
         if not added:
             front[0].append(i)
             front[1].append(j)
@@ -901,23 +920,14 @@ def add_table2plot(pareto):
     plt.show()
 
 
-def assign_conf2concept(conf):
-    conf_name, z, mu, dof = conf
-    concepts = MergeData.load_json("tosim/concepts")
-    dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
-    res_data = []  # [[] for i in conf_name]
-    for k in range(len(conf_name)):
-        for concept in concepts:
-            if conf_name[k] in concepts[concept]:
-                dict_type["configuration"] = conf_name[k]
-                dict_type["concept"] = concept
-                dict_type["mu"] = mu[k]
-                dict_type["z"] = z[k]
-                dict_type["dof"] = dof[k]
-                res_data.append(dict_type)
-                dict_type = {"configuration": "", "concept": "", "mu": 1, "z": 0.5, "dof": 7}
-                break
-    return res_data
+def save_json(name="data_file", data=None):
+    with open(name + ".json", "a") as write_file:
+        json.dump(data, write_file, indent=2)
+
+
+def load_json(name="data_file"):
+    with open(name + ".json", "r") as read_file:
+        return json.load(read_file)
 
 
 if __name__ == '__main__':
@@ -954,10 +964,13 @@ if __name__ == '__main__':
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
     if pareto_plot:
-        conf = assign_results()
-        outer_points, pareto_front = domination_check(conf)
+        con = assign_results()
+        outer_points, pareto_front = domination_check(con)
         pareto_with_concepts = assign_conf2concept(pareto_front)
         plot_pareto(outer_points, pareto_with_concepts)
+        # save_json("front_concept", pareto_with_concepts )
+        # a = load_json("tosim/front_concept")
+        # plot_pareto(outer_points, a)
         # cmp = [[[], [], [], []], [[], [], [], []]]
         # for i in range(len(pareto_front[0])):
         #     p = pareto_front[0][i]
