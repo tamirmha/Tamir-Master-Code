@@ -366,4 +366,5 @@ woi.set_gen(woi.get_gen() + 1)
 
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
+# todo - problematic urdf to make list and pre create
 # tqdm

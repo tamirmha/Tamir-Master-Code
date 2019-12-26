@@ -135,7 +135,7 @@ class MergeData(object):
                     if not empty:
                         data = []
                     empty = True
-        with open(file_name + "_fixed.json", 'w') as name:
+        with open(file_name + ".json", 'w') as name:
             name.writelines(data)
 
 
@@ -154,7 +154,7 @@ class FixFromJson(object):
         file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
         MergeData.fix_json(file2fix)
-        original_data = load_json(file_fixed)
+        original_data = load_json(file2fix)
         for row in to_fix:
             if row[5] == "True":
                 if row[8] == "-16" and not self.all:
@@ -594,7 +594,7 @@ def sum_data():
             csv_file = MyCsv.read_csv(res_file[:-4], "dict")
         for v in csv_file:
             in_data = False
-            if v["Z"] == -1:
+            if v["Z"] == -1 or v["Z"] == '70':
                 if len(data_no_success) == 0:
                     v["mu"] = mu_penalty
                     v["LCI"] = mu_penalty
@@ -749,7 +749,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 
 # for optimization
-def assign_results(res_name="tosim/results_all"):
+def assign_results(res_name="tosim/results_all_Success"):
     """ assign results from csv file """
     results = MyCsv.read_csv(res_name, "dict")
     x = []
@@ -862,7 +862,7 @@ def plot_pareto(other_points, pareto_concepts):
         ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
     # Make 3D surface of the front
     tri = Triangulation(pareto[1], pareto[3]).triangles
-    ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.1), edgecolor='')
+    ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.49), edgecolor='')
     # # Plot each dof points
     # plt.figure(4)
     # for x, y in zip(pareto[1][:5], pareto[2][:5]):
