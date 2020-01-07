@@ -71,66 +71,66 @@ import numpy as np
 #         return manip_array_of_dict
 
 
-# def to_urdf(interface_joints, joint_parent_axis, links, folder):
-#     """Create the desired confiuration
-#             interface_joints- roll,pitch or prismatic
-#                              roll - revolute around own Z axe
-#                              pitch - revolute that not roll
-#                              pris - prismatic along z
-#             links - length of links
-#             joint_parent_axis - the axe, in the parent frame, which each joint use
-#         """
-#     joints = []
-#     joint_axis = []
-#     rpy = []
-#     # file_name = os.environ['HOME'] + "\Tamir_Ws\src\manipulator_ros\Manipulator\man_gazebo\urdf\"
-#     # + str(dof) + "dof\combined\"
-#     file_name = ""
-#     rolly_number = -1
-#     pitchz_number = 1
-#     prisy_number = -1
-#     for i in range(len(joint_parent_axis)):
-#         # file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + \
-#         #              links[i].replace(".", "_")
-#         file_name += interface_joints[i] + "_" + joint_parent_axis[i] + "_" + str(links[i]).replace(".", "_")
-#         if interface_joints[i] == "roll":
-#             joints.append("revolute")
-#             joint_axis.append('z')
-#             if joint_parent_axis[i] == "y":
-#                 rolly_rot = '${' + str(rolly_number) + '/2*pi} '
-#                 rpy.append([rolly_rot, '0 ', '0 '])
-#                 rolly_number = rolly_number * -1
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '${pi/2} ', '0 '])
-#             elif joint_parent_axis[i] == "z":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#         elif interface_joints[i] == "pitch":
-#             joints.append("revolute")
-#             joint_axis.append('y')
-#             if joint_parent_axis[i] == "y":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '0 ', '${-pi/2} '])
-#             elif joint_parent_axis[i] == "z":
-#                 # rpy.append(['${pi/2} ', '0 ', '0 '])
-#                 pitchz = '${' + str(pitchz_number) + '/2*pi} '
-#                 rpy.append([pitchz, '0 ', '0 '])
-#                 pitchz_number = pitchz_number * -1
-#         elif interface_joints[i] == "pris":
-#             joints.append("prismatic")
-#             joint_axis.append('z')
-#             if joint_parent_axis[i] == "y":
-#                 # rpy.append(['${pi/2} ', '0 ', '0 '])
-#                 prisy = '${' + str(prisy_number) + '/2*pi} '
-#                 rpy.append([prisy, '0 ', '0 '])
-#                 prisy_number = prisy_number * -1
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '${-pi/2} ', '0 '])
-#             elif joint_parent_axis[i] == "z":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#     arm = UrdfClass(links, joints, joint_axis, rpy)
-#     # arm.urdf_write(arm.urdf_data(), file_name)
-#     return {"arm": arm, "name": file_name, "folder": folder}
+def to_urdf(interface_joints, joint_parent_axis, links, folder):
+    """Create the desired confiuration
+            interface_joints- roll,pitch or prismatic
+                             roll - revolute around own Z axe
+                             pitch - revolute that not roll
+                             pris - prismatic along z
+            links - length of links
+            joint_parent_axis - the axe, in the parent frame, which each joint use
+        """
+    joints = []
+    joint_axis = []
+    rpy = []
+    # file_name = os.environ['HOME'] + "\Tamir_Ws\src\manipulator_ros\Manipulator\man_gazebo\urdf\"
+    # + str(dof) + "dof\combined\"
+    file_name = ""
+    rolly_number = -1
+    pitchz_number = 1
+    prisy_number = -1
+    for i in range(len(joint_parent_axis)):
+        # file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + \
+        #              links[i].replace(".", "_")
+        file_name += interface_joints[i] + "_" + joint_parent_axis[i] + "_" + str(links[i]).replace(".", "_")
+        if interface_joints[i] == "roll":
+            joints.append("revolute")
+            joint_axis.append('z')
+            if joint_parent_axis[i] == "y":
+                rolly_rot = '${' + str(rolly_number) + '/2*pi} '
+                rpy.append([rolly_rot, '0 ', '0 '])
+                rolly_number = rolly_number * -1
+            elif joint_parent_axis[i] == "x":
+                rpy.append(['0 ', '${pi/2} ', '0 '])
+            elif joint_parent_axis[i] == "z":
+                rpy.append(['0 ', '0 ', '0 '])
+        elif interface_joints[i] == "pitch":
+            joints.append("revolute")
+            joint_axis.append('y')
+            if joint_parent_axis[i] == "y":
+                rpy.append(['0 ', '0 ', '0 '])
+            elif joint_parent_axis[i] == "x":
+                rpy.append(['0 ', '0 ', '${-pi/2} '])
+            elif joint_parent_axis[i] == "z":
+                # rpy.append(['${pi/2} ', '0 ', '0 '])
+                pitchz = '${' + str(pitchz_number) + '/2*pi} '
+                rpy.append([pitchz, '0 ', '0 '])
+                pitchz_number = pitchz_number * -1
+        elif interface_joints[i] == "pris":
+            joints.append("prismatic")
+            joint_axis.append('z')
+            if joint_parent_axis[i] == "y":
+                # rpy.append(['${pi/2} ', '0 ', '0 '])
+                prisy = '${' + str(prisy_number) + '/2*pi} '
+                rpy.append([prisy, '0 ', '0 '])
+                prisy_number = prisy_number * -1
+            elif joint_parent_axis[i] == "x":
+                rpy.append(['0 ', '${-pi/2} ', '0 '])
+            elif joint_parent_axis[i] == "z":
+                rpy.append(['0 ', '0 ', '0 '])
+    arm = UrdfClass(links, joints, joint_axis, rpy)
+    # arm.urdf_write(arm.urdf_data(), file_name)
+    return {"arm": arm, "name": file_name, "folder": folder}
 
 
 class Problem:
@@ -150,57 +150,145 @@ class Problem:
         # self.x4_options = x4_options
         # self.possibles_configs = Configs().possible_configs  # get all the possible configurations
         self.number_of_arms = number_of_arms  # how many arms to create
-        self.confs_of_concepts = np.asarray(confs_of_concepts)
+        self.confs_of_concepts = confs_of_concepts  # all possible configuration of the concept
         self.number_of_objects = number_of_objects
-        self.large_concept = confs_of_concepts.shape[0] > large_concept
+        self.large_concept = len(confs_of_concepts) > large_concept  # True if large False otherwise
         self.concept_name = concept_name
+        self.confs_archive = []  # Archive of all the selected configurations
+        self.dof = int(str(concept_name).split(" ")[5].split(",")[0])
 
-    def init_pop(self, pop_size=25):
+    def rand_pop(self, pop_size=25):
         """ select random configurations that belongs to the concept"""
         confs_of_concepts = self.get_configs()
+        confs_archive = self.get_prev_confs()
+        remain_confs = len(confs_of_concepts) - len(confs_archive)
+        # check that the number of selected configuration wont be bigger than the number of remain configurations
+        if remain_confs < pop_size:
+            pop_size = remain_confs
         num_of_confs = len(confs_of_concepts)
+        # select random indices
         indices = np.random.randint(0, num_of_confs, pop_size)
-        return np.asarray(confs_of_concepts[indices])
+        # get the configurations of the random indices
+        random_confs = np.ndarray.tolist(np.asarray(confs_of_concepts)[indices])
+        confs = []
+        while len(random_confs) != 0:
+            for conf in random_confs:
+                # if the random configuration in the archive
+                if conf in confs_archive:
+                    # delete the configuration and select new one
+                    random_confs.remove(conf)
+                    new_ind = np.random.randint(0, num_of_confs, 1)
+                    while new_ind in indices:
+                        new_ind = np.random.randint(0, num_of_confs, 1)
+                    random_confs.append(confs_of_concepts[new_ind[0]])
+                else:
+                    confs.append(conf)
+                    random_confs.remove(conf)
+        a = 3
+        return confs
 
     def evalute(self, pop):
         # simulator
-        f3 = np.random.randint(4, 7, pop.shape[0])  # dof
-        f2 = np.random.uniform(0, 1, pop.shape[0])  # manipulability
-        f1 = np.random.uniform(0, 0.5, pop.shape[0])   # (Mid-Range Proximity)
+        f3 = np.around(np.random.randint(4, 7, pop.shape[0]), 3)  # dof
+        f2 = np.around(np.random.uniform(0, 1, pop.shape[0]), 3)  # manipulability
+        f1 = np.around(np.random.uniform(0, 0.5, pop.shape[0]), 3)   # (Mid-Range Proximity)
         return [f1, f2, f3, pop, self.concept_name]
+
+    def stop_condition(self):
+        """Stop condition of the concept (not of all the problem)
+        condition 1 - if all the configuration been checked
+        """
+        stop = False
+        if self.get_prev_confs().shape[0] == self.get_configs().shape[0]:
+            stop = True
+
+        return False
 
     @staticmethod
     def assign_fitness(points, dwoi):
         """ calculate the distance from each point to the DWOI"""
         dwoi_loc = np.asarray(dwoi[:3]).T   # np.asarray([[i[1], i[0], i[2]] for i in dwoi])
         dist = distance.cdist(dwoi_loc,  np.asarray(points[:3]).T, 'euclidean')
-        return dist
+        return np.around(dist, 3)
 
     @staticmethod
-    def selection(distanc, num_of_returns=10):
+    def selection(distanc, num_of_returns=2):
         """Make selection by using RWS return the value
         :param distanc: array of distances
         :param num_of_returns: how many elements to return
         :return selected: the selected values that won the RWS
         """
         selected = []
+        distanc = 1 - distanc
         fp = np.asarray([i / sum(distanc) for i in distanc])
         for i in range(num_of_returns):
             wheel = np.random.uniform(0, 1)
-            selected.append(distanc[(np.abs(fp - wheel).argmin())])
-        return selected
+            selected.append(round(distanc[(np.abs(fp - wheel).argmin())], 3))
+        return [1-x for x in selected]
+
+    def mating(self, parents):
+        """ """
+        parent_1 = np.asarray(Other.Concepts.arm2parts(str(parents[0]).split("_")))
+        parent_2 = np.asarray(Other.Concepts.arm2parts(str(parents[1]).split("_")))
+        offspring = []
+        offspring.append(self.crossover([parent_1, parent_2]))
+        offspring.append(self.mutation([parent_1, parent_2]))
+        return offspring
+
+    def crossover(self, parents):
+        """ select a random number (link) and all the links&joints&axes until this point
+        taken from parent 1 and all the links&joints&axes from this point are taken from parent 2
+        """
+        dof = self.dof
+        for t in range(dof):
+            point_of_split = np.random.randint(1, dof)
+            child = np.ndarray.tolist(parents[0][:, :point_of_split].copy())
+            [child[i].extend(np.ndarray.tolist(parents[1][i, point_of_split:])) for i in range(3)]
+            child = to_urdf(child[0], child[1], child[2], "")
+            if self.check_conf(child["name"]):
+                break
+        if t == dof - 1:
+            child = np.ndarray.tolist(parents[0])
+            child = to_urdf(child[0], child[1], child[2], "")
+        return child["name"]
+
+    def mutation(self, parents):
+        """ switch randomlly 2 links and joints """
+        dof = self.dof
+        ind = np.random.randint(0, len(parents))
+        parent = parents[ind]
+        inds = np.arange(1, dof)
+        np.random.shuffle(inds)
+        inds = np.insert(inds, 0, 0)
+        child = parent[:, inds]
+        child = to_urdf(child[0], child[1], child[2], "")
+
+    @staticmethod
+    def confs_by_indices(select, fit):
+        """ get the selected distances and return the indices of them
+         if distance appear more than once it than take the second item
+         """
+        indices = []
+        for x in select:
+            ind = np.argwhere(fit == round(x, 3))
+            print(ind)
+            if ind.shape[0] > 1:
+                fit[ind[0][0]] = 100
+            indices.append(ind[0][0])
+        return indices
 
     def get_conifgs_by_indices(self, conf_indices):
         """get configuration by indices"""
-        get_configs = self.get_configs()
-        return np.unique(get_configs[conf_indices])
+        get_configs = np.asarray(self.get_configs())
+        return np.ndarray.tolist(np.unique(get_configs[conf_indices]))
 
     def check_conf(self, confs):
         """Ceck if the configurations are belongs to the concept
         :param confs: list of configurations to check        """
         concepts = self.get_configs()
-        ind = [i for i in range(confs.shape[0]) if confs[i] in concepts]
-        return confs[ind]
+        return confs in concepts
+        # ind = [i for i in range(confs.shape) if confs[i] in concepts]
+        # return confs[ind]
 
     @staticmethod
     def clost_point(distances, nums_mins=4):
@@ -248,6 +336,14 @@ class Problem:
                 front[3].append(l)
                 front[4].append(self.concept_name)
         return front
+
+    def set_prev_confs(self, confs):
+        """Add configurtions to the archive """
+        self.confs_archive.append(confs)
+
+    def get_prev_confs(self):
+        """ Return the configuration in the archive"""
+        return self.confs_archive
 
     # def get_random_values(self):
     #     # set random
@@ -329,42 +425,50 @@ class DWOI:
 
 test_points = np.asarray([[0.05, 0.57, 4], [0.09, 0.94, 5], [0.5, 0.8, 6], [0.5, 0.1, 4], [0.9, 0.94, 4], [0.5, 0.8, 4]])
 concepts_with_conf = Other.load_json("concepts")
-dists = np.asarray([1, 6, 8, 9, 10], dtype=float)
+# dists = np.asarray([1, 6, 8, 9, 10], dtype=float)
 
 woi = DWOI()
 
 name_of_concept = list(concepts_with_conf)[0]
-prob = Problem(name_of_concept, confs_of_concepts=np.asarray(concepts_with_conf[name_of_concept]))
-population = prob.init_pop(25)  # initiliaze population
+prob = Problem(name_of_concept, confs_of_concepts=concepts_with_conf[name_of_concept], large_concept=200)
+# initiliaze population
+population = prob.rand_pop(25)
+# how many gens to run
+num_gens = 10
 
-# this part inside loop
-confs_results = prob.evalute(population)
+for n in range(num_gens):
+    # Evaluation
+    confs_results = prob.evalute(np.asarray(population))
+    # Update DWOI if necessary
+    woi.set_dwoi(prob.domination_check(confs_results, woi.get_last_dwoi()))
+    # Assign fitness
+    dis = prob.assign_fitness(confs_results, woi.get_last_dwoi())  # the distance of all the configurations
+    fitness = np.amin(dis, axis=0)  # calc the minimum distance for each configuration
+    # fitness1 = np.asarray(confs_results[:4])[:, prob.clost_point(fitness)]
 
-curr_dwoi = prob.domination_check(confs_results, woi.get_last_dwoi())
+    # Stop Condition
+    # todo - add Condition stop
+    # check if large concept
+    if prob.large_concept:  # if large concept
+        # Selection (RWS)
+        selection = prob.selection(fitness)
+        selected_confs_ind = prob.confs_by_indices(selection, fitness)
+        selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
+        # todo - add faunction of mating
+        population = prob.mating(selected_confs)
 
-woi.set_dwoi(curr_dwoi)
-# woi.set_dwoi_archive(archive_dwoi)
+    else:  # if small concept
+        # Random Selection
+        population = prob.rand_pop(25)
 
-fitness = prob.assign_fitness(confs_results, woi.get_last_dwoi())
-closest_points = confs_results[prob.clost_point(fitness)]
+    # pop_to_mating = prob.check_conf(selected_confs)
+    # update generation
+    woi.set_gen(n+1)
 
-# todo - add Condition stop
-
-if prob.large_concept:  # if large concept
-    selection = prob.selection(dists)
-    selected_confs_ind = np.searchsorted(dists, selection)
-    selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
-    population = prob.check_conf(selected_confs)
-
-else:  # if small concept
-    population = prob.init_pop(25)
-
-# update generation
-woi.set_gen(woi.get_gen() + 1)
-
+# TodO - if configuration allrady selected?
 # todo - save dwoi to json every iteration?
-
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
 # todo - problematic urdf to make list and pre create
+# todo - to check from main results fail if allready simulated
 # tqdm
