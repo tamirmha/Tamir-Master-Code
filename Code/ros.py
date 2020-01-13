@@ -123,18 +123,18 @@ class MoveGroupPythonInterface(object):
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
 
-    @staticmethod
-    def manipulability_index(jacobian):
-        n = jacobian.size / len(jacobian)
-        if n == 5:
-            det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
-        else:
-            det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-        if det_j > 0.00001:  # preventing numeric problems
-            # return round(det_j ** (1/n), 3)
-            return round(det_j ** 0.5, 3)
-        else:
-            return 0
+    # @staticmethod
+    # def manipulability_index(jacobian):
+    #     n = jacobian.size / len(jacobian)
+    #     if n == 5:
+    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
+    #     else:
+    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
+    #     if det_j > 0.00001:  # preventing numeric problems
+    #         # return round(det_j ** (1/n), 3)
+    #         return round(det_j ** 0.5, 3)
+    #     else:
+    #         return 0
 
     def indices_calc(self, joints, links):
         try:
@@ -142,30 +142,48 @@ class MoveGroupPythonInterface(object):
             cur_pos = self.move_group.get_current_joint_values()
             jacobian = np.delete(self.move_group.get_jacobian_matrix(cur_pos), -1, 1)
             cur_pos = np.asarray(cur_pos)
-            # Jacobian eighen values
-            j_ev = np.linalg.svd(jacobian)[1]
+            # Jacobian singular values (~eighen values)
+            j_ev = np.linalg.svd(jacobian, compute_uv=False)
             mu = round(np.product(j_ev), 3)
-            lci = round(j_ev[-1] / j_ev[0], 3)
             # Manipulability index
+            z = self.mid_joint_proximity(cur_pos, joints, links)
+            # lci = round(j_ev[-1] / j_ev[0], 3)
             # mu = self.manipulability_index(jacobian)
             # Local Conditioning Index
             # lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
             # Joint Mid-Range Proximity
-            theta_mean = [0.75]
-            for joint in joints:
-                if joint == "revolute":
-                    theta_mean.append(np.pi)
-                else:
-                    theta_mean.append(float(links[joints.index(joint)])/2)
-            # theta_mean.append(np.pi)
-            w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-            z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
-            # Relative Manipulability Index - calculate only for redundent manipulators
-            # print np.diag(z)
-            return mu, lci, np.diag(z), jacobian, cur_pos
+            # theta_mean = [0.75]
+            # for joint in joints:
+            #     if joint == "revolute":
+            #         theta_mean.append(0)
+            #     else:
+            #         theta_mean.append(float(links[joints.index(joint)])/2)
+            # # theta_mean.append(np.pi)
+            # w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
+            # z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
+            # # print np.diag(z)
+            return mu, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
             return -1, -1, np.asarray([-1]*len(joints)), jacobian, cur_pos
+
+    @staticmethod
+    def mid_joint_proximity(cur_pos, joints, link_length):
+        theta_mean = [0.75]
+        to_norm = [1.5]
+        for joint in joints:
+            if "pris" not in joint:
+                theta_mean.append(0)
+                to_norm.append(2*np.pi)
+            else:
+                theta_mean.append(float(link_length[joints.index(joint)])/2)
+                to_norm.append(float(link_length[joints.index(joint)]))
+        # print(name)
+        dis = (cur_pos[:-1]-theta_mean)
+        nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
+        w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
+        z = np.around(0.5*np.transpose(nor_dis)*w, 3)
+        return z
 
     def go_to_pose_goal(self, pose, orientaion, joints=None, links=None):
         """send position and orientaion of the desired point
