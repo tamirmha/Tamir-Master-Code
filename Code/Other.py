@@ -169,19 +169,19 @@ class FixFromJson(object):
                 jacobians, curr_poss = dat[row[2]]
                 mu = 1.1
                 z = 0
-                lci = 1.1
+                # lci = 1.1
                 for jacobian, curr_pos in zip(jacobians, curr_poss):
                     if jacobian != -1:
-                        mu_new, lci_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
+                        mu_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
                         if mu > mu_new:
                             mu = mu_new
                         if z < z_new:
                             z = z_new
-                        if lci > lci_new:
-                            lci = lci_new
+                        # if lci > lci_new:
+                        #     lci = lci_new
                 to_fix[to_fix.index(row)][7] = mu
                 to_fix[to_fix.index(row)][8] = z
-                to_fix[to_fix.index(row)][9] = lci
+                # to_fix[to_fix.index(row)][9] = lci
         return to_fix
 
     def indices_calc(self, names, jacobian, cur_pos):
@@ -191,23 +191,23 @@ class FixFromJson(object):
         # Manipulability index
         mu = round(np.product(j_ev), 3)  # self.manipulability_index(jacobian)
         # Local Conditioning Index
-        lci = round(j_ev[-1] / j_ev[0], 3)  # self.local_conditioning_index(jacobian)
+        # lci = round(j_ev[-1] / j_ev[0], 3)  # self.local_conditioning_index(jacobian)
         # Joint Mid-Range Proximity
         z = self.mid_joint_proximity(cur_pos, names)
-        return mu, lci, np.diag(z).max()
+        return mu, np.diag(z).max()
 
-    @staticmethod
-    def manipulability_index(jacobian):
-        n = jacobian.size / len(jacobian)
-        if n == 5:
-            det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
-        else:
-            det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-        if det_j > 1e-18:  # preventing numeric problems
-            return round(det_j ** (1/float(n)), 3)
-            # return round(det_j ** 0.5, 3)
-        else:
-            return 0
+    # @staticmethod
+    # def manipulability_index(jacobian):
+    #     n = jacobian.size / len(jacobian)
+    #     if n == 5:
+    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
+    #     else:
+    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
+    #     if det_j > 1e-18:  # preventing numeric problems
+    #         return round(det_j ** (1/float(n)), 3)
+    #         # return round(det_j ** 0.5, 3)
+    #     else:
+    #         return 0
 
     @staticmethod
     def mid_joint_proximity(cur_pos, names):
@@ -749,7 +749,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 
 # for optimization
-def assign_results(res_name="tosim/results_all_Success"):
+def assign_results(res_name="tosim/results_all_"):
     """ assign results from csv file """
     results = MyCsv.read_csv(res_name, "dict")
     x = []
@@ -955,12 +955,12 @@ if __name__ == '__main__':
     if to_merge:
         merge_data = MergeData()
         merge_data.merge()
+    if fix_all_from_json:
+        FixFromJson(all_files=True)
     if sumdata:
         summed_data = sum_data()
     if fix_from_json:
         FixFromJson()
-    if fix_all_from_json:
-        FixFromJson(all_files=True)
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
     if pareto_plot:

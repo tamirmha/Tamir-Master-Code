@@ -465,7 +465,7 @@ for n in range(num_gens):
     # update generation
     woi.set_gen(n+1)
 
-# TodO - if configuration allrady selected?
+# TodO - if configuration allready selected?
 # todo - save dwoi to json every iteration?
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
