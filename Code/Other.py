@@ -119,24 +119,24 @@ class MergeData(object):
     #     with open(name + ".json", "r") as read_file:
     #         return json.load(read_file)
 
-    @staticmethod
-    def fix_json(file_name):
-        with open(file_name + ".json", 'r') as filehandler:
-            file_reader = filehandler.readlines()
-            data = []
-            empty = True
-            for row in file_reader:
-                if len(row) > 0:
-                    if '][' in row:
-                        row = ',\n'
-                    data.append(row)
-                    empty = False
-                else:
-                    if not empty:
-                        data = []
-                    empty = True
-        with open(file_name + ".json", 'w') as name:
-            name.writelines(data)
+    # @staticmethod
+    # def fix_json(file_name):
+    #     with open(file_name + ".json", 'r') as filehandler:
+    #         file_reader = filehandler.readlines()
+    #         data = []
+    #         empty = True
+    #         for row in file_reader:
+    #             if len(row) > 0:
+    #                 if '][' in row:
+    #                     row = ',\n'
+    #                 data.append(row)
+    #                 empty = False
+    #             else:
+    #                 if not empty:
+    #                     data = []
+    #                 empty = True
+    #     with open(file_name + ".json", 'w') as name:
+    #         name.writelines(data)
 
 
 class FixFromJson(object):
@@ -153,7 +153,7 @@ class FixFromJson(object):
     def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
         file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
-        MergeData.fix_json(file2fix)
+        # MergeData.fix_json(file2fix)
         original_data = load_json(file2fix)
         for row in to_fix:
             if row[5] == "True":
@@ -196,19 +196,6 @@ class FixFromJson(object):
         z = self.mid_joint_proximity(cur_pos, names)
         return mu, np.diag(z).max()
 
-    # @staticmethod
-    # def manipulability_index(jacobian):
-    #     n = jacobian.size / len(jacobian)
-    #     if n == 5:
-    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
-    #     else:
-    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-    #     if det_j > 1e-18:  # preventing numeric problems
-    #         return round(det_j ** (1/float(n)), 3)
-    #         # return round(det_j ** 0.5, 3)
-    #     else:
-    #         return 0
-
     @staticmethod
     def mid_joint_proximity(cur_pos, names):
         joints = ["roll"]
@@ -228,7 +215,6 @@ class FixFromJson(object):
             else:
                 theta_mean.append(float(link_length[joints.index(joint)])/2)
                 to_norm.append(float(link_length[joints.index(joint)]))
-        # print(name)
         dis = (cur_pos[:-1]-theta_mean)
         nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
         while np.isin(nor_dis > 1, True).argmax():
@@ -240,9 +226,22 @@ class FixFromJson(object):
         z = np.around(0.5*np.transpose(nor_dis)*w, 3)
         return z
 
-    @staticmethod
-    def local_conditioning_index(jacobian):
-        return round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+    # @staticmethod
+    # def manipulability_index(jacobian):
+    #     n = jacobian.size / len(jacobian)
+    #     if n == 5:
+    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
+    #     else:
+    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
+    #     if det_j > 1e-18:  # preventing numeric problems
+    #         return round(det_j ** (1/float(n)), 3)
+    #         # return round(det_j ** 0.5, 3)
+    #     else:
+    #         return 0
+
+    # @staticmethod
+    # def local_conditioning_index(jacobian):
+    #     return round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
 
 
 class Concepts:
@@ -749,7 +748,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/res
 
 
 # for optimization
-def assign_results(res_name="tosim/results_all_"):
+def assign_results(res_name="results_all"):
     """ assign results from csv file """
     results = MyCsv.read_csv(res_name, "dict")
     x = []
@@ -787,9 +786,10 @@ def assign_conf2concept(conf):
 
 def domination_check(conf):
     """ check domination in 3D"""
-    front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
+    # front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
+    front = [[1], [1], [6], [conf[3][0]]]
     points = [[], [], [], []]
-    for i, j, k, l in zip(conf[0][1:], conf[1][1:], conf[2][1:], conf[3][1:]):  # z, mu, dof, configuration
+    for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
         # if k == 4 or k == 6:
         #     continue
         added = False
@@ -926,8 +926,32 @@ def save_json(name="data_file", data=None):
 
 
 def load_json(name="data_file"):
-    with open(name + ".json", "r") as read_file:
-        return json.load(read_file)
+        try:
+            with open(name + ".json", "r") as read_file:
+                return json.load(read_file)
+        except:
+            fix_json(name)
+            with open(name + ".json", "r") as read_file:
+                return json.load(read_file)
+
+
+def fix_json(file_name):
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = []
+            empty = True
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    data.append(row)
+                    empty = False
+                else:
+                    if not empty:
+                        data = []
+                    empty = True
+        with open(file_name + ".json", 'w') as name:
+            name.writelines(data)
 
 
 if __name__ == '__main__':
