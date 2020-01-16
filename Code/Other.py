@@ -1051,6 +1051,7 @@ if __name__ == '__main__':
         confs_in_concepts = 220  # all the concecpts with less than 220 configurations
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         all_concepts = load_json("concepts")  # all the concepts and there configurations
+        # #to save time the following is commented.  if we want to calculated with different data uncomment
         # concepts2check, simulated, v = how_many_to_create(all_concepts, all_data, confs_in_concepts)
         # save_json("confs_number", v)
         # save_json("concepts2check", concepts2check)
