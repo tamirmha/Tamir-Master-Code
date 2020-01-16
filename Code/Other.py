@@ -10,6 +10,8 @@ import numpy as np
 from itertools import product
 from simulator import Simulator
 from matplotlib.tri import Triangulation
+from tqdm import tqdm
+from multiprocessing import Pool
 
 
 class MyCsv(object):
@@ -153,7 +155,6 @@ class FixFromJson(object):
     def fix(self, file2fix="/home/tamir/Tamir/Master/Code/test/results_4dof_4d_toMuch"):
         file_fixed = file2fix + "_fixed"
         to_fix = MyCsv.read_csv(file2fix)
-        # MergeData.fix_json(file2fix)
         original_data = load_json(file2fix)
         for row in to_fix:
             if row[5] == "True":
@@ -245,7 +246,7 @@ class FixFromJson(object):
 
 
 class Concepts:
-    def __init__(self, file_name="/home/tamir/Tamir/Master/optimization/all_configs"):
+    def __init__(self, file_name="/home/tamir/Tamir/Master/Code/all_configs"):
         self.concepts = []
         self.joints_combs = []
         self.links = []
@@ -283,13 +284,14 @@ class Concepts:
         return confs2sim  # , cons_of_sim
 
     @staticmethod
-    def filter_confs(to_sim):
+    def filter_confs(to_sim, results_all="results_all"):
         """ check if any of the selected configurations have been simulated before
         :param to_sim: all the selected configuration thats need to be simulated
+        :param results_all: the of with all results
         return: sorted array without the configurations that allready simulated
                 results: the results from the simulated configuration
         """
-        simmed_results = MyCsv.read_csv("results/recalculate/results_all_with_failed", "dict")
+        simmed_results = MyCsv.read_csv(results_all, "dict")
         sim_allready = []
         results = []
         for i in simmed_results:
@@ -533,7 +535,7 @@ class Concepts:
                 concepts_with_configuration[str(conf_concept)].append(conf_name)
         self.set_concepts_with_configuration(concepts_with_configuration)
 
-    def set_possible_joints_order(self, file_name="/home/tamir/Tamir/Master/optimization/all_configs"):
+    def set_possible_joints_order(self, file_name="/home/tamir/Tamir/Code/all_configs"):
         self.joints_combs = MyCsv.read_csv(file_name)
 
     def set_concepts(self, concepts):
@@ -923,7 +925,7 @@ def add_table2plot(pareto):
 def save_json(name="data_file", data=None):
     with open(name + ".json", "a") as write_file:
         json.dump(data, write_file, indent=2)
-
+                                                             
 
 def load_json(name="data_file"):
         try:
@@ -964,7 +966,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1007,3 +1009,60 @@ if __name__ == '__main__':
         #     cmp[1][2].append(pareto_front[2][i])          # pareto mu
         #     cmp[0][3].append(conf[2][ind])  # conf dof
         #     cmp[1][3].append(pareto_front[3][i])          # pareto dof
+
+
+# def number_configurations_created_in_concept(how_many=220):
+how_many = 220
+all_data = MyCsv.read_csv("results_all", "dict")
+all_concepts = load_json("concepts")
+v = {}
+d = []
+concepts2check = []
+for k in range(len(all_concepts)):
+    v[all_concepts.keys()[k]] = [len(all_concepts[all_concepts.keys()[k]]), 0, len(all_concepts[all_concepts.keys()[k]])]
+for dat in tqdm(all_data):
+    if dat["name"] not in d:  # dat["dof"] != "4" and
+        for concept in all_concepts.keys():
+            if 25 < len(all_concepts[concept]) < how_many and dat["dof"] == concept[43:44]:
+                if dat["name"] in all_concepts[concept]:
+                    v[concept][1] += 1
+                    v[concept][2] = v[concept][0] - v[concept][1]
+                    d.append(dat["name"])
+                    if concept not in concepts2check:
+                        concepts2check.append(concept)
+                    break
+save_json("confs_number", v)
+
+total = 0
+total2 = 0
+total3 = 0
+for concept in all_concepts.keys():
+    if len(all_concepts[concept]) < how_many and concept[43:44] != "4":
+        total += v[concept][2]
+        total2 += v[concept][0]
+        total3 += v[concept][1]
+
+# z = 0
+# for dat in tqdm(all_data):
+#     if dat["dof"] != "4" and dat["name"] not in d:
+#         for conc in concepts2check:
+#             if dat["name"] in all_concepts[conc]:
+#                 z += 1
+#                 conf2create.append(d)
+#                 break
+z = 0
+not_in = []
+conf2create = []
+for conc in tqdm(concepts2check):
+    for conf in all_concepts[conc]:
+        z += 1
+        if conf not in d:
+            conf2create.append(conf)
+        else:
+            not_in.append(conf)
+
+# for k in range(len(d)):
+#     if d[k] in d[k+1:]:
+#         print(d[k])
+
+# number_configurations_created_in_concept()
