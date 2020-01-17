@@ -224,7 +224,7 @@ class Problem:
         inds = np.insert(inds, 0, 0)
         child = parent[:, inds]
         child = to_urdf(child[0], child[1], child[2], "")
-        return childself.get_prev_confs()
+        return child
 
     @staticmethod
     def confs_by_indices(select, fit):

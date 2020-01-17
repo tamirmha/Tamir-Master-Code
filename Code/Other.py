@@ -1,8 +1,8 @@
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
-# import tkFileDialog
-# from Tkinter import *
+import tkFileDialog
+from Tkinter import *
 import json
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -11,7 +11,8 @@ from itertools import product
 from simulator import Simulator
 from matplotlib.tri import Triangulation
 from tqdm import tqdm
-from multiprocessing import Pool
+import copy
+# from multiprocessing import Pool
 
 
 class MyCsv(object):
@@ -963,7 +964,7 @@ def how_many_to_create(all_concepts, all_data, how_many):
     simulated = []
     concepts2check = []
     for dat in tqdm(all_data):
-        if dat["name"] not in simulated:  # dat["dof"] != "4" and
+        if dat["name"] not in simulated:  # and dat["dof"] == "5":
             for concept in v.keys():
                 if 25 < v[concept][0] < how_many and dat["dof"] == concept[43:44]:
                     if dat["name"] in all_concepts[concept]:
@@ -989,7 +990,43 @@ def which_confs2create(concepts2check, all_concepts, simulated):
                 else:
                     print(conf)
     return conf2create5, conf2create6
+
+
+def how_many_configs_left(dof="5"):
+    """ Check how many configurations left in the specific dof - return all the concepts of this dof"""
+    all_concept = load_json("confs_number_all")
+    total = 0
+    total2 = 0
+    concepts = []
+    for i in tqdm(range(len(all_concept))):
+        if all_concept.keys()[i][43:44] == dof:
+            total += all_concept[all_concept.keys()[i]][2]
+            total2 += all_concept[all_concept.keys()[i]][1]
+            concepts.append(all_concept.keys()[i])
+    print("About " + str(total) + " configurations lefts. with Avg time of 15 seconds per configuration"
+         " it will take about\n " + str(total*15/3600./24) + " days to simulate all of them")
+    return concepts
+
+
+def remain_configs(all_concept, all_dat, concepts, dof="5"):
+    """check which configuration allready simulated and return list of all the configurations
+    that havent simulated yet"""
+    to_create = []
+    for a in all_concept:
+        if a in concepts:
+            to_create += all_concept[a]
+    for dat in tqdm(all_dat):
+        if dat["dof"] == dof:
+            if dat["name"] in to_create:
+                to_create.remove(dat["name"])
+    to_cr = []
+    # fix this to the create urdf function
+    for t in to_create:
+        to_cr.append([t])
+    return to_cr
+
 # ###   ###
+
 
 if __name__ == '__main__':
     # while True:
@@ -1049,15 +1086,24 @@ if __name__ == '__main__':
         # before start the the GA i want to simulate all the small concepts - this calculate how many and which
         # configurations needed to be simulated
         confs_in_concepts = 220  # all the concecpts with less than 220 configurations
-        all_data = MyCsv.read_csv("results_all", "dict")  # all the results
+        # all_data = MyCsv.read_csv("results_all", "dict")  # all the results
+        all_data = load_json("all_data")
         all_concepts = load_json("concepts")  # all the concepts and there configurations
         # #to save time the following is commented.  if we want to calculated with different data uncomment
         # concepts2check, simulated, v = how_many_to_create(all_concepts, all_data, confs_in_concepts)
         # save_json("confs_number", v)
         # save_json("concepts2check", concepts2check)
         # save_json("simulated", simulated)
-        simulated = load_json("to_complete_sim/simulated")
+        simulated220 = load_json("to_complete_sim/simulated220")
         concepts2check = load_json("to_complete_sim/concepts2check")
-        create5dof, create6dof = which_confs2create(concepts2check, all_concepts, simulated)
-        con = Concepts()
-        con.create_files2sim(create5dof + create6dof, "5dof", "6dof")
+        # create5dof, create6dof = which_confs2create(concepts2check, all_concepts, simulated)
+        # con = Concepts()
+        # con.create_files2sim(create5dof + create6dof, "5dof", "6dof")
+        concepts5 = how_many_configs_left("5")
+        to_create = remain_configs(all_concepts, all_data, concepts5)
+        # save_json("5Configs2complete", to_create)
+        # # add to ist all the simulated configurations
+        # simulated = []
+        # for i in tqdm(all_data):
+        #     simulated.append(i["name"])
+
