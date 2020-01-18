@@ -76,9 +76,10 @@ np.random.seed(1)
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, number_of_arms=100, number_of_objects=3, large_concept=200):
+    def __init__(self, concept_name, res, confs_of_concepts, number_of_arms=100, number_of_objects=3, large_concept=200):
         self.number_of_arms = number_of_arms  # how many arms to create
-        self.confs_of_concepts = confs_of_concepts  # all possible configuration of the concept
+        self.confs_of_concepts = confs_of_concepts  # all possible configurations names of the concept
+        self.confs_results = res  # all the configurations of the concept and their indices
         self.number_of_objects = number_of_objects
         self.large_concept = len(confs_of_concepts) > large_concept  # True if large False otherwise
         self.concept_name = concept_name
@@ -118,10 +119,21 @@ class Problem:
         return confs
 
     def evalute(self, pop):
-        # simulator
-        f3 = np.around(np.random.randint(4, 7, pop.shape[0]), 3)  # dof
-        f2 = np.around(np.random.uniform(0, 1, pop.shape[0]), 3)  # manipulability
-        f1 = np.around(np.random.uniform(0, 0.5, pop.shape[0]), 3)   # (Mid-Range Proximity)
+        f1 = []
+        f2 = []
+        f3 = []
+        for p in pop:
+            res = self.get_result(p)
+            # check if the configuration allready simulated
+            if res["z"] != None:
+                f3.append(int(res["dof"]))  # np.around(np.random.randint(4, 7, pop.shape[0]), 3)  # dof
+                f2.append(float(res["mu"]))  #np.around(np.random.uniform(0, 1, pop.shape[0]), 3)  # manipulability
+                f1.append(float(res["z"]))  #np.around(np.random.uniform(0, 0.5, pop.shape[0]), 3)   # (Mid-Range Proximity)
+            else:
+                # todo - delete this when adding the simulator
+                f3.append(np.around(np.random.randint(4, 7), 3))  # dof
+                f2.append(np.around(np.random.uniform(0, 1), 3))  # manipulability
+                f1.append(np.around(np.random.uniform(0, 0.5), 3))
         return [f1, f2, f3, pop, self.concept_name]
 
     def stop_condition(self):
@@ -310,6 +322,13 @@ class Problem:
         """ Return the configuration in the archive"""
         return self.confs_archive
 
+    def get_result(self, config):
+        for i in range(len(self.confs_results)):
+            if self.confs_results[i].keys()[0] == config:
+                result = self.confs_results[i][self.confs_results[i].keys()[0]]
+                break
+        return result
+
     def stop_condition(self):
         if len(self.get_prev_confs()) == len(self.confs_of_concepts):
             # check if all the configurations simulated
@@ -458,14 +477,14 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
     return {"arm": arm, "name": file_name, "folder": folder}
 
 
-def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25):
+def init_concepts(concepts_with_conf, all_data, large_concept=250, number_of_arms=25):
     """ Initilize all the concept and the first populations"""
     prob = []
     population = []
     for i in range(len(concepts_with_conf)):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
-        prob.append(Problem(name_of_concept, confs_of_concepts=concepts_with_conf[name_of_concept],
+        prob.append(Problem(name_of_concept, all_data[name_of_concept], confs_of_concepts=concepts_with_conf[name_of_concept],
                        number_of_arms=number_of_arms, large_concept=large_concept))
         # initiliaze population
         population.append(prob[i].rand_pop())
@@ -515,26 +534,27 @@ if __name__ == '__main__':
     # load the first WOI
     woi = DWOI()
     # how many gens to run
-    num_gens = 500
+    num_gens = 10
     # the name of the json file of the DWOI
     name = "optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
 
-    # prob, population = init_concepts(concepts_with_conf)
-    # for n in tqdm(range(num_gens)):
-    #     for i in range(1):  # len(concepts_with_conf)):
-    #         population[i] = run(population[i], prob[i])
-    #     # Save the current WOI
-    #     Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-    #     # Update generation
-    #     woi.set_gen(n + 1)
-    #     # Check global stop condition
-    #     woi.stop_condition()
-    #     if woi.stopped:
-    #         break
-    # # a = Other.load_json("optimizaion_WOI_13_01_")
+    prob, population = init_concepts(concepts_with_conf, all_data)
+    for n in tqdm(range(num_gens)):
+        for i in range(1):  # len(concepts_with_conf)):
+            population[i] = run(population[i], prob[i])
+        # Save the current WOI
+        Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+        # Update generation
+        woi.set_gen(n + 1)
+        # Check global stop condition
+        woi.stop_condition()
+        if woi.stopped:
+            break
+    # a = Other.load_json("optimizaion_WOI_13_01_")
 
 # done - create main results file
 # done - save dwoi to json every iteration?
+# todO - set json file with the desired concepts
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
 # todo - problematic urdf to make list and pre create
