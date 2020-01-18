@@ -1,8 +1,8 @@
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
-import tkFileDialog
-from Tkinter import *
+# import tkFileDialog
+# from Tkinter import *
 import json
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -1085,25 +1085,53 @@ if __name__ == '__main__':
     if check_num_confs_in_concepts:
         # before start the the GA i want to simulate all the small concepts - this calculate how many and which
         # configurations needed to be simulated
-        confs_in_concepts = 220  # all the concecpts with less than 220 configurations
-        # all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-        all_data = load_json("all_data")
+        all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         all_concepts = load_json("concepts")  # all the concepts and there configurations
         # #to save time the following is commented.  if we want to calculated with different data uncomment
+        # confs_in_concepts = 220  # all the concecpts with less than 220 configurations
         # concepts2check, simulated, v = how_many_to_create(all_concepts, all_data, confs_in_concepts)
         # save_json("confs_number", v)
         # save_json("concepts2check", concepts2check)
         # save_json("simulated", simulated)
-        simulated220 = load_json("to_complete_sim/simulated220")
-        concepts2check = load_json("to_complete_sim/concepts2check")
+        # simulated220 = load_json("to_complete_sim/simulated_220")
+        # concepts2check = load_json("to_complete_sim/concepts2check")
         # create5dof, create6dof = which_confs2create(concepts2check, all_concepts, simulated)
         # con = Concepts()
         # con.create_files2sim(create5dof + create6dof, "5dof", "6dof")
-        concepts5 = how_many_configs_left("5")
-        to_create = remain_configs(all_concepts, all_data, concepts5)
+
+        # concepts5 = how_many_configs_left("5")
+        # to_create = remain_configs(all_concepts, all_data, concepts5)
         # save_json("5Configs2complete", to_create)
-        # # add to ist all the simulated configurations
+        # # add to list all the simulated configurations
         # simulated = []
         # for i in tqdm(all_data):
         #     simulated.append(i["name"])
-
+        # a = load_json("confs_number_all")
+        # b = list(a)
+        # c = [[]]*len(b)
+        # for i in range(len(b)):
+        #     c[i] = [b[i], a[b[i]][0], a[b[i]][1], a[b[i]][2]]
+        # MyCsv.save_csv(c, "left_concepts")
+        # # create one file ofconfigurations with there results via concepts
+        # all_data = load_json("all_data2")
+        # new_data = {}
+        # # dict_keys = {"name": None, "mu": None, "dof": None, "z": None}
+        # for dat in tqdm(all_concepts):
+        #     flag = []
+        #     for conf in all_concepts[dat]:
+        #         # parts = Concepts.arm2parts(str(conf).split("_"))
+        #         try:
+        #             # all_data[conf]["joints"] = parts[0]
+        #             # all_data[conf]["prev_axe"] = parts[1]
+        #             # all_data[conf]["link_length"] = parts[2]
+        #             # dict_keys["name"] = conf
+        #             # dict_keys["mu"] = all_data[conf]["mu"]
+        #             # dict_keys["dof"] = all_data[conf]["dof"]
+        #             # dict_keys["z"] = all_data[conf]["Z"]
+        #             dict_keys = {"name": conf, "mu": all_data[conf]["mu"], "dof": all_data[conf]["dof"], "z": all_data[conf]["Z"]}
+        #             # flag.append({conf: all_data[conf]})
+        #         except:
+        #             dict_keys = {"name": conf, "mu": None, "dof": None, "z": None}
+        #         flag.append({conf: dict_keys})
+        #     new_data[dat] = flag
+        # save_json("concepts+configs+results", new_data)

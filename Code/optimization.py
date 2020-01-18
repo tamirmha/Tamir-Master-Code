@@ -511,6 +511,7 @@ if __name__ == '__main__':
     # initilize globaly
     # load all the concepts
     concepts_with_conf = Other.load_json("concepts")
+    all_data = Other.load_json("concepts+configs+results")
     # load the first WOI
     woi = DWOI()
     # how many gens to run
@@ -518,22 +519,21 @@ if __name__ == '__main__':
     # the name of the json file of the DWOI
     name = "optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
 
-    prob, population = init_concepts(concepts_with_conf)
-    for n in tqdm(range(num_gens)):
-        for i in range(1):  # len(concepts_with_conf)):
-            population[i] = run(population[i], prob[i])
-        # Save the current WOI
-        Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        # Update generation
-        woi.set_gen(n + 1)
-        # Check global stop condition
-        woi.stop_condition()
-        if woi.stopped:
-            break
-    # a = Other.load_json("optimizaion_WOI_13_01_")
+    # prob, population = init_concepts(concepts_with_conf)
+    # for n in tqdm(range(num_gens)):
+    #     for i in range(1):  # len(concepts_with_conf)):
+    #         population[i] = run(population[i], prob[i])
+    #     # Save the current WOI
+    #     Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+    #     # Update generation
+    #     woi.set_gen(n + 1)
+    #     # Check global stop condition
+    #     woi.stop_condition()
+    #     if woi.stopped:
+    #         break
+    # # a = Other.load_json("optimizaion_WOI_13_01_")
 
-# todo - create main results file
-# TodO - if configuration allready selected?
+# done - create main results file
 # done - save dwoi to json every iteration?
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
