@@ -371,7 +371,7 @@ class Problem:
 
 class DWOI:
 
-    def __init__(self, concepts_file="front_concept"):
+    def __init__(self, concepts_file="jsons/front_concept"):
         self.gen = 0
         self.dwoi = self.dwoi2conf(Other.load_json(concepts_file))  # , self.gen])
         self.stopped = False
@@ -529,14 +529,14 @@ def run(population, prob):
 if __name__ == '__main__':
     # initilize globaly
     # load all the concepts
-    concepts_with_conf = Other.load_json("concepts")
-    all_data = Other.load_json("concepts+configs+results")
+    concepts_with_conf = Other.load_json("jsons/concepts2ga")
+    all_data = Other.load_json("jsons/concepts+configs+results")
     # load the first WOI
     woi = DWOI()
     # how many gens to run
     num_gens = 10
     # the name of the json file of the DWOI
-    name = "optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
+    name = "jsons/optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
 
     prob, population = init_concepts(concepts_with_conf, all_data)
     for n in tqdm(range(num_gens)):

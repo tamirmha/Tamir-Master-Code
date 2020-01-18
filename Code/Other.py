@@ -1135,3 +1135,9 @@ if __name__ == '__main__':
         #         flag.append({conf: dict_keys})
         #     new_data[dat] = flag
         # save_json("concepts+configs+results", new_data)
+        # create file with the concepts to the GA
+        ga_concepts = {}
+        for concept in all_concepts:
+            if len(all_concepts[concept]) > 220 and concept[43:44] != "4":
+                ga_concepts[concept] = all_concepts[concept]
+        save_json("concepts2ga", ga_concepts)
