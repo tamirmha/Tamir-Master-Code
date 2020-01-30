@@ -76,10 +76,10 @@ np.random.seed(1)
 
 
 class Problem:
-    def __init__(self, concept_name, res, confs_of_concepts, number_of_arms=100, number_of_objects=3, large_concept=200):
+    def __init__(self, concept_name, confs_of_concepts, number_of_arms=100, number_of_objects=3, large_concept=200):
         self.number_of_arms = number_of_arms  # how many arms to create
-        self.confs_of_concepts = confs_of_concepts  # all possible configurations names of the concept
-        self.confs_results = res  # all the configurations of the concept and their indices
+        self.confs_of_concepts = [x.keys() for x in confs_of_concepts]  # all possible configurations names of the concept
+        self.confs_results = confs_of_concepts  # all the configurations of the concept and their indices
         self.number_of_objects = number_of_objects
         self.large_concept = len(confs_of_concepts) > large_concept  # True if large False otherwise
         self.concept_name = concept_name
@@ -122,19 +122,21 @@ class Problem:
         f1 = []
         f2 = []
         f3 = []
+        pops = []
         for p in pop:
+            pops.append(p[0])
             res = self.get_result(p)
             # check if the configuration allready simulated
             if res["z"] != None:
-                f3.append(int(res["dof"]))  # np.around(np.random.randint(4, 7, pop.shape[0]), 3)  # dof
-                f2.append(float(res["mu"]))  #np.around(np.random.uniform(0, 1, pop.shape[0]), 3)  # manipulability
-                f1.append(float(res["z"]))  #np.around(np.random.uniform(0, 0.5, pop.shape[0]), 3)   # (Mid-Range Proximity)
+                f3.append(int(res["dof"]))   # dof
+                f2.append(float(res["mu"]))  # manipulability
+                f1.append(float(res["z"]))   # Mid-Range Proximity
             else:
+                f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
-                f3.append(np.around(np.random.randint(4, 7), 3))  # dof
-                f2.append(np.around(np.random.uniform(0, 1), 3))  # manipulability
-                f1.append(np.around(np.random.uniform(0, 0.5), 3))
-        return [f1, f2, f3, pop, self.concept_name]
+                f2.append(np.around(np.random.uniform(0, 1), 3))    # manipulability
+                f1.append(np.around(np.random.uniform(0, 0.5), 3))  # Mid-Range Proximity
+        return [f1, f2, f3, pops, self.concept_name]
 
     def stop_condition(self):
         """Stop condition of the concept (not of all the problem)
@@ -154,30 +156,31 @@ class Problem:
         return np.around(dist, 3)
 
     @staticmethod
-    def selection(distanc, num_of_returns=2):
+    def selection(dis, num_of_returns=2):
         """Make selection by using RWS return the value
-        :param distanc: array of distances
+        :param dis: array of distances
         :param num_of_returns: how many elements to return
         :return selected: the selected values that won the RWS
         """
         selected = []
-        distanc = 10 - distanc
-        fp = np.asarray([i / sum(distanc) for i in distanc])
+        # distanc = 10 - distanc
+        fitness = np.exp(-dis)
+        fp = np.asarray([i / sum(fitness) for i in fitness])
         # print(distanc)
         for i in range(num_of_returns):
             wheel = np.random.uniform(0, 1)
             # print(wheel)
             ind = (np.abs(fp - wheel).argmin())
-            d = round(distanc[ind], 3)
+            d = round(fitness[ind], 3)
             fp[ind] = -10
             # print(ind)
             selected.append(d)
         # print(selected)
-        return [10-x for x in selected]
+        return np.abs(np.round(np.log(selected), 3))  # [10-x for x in selected]
 
     def mating(self, parents):
         """ """
-        total_attempts = 3000  # to prevent infinite loop
+        total_attempts = 16  # to prevent infinite loop
         offspring_size = self.number_of_arms
         parent_1 = np.asarray(Other.Concepts.arm2parts(str(parents[0]).split("_")))
         parent_2 = np.asarray(Other.Concepts.arm2parts(str(parents[1]).split("_")))
@@ -186,7 +189,7 @@ class Problem:
             attempt = 0
             in_concept = False
             cross_ok = False
-            mut_conf = True
+            mut_ok = False
             while not in_concept:
                 # todo - check if in get_prev_confs
                 # calculate crossover and mutation and check if they are belongs to the concept
@@ -195,10 +198,12 @@ class Problem:
                     cross_conf = self.check_conf(cross_spring)
                     if cross_conf:
                         cross_ok = cross_spring not in self.get_prev_confs()
-                if not mut_conf:
-                    mut_spring = self.mutation([parent_1, parent_2])
+                if not mut_ok:
+                    mut_spring = self.mutation_round([parent_1, parent_2])
                     mut_conf = self.check_conf(mut_spring)
-                in_concept = cross_ok and mut_conf
+                    if mut_conf:
+                        mut_ok = mut_spring not in self.get_prev_confs()
+                in_concept = cross_ok and mut_ok
                 if attempt >= total_attempts:
                     offspring = []
                     self.stopped = True
@@ -226,7 +231,7 @@ class Problem:
             child = to_urdf(child[0], child[1], child[2], "")
         return child["name"]
 
-    def mutation(self, parents):
+    def mutation_rand(self, parents):
         """ switch randomlly 2 links and joints """
         dof = self.dof
         ind = np.random.randint(0, len(parents))
@@ -234,9 +239,20 @@ class Problem:
         inds = np.arange(1, dof)
         np.random.shuffle(inds)
         inds = np.insert(inds, 0, 0)
-        child = parent[:, inds]
-        child = to_urdf(child[0], child[1], child[2], "")
-        return child
+        offspring = parent[:, inds]
+        offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
+        return offspring["name"]
+
+    def mutation_round(self, parents):
+        """ Switch the elements in circle. the last will be first
+        first will be second and so on"""
+        dof = self.dof
+        # select random parent
+        parent = parents[np.random.randint(0, len(parents))]
+        indices = np.concatenate((np.asarray([0, dof-1]), np.arange(1, dof-1)))
+        offspring = parent[:, indices]
+        offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
+        return offspring["name"]
 
     @staticmethod
     def confs_by_indices(select, fit):
@@ -324,7 +340,7 @@ class Problem:
 
     def get_result(self, config):
         for i in range(len(self.confs_results)):
-            if self.confs_results[i].keys()[0] == config:
+            if self.confs_results[i].keys()[0] == config[0]:
                 result = self.confs_results[i][self.confs_results[i].keys()[0]]
                 break
         return result
@@ -381,6 +397,9 @@ class DWOI:
             self.stopped = True
 
     def set_dwoi(self, dwoi):
+        for i in range(len(dwoi[3])):
+            if type(dwoi[3][i]) != unicode:
+                dwoi[3][i] = unicode(dwoi[3][i][0])
         self.dwoi.append(dwoi)
 
     def get_all_dwoi(self):
@@ -477,22 +496,25 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
     return {"arm": arm, "name": file_name, "folder": folder}
 
 
-def init_concepts(concepts_with_conf, all_data, large_concept=250, number_of_arms=25):
+def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25):
     """ Initilize all the concept and the first populations"""
     prob = []
     population = []
     for i in range(len(concepts_with_conf)):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
-        prob.append(Problem(name_of_concept, all_data[name_of_concept], confs_of_concepts=concepts_with_conf[name_of_concept],
-                       number_of_arms=number_of_arms, large_concept=large_concept))
+        # todo - set each concept relative numbers of arms
+        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept],
+                            number_of_arms=number_of_arms, large_concept=large_concept))
         # initiliaze population
         population.append(prob[i].rand_pop())
     return prob, population
 
 
 def run(population, prob):
+    # insert previous configurations into archive
     prob.set_prev_confs(population)
+    # check if the local stop condition applied
     if prob.stopped:
         return []
     # Evaluation
@@ -509,7 +531,6 @@ def run(population, prob):
     if prob.large_concept:  # if large concept
         # Assign fitness
         dis = prob.assign_fitness(confs_results, woi.get_last_dwoi())  # the distance of all the configurations
-        # print(dis)
         fitness = np.amin(dis, axis=0)  # calc the minimum distance for each configuration
         # print(fitness)
         # Selection (RWS)
@@ -526,11 +547,28 @@ def run(population, prob):
     return population
 
 
+def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
+    """ get all the previous data and the concepts to enter into the ga and return only the relevant data
+    :param all_concepts_json- json file with all the simulated data
+    :param ga_json- all the concepts to check in the GA
+    :return ga_data- dictoinary with all the configurations and there results per concept
+    """
+    all_concepts = Other.load_json(all_concepts_json)
+    ga_concepts = Other.load_json(ga_json)
+    ga_data = {}
+    for i in ga_concepts:
+        if i in all_concepts:
+            ga_data[i] = all_concepts[i]
+    return ga_data
+
+
 if __name__ == '__main__':
     # initilize globaly
+
+    # concepts_with_conf = Other.load_json("jsons/concepts2ga")
+    # all_data = Other.load_json("jsons/concepts+configs+results")
     # load all the concepts
-    concepts_with_conf = Other.load_json("jsons/concepts2ga")
-    all_data = Other.load_json("jsons/concepts+configs+results")
+    all_data = get_prev_data()
     # load the first WOI
     woi = DWOI()
     # how many gens to run
@@ -538,7 +576,7 @@ if __name__ == '__main__':
     # the name of the json file of the DWOI
     name = "jsons/optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
 
-    prob, population = init_concepts(concepts_with_conf, all_data)
+    prob, population = init_concepts(all_data)
     for n in tqdm(range(num_gens)):
         for i in range(1):  # len(concepts_with_conf)):
             population[i] = run(population[i], prob[i])
@@ -554,6 +592,8 @@ if __name__ == '__main__':
 
 # done - create main results file
 # done - save dwoi to json every iteration?
+# done - check that DWOI archive change only after change
+# todo - add elitism check
 # todO - set json file with the desired concepts
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator

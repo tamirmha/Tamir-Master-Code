@@ -19,7 +19,10 @@ if __name__ == '__main__':
     # p.close()
     # toc = time()
     # print(toc-tic)
-    all_data = MyCsv.read_csv("results_all", "dict")
-    all_concepts = load_json("concepts")
-    to_create = []
-    not_in = []
+    # all_data = MyCsv.read_csv("results_all", "dict")
+    all_concepts = load_json("jsons/concepts+configs+results")
+    ga_concepts = load_json("jsons/concepts2ga")
+    ga_data = {}
+    for i in ga_concepts:
+        if i in all_concepts:
+            ga_data[i] = all_concepts[i]
