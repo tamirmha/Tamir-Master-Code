@@ -1141,3 +1141,6 @@ if __name__ == '__main__':
             if len(all_concepts[concept]) > 220 and concept[43:44] != "4":
                 ga_concepts[concept] = all_concepts[concept]
         save_json("concepts2ga", ga_concepts)
+
+
+# todo - show the configurations that on the woi

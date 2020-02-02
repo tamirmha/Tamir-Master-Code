@@ -19,17 +19,14 @@ Constrains:
 
 from ros import UrdfClass
 import Other
-# import datetime
-# import pymoo
-# import csv
-# import os
 from scipy.spatial import distance
 import numpy as np
 import copy
 from datetime import datetime
 from tqdm import tqdm
+from time import time
 
-np.random.seed(1)
+np.random.seed(100100)
 
 # class Configs:
 #     def __init__(self):
@@ -76,20 +73,21 @@ np.random.seed(1)
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, number_of_arms=100, number_of_objects=3, large_concept=200):
-        self.number_of_arms = number_of_arms  # how many arms to create
-        self.confs_of_concepts = [x.keys() for x in confs_of_concepts]  # all possible configurations names of the concept
+    def __init__(self, concept_name, confs_of_concepts, pop_size=100, number_of_objects=3, large_concept=200):
+        self.pop_size = pop_size  # size of population
+        self.confs_of_concepts = [x.keys() for x in confs_of_concepts]  # all possible configs names of the concept
         self.confs_results = confs_of_concepts  # all the configurations of the concept and their indices
-        self.number_of_objects = number_of_objects
+        self.confs_archive = []  # Archive of all the selected configurations
         self.large_concept = len(confs_of_concepts) > large_concept  # True if large False otherwise
         self.concept_name = concept_name
-        self.confs_archive = []  # Archive of all the selected configurations
+        self.elit_confs = []
         self.dof = int(str(concept_name).split(" ")[5].split(",")[0])
         self.stopped = False
+        self.number_of_objects = number_of_objects
 
     def rand_pop(self):
         """ select random configurations that belongs to the concept"""
-        pop_size = self.number_of_arms
+        pop_size = self.pop_size
         confs_of_concepts = self.get_configs()
         confs_archive = self.get_prev_confs()
         remain_confs = len(confs_of_concepts) - len(confs_archive)
@@ -115,7 +113,6 @@ class Problem:
                 else:
                     confs.append(conf)
                     random_confs.remove(conf)
-        a = 3
         return confs
 
     def evalute(self, pop):
@@ -127,15 +124,15 @@ class Problem:
             pops.append(p[0])
             res = self.get_result(p)
             # check if the configuration allready simulated
-            if res["z"] != None:
+            if res["z"] is not None:
                 f3.append(int(res["dof"]))   # dof
-                f2.append(float(res["mu"]))  # manipulability
+                f2.append(1 - float(res["mu"]))  # manipulability
                 f1.append(float(res["z"]))   # Mid-Range Proximity
             else:
                 f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.uniform(0, 1), 3))    # manipulability
-                f1.append(np.around(np.random.uniform(0, 0.5), 3))  # Mid-Range Proximity
+                f2.append(np.around(np.random.normal(0.95, 0.01), 3))    # manipulability
+                f1.append(np.around(np.random.normal(0.434, 0.01), 3))  # Mid-Range Proximity
         return [f1, f2, f3, pops, self.concept_name]
 
     def stop_condition(self):
@@ -148,12 +145,22 @@ class Problem:
 
         return False
 
+    def elitism(self, new_gen):
+        """Elitism - Make sure the offsprings will be better than the previous generation
+        :param new_gen - the results of the last genration
+        """
+        elite_confs = self.get_elite_confs()
+        if not elite_confs:
+            return new_gen
+        new_elite_gen = self.domination_check(new_gen, elite_confs)
+        return new_elite_gen
+
     @staticmethod
     def assign_fitness(points, dwoi):
         """ calculate the distance from each point to the DWOI"""
         dwoi_loc = np.asarray(dwoi[:3]).T   # np.asarray([[i[1], i[0], i[2]] for i in dwoi])
         dist = distance.cdist(dwoi_loc,  np.asarray(points[:3]).T, 'euclidean')
-        return np.around(dist, 3)
+        return np.amin(np.around(dist, 3), axis=0)
 
     @staticmethod
     def selection(dis, num_of_returns=2):
@@ -164,24 +171,24 @@ class Problem:
         """
         selected = []
         # distanc = 10 - distanc
-        fitness = np.exp(-dis)
+        c = 3.
+        fitness = np.exp(-c*dis)
         fp = np.asarray([i / sum(fitness) for i in fitness])
+        roullete = np.asarray([sum(fp[:x+1]) for x in range(len(fp))])
         # print(distanc)
         for i in range(num_of_returns):
             wheel = np.random.uniform(0, 1)
-            # print(wheel)
-            ind = (np.abs(fp - wheel).argmin())
+            ind = np.where((roullete - wheel) > 0, (roullete - wheel), np.inf).argmin()
             d = round(fitness[ind], 3)
-            fp[ind] = -10
+            # fp[ind] = -10
             # print(ind)
             selected.append(d)
-        # print(selected)
-        return np.abs(np.round(np.log(selected), 3))  # [10-x for x in selected]
+        return np.abs(np.round(np.log(selected)/c, 3))  # [10-x for x in selected]
 
     def mating(self, parents):
         """ """
         total_attempts = 16  # to prevent infinite loop
-        offspring_size = self.number_of_arms
+        offspring_size = self.pop_size
         parent_1 = np.asarray(Other.Concepts.arm2parts(str(parents[0]).split("_")))
         parent_2 = np.asarray(Other.Concepts.arm2parts(str(parents[1]).split("_")))
         offspring = []
@@ -191,7 +198,6 @@ class Problem:
             cross_ok = False
             mut_ok = False
             while not in_concept:
-                # todo - check if in get_prev_confs
                 # calculate crossover and mutation and check if they are belongs to the concept
                 if not cross_ok:
                     cross_spring = self.crossover([parent_1, parent_2])
@@ -205,13 +211,11 @@ class Problem:
                         mut_ok = mut_spring not in self.get_prev_confs()
                 in_concept = cross_ok and mut_ok
                 if attempt >= total_attempts:
-                    offspring = []
-                    self.stopped = True
+                    offspring = self.rand_pop()
+                    # self.stopped = True
                     break
                 attempt += 1
             offspring.append(cross_spring)
-            # if cross_spring in self.get_prev_confs():
-            #     print("shit")
         return offspring
 
     def crossover(self, parents):
@@ -260,13 +264,10 @@ class Problem:
          if distance appear more than once it than take the second item
          """
         indices = []
-        # print(select)
         for x in select:
-            # print(fit)
             ind = np.argwhere(fit == round(x, 3))
-            # print(ind)
-            if ind.shape[0] >= 1:
-                fit[ind[0][0]] = 100
+            # if ind.shape[0] >= 1:
+            #     fit[ind[0][0]] = 100
             indices.append(ind[0][0])
         return indices
 
@@ -345,6 +346,12 @@ class Problem:
                 break
         return result
 
+    def set_elite_confs(self, confs):
+        self.elit_confs = confs
+
+    def get_elite_confs(self):
+        return self.elit_confs
+
     def stop_condition(self):
         if len(self.get_prev_confs()) == len(self.confs_of_concepts):
             # check if all the configurations simulated
@@ -387,13 +394,15 @@ class Problem:
 
 class DWOI:
 
-    def __init__(self, concepts_file="jsons/front_concept"):
+    def __init__(self, concepts_file="jsons/front_concept", run_time=7):
         self.gen = 0
         self.dwoi = self.dwoi2conf(Other.load_json(concepts_file))  # , self.gen])
         self.stopped = False
+        self.start_time = time()
+        self.run_time = run_time * 3600  # in seconds
 
     def stop_condition(self):
-        if 1 == 3:
+        if self.run_time <= time() - self.start_time:
             self.stopped = True
 
     def set_dwoi(self, dwoi):
@@ -505,7 +514,7 @@ def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25):
         name_of_concept = list(concepts_with_conf)[i]
         # todo - set each concept relative numbers of arms
         prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept],
-                            number_of_arms=number_of_arms, large_concept=large_concept))
+                            pop_size=number_of_arms, large_concept=large_concept))
         # initiliaze population
         population.append(prob[i].rand_pop())
     return prob, population
@@ -523,21 +532,17 @@ def run(population, prob):
     front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
     if front != woi.get_last_dwoi():
         woi.set_dwoi(front)
-
     # Stop Condition
     prob.stop_condition()
-
     # Check if large concept
     if prob.large_concept:  # if large concept
+        # elitism
+        confs_results = prob.elitism(confs_results)
         # Assign fitness
-        dis = prob.assign_fitness(confs_results, woi.get_last_dwoi())  # the distance of all the configurations
-        fitness = np.amin(dis, axis=0)  # calc the minimum distance for each configuration
-        # print(fitness)
+        fitness = prob.assign_fitness(confs_results, woi.get_last_dwoi())  # calc minimum distance for each config
         # Selection (RWS)
-        selection = prob.selection(fitness)
-        # print(selection)
+        selection = prob.selection(fitness, prob.pop_size)
         selected_confs_ind = prob.confs_by_indices(selection, fitness)
-        # print(selected_confs_ind)
         selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
         # Mating
         population = prob.mating(selected_confs)
@@ -563,23 +568,20 @@ def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="j
 
 
 if __name__ == '__main__':
-    # initilize globaly
-
-    # concepts_with_conf = Other.load_json("jsons/concepts2ga")
-    # all_data = Other.load_json("jsons/concepts+configs+results")
+    # ##Initilize globaly
     # load all the concepts
     all_data = get_prev_data()
     # load the first WOI
-    woi = DWOI()
+    woi = DWOI(run_time=7)
     # how many gens to run
     num_gens = 10
     # the name of the json file of the DWOI
     name = "jsons/optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
-
-    prob, population = init_concepts(all_data)
+    # ##Initilize all the concepts GA
+    prob, populations = init_concepts(all_data)
     for n in tqdm(range(num_gens)):
-        for i in range(1):  # len(concepts_with_conf)):
-            population[i] = run(population[i], prob[i])
+        for i in range(1):  # len(prob)):
+            populations[47] = run(populations[i], prob[i])
         # Save the current WOI
         Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         # Update generation
@@ -588,15 +590,17 @@ if __name__ == '__main__':
         woi.stop_condition()
         if woi.stopped:
             break
-    # a = Other.load_json("optimizaion_WOI_13_01_")
 
 # done - create main results file
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
 # todo - add elitism check
+# todo - create folder with all the configurations for each concept?
 # todO - set json file with the desired concepts
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
 # todo - problematic urdf to make list and pre create
 # todo - to check from main results file if allready simulated
-# tqdm
+
+
+# todo - take a concept with ~10000 conf and fully simulate him
