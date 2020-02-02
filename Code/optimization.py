@@ -151,8 +151,25 @@ class Problem:
         """
         elite_confs = self.get_elite_confs()
         if not elite_confs:
+            self.set_elite_confs(new_gen)
             return new_gen
-        new_elite_gen = self.domination_check(new_gen, elite_confs)
+        new_elite_gen = []
+        new_elite_gen_name = []
+        for i in range(self.pop_size):
+            for j in range(self.pop_size):
+                if elite_confs[0][i] > new_gen[0][j] and elite_confs[1][i] > new_gen[1][j]:
+                    new_elite = [new_gen[0][j], new_gen[1][j], new_gen[2][j]]
+                    new_elite_gen_name.append(new_gen[3][j])
+                    new_gen[0][j] = 100
+                    new_gen[1][j] = 100
+                    new_elite_gen.append(new_elite)
+                    break
+            if j == self.pop_size -1:
+                new_elite = [elite_confs[0][i], elite_confs[1][i],elite_confs[2][i]]
+                new_elite_gen_name.append(elite_confs[3][i])
+                new_elite_gen.append(new_elite)
+        new_elite_gen = np.ndarray.tolist(np.asarray(new_elite_gen).T) + [new_elite_gen_name] + elite_confs[4]
+        self.set_elite_confs(new_elite_gen)
         return new_elite_gen
 
     @staticmethod
@@ -315,20 +332,23 @@ class Problem:
                     del front[1][ind]
                     del front[2][ind]
                     del front[3][ind]
-                    del front[4][ind]
+                    if front[4] != self.concept_name:
+                        del front[4][ind]
                     if not added:
                         front[0].append(i)
                         front[1].append(j)
                         front[2].append(k)
                         front[3].append(l)
-                        front[4].append(self.concept_name)
+                        if front[4] != self.concept_name:
+                            front[4].append(self.concept_name)
                         added = True
             if not added:
                 front[0].append(i)
                 front[1].append(j)
                 front[2].append(k)
                 front[3].append(l)
-                front[4].append(self.concept_name)
+                if front[4] != self.concept_name:
+                    front[4].append(self.concept_name)
         return front
 
     def set_prev_confs(self, confs):
@@ -399,7 +419,7 @@ class DWOI:
         self.dwoi = self.dwoi2conf(Other.load_json(concepts_file))  # , self.gen])
         self.stopped = False
         self.start_time = time()
-        self.run_time = run_time * 3600  # in seconds
+        self.run_time = run_time*3600*24  # in seconds
 
     def stop_condition(self):
         if self.run_time <= time() - self.start_time:
