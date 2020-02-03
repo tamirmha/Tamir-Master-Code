@@ -168,7 +168,7 @@ class Problem:
                 new_elite = [elite_confs[0][i], elite_confs[1][i],elite_confs[2][i]]
                 new_elite_gen_name.append(elite_confs[3][i])
                 new_elite_gen.append(new_elite)
-        new_elite_gen = np.ndarray.tolist(np.asarray(new_elite_gen).T) + [new_elite_gen_name] + elite_confs[4]
+        new_elite_gen = np.ndarray.tolist(np.asarray(new_elite_gen).T) + [new_elite_gen_name] + [elite_confs[4]]
         self.set_elite_confs(new_elite_gen)
         return new_elite_gen
 
