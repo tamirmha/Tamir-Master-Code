@@ -568,19 +568,18 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
     return {"arm": arm, "name": file_name, "folder": folder}
 
 
-def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25):
+def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25, parents_percent=0.4):
     """ Initilize all the concept and the first populations"""
     prob = []
     # population = []
     for i in range(len(concepts_with_conf)):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
-        # todo - set each concept relative numbers of arms
-        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept],parents_percent=0.4,
+        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept], parents_percent=parents_percent,
                             pop_size=number_of_arms, large_concept=large_concept))
         # initiliaze population
-        # population.append(prob[i].rand_pop())
         prob[i].set_population(prob[i].rand_pop())
+        # population.append(prob[i].rand_pop())
     return prob  # , population
 
 
@@ -641,33 +640,37 @@ if __name__ == '__main__':
     # load the first WOI
     woi = DWOI(run_time=7)
     # how many gens to run
-    num_gens = 10
+    num_gens = 3
     # the name of the json file of the DWOI
     name = "jsons/optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
     # ##Initilize all the concepts GA
     # prob, populations = init_concepts(all_data)  # {list(all_data)[47]:all_data[list(all_data)[47]]}
-    prob = init_concepts(all_data)
-    p = Pool(4)
-    for n in (range(num_gens)):
-        # for i in range(len(prob[:10])):
-        #     prob[i] = run(prob[i])
-        print("Generation " + str(n+1) + " of " + str(num_gens) + " generations")
-        prob = list(tqdm(p.imap(run, prob), total=len(prob)))
-        # Save the current WOI
-        Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        # Update generation
-        woi.set_gen(n + 1)
-        # Check global stop condition
-        woi.stop_condition()
-        if woi.stopped:
-            break
-    p.close()
+    prob = init_concepts(concepts_with_conf=all_data, large_concept=250, number_of_arms=25, parents_percent=0.4)
+    p = Pool(1)
+    try:
+        for n in (range(num_gens)):
+            # for i in range(len(prob[:10])):
+            #     prob[i] = run(prob[i])
+            print("Generation " + str(n+1) + " of " + str(num_gens) + " generations")
+            prob = list(tqdm(p.imap(run, prob), total=len(prob)))
+            # Save the current WOI
+            Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+            # Update generation
+            woi.set_gen(n + 1)
+            # Check global stop condition
+            woi.stop_condition()
+            if woi.stopped:
+                break
+    finally:
+        p.close()
+        Other.pickle_save_data(prob, "problems")
 
 # done - create main results file
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
 # done - add elitism check
-# todo - parents number to each concept
+# todo - set each concept relative numbers of arms (init concepts)
+# done - parents number to each concept
 # todo - in mating- if doesnt succeeded to create offspring?
 # todo - create folder with all the configurations for each concept?
 # todO - set json file with the desired concepts
@@ -676,7 +679,7 @@ if __name__ == '__main__':
 # todo - problematic urdf to make list and pre create
 # done - to check from main results file if allready simulated
 # todo - check the differences with parallel
-# todo- how to save variable
+# todo- to think when to save prob
 
 # todo - play with the follow parameters: mutation rate, parents number, number of offsprings
 # todo - take a concept with ~10000 conf and fully simulate him

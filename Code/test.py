@@ -4,22 +4,32 @@ from tqdm import tqdm
 from Other import *
 
 
-def f(x):
-    y=5
-    z = 1
-    q = 0
-    for i in range(1,x+1):
-        z *= i
-        q += y
-    return z, q
+def f(K):
+    # T = 10
+    z = 0.5
+    for k in range(2, K+1):
+        # for t in range(1, T+1):
+        #     z += 0.5**k
+        #     z += 1
+        z *= k/(k+1.)
+    return z
 
 
 if __name__ == '__main__':
-    d = range(1, 50)
-    p = Pool(4)
-    tic = time()
-    a = list(tqdm(p.imap(f, d), total=len(d)))
-    p.close()
+    T = 100
+    K = 10
+    a = f(K)
+    b = 1./(K+1)
+    # c = np.log(np.prod(np.exp(np.arange(1, K+1))))
+    # d= K*((K+1)/2.0)
+    # a = f(K)
+    # b = T - T*0.5**K
+    # d = range(510)
+    # p = Pool(4)
+    # tic = time()
+    # a = list(tqdm(p.imap(f, d), total=10))
+    # b = sum(a)
+    # p.close()
     # toc = time()
     # print(toc-tic)
     # all_data = MyCsv.read_csv("results_all", "dict")

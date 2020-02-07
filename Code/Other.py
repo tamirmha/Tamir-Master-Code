@@ -12,6 +12,7 @@ from simulator import Simulator
 from matplotlib.tri import Triangulation
 from tqdm import tqdm
 import copy
+import pickle
 # from multiprocessing import Pool
 
 
@@ -922,6 +923,7 @@ def add_table2plot(pareto):
     plt.show()
 
 
+#  ### Json handaling
 def save_json(name="data_file", data=None):
     with open(name + ".json", "a") as write_file:
         json.dump(data, write_file, indent=2)
@@ -954,6 +956,22 @@ def fix_json(file_name):
                     empty = True
         with open(file_name + ".json", 'w') as name:
             name.writelines(data)
+
+
+#  ### Pickle handling
+def pickle_load_data(file_name="bin.dat"):
+    try:
+        with open(file_name) as f:
+            x = pickle.load(f)
+    except:
+        print("can't load the file")
+        x = []
+    return x
+
+
+def pickle_save_data(data, file_name):
+    with open(file_name, "wb") as f:
+        pickle.dump(data, f)
 
 
 #  ###how many configurations allready simulated and which to create  ###
@@ -1038,7 +1056,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
+    pareto_plot = True
     check_num_confs_in_concepts = True
     if calc_concepts:
         con = Concepts()
@@ -1061,7 +1079,7 @@ if __name__ == '__main__':
     if fix_from_json:
         FixFromJson()
     if plotdata:
-        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all")
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all")
     if pareto_plot:
         con = assign_results()
         outer_points, pareto_front = domination_check(con)
