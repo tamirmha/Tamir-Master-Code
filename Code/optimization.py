@@ -519,12 +519,17 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
 
 
 def set_pop_size(num_concept_confs, min_configs=[25, 10]):
+    """decide the population size: going to be the bigger between min_configs[1] % of concepts number or min_configs[0]
+     :param num_concept_confs: [int] number of configurations in this concept
+     :param min_configs: [2 elements list] the limits: min_configs[0] is the minimum number of the population
+                        min_configs[1] is the percent of number of configurations in the concept
+    :return pop_size: [int] size of the pipulation
+     """
     if num_concept_confs * min_configs[1] / 100 > min_configs[0]:
         pop_size = num_concept_confs * min_configs[1] / 100
     else:
-        pop_size = min[0]
+        pop_size = min_configs[0]
     return pop_size
-
 
 
 def init_concepts(large_concept=1500, arms_limit=[25, 40], parents_percent=0.4):
@@ -534,7 +539,6 @@ def init_concepts(large_concept=1500, arms_limit=[25, 40], parents_percent=0.4):
     :param parents_percent - [float] how much from the populatoin will be parents
     :return prob - [list of objects] all the data of each concept
     """
-    # todo - number of arms
     # load all the concepts
     concepts_with_conf = get_prev_data()
     prob = []
@@ -566,27 +570,39 @@ def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="j
     return ga_data
 
 
+def csvs2data():
+    """ Take all the created CSVs and insert them into one variable
+     :return data -[list of dicts] the results of all the simulated configuration in this run
+     """
+    data = []
+    for file in os.listdir(os.getcwd()):
+        if file.endswith(".csv"):
+            data.append(MyCsv.load_csv(file[:-4]))
+    data = [val for sublist in data for val in sublist]
+    return data
+
+
 def set_new_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
     """ get all the previous data and the concepts to enter into the ga and return only the relevant data
     :param all_concepts_json - [str] json file with all the simulated data
     :param ga_json - [str] all the concepts to check in the GA
     """
-    # todo - add all files in the folder
-    new_data = MyCsv.load_csv("results_file" +  datetime.now().strftime("%d_%m_") + "6dof_4d_")
+    data = csvs2data()
     jsons_folder = os.environ['HOME'] + "/Tamir/Master/Code/"
     all_concepts_json = jsons_folder + all_concepts_json
     ga_json = jsons_folder + ga_json
     all_concepts = load_json(all_concepts_json)
     ga_concepts = load_json(ga_json)
-    for dat in new_data:
+    for dat in data:
         second_loop_stop = False
         for con in ga_concepts:
             k = 0
             for concept in all_concepts[con]:
                 if dat["name"] in concept:
-                    print(dat["name"])
                     second_loop_stop = True
-                    all_concepts[con][k] = {unicode(dat["name"]): {"mu":dat["mu"], "z": dat["Z"], "dof": dat["dof"],
+                    if all_concepts[con][k][dat["name"]]["mu"] is not None:
+                        print("Check it!!!")
+                    all_concepts[con][k] = {unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"],
                                                                   "name": unicode(dat["name"])}}
                     break
                 k += 1
@@ -726,29 +742,29 @@ if __name__ == '__main__':
     try:
         # decide how many threads to use
         # with Pool(threads) as p:
-            # running each generation
-            for n in (range(num_gens)):
-                # simulate the population
-                probs = sim(prob=probs)
-                # Save the current WOI
-                save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-                print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
-                for i in tqdm(range(len(probs))):
-                    probs[i] = run(probs[i])
-                # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
-                # Update generation
-                woi.set_gen(n + 1)
-                # Check global stop condition
-                woi.stop_condition()
-                if woi.stopped:
-                    break
+        # running each generation
+        for n in (range(num_gens)):
+            # simulate the population
+            probs = sim(prob=probs)
+            # Save the current WOI
+            save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+            print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
+            for i in tqdm(range(1)):  # len(probs)
+                probs[i] = run(probs[i])
+            # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
+            # Update generation
+            woi.set_gen(n + 1)
+            # Check global stop condition
+            woi.stop_condition()
+            if woi.stopped:
+                break
     finally:
         print("Savaing data...")
         # p.close()
         save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         pickle_save_data(woi, "woi")
         # pickle_save_data(probs, "problems")
-        # set_new_data()
+        set_new_data()
         print("Finished")
 
 
@@ -763,7 +779,7 @@ if __name__ == '__main__':
 # done - how to evalute?  run simulation for all ?
 # done - how to get the results from the simulator
 # done - to check from main results file if allready simulated
-# todo - check the differences with parallel - doesnt share global vars - need to change the code
+# done - check the differences with parallel - doesnt share global vars - need to change the code
 
 # todo - play with the follow parameters: mutation rate, parents number, number of offsprings
 # todo - take a concept with ~10000 conf and fully simulate him
