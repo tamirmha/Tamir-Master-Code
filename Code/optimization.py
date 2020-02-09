@@ -518,7 +518,16 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
     return {"arm": arm, "name": file_name, "folder": folder}
 
 
-def init_concepts(large_concept=1500, number_of_arms=25, parents_percent=0.4):
+def set_pop_size(num_concept_confs, min_configs=[25, 10]):
+    if num_concept_confs * min_configs[1] / 100 > min_configs[0]:
+        pop_size = num_concept_confs * min_configs[1] / 100
+    else:
+        pop_size = min[0]
+    return pop_size
+
+
+
+def init_concepts(large_concept=1500, arms_limit=[25, 40], parents_percent=0.4):
     """ Initilize all the concept and the first populations
     :param large_concept - [int] minimum number of configurations in concept in order to concept will be large
     :param number_of_arms - [int]
@@ -533,6 +542,7 @@ def init_concepts(large_concept=1500, number_of_arms=25, parents_percent=0.4):
     for i in range(len(concepts_with_conf)):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
+        number_of_arms = set_pop_size(len(concepts_with_conf[name_of_concept]), arms_limit)
         prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept], parents_percent=parents_percent,
                             pop_size=number_of_arms, large_concept=large_concept))
         # initiliaze population
@@ -690,7 +700,7 @@ if __name__ == '__main__':
     num_gens = 1  # how many gens to run
     parents_percent = 0.4  # percent of oarents from the total population
     large_concept = 1500  # define what is a large concept
-    number_of_arms = 25  #
+    arms_limit = [25, 5]  # population limit: arms_limit[0]: minimum numcer of configs, arms_limit[1]: % of population
     threads = 1  # how many threads to use if using parallel
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
     params = "Number of gens: " + str(num_gens) + "\nparents_percent: " + str(parents_percent) + \
@@ -710,7 +720,7 @@ if __name__ == '__main__':
     woi = DWOI(run_time=run_time)
     # Initilize all the concepts GA
     print("initiliaze data")
-    probs = init_concepts(large_concept=large_concept, number_of_arms=number_of_arms, parents_percent=parents_percent)
+    probs = init_concepts(large_concept=large_concept, arms_limit=arms_limit, parents_percent=parents_percent)
     # change the working dir
     os.chdir(results_folder)
     try:
@@ -746,12 +756,12 @@ if __name__ == '__main__':
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
 # done - add elitism check
-# todo - set each concept relative numbers of arms (init concepts)
+# done - set each concept relative numbers of arms (init concepts)
 # done - parents number to each concept
 # todo - in mating- if doesnt succeeded to create offspring?
 # done - set json file with the desired concepts
-# todo - how to evalute?  run simulation for all ?
-# todo - how to get the results from the simulator
+# done - how to evalute?  run simulation for all ?
+# done - how to get the results from the simulator
 # done - to check from main results file if allready simulated
 # todo - check the differences with parallel - doesnt share global vars - need to change the code
 
