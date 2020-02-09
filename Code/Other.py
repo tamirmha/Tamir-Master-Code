@@ -328,7 +328,7 @@ class Concepts:
                 link_length.append(arm[a] + "." + arm[a + 1][:1])
         return joints, prev_axe, link_length
 
-    def create_files2sim(self, to_sim, confs_file5="tests/5dof/to_sim_5dof_", confs_file6="tests/dof/to_sim_6dof_"):
+    def create_files2sim(self, to_sim, confs_file5="urdf/5dof", confs_file6="urdf/6dof"):
         """ get configurations and save urdf files
         :param to_sim: list of configurations to create urdfs
         :param confs_file5: name of csv file with all 5dof configurations to create
@@ -350,16 +350,17 @@ class Concepts:
         conf_6dof = [x for x in conf_6dof if x]
         conf_5dof = [x for x in conf_5dof if x]
         for k in range(len(conf_5dof)):
-            MyCsv.save_csv(conf_5dof[k], confs_file5 + str(k))
+            MyCsv.save_csv(conf_5dof[k], confs_file5)
         for k in range(len(conf_6dof)):
-            MyCsv.save_csv(conf_6dof[k], confs_file6 + str(k))
+            MyCsv.save_csv(conf_6dof[k], confs_file6)
 
-    def create_urdfs(self, i_length, i, dof, conf, confs_in_folder=4000):
+    def create_urdfs(self, i_length, i, dof, conf, confs_in_folder=4000, path="urdf/"):
         i_length += len(conf)
+        path += str(dof) + "dof/"
         for c in conf:
             joints, prev_axe, link_length = self.arm2parts(c.split("_"))  # con.arm2parts(c.split("_"))
             arm = Simulator.create_arm(joints, prev_axe, link_length, "")
-            path = "tests/" + str(dof) + "dof/" + str(i) + "/"
+            # path = "tests/" + str(dof) + "dof/" + str(i) + "/"
             Simulator.create_folder(path)
             arm["arm"].urdf_write(arm["arm"].urdf_data(), path + arm["name"])
         if i_length > confs_in_folder:
@@ -565,10 +566,8 @@ def split_files_to_several_folders(files_in_folder=5000):
     name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
     if not path.exists(name):
         mkdir(name)
-
     full_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/combined/"
     files = listdir(full_path)
-
     for j in range(len(files)/files_in_folder):
         if not path.exists(name + str(j)):
             mkdir(name + str(j))
@@ -637,7 +636,7 @@ def sum_data():
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/recalculate/results_all"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -959,9 +958,9 @@ def fix_json(file_name):
 
 
 #  ### Pickle handling
-def pickle_load_data(file_name="bin.dat"):
+def pickle_load_data(file_name="bin.pkl"):
     try:
-        with open(file_name) as f:
+        with open(file_name + ".pkl") as f:
             x = pickle.load(f)
     except:
         print("can't load the file")
@@ -970,7 +969,7 @@ def pickle_load_data(file_name="bin.dat"):
 
 
 def pickle_save_data(data, file_name):
-    with open(file_name, "wb") as f:
+    with open(file_name + ".pkl", "wb") as f:
         pickle.dump(data, f)
 
 
@@ -1056,7 +1055,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
     check_num_confs_in_concepts = True
     if calc_concepts:
         con = Concepts()
@@ -1079,7 +1078,7 @@ if __name__ == '__main__':
     if fix_from_json:
         FixFromJson()
     if plotdata:
-        plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all")
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all")
     if pareto_plot:
         con = assign_results()
         outer_points, pareto_front = domination_check(con)
@@ -1104,7 +1103,7 @@ if __name__ == '__main__':
         # before start the the GA i want to simulate all the small concepts - this calculate how many and which
         # configurations needed to be simulated
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-        all_concepts = load_json("concepts")  # all the concepts and there configurations
+        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
         # #to save time the following is commented.  if we want to calculated with different data uncomment
         # confs_in_concepts = 220  # all the concecpts with less than 220 configurations
         # concepts2check, simulated, v = how_many_to_create(all_concepts, all_data, confs_in_concepts)

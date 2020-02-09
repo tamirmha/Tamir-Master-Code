@@ -16,9 +16,9 @@ Constrains:
 •	If (X1[i]==Roll and X2[i]==Z) than (X1[i+1]!=Roll and X2[i+1]!=Z)
 •	Arrival points : reach to one from two upper points and to the middle and bottom points
 """
-
+from simulator import simulate
 from ros import UrdfClass
-import Other
+from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -26,51 +26,9 @@ from datetime import datetime
 from tqdm import tqdm
 from time import time
 from multiprocessing import Pool
-
+import os
+import shutil
 np.random.seed(100100)
-
-# class Configs:
-#     def __init__(self):
-#         configs = self.read_data("all_configs")
-#         possible_configs = {"3": [], "4": [], "5": [], "6": []}
-#         for config in configs:
-#             if config[0]["dof"] == 3:
-#                 possible_configs["3"].append(config[0])
-#             elif config[0]["dof"] == 4:
-#                 possible_configs["4"].append(config[0])
-#             elif config[0]["dof"] == 5:
-#                 possible_configs["5"].append(config[0])
-#             elif config[0]["dof"] == 6:
-#                 possible_configs["6"].append(config[0])
-#         self.possible_configs = possible_configs
-#
-#     def read_data(self, file_name):
-#         with open(file_name + ".csv", 'r') as _filehandler:
-#             csv_file_reader = csv.reader(_filehandler)
-#             data = []
-#             manip = []
-#             empty = True
-#             for row in csv_file_reader:
-#                 while "" in row:
-#                     row.remove("")
-#                 if len(row) > 0:
-#                     data.append([row[0].strip("\"").strip(" "), row[1]])
-#                     empty = False
-#                 else:
-#                     if not empty:
-#                         manip.append(self.read_data_action(data))
-#                         data = []
-#                     empty = True
-#             # manip.append(self.read_data_action(data))  # append the last session
-#             return manip
-#
-#     @staticmethod
-#     def read_data_action(data):
-#         manip = list(map(list, zip(*data[0:])))
-#         manip_array_of_dict = []
-#         for i in range(0, len(manip) - 1, 2):
-#             manip_array_of_dict.append({"joint": manip[i], "axe": manip[i + 1], "dof": len(manip[i])})
-#         return manip_array_of_dict
 
 
 class Problem:
@@ -95,7 +53,10 @@ class Problem:
         return self.population
 
     def rand_pop(self, pop_size=None):
-        """ select random configurations that belongs to the concept"""
+        """ select random configurations that belongs to the concept
+        :param pop_size-[int] the size of selected population - if nothing entred than take self.pop_size
+        :return confs- [list]  names of configurations
+        """
         if pop_size is None:
             pop_size = self.pop_size
         confs_of_concepts = self.get_configs()
@@ -141,8 +102,8 @@ class Problem:
             else:
                 f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.normal(0.95, 0.01), 3))    # manipulability
-                f1.append(np.around(np.random.normal(0.434, 0.01), 3))  # Mid-Range Proximity
+                f2.append(np.around(np.random.normal(0.05, 0.01), 3))    # manipulability
+                f1.append(np.around(np.random.normal(0.05, 0.01), 3))  # Mid-Range Proximity
         if len(f1) != 25:
             a = 3
         return [f1, f2, f3, pops, self.concept_name]
@@ -159,7 +120,8 @@ class Problem:
 
     def elitism(self, new_gen):
         """Elitism - Make sure the offsprings will be better than the previous generation
-        :param new_gen - the results of the last genration
+        :param new_gen - [list of lists] the results of the last genration
+        :return new_elite_gen -[list of lists] the best population from the elite and last offsprings
         """
         elite_confs = self.get_elite_confs()
         if not elite_confs:
@@ -169,7 +131,6 @@ class Problem:
         new_elite_gen_name = []
         for i in range(self.pop_size):
             for j in range(self.pop_size):
-              try:
                 if elite_confs[0][i] > new_gen[0][j] and elite_confs[1][i] > new_gen[1][j]:
                     new_elite = [new_gen[0][j], new_gen[1][j], new_gen[2][j]]
                     new_elite_gen_name.append(new_gen[3][j])
@@ -177,8 +138,6 @@ class Problem:
                     new_gen[1][j] = 100
                     new_elite_gen.append(new_elite)
                     break
-              except:
-                    a = 3
             if j == self.pop_size -1:
                 new_elite = [elite_confs[0][i], elite_confs[1][i],elite_confs[2][i]]
                 new_elite_gen_name.append(elite_confs[3][i])
@@ -189,17 +148,21 @@ class Problem:
 
     @staticmethod
     def assign_fitness(points, dwoi):
-        """ calculate the distance from each point to the DWOI"""
-        dwoi_loc = np.asarray(dwoi[:3]).T   # np.asarray([[i[1], i[0], i[2]] for i in dwoi])
+        """ calculate the distance from each point to the DWOI
+        :param points - [list of lists] the results of last evaluation
+        :param dwoi - [list of lists] last Dynamic Window of Intrest
+        :return [np array] of the shortest distance form each point to the DWOI
+        """
+        dwoi_loc = np.asarray(dwoi[:3]).T
         dist = distance.cdist(dwoi_loc,  np.asarray(points[:3]).T, 'euclidean')
         return np.amin(np.around(dist, 3), axis=0)
 
     @staticmethod
     def selection(dis, num_of_returns=2):
         """Make selection by using RWS return the value
-        :param dis: array of distances
-        :param num_of_returns: how many elements to return
-        :return selected: the selected values that won the RWS
+        :param dis: [np array]  distances
+        :param num_of_returns:[int] how many elements to return
+        :return :[np array] the selected indices that won the RWS
         """
         selected = []
         c = 3.
@@ -213,7 +176,11 @@ class Problem:
         return np.abs(np.round(np.log(selected)/c, 3))  # [10-x for x in selected]
 
     def mating(self, parents, mutation_percent=40):
-        """ """
+        """
+        :param parents - [list] all the parents that go into the mating pool
+        :param mutation_percent - [int] how much mutation wanted
+        :return offspring - [list] names of the offsprings
+         """
         offspring_size = self.pop_size
         num_mutations = int(offspring_size * mutation_percent/100.)
         num_crossover = offspring_size - num_mutations
@@ -231,8 +198,8 @@ class Problem:
                 # select parents randomlly
                 j = np.random.randint(0, len(parents))
                 k = np.random.randint(0, len(parents))
-                parent_1 = np.asarray(Other.Concepts.arm2parts(str(parents[k]).split("_")))
-                parent_2 = np.asarray(Other.Concepts.arm2parts(str(parents[j]).split("_")))
+                parent_1 = np.asarray(Concepts.arm2parts(str(parents[k]).split("_")))
+                parent_2 = np.asarray(Concepts.arm2parts(str(parents[j]).split("_")))
                 # calculate crossover and mutation and check if they are belongs to the concept
                 if not cross_ok and cross_offspring < num_crossover:
                     cross_spring = self.crossover([parent_1, parent_2])
@@ -275,6 +242,8 @@ class Problem:
     def crossover(self, parents):
         """ select a random number (link) and all the links&joints&axes until this point
         taken from parent 1 and all the links&joints&axes from this point are taken from parent 2
+        :param parents- [list] names of parents
+        :return -[str] name of offspring
         """
         dof = self.dof
         for t in range(dof):
@@ -290,10 +259,13 @@ class Problem:
         return child["name"]
 
     def mutation_rand(self, parent):
-        """ switch randomlly 2 links and joints """
+        """ switch randomlly 2 links and joints
+        :param parent- [np array] names of parents
+        :return -[str] name of offspring
+        """
         dof = self.dof
-        ind = np.random.randint(0, len(parents))
-        parent = parents[ind]
+        # ind = np.random.randint(0, len(parents))
+        # parent = parents[ind]
         inds = np.arange(1, dof)
         np.random.shuffle(inds)
         inds = np.insert(inds, 0, 0)
@@ -301,15 +273,14 @@ class Problem:
         offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
         return offspring["name"]
 
-    def mutation_round(self, offspring):
-        """ Switch the elements in circle. the last will be first
-        first will be second and so on"""
+    def mutation_round(self, parent):
+        """ Switch the elements in circle. the last will be first first will be second and so on
+        :param parent- [np array] names of parents
+        :return -[str] name of offspring
+        """
         dof = self.dof
-        # select random parent
-        # parent = parents[np.random.randint(0, len(parents))]
-        # indices = np.concatenate((np.asarray([0, dof-1]), np.arange(1, dof-1)))
-        # offspring = parent[:, indices]
-
+        indices = np.concatenate((np.asarray([0, dof-1]), np.arange(1, dof-1)))
+        offspring = parent[:, indices]
         offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
         if offspring["name"][15] == "x":  # for roll\pris x in start
             offspring["name"] = offspring["name"][:15] + "y" + offspring["name"][16:]
@@ -319,52 +290,66 @@ class Problem:
 
     @staticmethod
     def confs_by_indices(select, fit):
-        """ get the selected distances and return the indices of them
-         if distance appear more than once it than take the second item
+        """ get the selected distances and return the indices of them if distance appear more
+        than once it than take the second item
+        :param select - [np array]  the selected fitnesses to find their indices
+        :param fit - [np array]  array of the fitness of the configurations
+        :return indices - [list]  indices of the selected configuration
          """
         indices = []
         for x in select:
-            ind = np.argwhere(fit == round(x, 3))
+            ind = np.argwhere(np.round(fit,3) == round(x, 3))
             if ind.shape[0] > 1:
                 fit[ind[0][0]] = 100
-            indices.append(ind[0][0])
+            if len(ind) == 0:
+                ind = np.argwhere(np.round(fit,2) == round(x, 2))
+            try:
+                indices.append(ind[0][0])
+            except:
+                print("ind=" + str(ind) + "  fit=" + str(fit) + "x=" + str(x) + "\n")
         return indices
 
     def get_conifgs_by_indices(self, conf_indices):
-        """get configuration by indices"""
+        """get configuration by indices
+        :param conf_indices - [list] indices of the configurations
+        :return - [list] - names of the configurations in the selected indices
+        """
         get_configs = np.asarray(self.get_configs())
         return np.ndarray.tolist(get_configs[conf_indices])
         # return np.ndarray.tolist(np.unique(get_configs[conf_indices]))
 
     def check_conf(self, confs):
         """Ceck if the configurations are belongs to the concept
-        :param confs: list of configurations to check        """
+        :param confs: [str] configuration to check if in the concept
+        :return :[boolean] True if in the concept False otherwise
+        """
         configs = self.get_configs()
         return confs in configs
-        # ind = [i for i in range(confs.shape) if confs[i] in concepts]
-        # return confs[ind]
 
-    @staticmethod
-    def clost_point(distances, nums_mins=4):
-        """Find the closest point to the DWOI
-        :param distances: NxM array-N number of points in the DWOI, M number of points to calc distance
-        :param nums_mins: number of minimum points to find
-        return: the index of the closest point
-        """
-        indices = []
-        # print(distances.shape[0], distances.shape[1])
-        for i in range(nums_mins):
-            ind = distances.argmin() % distances.shape[1]
-            indices.append(ind)
-            distances[:, ind] = [100] * distances.shape[0]
-            # distances = distances[:, range(ind) + range(ind + 1, distances.shape[1])]
-        return indices
+    # @staticmethod
+    # def clost_point(distances, nums_mins=4):
+    #     """Find the closest point to the DWOI
+    #     :param distances: NxM array-N number of points in the DWOI, M number of points to calc distance
+    #     :param nums_mins: number of minimum points to find
+    #     :return the index of the closest point
+    #     """
+    #     indices = []
+    #     for i in range(nums_mins):
+    #         ind = distances.argmin() % distances.shape[1]
+    #         indices.append(ind)
+    #         distances[:, ind] = [100] * distances.shape[0]
+    #         # distances = distances[:, range(ind) + range(ind + 1, distances.shape[1])]
+    #     return indices
 
     def get_configs(self):
         return self.confs_of_concepts
 
     def domination_check(self, conf, front):
-        """ check if any of the configuration dominated the DWOI and update the DWOI"""
+        """ check if any of the configuration dominated the DWOI and update the DWOI
+        :param conf - [list] the results of the configuration
+        :param front - [list] the results of the DWOI
+        :return front - [list] the new front
+        """
         for i, j, k, l in zip(conf[0], conf[1], conf[2], conf[3]):  # z, mu, dof, configuration
             added = False
             for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):
@@ -419,47 +404,13 @@ class Problem:
         if len(self.get_prev_confs()) == len(self.confs_of_concepts):
             # check if all the configurations simulated
             self.stopped = True
-    # def get_random_values(self):
-    #     # set random
-    #     x4 = random.randrange(self.x4_options[0], self.x4_options[-1]+1, 1)  # number degrees of freedom
-    #     # the first joint is roll
-    #     x1 = ["roll"]
-    #     x2 = ["z"]
-    #     x3 = [0.1]
-    #     x = [[], [], [], x4]
-    #     k = 0
-    #     for i in range(1, self.number_of_arms * x4 - self.number_of_arms + 1):
-    #         x1.append(random.choice(self.x1_options))
-    #         x2.append(random.choice(self.x2_options))
-    #         x3.append(random.choice(self.x3_options))
-    #         if i % (x4-1) == 0 and i != 0:
-    #             k += 1
-    #             x[0].append(x1)
-    #             x[1].append(x2)
-    #             x[2].append(x3)
-    #             x1 = ["roll"]
-    #             x2 = ["z"]
-    #             x3 = [0.1]
-    #     return x
-    #
-    # def constrains(self, x):
-    #     # filter the combinations according to constrains
-    #     to_sim = []
-    #     for i in range(self.number_of_arms):
-    #         if sum(x[2][i]) > 1:
-    #             for conf in self.possibles_configs[str(x[3])]:
-    #                 if x[0][i] == conf["joint"] and x[1][i] == conf["axe"]:
-    #                     to_sim.append(to_urdf(x[0][i], x[1][i], x[2][i], x[3]))
-    #                     # print(conf["joint"])
-    #                     break
-    #     return to_sim
 
 
 class DWOI:
 
     def __init__(self, concepts_file="jsons/front_concept", run_time=7):
         self.gen = 0
-        self.dwoi = self.dwoi2conf(Other.load_json(concepts_file))  # , self.gen])
+        self.dwoi = self.dwoi2conf(load_json(concepts_file))  # , self.gen])
         self.stopped = False
         self.start_time = time()
         self.run_time = run_time*3600*24  # in seconds
@@ -508,12 +459,11 @@ class DWOI:
 
 def to_urdf(interface_joints, joint_parent_axis, links, folder):
     """Create the desired confiuration
-            interface_joints- roll,pitch or prismatic
-                             roll - revolute around own Z axe
-                             pitch - revolute that not roll
-                             pris - prismatic along z
-            links - length of links
-            joint_parent_axis - the axe, in the parent frame, which each joint use
+    :param interface_joints- [list] roll,pitch or prismatic (roll -revolute around own Z axis,
+                                    pitch - revolute that not roll,  pris - prismatic along z)
+    :param links -[list] length of links
+    :param joint_parent_axis - [list] the axe, in the parent frame, which each joint use
+    :return -[dict] -contain the configuration name and all the data to the urdf file
         """
     joints = []
     joint_axis = []
@@ -568,8 +518,16 @@ def to_urdf(interface_joints, joint_parent_axis, links, folder):
     return {"arm": arm, "name": file_name, "folder": folder}
 
 
-def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25, parents_percent=0.4):
-    """ Initilize all the concept and the first populations"""
+def init_concepts(large_concept=1500, number_of_arms=25, parents_percent=0.4):
+    """ Initilize all the concept and the first populations
+    :param large_concept - [int] minimum number of configurations in concept in order to concept will be large
+    :param number_of_arms - [int]
+    :param parents_percent - [float] how much from the populatoin will be parents
+    :return prob - [list of objects] all the data of each concept
+    """
+    # todo - number of arms
+    # load all the concepts
+    concepts_with_conf = get_prev_data()
     prob = []
     # population = []
     for i in range(len(concepts_with_conf)):
@@ -585,12 +543,12 @@ def init_concepts(concepts_with_conf, large_concept=250, number_of_arms=25, pare
 
 def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
     """ get all the previous data and the concepts to enter into the ga and return only the relevant data
-    :param all_concepts_json- json file with all the simulated data
-    :param ga_json- all the concepts to check in the GA
+    :param all_concepts_json - [str] json file with all the simulated data
+    :param ga_json - [str] all the concepts to check in the GA
     :return ga_data- dictoinary with all the configurations and there results per concept
     """
-    all_concepts = Other.load_json(all_concepts_json)
-    ga_concepts = Other.load_json(ga_json)
+    all_concepts = load_json(all_concepts_json)
+    ga_concepts = load_json(ga_json)
     ga_data = {}
     for i in ga_concepts:
         if i in all_concepts:
@@ -599,12 +557,13 @@ def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="j
 
 
 def run(prob):
-    population = prob.get_population()
-    # insert previous configurations into archive
-    prob.set_prev_confs(population)
+    global woi
     # check if the local stop condition applied
     if prob.stopped:
         return []
+    population = prob.get_population()
+    # insert previous configurations into archive
+    prob.set_prev_confs(population)
     # Evaluation
     confs_results = prob.evalute(np.asarray(population))
     # Update DWOI if necessary
@@ -616,9 +575,9 @@ def run(prob):
     # Check if large concept
     if prob.large_concept:  # if large concept
         # elitism
-        confs_results2 = prob.elitism(confs_results)
+        confs_results_elite = prob.elitism(confs_results)
         # Assign fitness
-        fitness = prob.assign_fitness(confs_results2, woi.get_last_dwoi())  # calc minimum distance for each config
+        fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
         # Selection (RWS)
         selection = prob.selection(fitness, prob.parents_percent)
         selected_confs_ind = prob.confs_by_indices(selection, fitness)
@@ -632,29 +591,82 @@ def run(prob):
     return prob
 
 
-if __name__ == '__main__':
+def move_folder(src_folder_name="urdf/6dof/", dst_folder_name=""):
+    if not dst_folder_name:
+        dst_folder_name = os.environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined/"
+    if os.path.exists(dst_folder_name):
+        shutil.rmtree(dst_folder_name)
+    shutil.move(src_folder_name, dst_folder_name)
 
-    # ##Initilize globaly
-    # load all the concepts
-    all_data = get_prev_data()
+
+def check_exist(problem):
+    pop = problem.get_population()
+    to_sim =[]
+    for p in pop:
+        res = problem.get_result(p)
+        # check if the configuration allready simulated
+        if res["z"] is None:
+            to_sim.append(p)
+    return to_sim
+
+
+def sim(prob):
+    print("start creating urdfs")
+    # configurations to create urdf
+    to_sim = []
+    con = Concepts()
+    for p in prob:
+        to_sim.append(check_exist(p))
+    # create urdf files
+    con.create_files2sim(filter(None, to_sim))
+    # move the files into the desired place
+    move_folder()
+    print("start simulating")
+    simulate()
+
+
+if __name__ == '__main__':
+    # ## Setting parameters
+    run_time = 7  # how many dats to run
+    num_gens = 1  # how many gens to run
+    parents_percent = 0.4  # percent of oarents from the total population
+    large_concept = 1500  # define what is a large concept
+    number_of_arms = 1  #
+    threads = 1  # how many threads to use if using parallel
+    name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
+    params = "Number of gens: " + str(num_gens) + "\nparents_percent: " + str(parents_percent) + \
+             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_time) +  \
+             "\nNumber of Threads used: " + str(threads)
+    # enter all the results to one folder
+    results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
+    while os.path.isdir(results_folder):
+        results_folder = results_folder[:-1] + str(int(results_folder[-1]) + 1)
+    os.mkdir(results_folder)
+    os.mkdir(results_folder + "/urdf")
+    print(results_folder + " folder created \nStart Optimization")
+    with open(results_folder + "/parameters.txt", "w+") as f:
+        f.write(params)
+        f.close()
     # load the first WOI
-    woi = DWOI(run_time=7)
-    # how many gens to run
-    num_gens = 3
-    # the name of the json file of the DWOI
-    name = "jsons/optimizaion_WOI_" + datetime.now().strftime("%d_%m_")
-    # ##Initilize all the concepts GA
-    # prob, populations = init_concepts(all_data)  # {list(all_data)[47]:all_data[list(all_data)[47]]}
-    prob = init_concepts(concepts_with_conf=all_data, large_concept=250, number_of_arms=25, parents_percent=0.4)
-    p = Pool(1)
+    woi = DWOI(run_time=run_time)
+    # Initilize all the concepts GA
+    print("initiliaze data")
+    probs = init_concepts(large_concept=large_concept, number_of_arms=number_of_arms, parents_percent=parents_percent)
+    # change the working dir
+    os.chdir(results_folder)
     try:
+        # decide how many threads to use
+        p = Pool(threads)
+        # running each generation
         for n in (range(num_gens)):
-            # for i in range(len(prob[:10])):
-            #     prob[i] = run(prob[i])
-            print("Generation " + str(n+1) + " of " + str(num_gens) + " generations")
-            prob = list(tqdm(p.imap(run, prob), total=len(prob)))
+            # simulate the population
+            sim(prob=probs)
             # Save the current WOI
-            Other.save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+            save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+            print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
+            for i in tqdm(range(len(5))):
+                probs[i] = run(probs[i])
+            # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
             # Update generation
             woi.set_gen(n + 1)
             # Check global stop condition
@@ -662,8 +674,13 @@ if __name__ == '__main__':
             if woi.stopped:
                 break
     finally:
+        print("Savaing data...")
         p.close()
-        Other.pickle_save_data(prob, "problems")
+        save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+        pickle_save_data(woi, "woi")
+        # pickle_save_data(probs, "problems")
+        print("Finished")
+
 
 # done - create main results file
 # done - save dwoi to json every iteration?
@@ -672,14 +689,11 @@ if __name__ == '__main__':
 # todo - set each concept relative numbers of arms (init concepts)
 # done - parents number to each concept
 # todo - in mating- if doesnt succeeded to create offspring?
-# todo - create folder with all the configurations for each concept?
-# todO - set json file with the desired concepts
+# done - set json file with the desired concepts
 # todo - how to evalute?  run simulation for all ?
 # todo - how to get the results from the simulator
-# todo - problematic urdf to make list and pre create
 # done - to check from main results file if allready simulated
-# todo - check the differences with parallel
-# todo- to think when to save prob
+# todo - check the differences with parallel - doesnt share global vars - need to change the code
 
 # todo - play with the follow parameters: mutation rate, parents number, number of offsprings
 # todo - take a concept with ~10000 conf and fully simulate him

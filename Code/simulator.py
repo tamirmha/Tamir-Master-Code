@@ -297,7 +297,11 @@ class Simulator(object):
         self.ros.stop_launch(self.main)
 
 
-if __name__ == '__main__':
+def simulate(start_arm=0):
+    # from which set of arms to start
+    # default values
+    dofe = 6  # number degrees of freedom of the manipulator
+    link_max = 0.71  # max link length to check
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
@@ -316,10 +320,6 @@ if __name__ == '__main__':
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
-    # default values
-    dofe = 4  # number degrees of freedom of the manipulator
-    link_max = 0.71 # max link length to check
-    start_arm = 0  # from which set of arms to start
     create_urdf = False
     # set parametrs from terminal
     args = sys.argv
@@ -366,15 +366,83 @@ if __name__ == '__main__':
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
-    # rename(sim.save_name + ".csv", sim.save_name + str((toc_main - tic_main).seconds) + ".csv")
-    # rename(sim.save_name + ".json", sim.save_name + str((toc_main - tic_main).seconds) + ".json")
 
+
+if __name__ == '__main__':
+    # # get pc name for specific configuration
+    # username = getpass.getuser()
+    # if username == "tamir":  # tamir laptop
+    #     nums = 25  # how many arms to send to simulator each time
+    #     wait1_replace = 2.7
+    #     wait2_replace = 2.3
+    # elif username == "arl_main":  # lab
+    #     nums = 25  # how many arms to send to simulator each time
+    #     wait1_replace = 2.7
+    #     wait2_replace = 2.3
+    # elif username == "tamirm":  # VM
+    #     nums = 25  # how many arms to send to simulator each time
+    #     wait1_replace = 2.7
+    #     wait2_replace = 2.1
+    # else:
+    #     nums = 25  # how many arms to send to simulator each time
+    #     wait1_replace = 2.7
+    #     wait2_replace = 2.3
+    # # default values
+    # dofe = 4  # number degrees of freedom of the manipulator
+    # link_max = 0.71 # max link length to check
+    # start_arm = 0  # from which set of arms to start
+    # create_urdf = False
+    # # set parametrs from terminal
+    # args = sys.argv
+    # if len(args) > 1:
+    #     dofe = int(args[1])
+    #     if len(args) > 2:
+    #         start_arm = int(args[2]) / nums
+    #         create_urdf = False
+    #         if len(args) > 3:
+    #             link_max = float(args[3]) + 0.1
+    # ros = Ros()
+    # # clean ros log file
+    # ros.ter_command("rosclean purge -y")
+    # # check if there is roscore running if there is stop it
+    # roscore = ros.checkroscorerun()
+    # if roscore:
+    #     ros.ter_command("kill -9 " + str(roscore))
+    # # start roscore
+    # ros.ros_core_start()
+    # init_node('arl_python', anonymous=True)
+    # # folder to save the file to
+    # foldere = "combined"
+    # sim = Simulator(dof=dofe, folder=foldere, create=create_urdf, wait1=wait1_replace, wait2=wait2_replace, link_max=link_max)
+    # if start_arm > 0:
+    #     ros.stop_launch(sim.arm_control)
+    #     ros.stop_launch(sim.main)
+    # arms = sim.arms
+    # if len(arms) < nums:
+    #     nums = len(arms)
+    # nodes = get_node_names()
+    # for node in nodes:
+    #     if "/moveit_python_wrappers" in node:
+    #         # moveit_arg = "call --wait " + node + """set_logger_level &quot; {logger: 'ros', level: 'Warn'} &quot;" """
+    #         command = "roslaunch man_gazebo logging_level.launch moveit_log:=" + node
+    #         ros.ter_command(command)
+    # for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
+    #     if t == len(arms) / nums:
+    #         sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
+    #         sim.run_simulation(nums*t, len(arms))
+    #     elif t != 0:
+    #         sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
+    #         sim.run_simulation(nums*t, len(arms))
+    #     else:  # first run
+    #         sim.arms = arms[:nums]
+    #         sim.run_simulation(nums*t, len(arms))
+    # ros.ros_core_stop()
+    simulate()
 
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
 # todo change link0 to the platform - github
 # done check planner parameters
-# TODo how accuracy in go to pose effect
 # tod - fix the Json save format
 # tod the file name wont change when date change
 # tod change the base_link to 0 meters - check difference
