@@ -1,3 +1,0 @@
-name,joints,link_length,prev_axe,dof,mu,time,Z,LCI,Passed
-roll_z_0_1pris_y_0_7pitch_x_0_4pitch_y_0_7pitch_z_0_7roll_z_0_1,roll_pris__pitch__pitch__pitch__roll_,0.1_0.7__0.4__0.7__0.7__0.1_,z_y__x__y__z__z_,6,0.212,2.09,0.125,0.101,1
-roll_z_0_1pris_y_0_7pitch_x_0_1roll_x_0_4pitch_y_0_1roll_x_0_4,roll_pris__pitch__roll__pitch__roll_,0.1_0.7__0.1__0.4__0.1__0.4_,z_y__x__x__y__x_,6,0.213,2.09,0.125,0.107,1
