@@ -18,7 +18,7 @@ Constrains:
 """
 from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts
+from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -298,15 +298,15 @@ class Problem:
          """
         indices = []
         for x in select:
-            ind = np.argwhere(np.round(fit,3) == round(x, 3))
+            ind = np.argwhere(fit == x)
             if ind.shape[0] > 1:
                 fit[ind[0][0]] = 100
             if len(ind) == 0:
-                ind = np.argwhere(np.round(fit,2) == round(x, 2))
+                ind = np.argwhere(np.abs(fit - x) < 0.003)
             try:
                 indices.append(ind[0][0])
             except:
-                print("ind=" + str(ind) + "  fit=" + str(fit) + "x=" + str(x) + "\n")
+                print("ind=" + str(ind) + "  fit=" + str(fit) + "\nx=" + str(x) + "\nselect=" + str(select))
         return indices
 
     def get_conifgs_by_indices(self, conf_indices):
@@ -556,6 +556,36 @@ def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="j
     return ga_data
 
 
+def set_new_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
+    """ get all the previous data and the concepts to enter into the ga and return only the relevant data
+    :param all_concepts_json - [str] json file with all the simulated data
+    :param ga_json - [str] all the concepts to check in the GA
+    """
+    # todo - add all files in the folder
+    new_data = MyCsv.load_csv("results_file" +  datetime.now().strftime("%d_%m_") + "6dof_4d_")
+    jsons_folder = os.environ['HOME'] + "/Tamir/Master/Code/"
+    all_concepts_json = jsons_folder + all_concepts_json
+    ga_json = jsons_folder + ga_json
+    all_concepts = load_json(all_concepts_json)
+    ga_concepts = load_json(ga_json)
+    for dat in new_data:
+        second_loop_stop = False
+        for con in ga_concepts:
+            k = 0
+            for concept in all_concepts[con]:
+                if dat["name"] in concept:
+                    print(dat["name"])
+                    second_loop_stop = True
+                    all_concepts[con][k] = {unicode(dat["name"]): {"mu":dat["mu"], "z": dat["Z"], "dof": dat["dof"],
+                                                                  "name": unicode(dat["name"])}}
+                    break
+                k += 1
+            if second_loop_stop:
+                break
+    save_json(all_concepts_json + "new", all_concepts, "w+")
+    # pickle_save_data(all_concepts, all_concepts_json + "new")
+
+
 def run(prob):
     global woi
     # check if the local stop condition applied
@@ -610,19 +640,48 @@ def check_exist(problem):
     return to_sim
 
 
+def new_data(prob):
+    """ update each concept results agter the simulation
+    :param prob - [list of objects] the data of all the objects
+    :return prob - [list of objects] updated data of all the objects
+    """
+    new_data = MyCsv.load_csv("results_file" + datetime.now().strftime("%d_%m_") + "6dof_4d_")
+    for dat in new_data:
+        k = 0
+        outer_loop_stop = False
+        for con in prob:
+            j = 0
+            for c in con.confs_results:
+                if dat["name"] == c.keys()[0]:
+                    outer_loop_stop = True
+                    prob[k].confs_results[j][prob[k].confs_results[j].keys()[0]] = {"mu":dat["mu"], "z": dat["Z"], "dof": dat["dof"], "name": unicode(dat["name"])}
+                    break
+                j += 1
+            k += 1
+            if outer_loop_stop:
+                break
+    return prob
+
+
 def sim(prob):
     print("start creating urdfs")
     # configurations to create urdf
     to_sim = []
     con = Concepts()
+    k = 0
     for p in prob:
         to_sim.append(check_exist(p))
+        k += 1
+        if k==10:
+            break
     # create urdf files
     con.create_files2sim(filter(None, to_sim))
     # move the files into the desired place
     move_folder()
     print("start simulating")
-    simulate()
+    # simulate()
+    prob = new_data(prob)
+    return prob
 
 
 if __name__ == '__main__':
@@ -631,7 +690,7 @@ if __name__ == '__main__':
     num_gens = 1  # how many gens to run
     parents_percent = 0.4  # percent of oarents from the total population
     large_concept = 1500  # define what is a large concept
-    number_of_arms = 1  #
+    number_of_arms = 25  #
     threads = 1  # how many threads to use if using parallel
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
     params = "Number of gens: " + str(num_gens) + "\nparents_percent: " + str(parents_percent) + \
@@ -656,29 +715,30 @@ if __name__ == '__main__':
     os.chdir(results_folder)
     try:
         # decide how many threads to use
-        p = Pool(threads)
-        # running each generation
-        for n in (range(num_gens)):
-            # simulate the population
-            sim(prob=probs)
-            # Save the current WOI
-            save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-            print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
-            for i in tqdm(range(len(5))):
-                probs[i] = run(probs[i])
-            # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
-            # Update generation
-            woi.set_gen(n + 1)
-            # Check global stop condition
-            woi.stop_condition()
-            if woi.stopped:
-                break
+        # with Pool(threads) as p:
+            # running each generation
+            for n in (range(num_gens)):
+                # simulate the population
+                probs = sim(prob=probs)
+                # Save the current WOI
+                save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
+                print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
+                for i in tqdm(range(len(probs))):
+                    probs[i] = run(probs[i])
+                # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
+                # Update generation
+                woi.set_gen(n + 1)
+                # Check global stop condition
+                woi.stop_condition()
+                if woi.stopped:
+                    break
     finally:
         print("Savaing data...")
-        p.close()
+        # p.close()
         save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         pickle_save_data(woi, "woi")
         # pickle_save_data(probs, "problems")
+        # set_new_data()
         print("Finished")
 
 

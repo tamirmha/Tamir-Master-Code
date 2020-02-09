@@ -43,7 +43,7 @@ class MyCsv(object):
                         elif a % 3 == 2:
                             link_length.append(arm[a] + "." + arm[a+1][:1] + "_")
                     result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "Z": float(row[8]),
-                        "LCI": float(row[9]), "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
+                         "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
                                    "link_length": "_".join(link_length)})
             result.sort()
             return result
@@ -567,7 +567,7 @@ def split_files_to_several_folders(files_in_folder=5000):
     if not path.exists(name):
         mkdir(name)
     full_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/combined/"
-    files = listdir(full_path)
+    files = listdicsvr(full_path)
     for j in range(len(files)/files_in_folder):
         if not path.exists(name + str(j)):
             mkdir(name + str(j))
@@ -923,8 +923,8 @@ def add_table2plot(pareto):
 
 
 #  ### Json handaling
-def save_json(name="data_file", data=None):
-    with open(name + ".json", "a") as write_file:
+def save_json(name="data_file", data=None, write_method="a"):
+    with open(name + ".json", write_method) as write_file:
         json.dump(data, write_file, indent=2)
                                                              
 
