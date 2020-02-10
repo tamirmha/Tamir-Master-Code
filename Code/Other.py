@@ -1,8 +1,8 @@
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
-# import tkFileDialog
-# from Tkinter import *
+import tkFileDialog
+from Tkinter import *
 import json
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -228,23 +228,6 @@ class FixFromJson(object):
         w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
         z = np.around(0.5*np.transpose(nor_dis)*w, 3)
         return z
-
-    # @staticmethod
-    # def manipulability_index(jacobian):
-    #     n = jacobian.size / len(jacobian)
-    #     if n == 5:
-    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
-    #     else:
-    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-    #     if det_j > 1e-18:  # preventing numeric problems
-    #         return round(det_j ** (1/float(n)), 3)
-    #         # return round(det_j ** 0.5, 3)
-    #     else:
-    #         return 0
-
-    # @staticmethod
-    # def local_conditioning_index(jacobian):
-    #     return round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
 
 
 class Concepts:
@@ -581,58 +564,47 @@ def sum_data():
     root.update()
     res_files = tkFileDialog.askopenfilenames(filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     root.destroy()
-    # new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + res_files[0].split("/")[8] + "_all"
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
-    mu_penalty = 0
+    mu_penalty = -70
     time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
+    in_list = []
     for res_file in res_files:
         try:
             csv_file = MyCsv.load_csv(res_file[:-4])
         except:
             csv_file = MyCsv.read_csv(res_file[:-4], "dict")
-        for v in csv_file:
+        for v in tqdm(csv_file):
             in_data = False
-            if v["Z"] == -1 or v["Z"] == '70':
-                if len(data_no_success) == 0:
-                    v["mu"] = mu_penalty
-                    v["LCI"] = mu_penalty
-                    v["Z"] = z_penalty
-                    v["time"] = time_penalty
-                    v["Passed"] = 0
-                    data_no_success.append(v)
-                    continue
-                else:
-                    v["mu"] = mu_penalty
-                    v["LCI"] = mu_penalty
-                    v["Z"] = z_penalty
-                    v["time"] = time_penalty
-                    v["Passed"] = 0
-                    data_no_success.append(v)
-                    # break
+            if v["Z"] == -1 or v["Z"] == '70' and v["name"] not in in_list:
+                v["mu"] = mu_penalty
+                v["Z"] = z_penalty
+                v["time"] = time_penalty
+                v["Passed"] = 0
+                data_no_success.append(v)
+                in_list.append((v["name"]))
                 continue
-            for dat in data:
-                if v["name"] in dat["name"]:
-                    dat_index = data[data.index(dat)]
-                    if dat_index["Z"] > v["Z"]:
-                        dat_index["Z"] = v["Z"]
-                    if dat_index["mu"] < v["mu"]:
-                        dat_index["mu"] = v["mu"]
-                    if dat_index["time"] > v["time"]:
-                        dat_index["time"] = v["time"]
-                    if dat_index["LCI"] < v["LCI"]:
-                        dat_index["LCI"] = v["LCI"]
-                    in_data = True
-                    break
+            if v["name"] in in_list:
+                for dat in data:
+                    if v["name"] == dat["name"]:
+                        dat_index = data[data.index(dat)]
+                        if dat_index["Z"] > v["Z"]:
+                            dat_index["Z"] = v["Z"]
+                        if dat_index["mu"] < v["mu"]:
+                            dat_index["mu"] = v["mu"]
+                        if dat_index["time"] > v["time"]:
+                            dat_index["time"] = v["time"]
+                        in_data = True
+                        break
             if not in_data:
                 v["Passed"] = 1
                 data.append(v)
+                in_list.append((v["name"]))
     data_no_success = [dict(t) for t in {tuple(d.items()) for d in data_no_success}]
     MyCsv.save_csv(data, new_file_name, "dict")
-    all_data = data + data_no_success
-    MyCsv.save_csv(all_data, new_file_name + "_with_failed", "dict")
+    MyCsv.save_csv(data + data_no_success, new_file_name + "_with_failed", "dict")
     return data
 
 
@@ -769,7 +741,7 @@ def assign_results(res_name="results_all"):
 
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
-    concepts = load_json("tosim/concepts")
+    concepts = load_json("jsons/concepts")
     dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
     res_data = []  # [[] for i in conf_name]
     for k in range(len(conf_name)):
@@ -983,7 +955,7 @@ def how_many_to_create(all_concepts, all_data, how_many):
     for dat in tqdm(all_data):
         if dat["name"] not in simulated:  # and dat["dof"] == "5":
             for concept in v.keys():
-                if 25 < v[concept][0] < how_many and dat["dof"] == concept[43:44]:
+                if 0 < v[concept][0] < how_many and dat["dof"] == concept[43:44]:
                     if dat["name"] in all_concepts[concept]:
                         v[concept][1] += 1
                         v[concept][2] = v[concept][0] - v[concept][1]
@@ -1004,8 +976,8 @@ def which_confs2create(concepts2check, all_concepts, simulated):
                     conf2create5.append([conf])
                 elif conc[43:44] == "6":
                     conf2create6.append([conf])
-                else:
-                    print(conf)
+                # else:
+                #     print(conf)
     return conf2create5, conf2create6
 
 
@@ -1051,7 +1023,7 @@ if __name__ == '__main__':
     calc_concepts = False
     create_urdf = False
     fix_all_from_json = False
-    sumdata = False
+    sumdata = True
     to_merge = False
     plotdata = False
     fix_from_json = False
@@ -1104,8 +1076,8 @@ if __name__ == '__main__':
         # configurations needed to be simulated
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        # #to save time the following is commented.  if we want to calculated with different data uncomment
-        # confs_in_concepts = 220  # all the concecpts with less than 220 configurations
+        #to save time the following is commented.  if we want to calculated with different data uncomment
+        # confs_in_concepts = 220000  # all the concecpts with less than 220 configurations
         # concepts2check, simulated, v = how_many_to_create(all_concepts, all_data, confs_in_concepts)
         # save_json("confs_number", v)
         # save_json("concepts2check", concepts2check)
