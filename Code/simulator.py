@@ -302,7 +302,7 @@ def simulate(start_arm=0):
     if username == "tamir":  # tamir laptop
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.3
+        wait2_replace = 2.0
     elif username == "arl_main":  # lab
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7

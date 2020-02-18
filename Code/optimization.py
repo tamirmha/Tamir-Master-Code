@@ -16,7 +16,7 @@ Constrains:
 •	If (X1[i]==Roll and X2[i]==Z) than (X1[i+1]!=Roll and X2[i+1]!=Z)
 •	Arrival points : reach to one from two upper points and to the middle and bottom points
 """
-from typing import Iterable
+# from typing import Iterable
 
 from simulator import simulate
 from ros import UrdfClass
@@ -34,16 +34,16 @@ np.random.seed(100100)
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, pop_size=100, parent_percent=10, number_of_objects=3,
+    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1, number_of_objects=3,
                  larg_concept=200):
         self.pop_size = pop_size  # size of population
-        self.confs_of_concepts = [x.keys()[0] for x in confs_of_concepts]  # all possible configs names of the concept
-        self.confs_results = confs_of_concepts  # all the configurations of the concept and their indices
+        self.confs_of_concepts = confs_of_concepts  # [x.keys()[0] for x in confs_of_concepts]  # all possible configs names of the concept
+        self.confs_results = confs_results  # all the configurations of the concept and their indices
         self.confs_archive = []  # Archive of all the selected configurations
         self.large_concept = len(confs_of_concepts) > larg_concept  # True if large False otherwise
         self.concept_name = concept_name
         self.elit_confs = []
-        self.parents_percent = parent_percent
+        self.parents_number = parents_number
         self.dof = int(str(concept_name).split(" ")[5].split(",")[0])
         self.stopped = False
         self.number_of_objects = number_of_objects
@@ -97,8 +97,13 @@ class Problem:
         for p in pop:
             pops.append(p)
             res = self.get_result(p)
+            if len(res) == 0:
+                f3.append(self.dof)  # dof
+                # todo - delete this when adding the simulator
+                f2.append(np.around(np.random.normal(0.05, 0.01), 3))    # manipulability
+                f1.append(np.around(np.random.normal(0.05, 0.01), 3))
             # check if the configuration allready simulated
-            if res["z"] is not None:
+            elif res["z"] is not None:
                 f3.append(int(res["dof"]))   # dof
                 f2.append(1 - float(res["mu"]))  # manipulability
                 f1.append(float(res["z"]))   # Mid-Range Proximity
@@ -117,6 +122,20 @@ class Problem:
         if self.get_prev_confs().shape[0] == self.get_configs().shape[0]:
             stop = True
         return stop
+
+    def archive_elitism(self, new_gen):
+        elite_confs = self.get_elite_confs()
+        if not elite_confs:
+            self.set_elite_confs(new_gen)
+            return new_gen
+        elite_confs[0].append(new_gen[0][0])
+        elite_confs[1].append(new_gen[1][0])
+        elite_confs[2].append(new_gen[2][0])
+        elite_confs[3].append(new_gen[3][0])
+        self.set_elite_confs(elite_confs)
+        return elite_confs
+        # new_elite_gen = []
+        # new_elite_gen_name = []
 
     def elitism(self, new_gen):
         """Elitism - Make sure the offsprings will be better than the previous generation
@@ -166,16 +185,16 @@ class Problem:
         """
         selected = []
         c = 3.
-        fitness = np.exp(-c*dis)
-        fp = np.asarray([i / sum(fitness) for i in fitness])
+        fitnes = np.exp(-c*dis)
+        fp = np.asarray([i / sum(fitnes) for i in fitnes])
         roullete = np.asarray([sum(fp[:x+1]) for x in range(len(fp))])
         for i in range(num_of_returns):
             wheel = np.random.uniform(0, 1)
             ind = np.where((roullete - wheel) > 0, (roullete - wheel), np.inf).argmin()
-            selected.append(round(fitness[ind], 3))
+            selected.append(round(fitnes[ind], 3))
         return np.abs(np.round(np.log(selected)/c, 3))  # [10-x for x in selected]
 
-    def mating(self, parents, mutation_percent=40):
+    def mating(self, parents, mutation_percent=100):
         """
         :param parents - [list] all the parents that go into the mating pool
         :param mutation_percent - [int] how much mutation wanted
@@ -188,7 +207,7 @@ class Problem:
         offspring = []
         mut_offspring = 0
         cross_offspring = 0
-        for i in range(num_crossover):
+        for i in range(num_mutations):
             attempt = 0
             in_concept = False
             cross_ok = False
@@ -235,7 +254,7 @@ class Problem:
         if len(offspring) > offspring_size:
             offspring = offspring[:offspring_size]
         elif len(offspring) < offspring_size:
-            print("3333333")
+            print("333333333")
         return offspring
 
     def crossover(self, parents):
@@ -527,7 +546,7 @@ def set_pop_size(num_concept_confs, min_configs=None):
     :return pop_size: [int] size of the pipulation
      """
     if min_configs is None:
-        min_configs = [25, 10]
+        min_configs = [1, 0]
     if num_concept_confs * min_configs[1] / 100 > min_configs[0]:
         pop_size = num_concept_confs * min_configs[1] / 100
     else:
@@ -535,7 +554,7 @@ def set_pop_size(num_concept_confs, min_configs=None):
     return pop_size
 
 
-def init_concepts(larg_concept=1500, arm_limit=None, parent_percent=40):
+def init_concepts(larg_concept=1500, arm_limit=None, parents_number=1):
     """ Initilize all the concept and the first populations
     :param larg_concept: [int] minimum number of configurations in concept in order to concept will be large
     :param arm_limit: [2 elements list] the limits: arm_limit[0] is the minimum number of the population
@@ -544,16 +563,16 @@ def init_concepts(larg_concept=1500, arm_limit=None, parent_percent=40):
     :return prob - [list of objects] all the data of each concept
     """
     if arm_limit is None:
-        arm_limit = [15, 10]
+        arm_limit = [1, 0]
     # load all the concepts
-    concepts_with_conf = get_prev_data()
+    concepts_with_conf, confs_results = get_prev_data()
     prob = []
     # population = []
     for i in range(len(concepts_with_conf)):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
         number_of_arms = set_pop_size(len(concepts_with_conf[name_of_concept]), arm_limit)
-        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept], parent_percent=parent_percent,
+        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept], confs_results[name_of_concept], parents_number=parents_number,
                             pop_size=number_of_arms, larg_concept=larg_concept))
         # initiliaze population
         prob[i].set_population(prob[i].rand_pop())
@@ -573,7 +592,7 @@ def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="j
     for k in ga_concepts:
         if k in all_concepts:
             ga_data[k] = all_concepts[k]
-    return ga_data
+    return ga_concepts, ga_data
 
 
 def csvs2data():
@@ -618,41 +637,6 @@ def set_new_data(all_concepts_json="jsons/concepts+configs+results", ga_json="js
     # pickle_save_data(all_concepts, all_concepts_json + "new")
 
 
-def run(prob):
-    global woi
-    # check if the local stop condition applied
-    if prob.stopped:
-        return []
-    population = prob.get_population()
-    # insert previous configurations into archive
-    prob.set_prev_confs(population)
-    # Evaluation
-    confs_results = prob.evalute(np.asarray(population))
-    # Update DWOI if necessary
-    front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
-    if front != woi.get_last_dwoi():
-        woi.set_dwoi(front)
-    # Stop Condition
-    prob.local_stop_condition()
-    # Check if large concept
-    if prob.large_concept:  # if large concept
-        # elitism
-        confs_results_elite = prob.elitism(confs_results)
-        # Assign fitness
-        fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
-        # Selection (RWS)
-        selection = prob.selection(fitness, prob.parents_percent)
-        selected_confs_ind = prob.confs_by_indices(selection, fitness)
-        selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
-        # Mating
-        population = prob.mating(selected_confs)
-    else:  # if small concept
-        # Random Selection
-        population = prob.rand_pop()
-    prob.set_population(population)
-    return prob
-
-
 def move_folder(src_folder_name="urdf/6dof/", dst_folder_name=""):
     if not dst_folder_name:
         dst_folder_name = os.environ['HOME'] + \
@@ -672,7 +656,9 @@ def check_exist(problem):
     for p in pop:
         res = problem.get_result(p)
         # check if the configuration allready simulated
-        if res["z"] is None:
+        if len(res) == 0:
+            to_sim.append(p)
+        elif res["z"] is None:
             to_sim.append(p)
     return to_sim
 
@@ -715,24 +701,60 @@ def sim(prob):
     # create urdf files
     con.create_files2sim(filter(None, to_sim))
     # move the files into the desired place
-    move_folder()
+    # move_folder()
     print("start simulating")
     # simulate()
-    prob = new_data(prob)
+    # prob = new_data(prob)
+    return prob
+
+
+def run(prob):
+    global woi
+    # check if the local stop condition applied
+    if prob.stopped:
+        return []
+    population = prob.get_population()
+    # insert previous configurations into archive
+    prob.set_prev_confs(population)
+    # Evaluation
+    confs_results = prob.evalute(np.asarray(population))
+    # Update DWOI if necessary
+    front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
+    if front != woi.get_last_dwoi():
+        woi.set_dwoi(front)
+    # Stop Condition
+    prob.local_stop_condition()
+    # Check if large concept
+    if prob.large_concept:  # if large concept
+        # elitism
+        # confs_results_elite = prob.elitism(confs_results)
+        confs_results_elite = prob.archive_elitism(confs_results)
+        # Assign fitness
+        fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
+        # Selection (RWS)
+        selection = prob.selection(fitness, prob.parents_number)
+        selected_confs_ind = prob.confs_by_indices(selection, fitness)
+        selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
+        # Mating
+        population = prob.mating(selected_confs)
+    else:  # if small concept
+        # Random Selection
+        population = prob.rand_pop()
+    prob.set_population(population)
     return prob
 
 
 if __name__ == '__main__':
     # ## Setting parameters
     run_tim = 7  # how many dats to run
-    num_gens = 1  # how many gens to run
-    parents_percent = 40  # percent of oarents from the total population
-    large_concept = 1500  # define what is a large concept
-    arms_limit = [25, 5]  # population limit: arms_limit[0]: minimum numcer of configs, arms_limit[1]: % of population
+    num_gens = 10  # how many gens to run
+    parents_number = 1  # number of parents
+    large_concept = 1000  # define what is a large concept
+    arms_limit = [1, 0]  # population limit: arms_limit[0]: minimum number of configs, arms_limit[1]: % of population
     threads = 1  # how many threads to use if using parallel
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
-    params = "Number of gens: " + str(num_gens) + "\nparents_percent: " + str(parents_percent) + \
-             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_time) +  \
+    params = "Number of gens: " + str(num_gens) + "\nparents_number: " + str(parents_number) + \
+             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_tim) +  \
              "\nNumber of Threads used: " + str(threads)
     # enter all the results to one folder
     results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
@@ -748,7 +770,7 @@ if __name__ == '__main__':
     woi = DWOI(run_time=run_tim)
     # Initilize all the concepts GA
     print("initiliaze data")
-    probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, parent_percent=parents_percent)
+    probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, parents_number=parents_number)
     # change the working dir
     os.chdir(results_folder)
     try:
@@ -771,12 +793,12 @@ if __name__ == '__main__':
             if woi.stopped:
                 break
     finally:
-        print("Savaing data...")
+        print("Saving data...")
         # p.close()
         save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        pickle_save_data(woi, "woi")
+        # pickle_save_data(woi, "woi")
         # pickle_save_data(probs, "problems")
-        set_new_data()
+        # set_new_data()
         print("Finished")
 
 
@@ -793,5 +815,5 @@ if __name__ == '__main__':
 # done - to check from main results file if allready simulated
 # done - check the differences with parallel - doesnt share global vars - need to change the code
 
-# todo - play with the follow parameters: mutation rate, parents number, number of offsprings
+# nottodo- play with the follow parameters: mutation rate, parents number, number of offsprings
 # todo - take a concept with ~10000 conf and fully simulate him
