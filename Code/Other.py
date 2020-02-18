@@ -551,7 +551,7 @@ def split_files_to_several_folders(files_in_folder=5000):
     if not path.exists(name):
         mkdir(name)
     full_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/combined/"
-    files = listdicsvr(full_path)
+    files = listdir(full_path)
     for j in range(len(files)/files_in_folder):
         if not path.exists(name + str(j)):
             mkdir(name + str(j))
@@ -1145,7 +1145,7 @@ if __name__ == '__main__':
         pareto_with_concepts = assign_conf2concept(pareto_front)
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
-        create_new_file = True
+        create_new_file = False
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
         confs_in_concepts = 500  # all the concecpts with less than 220 configurations
