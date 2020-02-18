@@ -1,0 +1,2 @@
+name,joints,link_length,prev_axe,dof,mu,time,Z,LCI,Passed
+roll_z_0_1pris_y_0_7pitch_z_0_4pitch_y_0_1roll_x_0_1roll_y_0_7,roll_pris__pitch__pitch__roll__roll_,0.1_0.7__0.4__0.1__0.1__0.7_,z_y__z__y__x__y_,6,0.182,2.29,0.125,0.092,1
