@@ -242,16 +242,11 @@ class Simulator(object):
             except:
                 self.save_json("mu_err", mu.tolist())
                 mu_min = -16
-            # try:
-            #     lci_min = lci[lci >= 0.0].min()
-            # except:
-            #     self.save_json("lci_err", lci.tolist())
-            #     lci_min = -16
             try:
-                z_max = z[z > 0.0].max()
+                z_max = z[z >= 0.0].max()
             except:
                 self.save_json("z_err", z.tolist())
-                z_max = -16
+                z_max = 16
         return [arm_number, datetime.now().strftime("%d/%m/%y, %H:%M"), self.arms[arm]["name"], data_res,
                 str(data_time), suc_res,  str(avg_time), str(mu_min), str(z_max)]
 
@@ -307,7 +302,7 @@ def simulate(start_arm=0):
     if username == "tamir":  # tamir laptop
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.3
+        wait2_replace = 2.0
     elif username == "arl_main":  # lab
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7

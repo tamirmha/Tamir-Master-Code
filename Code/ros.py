@@ -144,24 +144,10 @@ class MoveGroupPythonInterface(object):
             cur_pos = np.asarray(cur_pos)
             # Jacobian singular values (~eighen values)
             j_ev = np.linalg.svd(jacobian, compute_uv=False)
-            mu = round(np.product(j_ev), 3)
             # Manipulability index
-            z = self.mid_joint_proximity(cur_pos, joints, links)
-            # lci = round(j_ev[-1] / j_ev[0], 3)
-            # mu = self.manipulability_index(jacobian)
-            # Local Conditioning Index
-            # lci = round(1/(np.linalg.norm(jacobian)*np.linalg.norm(np.linalg.pinv(jacobian))), 3)
+            mu = round(np.product(j_ev), 3)
             # Joint Mid-Range Proximity
-            # theta_mean = [0.75]
-            # for joint in joints:
-            #     if joint == "revolute":
-            #         theta_mean.append(0)
-            #     else:
-            #         theta_mean.append(float(links[joints.index(joint)])/2)
-            # # theta_mean.append(np.pi)
-            # w = np.identity(len(joints)+1)*(cur_pos[:-1]-theta_mean)  # weighted diagonal matrix
-            # z = np.around(0.5*np.transpose(cur_pos[:-1]-theta_mean)*w, 3)
-            # # print np.diag(z)
+            z = self.mid_joint_proximity(cur_pos, joints, links)
             return mu, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
@@ -178,7 +164,6 @@ class MoveGroupPythonInterface(object):
             else:
                 theta_mean.append(float(link_length[joints.index(joint)])/2)
                 to_norm.append(float(link_length[joints.index(joint)]))
-        # print(name)
         dis = (cur_pos[:-1]-theta_mean)
         nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
         w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
