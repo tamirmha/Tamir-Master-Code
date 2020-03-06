@@ -1021,15 +1021,16 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="5"):
 
 def create_configs(all_concept, all_dat, confs_in_concept=220000):
     # if we want to calculated with different data uncomment
-      # all the concecpts with less than 220 configurations
+    # all the concecpts with less than 220 configurations
     concepts2check, simulated, v = how_many_to_create(all_concept, all_dat, confs_in_concept)
     save_json("jsons/other/confs_number", v, "w+")
     save_json("jsons/other/concepts2check", concepts2check, "w+")
-    # save_json("jsons/other/simulated", simulated, "w+")
+    save_json("jsons/other/simulated", simulated, "w+")
     return concepts2check, simulated, v
 
 
 def update_results(to_add_file="to_add", current_file="jsons/concepts+configs+results"):
+    # todo - fix this
     concepts_configs_results = load_json(current_file)
     to_add = MyCsv.read_csv(to_add_file, "dict")
 
@@ -1056,13 +1057,13 @@ def remain_to_sim(all_concept, dof2check="5"):
     return create_urdf
 
 
-def remain_conf_in_conc(all_concept):
+def remain_conf_in_conc(all_concept, min_confs=1000):
     print("Start remain_conf_in_conc")
     ga_concept = {}
     for concept in all_concept:
-        if len(all_concepts[concept]) > 220 and concept[43:44] == "6":
+        if len(all_concepts[concept]) > min_confs and concept[43:44] == "6":
             ga_concept[concept] = all_concept[concept]
-    save_json("jsons/concepts2ga", ga_concept)
+    save_json("jsons/concepts2ga", ga_concept, "w+")
     return ga_concept
 
 
@@ -1100,8 +1101,28 @@ def combine_res(all_data, all_concepts):
             k += 1
         new_data[dat] = flag
 
-    save_json("concepts+configs+results", new_data)
+    save_json("concepts+configs+results", new_data, "w+")
     return new_data
+
+
+def simulated(res_file ="results_all"):
+    "return list of names of all simulated configs"
+    simulate = []
+    res = MyCsv.read_csv(res_file, "dict")
+    for r in res:
+        simulate.append(r["name"])
+    return simulate
+
+
+def confs_number(all=[]):
+    """Calculate how many configs simulated and how many left in each concept"""
+    if not all:
+        all = load_json("jsons/concepts+configs+results")
+    conf_number = {}
+    for i in all_concepts:
+        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
+    return conf_number
+
 # ###   ###
 
 
@@ -1115,8 +1136,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
-    check_num_confs_in_concepts = False
+    pareto_plot = False
+    check_num_confs_in_concepts = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1145,26 +1166,43 @@ if __name__ == '__main__':
         pareto_with_concepts = assign_conf2concept(pareto_front)
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
-        create_new_file = True
+        create_new_file = False
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
         confs_in_concepts = 500000  # all the concecpts with less than 220 configurations
         if create_new_file:
             create_configs(all_concepts, all_data, confs_in_concept=confs_in_concepts)
-        # else:
-        #     update_results("to_add")
+        else:
+            # update_results("to_add")
+            # names of simulated confs
+            simulated_confs = simulated()
+            save_json("jsons/other/simulated", simulated_confs, "w+")
         # Create json file of the remaining concepts and their configurations
         ga_concepts = remain_conf_in_conc(all_concepts)
-        save_json("results_all", all_data)
+        # how many confs simulated
+        conf_number = confs_number()
+        save_json("jsons/other/confs_number", conf_number, "w+")
+        save_json("results_all", all_data, "w+")
         # create CSV file with how many configs simulated and left at each concept
         left_confs_concepts()
         # create one file of configurations with there results via concepts
         combine_data = combine_res(all_data, all_concepts)
-        # # create the urdf's for the remaining configurations in the selected dof
-        # to_create = remain_to_sim(all_concepts, dof2check="6")
+        # create the urdf's for the remaining configurations in the selected dof
+        to_create = remain_to_sim(all_concepts, dof2check="6")
+
+#
+
+    # if 220 < len(a[i]) < 1000 and i[43:44] == "6":
+    #     b.append(i)
+    #     c.append(a[i])
+    #     d.append(all[i])
+
+
 
 # todo - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
 # todo - update concepts+configs+results instead of recalculate + need to change jsons files
+# todo -   &  concepts2check update
+# todo  - fix concepts + configs+results  - the name and the dict key not te same
 # todo - show the configurations that on the woi
 # todo - to see which configuration are in several concepts
 # todo - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
