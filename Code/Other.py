@@ -567,7 +567,7 @@ def sum_data():
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = -70
-    time_penalty = 20
+    # time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
@@ -1115,8 +1115,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
-    check_num_confs_in_concepts = True
+    pareto_plot = True
+    check_num_confs_in_concepts = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
