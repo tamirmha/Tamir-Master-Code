@@ -49,6 +49,11 @@
     40, 
     0
   ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    16, 
+    16, 
+    0
+  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     6, 
     6, 
@@ -75,9 +80,9 @@
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    9, 
     7, 
-    2
+    7, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
     15925, 
@@ -119,14 +124,14 @@
     130, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
-    2736, 
-    271, 
-    2465
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    240, 
+    240, 
+    0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
-    225, 
-    225, 
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+    26, 
+    26, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
@@ -142,11 +147,6 @@
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     464, 
     464, 
-    0
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    44, 
-    44, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
@@ -179,30 +179,30 @@
     1, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
-    570, 
-    36, 
-    534
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
+    360, 
+    360, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     78, 
     78, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    168, 
-    144, 
-    24
-  ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     90, 
     90, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    1560, 
-    75, 
-    1485
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
+    1140, 
+    66, 
+    1074
+  ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    342, 
+    342, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     33, 
@@ -238,6 +238,11 @@
     6370, 
     312, 
     6058
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    12, 
+    12, 
+    0
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
     2, 
@@ -275,9 +280,9 @@
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    320, 
     272, 
-    48
+    272, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     1110, 
@@ -299,10 +304,10 @@
     1301, 
     10707
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
-    970, 
-    43, 
-    927
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    930, 
+    930, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
     5400, 
@@ -354,15 +359,10 @@
     70, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
-    220, 
-    220, 
-    0
-  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    224, 
     192, 
-    32
+    192, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     126, 
@@ -389,9 +389,9 @@
     200, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    286, 
-    286, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    2432, 
+    2432, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
@@ -444,15 +444,20 @@
     65, 
     1387
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
-    6840, 
-    331, 
-    6509
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
+    2840, 
+    124, 
+    2716
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     5820, 
     294, 
     5526
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    4268, 
+    196, 
+    4072
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.33, 'acc_length': 2.6}": [
     38, 
@@ -472,11 +477,6 @@
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     429, 
     429, 
-    0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    2, 
-    2, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.5, 'acc_length': 3.6}": [
@@ -514,6 +514,11 @@
     22, 
     0
   ], 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 3.6}": [
+    845, 
+    37, 
+    808
+  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     284, 
     284, 
@@ -534,25 +539,30 @@
     5, 
     0
   ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    330, 
+    330, 
+    0
+  ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     572, 
     34, 
     538
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.6}": [
-    2700, 
-    141, 
-    2559
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    18, 
+    18, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     132, 
     132, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    111, 
-    111, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    560, 
+    30, 
+    530
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     10, 
@@ -569,7 +579,7 @@
     93, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
     42, 
     42, 
     0
@@ -577,6 +587,11 @@
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     7, 
     7, 
+    0
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
+    36, 
+    36, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
@@ -603,11 +618,6 @@
     2166, 
     157, 
     2009
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    231, 
-    231, 
-    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 2.6}": [
     24, 
@@ -659,9 +669,9 @@
     2402, 
     9701
   ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
-    44, 
-    44, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
+    38, 
+    38, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
@@ -719,25 +729,20 @@
     1056, 
     0
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    1680, 
-    88, 
-    1592
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    6, 
-    6, 
-    0
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
+    1704, 
+    113, 
+    1591
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
     1216, 
     1216, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    3696, 
-    168, 
-    3528
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    2, 
+    2, 
+    0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     1420, 
@@ -764,14 +769,9 @@
     7, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    308, 
-    308, 
-    0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    1520, 
-    1520, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    160, 
+    160, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.67, 'acc_length': 2.6}": [
@@ -784,20 +784,10 @@
     10, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.6}": [
-    130, 
-    130, 
-    0
-  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     780, 
     36, 
     744
-  ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    440, 
-    440, 
-    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     5160, 
@@ -824,10 +814,10 @@
     75, 
     1345
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
-    860, 
-    42, 
-    818
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    3268, 
+    749, 
+    2519
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     1475, 
@@ -844,9 +834,9 @@
     176, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 2}": [
-    270, 
-    270, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    12, 
+    12, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
@@ -870,18 +860,18 @@
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2.6}": [
-    144, 
     120, 
-    24
+    120, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
     450, 
     450, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    224, 
-    224, 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    210, 
+    210, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.6}": [
@@ -965,19 +955,19 @@
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    90, 
     70, 
-    20
+    70, 
+    0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.67, 'acc_length': 3.1}": [
     51, 
     51, 
     0
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
-    1140, 
-    66, 
-    1074
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    1560, 
+    75, 
+    1485
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     570, 
@@ -994,14 +984,9 @@
     39, 
     821
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    440, 
-    439, 
-    1
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    176, 
-    176, 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    11, 
+    11, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
@@ -1024,9 +1009,9 @@
     145, 
     492
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    32, 
-    32, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
+    24, 
+    24, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
@@ -1034,14 +1019,19 @@
     50, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    72, 
-    72, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
+    612, 
+    612, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     180, 
     180, 
+    0
+  ], 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    2, 
+    2, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 2}": [
@@ -1090,14 +1080,14 @@
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    448, 
     384, 
-    64
+    384, 
+    0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    2464, 
-    107, 
-    2357
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    20, 
+    20, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     16, 
@@ -1134,10 +1124,10 @@
     41, 
     739
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    744, 
-    744, 
-    0
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    1680, 
+    88, 
+    1592
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     42, 
@@ -1179,10 +1169,10 @@
     14, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
-    1440, 
-    64, 
-    1376
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    6, 
+    6, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     156, 
@@ -1224,10 +1214,10 @@
     48, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    3268, 
-    749, 
-    2519
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
+    860, 
+    42, 
+    818
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.67, 'acc_length': 2}": [
     192, 
@@ -1239,11 +1229,6 @@
     175, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    968, 
-    42, 
-    926
-  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     666, 
     91, 
@@ -1254,25 +1239,15 @@
     11, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    44, 
-    44, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 2}": [
+    72, 
+    72, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     18, 
     18, 
     0
-  ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
-    6400, 
-    306, 
-    6094
-  ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    54, 
-    42, 
-    12
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     1452, 
@@ -1290,19 +1265,14 @@
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2.6}": [
-    192, 
     160, 
-    32
+    160, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
     3600, 
     172, 
     3428
-  ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
-    1940, 
-    113, 
-    1827
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
     9652, 
@@ -1334,6 +1304,11 @@
     66, 
     0
   ], 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    590, 
+    33, 
+    557
+  ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     10, 
     10, 
@@ -1354,11 +1329,6 @@
     1, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    290, 
-    290, 
-    0
-  ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     2840, 
     145, 
@@ -1369,10 +1339,10 @@
     350, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
-    2840, 
-    124, 
-    2716
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
+    6840, 
+    331, 
+    6509
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     112, 
@@ -1394,10 +1364,10 @@
     396, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    18, 
-    18, 
-    0
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.6}": [
+    2700, 
+    141, 
+    2559
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     25, 
@@ -1444,9 +1414,9 @@
     50, 
     1090
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    12, 
-    12, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 2}": [
+    270, 
+    270, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
@@ -1465,23 +1435,28 @@
     6068
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    504, 
     432, 
-    72
+    432, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     1232, 
     55, 
     1177
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    720, 
-    612, 
-    108
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    72, 
+    72, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     576, 
     576, 
+    0
+  ], 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    36, 
+    36, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
@@ -1499,10 +1474,10 @@
     14, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
-    2280, 
-    108, 
-    2172
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    224, 
+    224, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     6320, 
@@ -1545,9 +1520,14 @@
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 3.1}": [
-    28, 
     24, 
-    4
+    24, 
+    0
+  ], 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    6, 
+    6, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
     3784, 
@@ -1644,11 +1624,6 @@
     20, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
-    38880, 
-    1925, 
-    36955
-  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.25, 'acc_length': 2}": [
     14, 
     14, 
@@ -1664,30 +1639,25 @@
     158, 
     3082
   ], 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
+    845, 
+    44, 
+    801
+  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     1, 
     1, 
     0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
-    1142, 
-    172, 
-    970
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     224, 
     224, 
     0
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    210, 
-    210, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    224, 
+    224, 
     0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
-    1704, 
-    113, 
-    1591
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     560, 
@@ -1725,9 +1695,9 @@
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    640, 
     544, 
-    96
+    544, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     160, 
@@ -1784,9 +1754,9 @@
     239, 
     1
   ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
-    44, 
-    44, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    140, 
+    140, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
@@ -1794,14 +1764,9 @@
     684, 
     13396
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    4, 
-    4, 
-    0
-  ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    10, 
-    10, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    12, 
+    12, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
@@ -1829,10 +1794,15 @@
     1, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    1488, 
-    1488, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 3.1}": [
+    38, 
+    38, 
     0
+  ], 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
+    18960, 
+    910, 
+    18050
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     128, 
@@ -1859,10 +1829,10 @@
     130, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
-    14256, 
-    680, 
-    13576
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
+    10140, 
+    505, 
+    9635
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     60, 
@@ -1884,20 +1854,20 @@
     528, 
     0
   ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    1892, 
+    80, 
+    1812
+  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
     112, 
     112, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    260, 
-    260, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
+    24, 
+    24, 
     0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
-    240, 
-    200, 
-    40
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
     5710, 
@@ -1924,11 +1894,6 @@
     130, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    80, 
-    80, 
-    0
-  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     70, 
     70, 
@@ -1938,11 +1903,6 @@
     6720, 
     330, 
     6390
-  ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
-    80, 
-    80, 
-    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     16, 
@@ -1964,9 +1924,9 @@
     37, 
     503
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    2432, 
-    2432, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    29, 
+    29, 
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
@@ -1984,10 +1944,10 @@
     34, 
     686
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    280, 
-    240, 
-    40
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
+    2736, 
+    271, 
+    2465
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.25, 'acc_length': 2}": [
     224, 
@@ -2014,6 +1974,11 @@
     24, 
     0
   ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    1400, 
+    66, 
+    1334
+  ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.6}": [
     225, 
     225, 
@@ -2029,10 +1994,10 @@
     576, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
-    9240, 
-    429, 
-    8811
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    5396, 
+    368, 
+    5028
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 2}": [
     93, 
@@ -2045,19 +2010,14 @@
     4800
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
-    24, 
     20, 
-    4
+    20, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
     4225, 
     209, 
     4016
-  ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
-    284, 
-    284, 
-    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     508, 
@@ -2079,11 +2039,6 @@
     103, 
     437
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2}": [
-    11420, 
-    546, 
-    10874
-  ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
     25124, 
     1215, 
@@ -2099,9 +2054,19 @@
     14, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 3.1}": [
-    138, 
-    138, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    4, 
+    4, 
+    0
+  ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    44, 
+    44, 
+    0
+  ], 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 2.6}": [
+    228, 
+    228, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
@@ -2109,9 +2074,9 @@
     80, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    160, 
-    160, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    308, 
+    308, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2.6}": [
@@ -2139,15 +2104,10 @@
     390, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    336, 
-    336, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    64, 
+    64, 
     0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    266, 
-    265, 
-    1
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     1140, 
@@ -2164,20 +2124,25 @@
     260, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    50, 
-    50, 
-    0
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    1100, 
+    52, 
+    1048
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
     34260, 
     1594, 
     32666
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    2, 
-    2, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+    220, 
+    220, 
     0
+  ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    1121, 
+    89, 
+    1032
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
     26, 
@@ -2215,9 +2180,9 @@
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    448, 
     384, 
-    64
+    384, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     1940, 
@@ -2234,9 +2199,14 @@
     260, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    8, 
-    8, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
+    770, 
+    42, 
+    728
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
+    816, 
+    816, 
     0
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
@@ -2279,9 +2249,9 @@
     26, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    140, 
-    140, 
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+    44, 
+    44, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
@@ -2289,14 +2259,14 @@
     99, 
     1671
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
-    10140, 
-    505, 
-    9635
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
+    14256, 
+    680, 
+    13576
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
-    24, 
-    24, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
+    200, 
+    200, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 2}": [
@@ -2339,15 +2309,10 @@
     150, 
     3010
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    162, 
-    126, 
-    36
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    1100, 
-    52, 
-    1048
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    50, 
+    50, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     200, 
@@ -2359,9 +2324,9 @@
     217, 
     4103
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
-    816, 
-    816, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    2, 
+    2, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
@@ -2405,9 +2370,9 @@
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    40, 
     34, 
-    6
+    34, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
     2178, 
@@ -2465,9 +2430,9 @@
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    144, 
     112, 
-    32
+    112, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     3, 
@@ -2520,14 +2485,14 @@
     1064
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 3.1}": [
-    40, 
     34, 
-    6
+    34, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
-    384, 
     320, 
-    64
+    320, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     264, 
@@ -2549,10 +2514,10 @@
     151, 
     3017
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
-    650, 
-    45, 
-    605
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    80, 
+    80, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 1.5}": [
     608, 
@@ -2619,6 +2584,11 @@
     256, 
     0
   ], 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    440, 
+    439, 
+    1
+  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     10, 
     10, 
@@ -2632,11 +2602,6 @@
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     8, 
     8, 
-    0
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
-    1380, 
-    1380, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
@@ -2654,6 +2619,11 @@
     260, 
     0
   ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    1064, 
+    178, 
+    886
+  ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     33, 
     33, 
@@ -2668,6 +2638,21 @@
     864, 
     91, 
     773
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    16, 
+    16, 
+    0
+  ], 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
+    430, 
+    428, 
+    2
+  ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    10, 
+    10, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     684, 
@@ -2684,9 +2669,9 @@
     86, 
     0
   ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
-    26, 
-    26, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
+    225, 
+    225, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
@@ -2694,10 +2679,10 @@
     40, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
-    432, 
-    360, 
-    72
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
+    570, 
+    36, 
+    534
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 2}": [
     1488, 
@@ -2720,9 +2705,9 @@
     1462
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    72, 
     56, 
-    16
+    56, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     1720, 
@@ -2734,10 +2719,10 @@
     567, 
     10853
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    930, 
-    930, 
-    0
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
+    970, 
+    43, 
+    927
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     858, 
@@ -2754,15 +2739,15 @@
     464, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    2432, 
-    2432, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    286, 
+    286, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 3.1}": [
-    24, 
     20, 
-    4
+    20, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     440, 
@@ -2789,9 +2774,19 @@
     114, 
     2526
   ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
+    60, 
+    60, 
+    0
+  ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 2}": [
     684, 
     684, 
+    0
+  ], 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    440, 
+    440, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
@@ -2799,15 +2794,20 @@
     60, 
     0
   ], 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
+    260, 
+    260, 
+    0
+  ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 3.0, 'acc_length': 2.6}": [
     3, 
     3, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    2, 
-    2, 
-    0
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    3696, 
+    168, 
+    3528
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
     26, 
@@ -2829,6 +2829,11 @@
     66, 
     1494
   ], 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    36, 
+    36, 
+    0
+  ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
     648, 
     161, 
@@ -2838,11 +2843,6 @@
     672, 
     62, 
     610
-  ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    160, 
-    160, 
-    0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     220, 
@@ -2884,15 +2884,20 @@
     1001, 
     20383
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 2}": [
-    72, 
-    72, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    44, 
+    44, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     1720, 
     78, 
     1642
+  ], 
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
+    18, 
+    18, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     2838, 
@@ -2919,10 +2924,10 @@
     143, 
     2437
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    224, 
-    224, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
+    2280, 
+    108, 
+    2172
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.67, 'acc_length': 2}": [
     3456, 
@@ -2939,10 +2944,10 @@
     793, 
     3095
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
-    260, 
-    260, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
+    38880, 
+    1925, 
+    36955
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     4, 
@@ -2964,9 +2969,9 @@
     148, 
     1016
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    12, 
-    12, 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    4, 
+    4, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
@@ -2984,25 +2989,25 @@
     140, 
     0
   ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
-    508, 
-    35, 
-    473
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
+    284, 
+    284, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     76, 
     76, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    4, 
-    4, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 3.1}": [
+    138, 
+    138, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    64, 
-    64, 
-    0
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    266, 
+    265, 
+    1
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2}": [
     6480, 
@@ -3014,19 +3019,19 @@
     20, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
-    12160, 
-    1173, 
-    10987
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
+    228, 
+    228, 
+    0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
-    770, 
-    42, 
-    728
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    8, 
+    8, 
+    0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
-    36, 
-    36, 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.6}": [
+    130, 
+    130, 
     0
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
@@ -3034,29 +3039,24 @@
     111, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
-    3718, 
-    193, 
-    3525
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
+    380, 
+    380, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    640, 
     544, 
-    96
+    544, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
     112, 
     112, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    600, 
-    41, 
-    559
-  ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    84, 
-    84, 
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
+    80, 
+    80, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
@@ -3069,9 +3069,9 @@
     342, 
     6758
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    342, 
-    342, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
+    260, 
+    260, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
@@ -3079,14 +3079,14 @@
     4, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    10, 
-    10, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    600, 
+    41, 
+    559
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    22, 
-    22, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    6, 
+    6, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
@@ -3099,9 +3099,9 @@
     76, 
     1644
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
-    60, 
-    60, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    336, 
+    336, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
@@ -3120,9 +3120,9 @@
     0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
-    384, 
     320, 
-    64
+    320, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
     16, 
@@ -3149,10 +3149,10 @@
     231, 
     4849
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
-    430, 
-    428, 
-    2
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
+    744, 
+    744, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
     14014, 
@@ -3209,10 +3209,10 @@
     308, 
     6062
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
-    18960, 
-    910, 
-    18050
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
+    650, 
+    45, 
+    605
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     20, 
@@ -3234,9 +3234,9 @@
     154, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
-    114, 
-    114, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
+    126, 
+    126, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
@@ -3259,10 +3259,10 @@
     32, 
     540
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    590, 
-    33, 
-    557
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 1.5}": [
+    1380, 
+    1380, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
     19200, 
@@ -3274,10 +3274,10 @@
     136, 
     2564
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 3.6}": [
-    845, 
-    37, 
-    808
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    44, 
+    44, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     48, 
@@ -3329,9 +3329,9 @@
     640, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    240, 
-    240, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    290, 
+    290, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
@@ -3414,19 +3414,19 @@
     646, 
     12854
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    560, 
-    30, 
-    530
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    111, 
+    111, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     120, 
     120, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
-    38, 
-    38, 
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+    44, 
+    44, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
@@ -3434,10 +3434,10 @@
     493, 
     1
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    1121, 
-    89, 
-    1032
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
+    6400, 
+    306, 
+    6094
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
     1320, 
@@ -3465,9 +3465,9 @@
     1415
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
-    400, 
     340, 
-    60
+    340, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
     380, 
@@ -3489,45 +3489,45 @@
     16, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    440, 
-    439, 
-    1
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 2.6}": [
+    114, 
+    114, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     6402, 
     304, 
     6098
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    11, 
-    11, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    440, 
+    439, 
+    1
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    28, 
-    24, 
-    4
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    32, 
+    32, 
+    0
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 3.0, 'acc_length': 2}": [
     9, 
     9, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    20, 
-    20, 
-    0
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    2464, 
+    107, 
+    2357
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     2540, 
     124, 
     2416
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    6, 
-    6, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
+    1440, 
+    64, 
+    1376
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
     648, 
@@ -3544,20 +3544,10 @@
     36, 
     536
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
-    4620, 
-    244, 
-    4376
-  ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
-    6320, 
-    297, 
-    6023
-  ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2}": [
-    144, 
     112, 
-    32
+    112, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 2}": [
     180, 
@@ -3584,19 +3574,19 @@
     258, 
     5142
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    330, 
-    330, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
+    6320, 
+    297, 
+    6023
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
-    240, 
     204, 
-    36
+    204, 
+    0
   ], 
-  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    440, 
-    440, 
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    84, 
+    84, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2}": [
@@ -3614,9 +3604,9 @@
     84, 
     0
   ], 
-  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
-    18, 
-    18, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    22, 
+    22, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 2}": [
@@ -3624,9 +3614,9 @@
     251, 
     781
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 3.1}": [
-    38, 
-    38, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    1488, 
+    1488, 
     0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
@@ -3644,19 +3634,19 @@
     114, 
     2328
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    44, 
-    44, 
-    0
+  "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
+    4620, 
+    244, 
+    4376
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
     19, 
     19, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    29, 
-    29, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 2}": [
+    2432, 
+    2432, 
     0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 2.6}": [
@@ -3664,15 +3654,15 @@
     169, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    5396, 
-    368, 
-    5028
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
+    9240, 
+    429, 
+    8811
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    6, 
-    6, 
-    0
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    968, 
+    42, 
+    926
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
     130, 
@@ -3694,10 +3684,10 @@
     130, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    4268, 
-    196, 
-    4072
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 5, 'pitch_joint': 5, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    10, 
+    10, 
+    0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
     380, 
@@ -3769,9 +3759,9 @@
     14, 
     0
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    16, 
-    16, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    42, 
+    42, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
@@ -3784,10 +3774,10 @@
     48, 
     942
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
-    1892, 
-    80, 
-    1812
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 1.5}": [
+    176, 
+    176, 
+    0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
     555, 
@@ -3804,10 +3794,10 @@
     36, 
     504
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    1064, 
-    178, 
-    886
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.25, 'acc_length': 1.5}": [
+    1520, 
+    1520, 
+    0
   ], 
   "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.5, 'acc_length': 3.1}": [
     2970, 
@@ -3819,19 +3809,19 @@
     163, 
     3037
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.33, 'acc_length': 1.5}": [
-    228, 
-    228, 
-    0
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 1.5}": [
+    12160, 
+    1173, 
+    10987
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2}": [
-    380, 
-    380, 
-    0
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 1.5}": [
+    3718, 
+    193, 
+    3525
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
-    12, 
-    12, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 2.6}": [
+    144, 
+    144, 
     0
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
@@ -3844,15 +3834,15 @@
     329, 
     6331
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 3.1}": [
-    845, 
-    44, 
-    801
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2}": [
+    11420, 
+    546, 
+    10874
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    16, 
-    16, 
-    0
+  "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}": [
+    1142, 
+    172, 
+    970
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2}": [
     21120, 
@@ -3880,9 +3870,19 @@
     522
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.25, 'acc_length': 3.1}": [
-    9, 
     7, 
-    2
+    7, 
+    0
+  ], 
+  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+    35, 
+    35, 
+    0
+  ], 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
+    2208, 
+    2208, 
+    0
   ], 
   "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 3.6}": [
     637, 
@@ -3904,10 +3904,10 @@
     8, 
     0
   ], 
-  "{'#long_link': 2, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.5, 'acc_length': 2.6}": [
-    228, 
-    228, 
-    0
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 3.1}": [
+    1940, 
+    113, 
+    1827
   ], 
   "{'#long_link': 1, 'long_link': 0.7, 'dof': 4, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.33, 'acc_length': 2}": [
     30, 
@@ -3919,14 +3919,14 @@
     80, 
     552
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.67, 'acc_length': 2}": [
-    2208, 
-    2208, 
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 4, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
+    240, 
+    240, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
-    36, 
-    36, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.0, 'acc_length': 1.5}": [
+    160, 
+    160, 
     0
   ], 
   "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2}": [
@@ -3944,24 +3944,24 @@
     114, 
     0
   ], 
-  "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.6}": [
+  "{'#long_link': 5, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.6}": [
+    508, 
     35, 
-    35, 
-    0
+    473
   ], 
-  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}": [
-    1400, 
-    66, 
-    1334
+  "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    440, 
+    440, 
+    0
   ], 
   "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.5, 'acc_length': 2}": [
     66, 
     66, 
     0
   ], 
-  "{'#long_link': 0, 'long_link': 0.4, 'dof': 5, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
-    36, 
-    36, 
+  "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 3, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2}": [
+    231, 
+    231, 
     0
   ], 
   "{'#long_link': 4, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 0.0, 'acc_length': 3.1}": [
