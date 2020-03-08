@@ -11,9 +11,9 @@ from itertools import product
 from simulator import Simulator
 from matplotlib.tri import Triangulation
 from tqdm import tqdm
-import copy
 import pickle
-from multiprocessing import Pool
+# from multiprocessing import Pool
+# import copy
 
 
 class MyCsv(object):
@@ -173,7 +173,6 @@ class FixFromJson(object):
                 jacobians, curr_poss = dat[row[2]]
                 mu = 1.1
                 z = 0
-                # lci = 1.1
                 for jacobian, curr_pos in zip(jacobians, curr_poss):
                     if jacobian != -1:
                         mu_new, z_new = self.indices_calc(row[2], jacobian, curr_pos)
@@ -181,11 +180,8 @@ class FixFromJson(object):
                             mu = mu_new
                         if z < z_new:
                             z = z_new
-                        # if lci > lci_new:
-                        #     lci = lci_new
                 to_fix[to_fix.index(row)][7] = mu
                 to_fix[to_fix.index(row)][8] = z
-                # to_fix[to_fix.index(row)][9] = lci
         return to_fix
 
     def indices_calc(self, names, jacobian, cur_pos):
@@ -195,7 +191,6 @@ class FixFromJson(object):
         # Manipulability index
         mu = round(np.product(j_ev), 3)  # self.manipulability_index(jacobian)
         # Local Conditioning Index
-        # lci = round(j_ev[-1] / j_ev[0], 3)  # self.local_conditioning_index(jacobian)
         # Joint Mid-Range Proximity
         z = self.mid_joint_proximity(cur_pos, names)
         return mu, np.diag(z).max()
@@ -290,8 +285,7 @@ class Concepts:
         to_sim.sort(key=len)
         return [x for x in to_sim if x], results
 
-    ###
-    # get configs names and create urdf files
+    #  ### get configs names and create urdf files
     @staticmethod
     def arm2parts(arm):
         """ get arm name and disassemble it to (joints, axes, link length)
@@ -362,11 +356,21 @@ class Concepts:
         combs_in_concept = []
         for c in concepts_with_values:
             combs_in_concept.append([c[0], len(c[1])])
+        # data = self.remove_duplicates_from_concepts(data)
         # MyCsv.save_csv(combs_in_concept, "concepts_sum")
         # save_json("concepts", data)
         return concepts_with_values
         # concepts_without_values = [[k, 0] for k, v in data.items() if v == []]
         # MyCsv.save_csv(concepts_without_values, "concepts_without_values")
+
+    @staticmethod
+    def remove_duplicates_from_concepts(all_concepts):
+        for conc in tqdm(all_concepts):
+            # happend only in 5dof - can disable this condition but will take more time
+            if conc[43:44] == "5":
+                confs = np.unique(all_concepts[conc])
+                all_concepts[conc] = np.ndarray.tolist(confs)
+        return all_concepts
 
     def determine_combinations(self):
         concepts_general = self.assign_concepts_vars_values()
@@ -567,7 +571,7 @@ def sum_data():
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = -70
-    time_penalty = 20
+    # time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
@@ -947,27 +951,7 @@ def pickle_save_data(data, file_name):
 
 
 #  ###how many configurations allready simulated and which to create  ###
-def how_many_to_create(all_concepts, all_data, how_many):
-    v = {}
-    for k in range(len(all_concepts)):
-        v[all_concepts.keys()[k]] = [len(all_concepts[all_concepts.keys()[k]]), 0, len(all_concepts[all_concepts.keys()[k]])]
-    simulated = []
-    concepts2check = []
-    for dat in tqdm(all_data):
-        if dat["name"] not in simulated and dat["dof"] == "6":
-            for concept in v.keys():
-                if 219 < v[concept][0] < how_many and dat["dof"] == concept[43:44]:
-                    if dat["name"] in all_concepts[concept]:
-                        v[concept][1] += 1
-                        v[concept][2] = v[concept][0] - v[concept][1]
-                        simulated.append(dat["name"])
-                        if concept not in concepts2check:
-                            concepts2check.append(concept)
-                        break
-    return concepts2check, simulated, v
-
-
-def which_confs2create(concepts2check, all_concepts, simulated, dof2check="5"):
+def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
@@ -981,72 +965,6 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="5"):
     return conf2create
 
 
-# def how_many_configs_left(dof="5"):
-#     """ Check how many configurations left in the specific dof - return all the concepts of this dof"""
-#     all_concept = load_json("confs_number")
-#     total = 0
-#     total2 = 0
-#     concepts = []
-#     for i in tqdm(range(len(all_concept))):
-#         if all_concept.keys()[i][43:44] == dof:
-#             total += all_concept[all_concept.keys()[i]][2]
-#             total2 += all_concept[all_concept.keys()[i]][1]
-#             concepts.append(all_concept.keys()[i])
-#     print("About " + str(total) + " configurations lefts. with Avg time of 15 seconds per configuration"
-#          " it will take about\n " + str(total*15/3600./24) + " days to simulate all of them")
-#     return concepts
-
-
-# def remain_configs(all_concept, all_dat, dof="5"):
-#     """check which configuration allready simulated and return list of all the configurations
-#     that havent simulated yet"""
-#     to_create = []
-#     for a in all_concept:
-#         if a[43:44] == dof:
-#             to_create += all_concept[a]
-#     for dat in tqdm(all_dat):
-#         if dat["dof"] == dof:
-#             if dat["name"] in to_create:
-#                 to_create.remove(dat["name"])
-#     to_cr = []
-#     # fix this to the create urdf function
-#     to_create = np.ndarray.tolist(np.unique(np.asarray(to_create)))
-#     for t in to_create:
-#         to_cr.append([t])
-#     total = len(to_cr)
-#     print("About " + str(total) + " configurations lefts. with Avg time of 15 seconds per configuration"
-#           " it will take about\n " + str(total * 15 / 3600. / 24) + " days to simulate all of them")
-#     return to_cr
-
-
-def create_configs(all_concept, all_dat, confs_in_concept=220000):
-    # if we want to calculated with different data uncomment
-      # all the concecpts with less than 220 configurations
-    concepts2check, simulated, v = how_many_to_create(all_concept, all_dat, confs_in_concept)
-    save_json("jsons/other/confs_number", v, "w+")
-    save_json("jsons/other/concepts2check", concepts2check, "w+")
-    # save_json("jsons/other/simulated", simulated, "w+")
-    return concepts2check, simulated, v
-
-
-def update_results(to_add_file="to_add", current_file="jsons/concepts+configs+results"):
-    concepts_configs_results = load_json(current_file)
-    to_add = MyCsv.read_csv(to_add_file, "dict")
-
-    for add in tqdm(to_add):
-        for res in concepts_configs_results:
-            if res[43:44] == add["dof"]:
-                for conf in concepts_configs_results[res]:
-                    conf_name = conf.keys()[0]
-                    if add["name"] == conf_name:
-                        # concepts_configs_results[res][concepts_configs_results[res].index(conf)] = add
-                        ind = [concepts_configs_results[res].index(conf)][0]
-                        concepts_configs_results[res][ind][conf_name]["mu"] = unicode(add["mu"])
-                        concepts_configs_results[res][ind][conf_name]["z"] = unicode(add["Z"])
-                        break
-    save_json(current_file, concepts_configs_results, "w+")
-
-
 def remain_to_sim(all_concept, dof2check="5"):
     simulated = load_json("jsons/other/simulated")
     concepts2check = load_json("jsons/other/concepts2check")
@@ -1056,13 +974,13 @@ def remain_to_sim(all_concept, dof2check="5"):
     return create_urdf
 
 
-def remain_conf_in_conc(all_concept):
+def remain_conf_in_conc(all_concept, min_confs=1000):
     print("Start remain_conf_in_conc")
     ga_concept = {}
     for concept in all_concept:
-        if len(all_concepts[concept]) > 220 and concept[43:44] == "6":
+        if len(all_concepts[concept]) > min_confs and concept[43:44] == "6":
             ga_concept[concept] = all_concept[concept]
-    save_json("jsons/concepts2ga", ga_concept)
+    save_json("jsons/concepts2ga", ga_concept, "w+")
     return ga_concept
 
 
@@ -1096,14 +1014,55 @@ def combine_res(all_data, all_concepts):
                              "dof": all_data[ind[0]]["dof"], "z": all_data[ind[0]]["Z"]}
             except:
                 dict_keys = {"name": all_concepts[dat][k], "mu": None, "dof": None, "z": None}
-            flag.append({all_concepts[dat][k]: dict_keys})
+            flag.append({dict_keys["name"]: dict_keys})
             k += 1
         new_data[dat] = flag
-
-    save_json("concepts+configs+results", new_data)
     return new_data
-# ###   ###
 
+
+def simulated(res_file="results_all"):
+    "return list of names of all simulated configs"
+    print("Start simulated")
+    simulate = []
+    res = MyCsv.read_csv(res_file, "dict")
+    for r in tqdm(res):
+        simulate.append(r["name"])
+    return simulate
+
+
+def confs_number(all=None):
+    """Calculate how many configs simulated and how many left in each concept"""
+    print("Start confs_number")
+    if all is None:
+        all = load_json("jsons/concepts+configs+results")
+    conf_number = {}
+    for i in tqdm(all_concepts):
+        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
+    return conf_number
+
+
+def concepts2check(confs_max=1000, confs_min=0, dof="6"):
+    """Which concepts we want to select to simulate """
+    print("Start concepts2check")
+    check_concepts = []
+    for k in tqdm(all_concepts):
+        if confs_min < len(all_concepts[k]) < confs_max and k[43:44] == dof:
+            check_concepts.append(k)
+    return check_concepts
+
+
+# def check_dupications_configs_in_concepts(all_concepts=None):
+#     """Check if there are duplicate configurations in the concepts """
+#     if all_concepts is None:
+#         all_concepts = load_json("jsons/concepts")
+#     configs = []
+#     for conc in all_concepts:
+#         configs.append(all_concepts[conc])
+#     all_configs = np.concatenate(np.asarray(configs))
+#     unq, unq_idx = np.unique(all_configs, True)
+#     unq_cnt = np.bincount(unq_idx)
+#     twice_inds = np.argwhere(unq_cnt < 1)
+#     twice = all_configs[twice_inds]
 
 if __name__ == '__main__':
     # while True:
@@ -1117,6 +1076,7 @@ if __name__ == '__main__':
     fix_from_json = False
     pareto_plot = False
     check_num_confs_in_concepts = True
+    create_configs = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1145,27 +1105,33 @@ if __name__ == '__main__':
         pareto_with_concepts = assign_conf2concept(pareto_front)
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
-        create_new_file = True
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
+        save_json("jsons/other/results_all", all_data, "w+")
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 500000  # all the concecpts with less than 220 configurations
-        if create_new_file:
-            create_configs(all_concepts, all_data, confs_in_concept=confs_in_concepts)
-        # else:
-        #     update_results("to_add")
-        # Create json file of the remaining concepts and their configurations
-        ga_concepts = remain_conf_in_conc(all_concepts)
-        save_json("results_all", all_data)
+        # how many confs simulated
+        conf_number = confs_number()
+        save_json("jsons/other/confs_number", conf_number, "w+")
         # create CSV file with how many configs simulated and left at each concept
         left_confs_concepts()
+        # Create json file of the remaining concepts and their configurations
+        ga_concepts = remain_conf_in_conc(all_concepts)
         # create one file of configurations with there results via concepts
         combine_data = combine_res(all_data, all_concepts)
-        # # create the urdf's for the remaining configurations in the selected dof
-        # to_create = remain_to_sim(all_concepts, dof2check="6")
+        save_json("jsons/concepts+configs+results", combine_data, "w+")
+    if create_configs:
+        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
+        confs_in_concepts = 750  # all the concecpts with less than X configurations
+        # names of simulated confs
+        simulated_confs = simulated()
+        save_json("jsons/other/simulated", simulated_confs, "w+")
+        # which concepts we want to simulte
+        check_concept = concepts2check(confs_max=confs_in_concepts, confs_min=0, dof="6")
+        save_json("jsons/other/concepts2check", check_concept, "w+")
+        # create the urdf's for the remaining configurations in the selected dof
+        to_create = remain_to_sim(all_concepts, dof2check="6")
+
 
 # todo - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
-# todo - update concepts+configs+results instead of recalculate + need to change jsons files
 # todo - show the configurations that on the woi
-# todo - to see which configuration are in several concepts
-# todo - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
+# to?do - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
 #  0	0.4	6	0	1	0.5	 1.5}"
