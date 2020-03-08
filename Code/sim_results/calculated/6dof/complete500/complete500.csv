@@ -124,3 +124,5 @@ roll_z_0_1pitch_y_0_4roll_z_0_1pitch_y_0_1pitch_y_0_4pitch_y_0_1,roll_pitch__rol
 roll_z_0_1pitch_y_0_4roll_x_0_4pitch_y_0_7pitch_y_0_7roll_y_0_4,roll_pitch__roll__pitch__pitch__roll_,0.1_0.4__0.4__0.7__0.7__0.4_,z_y__x__y__y__y_,6,0.149,3.44,0.011,,1
 roll_z_0_1pitch_y_0_7roll_z_0_7roll_y_0_7pitch_y_0_7roll_y_0_4,roll_pitch__roll__roll__pitch__roll_,0.1_0.7__0.7__0.7__0.7__0.4_,z_y__z__y__y__y_,6,0.162,2.22,0.011,,1
 roll_z_0_1roll_y_0_7roll_y_0_1roll_y_0_4pitch_y_0_1roll_x_0_1,roll_roll__roll__roll__pitch__roll_,0.1_0.7__0.1__0.4__0.1__0.1_,z_y__y__y__y__x_,6,0.183,1.95,0.011,,1
+roll_z_0_1pitch_y_0_7pitch_y_0_7pitch_x_0_7pitch_y_0_1roll_x_0_7,roll_pitch__pitch__pitch__pitch__roll_,0.1_0.7__0.7__0.7__0.1__0.7_,z_y__y__x__y__x_,6,0.204,2.7,0.004,,1
+roll_z_0_1roll_y_0_7pitch_y_0_1pitch_y_0_1pitch_y_0_4roll_x_0_7,roll_roll__pitch__pitch__pitch__roll_,0.1_0.7__0.1__0.1__0.4__0.7_,z_y__y__y__y__x_,6,0.198,1.89,0.004,,1

@@ -974,7 +974,7 @@ def remain_to_sim(all_concept, dof2check="5"):
     return create_urdf
 
 
-def remain_conf_in_conc(all_concept, min_confs=1000):
+def remain_conf_in_conc(all_concept, min_confs=500):
     print("Start remain_conf_in_conc")
     ga_concept = {}
     for concept in all_concept:
@@ -1108,6 +1108,9 @@ if __name__ == '__main__':
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         save_json("jsons/other/results_all", all_data, "w+")
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
+        # create one file of configurations with there results via concepts
+        combine_data = combine_res(all_data, all_concepts)
+        save_json("jsons/concepts+configs+results", combine_data, "w+")
         # how many confs simulated
         conf_number = confs_number()
         save_json("jsons/other/confs_number", conf_number, "w+")
@@ -1115,9 +1118,6 @@ if __name__ == '__main__':
         left_confs_concepts()
         # Create json file of the remaining concepts and their configurations
         ga_concepts = remain_conf_in_conc(all_concepts)
-        # create one file of configurations with there results via concepts
-        combine_data = combine_res(all_data, all_concepts)
-        save_json("jsons/concepts+configs+results", combine_data, "w+")
     if create_configs:
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
         confs_in_concepts = 750  # all the concecpts with less than X configurations
