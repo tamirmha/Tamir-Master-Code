@@ -18,9 +18,9 @@ Constrains:
 """
 # from typing import Iterable
 
-from simulator import simulate
+# from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv
+from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv, get_key
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -211,6 +211,8 @@ class Problem:
             attempt = 0
             in_concept = False
             cross_ok = False
+            if mutation_percent == 100:  # if the mutation % is 100 than no crossover
+                cross_ok = True
             mut_ok = False
             spring = []
             while not in_concept:
@@ -228,7 +230,8 @@ class Problem:
                         spring.append(cross_spring)
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
-                    mut_spring = self.mutation_round(parent_1)
+                    # mut_spring = self.mutation_round(parent_1)
+                    mut_spring = self.mutation_rand(parent_1)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -276,18 +279,46 @@ class Problem:
             child = to_urdf(child[0], child[1], child[2], "")
         return child["name"]
 
-    def mutation_rand(self, parent):
+    def mutation_rand(self, parent, nb_prox=1):
         """ switch randomlly 2 links and joints
         :param parent- [np array] names of parents
+        :param nb_prox- [int] proximity of the neighboors: 1-first neigboor, 2-second neighboor
         :return -[str] name of offspring
         """
         dof = self.dof
-        # ind = np.random.randint(0, len(parents))
-        # parent = parents[ind]
-        inds = np.arange(1, dof)
-        np.random.shuffle(inds)
-        inds = np.insert(inds, 0, 0)
-        offspring = parent[:, inds]
+        arm_index = []
+        nbs_dict = {1: [[2, 4], [5, 8]], 2: [[1, 5, 8], [4, 7]], 3: [[6, 9], []],
+                    4: [[1, 5, 7], [2, 8]], 5: [[2, 4, 8], [1, 7]], 6: [[3, 9], []],
+                    7: [[1, 4, 8], [2, 5]], 8: [[2, 5, 7], [1, 4]], 9: [[3, 6], []],
+                    11: [[12, 14, 17], [15, 18]], 12: [[11, 15, 18], [14, 17]], 13: [[16, 19], []],
+                    14: [[11, 15, 17], [12, 18]], 15: [[12, 14, 18], [11, 17]], 16: [[13, 19], []],
+                    17: [[11, 14, 18], [12, 15]], 18: [[12, 15, 17], [11, 14]], 19: [[13, 16], []],
+                    21: [[22, 24, 27], [25, 28]], 22: [[21, 25, 28], [24, 27]], 23: [[26, 29], []],
+                    24: [[21, 25, 27], [22, 28]], 25: [[22, 24, 28], [21, 27]], 26: [[23, 29], []],
+                    27: [[21, 24, 28], [22, 25]], 28: [[22, 25, 27], [21, 24]], 29: [[23, 26], []]
+        }
+        dict = {'roll z 0.1': 1, 'roll z 0.4': 2, 'roll z 0.7': 3,
+                'roll y 0.1': 4, 'roll y 0.4': 5, 'roll y 0.7': 6,
+                'roll x 0.1': 7, 'roll x 0.4': 8, 'roll x 0.7': 9,
+                'pitch z 0.1': 11, 'pitch z 0.4': 12, 'pitch z 0.7': 13,
+                'pitch y 0.1': 14, 'pitch y 0.4': 15, 'pitch y 0.7': 16,
+                'pitch x 0.1': 17, 'pitch x 0.4': 18, 'pitch x 0.7': 19,
+                'pris z 0.1': 21, 'pris z 0.4': 22, 'pris z 0.7': 23,
+                'pris y 0.1': 24, 'pris y 0.4': 25, 'pris y 0.7': 26,
+                'pris x 0.1': 27, 'pris x 0.4': 28, 'pris x 0.7': 29
+                }
+        for p in parent.T:
+            arm_index.append(dict["_".join(p).replace("_", " ")])
+        ind = np.random.randint(1, dof)
+        to_replace = arm_index[ind]
+        nbs = nbs_dict[to_replace]
+        if nb_prox == 1:
+            rand_nb = np.random.choice(nbs[0])
+        else:
+            rand_nb = np.random.choice(nbs[0] + nbs[1])
+        offspring = parent.T
+        offspring[ind] = get_key(rand_nb, dict).split(" ")
+        offspring = offspring.T
         offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
         return offspring["name"]
 
@@ -784,7 +815,7 @@ if __name__ == '__main__':
             save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
             for t in tqdm(range(1)):  # len(probs)
-                probs[t] = run(probs[t])
+                probs[t] = run(probs[5])
             # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
             # Update generation
             woi.set_gen(n + 1)
@@ -802,6 +833,7 @@ if __name__ == '__main__':
         print("Finished")
 
 
+
 # done - create main results file
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
@@ -816,4 +848,4 @@ if __name__ == '__main__':
 # done - check the differences with parallel - doesnt share global vars - need to change the code
 
 # nottodo- play with the follow parameters: mutation rate, parents number, number of offsprings
-# todo - take a concept with ~10000 conf and fully simulate him
+# to?do - take a concept with ~10000 conf and fully simulate him

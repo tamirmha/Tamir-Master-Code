@@ -16,6 +16,14 @@ import pickle
 # import copy
 
 
+def get_key(val, my_dict):
+    for key, value in my_dict.items():
+        if val == value:
+            return key
+
+    return "key doesn't exist"
+
+
 class MyCsv(object):
 
     @staticmethod
@@ -769,8 +777,6 @@ def domination_check(conf):
     front = [[1], [1], [6], [conf[3][0]]]
     points = [[], [], [], []]
     for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
-        # if k == 4 or k == 6:
-        #     continue
         added = False
         for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):  # zip(x_front, y_front, z_front, conf_front):
             # check if the point is dominate the front
@@ -810,7 +816,6 @@ def domination_check(conf):
             front[1].append(j)
             front[2].append(k)
             front[3].append(l)
-
     ind = np.ndarray.tolist(np.asarray(front[2]).argsort(axis=0))
     front = [map(front[3].__getitem__, ind), map(front[0].__getitem__, ind), map(front[1].__getitem__, ind),
              map(front[2].__getitem__, ind)]
@@ -822,7 +827,7 @@ def plot_pareto(other_points, pareto_concepts):
     # plot settings
     plt.figure(figsize=(24.0, 10.0))
     ax = plt.axes(projection='3d')
-    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
+    plt.subplots_adjust(left=0.23, bottom=0.17, right=1.0, top=1.0, wspace=0.2, hspace=0.16 )
     ax.view_init(azim=-145, elev=15)
     ax.set_ylim(0, 1)
     ax.set_xlim(0, 0.5)
@@ -839,25 +844,15 @@ def plot_pareto(other_points, pareto_concepts):
     # add 3d points of all the points that on the front with their number
     for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], pareto[0]):
         ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
+    confs = []
+    i = 0
+    for c in pareto_concepts:
+        confs.append(str(i) + " " + c["configuration"])
+        i += 1
+    plt.legend(confs, loc=6, fontsize=10,  bbox_to_anchor=(-0.33, 0.5))
     # Make 3D surface of the front
     tri = Triangulation(pareto[1], pareto[3]).triangles
     ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.49), edgecolor='')
-    # # Plot each dof points
-    # plt.figure(4)
-    # for x, y in zip(pareto[1][:5], pareto[2][:5]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
-    # plt.figure(5)
-    # for x, y in zip(pareto[1][5:10], pareto[2][5:10]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
-    # plt.figure(6)
-    # for x, y in zip(pareto[1][10:], pareto[2][10:]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
 
 
 def text2points(ax, points):
@@ -895,7 +890,7 @@ def add_table2plot(pareto):
     colwidths = [0.03]*len(columns)
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
-    plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
+    # plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
     plt.show()
 
 
@@ -1074,8 +1069,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
-    check_num_confs_in_concepts = True
+    pareto_plot = True
+    check_num_confs_in_concepts = False
     create_configs = False
     if calc_concepts:
         con = Concepts()
@@ -1098,11 +1093,12 @@ if __name__ == '__main__':
     if fix_from_json:
         FixFromJson()
     if plotdata:
-        plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all")
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/results_all")
     if pareto_plot:
         con = assign_results()
         outer_points, pareto_front = domination_check(con)
         pareto_with_concepts = assign_conf2concept(pareto_front)
+        save_json("jsons/front_concept", pareto_with_concepts, "w+")
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
@@ -1132,6 +1128,6 @@ if __name__ == '__main__':
 
 
 # todo - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
-# todo - show the configurations that on the woi
+# done - show the configurations that on the woi
 # to?do - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
 #  0	0.4	6	0	1	0.5	 1.5}"
