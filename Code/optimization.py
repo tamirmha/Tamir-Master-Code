@@ -35,7 +35,7 @@ np.random.seed(100100)
 
 class Problem:
     def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1, number_of_objects=3,
-                 larg_concept=200):
+                 larg_concept=200, delta_allocation=10):
         self.pop_size = pop_size  # size of population
         self.confs_of_concepts = confs_of_concepts  # [x.keys()[0] for x in confs_of_concepts]  # all possible configs names of the concept
         self.confs_results = confs_results  # all the configurations of the concept and their indices
@@ -45,9 +45,14 @@ class Problem:
         self.elit_confs = []
         self.parents_number = parents_number
         self.dof = int(str(concept_name).split(" ")[5].split(",")[0])
-        self.stopped = False
+        self.stopped = False  # if local condition is true or very slow Cr
+        self.paused = False   # if the Cr is slow
+        self.in_dwoi = False  # the concept in the DWOI - is pasued
         self.number_of_objects = number_of_objects
         self.population = []
+        self.dis = []  # distance from the origin
+        self.cr = 0  # Convergence rate of the concept
+        self.delta_allocation = delta_allocation
 
     def set_population(self, pop):
         self.population = pop
@@ -257,7 +262,9 @@ class Problem:
         if len(offspring) > offspring_size:
             offspring = offspring[:offspring_size]
         elif len(offspring) < offspring_size:
-            print("333333333")
+            # the mating didn't success to create new offsprings
+            self.stopped = True
+            print("local stop condition - no more offsprings")
         return offspring
 
     def crossover(self, parents):
@@ -375,21 +382,6 @@ class Problem:
         configs = self.get_configs()
         return confs in configs
 
-    # @staticmethod
-    # def clost_point(distances, nums_mins=4):
-    #     """Find the closest point to the DWOI
-    #     :param distances: NxM array-N number of points in the DWOI, M number of points to calc distance
-    #     :param nums_mins: number of minimum points to find
-    #     :return the index of the closest point
-    #     """
-    #     indices = []
-    #     for i in range(nums_mins):
-    #         ind = distances.argmin() % distances.shape[1]
-    #         indices.append(ind)
-    #         distances[:, ind] = [100] * distances.shape[0]
-    #         # distances = distances[:, range(ind) + range(ind + 1, distances.shape[1])]
-    #     return indices
-
     def get_configs(self):
         return self.confs_of_concepts
 
@@ -455,6 +447,29 @@ class Problem:
             # check if all the configurations simulated
             self.stopped = True
 
+    def set_cr(self, dis_start, dis_end):
+        self.cr = (dis_start - dis_end)/self.delta_allocation
+
+    def get_cr(self):
+        return self.cr
+
+    def get_dis(self):
+        return self.dis
+
+    def set_dis(self, dis):
+        self.dis = dis
+
+    def add_dis(self, d):
+        self.dis.append(d)
+
+    def calc_dis(self):
+        """Calc distance of the Non-Dominate (elite) results from the origin """
+        elite = self.get_elite_confs()
+        dist = distance.cdist(np.asarray(elite[:2]).T,  np.zeros((1, 2)), 'euclidean')
+        min_dis = dist.min()
+        self.add_dis(min_dis)
+        return min_dis
+
 
 class DWOI:
 
@@ -463,7 +478,7 @@ class DWOI:
         self.dwoi = self.dwoi2conf(load_json(concepts_file))  # , self.gen])
         self.stopped = False
         self.start_time = time()
-        self.run_time = run_time*3600*24  # in seconds
+        self.run_time = run_time*24*3600  # in seconds
 
     def stop_condition(self):
         if self.run_time <= time() - self.start_time:
@@ -505,6 +520,81 @@ class DWOI:
 
     def get_gen(self):
         return self.gen
+
+
+class ResourceAllocation:
+    def __init__(self, greedy=True, t_low=0.001, t_high=0.003, cont_per_max=40, cont_min=1):
+        self.t_low = t_low
+        self.t_high = t_high,
+        self.cont_per_max = cont_per_max
+        self.cont_min = round(cont_min)
+        self.greedy = greedy
+
+    @staticmethod
+    def sort_cr(cr):
+        cr = np.asarray(cr)
+        sorted_cr = np.sort(cr)
+        sorted_cr_ind = np.argsort(cr)
+        return sorted_cr, sorted_cr_ind[::-1]
+
+    def set_group(self, sorted_cr):
+        group_a = sorted_cr[sorted_cr > self.t_high]  # [i[0] for i in np.argwhere(sorted_cr > self.t_high)]
+        group_b = sorted_cr[(sorted_cr <= self.t_high)& (sorted_cr > self.t_low)]  # [i[0] for i in np.argwhere((sorted_cr <= self.t_high)& (sorted_cr > self.t_low))]
+        group_c = sorted_cr[self.t_low >= sorted_cr] # [i[0] for i in np.argwhere(self.t_low >= sorted_cr)]
+        return [group_a, group_b, group_c]
+
+    def set_decision(self, groups):
+        """Decide if a concepts will continue \ pause \ stop
+        :param groups: [list of 3 lists] - groups[0] - set 1, groups[1] - set 2, groups[2] - set 3
+        :return: con_res, pause_res, stop_res - results to continue, pause, stop
+        """
+        total_concepts = 0
+        for j in groups:
+            total_concepts += len(j)
+        if self.cont_per_max/100. * total_concepts > self.cont_min:
+            number_concepts_to_continue = self.cont_per_max/100. * total_concepts
+        else:
+            number_concepts_to_continue = self.cont_min
+        con_res = [i for i in groups[0]]
+        pause_res = []
+        stop_res = []
+        for i in groups[1][::-1]:
+            if len(con_res) < number_concepts_to_continue:
+                con_res.append(i)
+            else:
+                pause_res = np.ndarray.tolist(groups[1][groups[1] > i])  # [j[0] for j in np.argwhere(groups[1] >= i)]
+                stop_res = [i for i in groups[2]]
+                return con_res, pause_res, stop_res
+        for i in groups[2]:
+            if len(con_res) < number_concepts_to_continue:
+                con_res.append(i)
+            else:
+                stop_res = np.ndarray.tolist(groups[2][groups[2] >= i])  # [j[0] for j in np.argwhere(groups[2] >= i)]
+        return con_res, pause_res, stop_res
+
+    @staticmethod
+    def assign2concepts(desicions, indx):
+        continues = indx[:len(desicions[0])]
+        pauses = indx[len(desicions[0]):len(desicions[1])+len(desicions[0])]
+        stopped = indx[len(desicions[1])+len(desicions[0]):len(desicions[1]) + len(desicions[0]) + len(desicions[2])]
+        return continues, pauses, stopped
+
+    def run(self, crs, prob):
+        print("Resource Allocation is made")
+        cr_sorted, cr_sorted_ind = self.sort_cr(crs)
+        decision = self.set_decision(self.set_group(cr_sorted))
+        decisions = self.assign2concepts(decision, cr_sorted_ind)
+        for i in tqdm(range(10)):  # len(prob) todo change
+            if i in decisions[0]:
+                prob[i].stopped = False
+                prob[i].paused = False
+            elif i in decisions[1]:
+                prob[i].stopped = False
+                prob[i].paused = True
+            elif i in decisions[2]:
+                prob[i].stopped = True
+                prob[i].paused = False
+        return prob
 
 
 def to_urdf(interface_joints, joint_parent_axis, links, folder):
@@ -585,12 +675,13 @@ def set_pop_size(num_concept_confs, min_configs=None):
     return pop_size
 
 
-def init_concepts(larg_concept=1500, arm_limit=None, parents_number=1):
+def init_concepts(larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
     """ Initilize all the concept and the first populations
     :param larg_concept: [int] minimum number of configurations in concept in order to concept will be large
     :param arm_limit: [2 elements list] the limits: arm_limit[0] is the minimum number of the population
             arm_limit[1] is the percent of number of configurations in the concept
-    :param parent_percent: [int] how much from the populatoin will be parents
+    :param number_of_parents: [int] how much from the populatoin will be parents
+    :param delta_allocation: how many generation between resource allocation
     :return prob - [list of objects] all the data of each concept
     """
     if arm_limit is None:
@@ -603,8 +694,9 @@ def init_concepts(larg_concept=1500, arm_limit=None, parents_number=1):
         # Initiliaze each concept
         name_of_concept = list(concepts_with_conf)[i]
         number_of_arms = set_pop_size(len(concepts_with_conf[name_of_concept]), arm_limit)
-        prob.append(Problem(name_of_concept, concepts_with_conf[name_of_concept], confs_results[name_of_concept], parents_number=parents_number,
-                            pop_size=number_of_arms, larg_concept=larg_concept))
+        prob.append(Problem(concept_name=name_of_concept, confs_of_concepts=concepts_with_conf[name_of_concept],
+                    confs_results=confs_results[name_of_concept], parents_number=number_of_parents,
+                    pop_size=number_of_arms, larg_concept=larg_concept, delta_allocation=delta_allocation))
         # initiliaze population
         prob[i].set_population(prob[i].rand_pop())
         # population.append(prob[i].rand_pop())
@@ -742,8 +834,8 @@ def sim(prob):
 def run(prob):
     global woi
     # check if the local stop condition applied
-    if prob.stopped:
-        return []
+    if prob.stopped or prob.paused or prob.in_dwoi:
+        return prob
     population = prob.get_population()
     # insert previous configurations into archive
     prob.set_prev_confs(population)
@@ -770,18 +862,21 @@ def run(prob):
         population = prob.mating(selected_confs)
     else:  # if small concept
         # Random Selection
+        # todo -  add non dominated archive
         population = prob.rand_pop()
     prob.set_population(population)
+    prob.calc_dis()
     return prob
 
 
 if __name__ == '__main__':
     # ## Setting parameters
     run_tim = 7  # how many dats to run
-    num_gens = 10  # how many gens to run
+    num_gens = 150  # how many gens to run
     parents_number = 1  # number of parents
-    large_concept = 1000  # define what is a large concept
+    large_concept = 100  # define what is a large concept
     arms_limit = [1, 0]  # population limit: arms_limit[0]: minimum number of configs, arms_limit[1]: % of population
+    allocation_delta = 10  # how many generation between resource allocation
     threads = 1  # how many threads to use if using parallel
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
     params = "Number of gens: " + str(num_gens) + "\nparents_number: " + str(parents_number) + \
@@ -801,7 +896,10 @@ if __name__ == '__main__':
     woi = DWOI(run_time=run_tim)
     # Initilize all the concepts GA
     print("initiliaze data")
-    probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, parents_number=parents_number)
+    probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, number_of_parents=parents_number,
+                          delta_allocation=allocation_delta)
+    ra = ResourceAllocation(cont_min=0.1*len(probs[:50]))
+    cr = []
     # change the working dir
     os.chdir(results_folder)
     try:
@@ -814,8 +912,18 @@ if __name__ == '__main__':
             # Save the current WOI
             save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
-            for t in tqdm(range(1)):  # len(probs)
-                probs[t] = run(probs[5])
+            for t in tqdm(range(10)):  # len(probs)
+                probs[t] = run(probs[t])
+                # Check Convergance rate
+                if not (n + 1) % allocation_delta:
+                    start_ind = allocation_delta * ((n + 1) / allocation_delta - 1)
+                    end_ind = n
+                    print("Calculating Convergence rate")
+                    probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
+                    cr.append(probs[t].get_cr())
+                # dis[t].append(probs[t].calc_dis())
+            if not (n + 1) % allocation_delta:
+                probs = ra.run(cr, probs)
             # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
             # Update generation
             woi.set_gen(n + 1)
@@ -833,19 +941,20 @@ if __name__ == '__main__':
         print("Finished")
 
 
-
+# todo - local stop condition - spreading (maybe cv = covariance/mean)
+# todo - create resource allocation
+# todo - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
 # done - create main results file
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
 # done - add elitism check
 # done - set each concept relative numbers of arms (init concepts)
 # done - parents number to each concept
-# todo - in mating- if doesnt succeeded to create offspring?
+# done - in mating- if doesnt succeeded to create offspring? no  - stop concept
 # done - set json file with the desired concepts
 # done - how to evalute?  run simulation for all ?
 # done - how to get the results from the simulator
 # done - to check from main results file if allready simulated
 # done - check the differences with parallel - doesnt share global vars - need to change the code
-
 # nottodo- play with the follow parameters: mutation rate, parents number, number of offsprings
 # to?do - take a concept with ~10000 conf and fully simulate him
