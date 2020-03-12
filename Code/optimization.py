@@ -197,6 +197,8 @@ class Problem:
             wheel = np.random.uniform(0, 1)
             ind = np.where((roullete - wheel) > 0, (roullete - wheel), np.inf).argmin()
             selected.append(round(fitnes[ind], 3))
+        if selected == [0.0]:
+            return np.asarray([99.028])  # (distance of the point 70,71) if the initial position didnt reach
         return np.abs(np.round(np.log(selected)/c, 3))  # [10-x for x in selected]
 
     def mating(self, parents, mutation_percent=100):
@@ -411,13 +413,13 @@ class Problem:
                         if front[4] != self.concept_name:
                             front[4].append(self.concept_name)
                         added = True
-            if not added:
-                front[0].append(i)
-                front[1].append(j)
-                front[2].append(k)
-                front[3].append(l)
-                if front[4] != self.concept_name:
-                    front[4].append(self.concept_name)
+            # if not added:
+            #     front[0].append(i)
+            #     front[1].append(j)
+            #     front[2].append(k)
+            #     front[3].append(l)
+            #     if front[4] != self.concept_name:
+            #         front[4].append(self.concept_name)
         return front
 
     def set_prev_confs(self, confs):
@@ -523,7 +525,7 @@ class DWOI:
 
 
 class ResourceAllocation:
-    def __init__(self, greedy=True, t_low=0.001, t_high=0.003, cont_per_max=40, cont_min=1.0):
+    def __init__(self, greedy=True, t_low=0.001, t_high=0.003, cont_per_max=90, cont_min=1.0):
         self.t_low = t_low
         self.t_high = t_high
         self.cont_per_max = cont_per_max
@@ -575,11 +577,11 @@ class ResourceAllocation:
                 pause_res = np.ndarray.tolist(groups[1][groups[1] > i])  # [j[0] for j in np.argwhere(groups[1] >= i)]
                 stop_res = [i for i in groups[2]]
                 return con_res, pause_res, stop_res
-        for i in groups[2]:
+        for i in groups[2][::-1]:
             if len(con_res) < number_concepts_to_continue:
                 con_res.append(i)
             else:
-                stop_res = np.ndarray.tolist(groups[2][groups[2] >= i])  # [j[0] for j in np.argwhere(groups[2] >= i)]
+                stop_res.append(i)
         return con_res, pause_res, stop_res
 
     @staticmethod
@@ -606,7 +608,7 @@ class ResourceAllocation:
         cr_sorted, cr_sorted_ind = self.sort_cr(crs)
         decision = self.set_decision(self.set_group(cr_sorted))
         decisions = self.assign2concepts(decision, cr_sorted_ind)
-        for i in tqdm(range(10)):  # len(prob) todo change
+        for i in tqdm(range(len(prob))):  # len(prob) todo change
             if i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -856,7 +858,10 @@ def sim(prob):
 def run(prob):
     global woi
     # check if the local stop condition applied
-    if prob.stopped or prob.paused or prob.in_dwoi:
+    if prob.stopped:
+        return prob
+    elif prob.paused or prob.in_dwoi:
+        prob.add_dis(1.5)
         return prob
     population = prob.get_population()
     # insert previous configurations into archive
@@ -918,7 +923,7 @@ if __name__ == '__main__':
     print("initiliaze data")
     probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, number_of_parents=parents_number,
                           delta_allocation=allocation_delta)
-    ra = ResourceAllocation(cont_min=0.1*len(probs[:50]))
+    ra = ResourceAllocation(cont_min=0.1*len(probs))
     cr = []
     # change the working dir
     os.chdir(results_folder)
@@ -930,17 +935,28 @@ if __name__ == '__main__':
             # Save the current WOI
             save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
-            for t in tqdm(range(10)):  # len(probs)
+            to_pop = []
+            for t in tqdm(range(len(probs))):  # len(probs)
                 probs[t] = run(probs[t])
+                if probs[t].concept_name in woi.dwoi[-1][4]:
+                    print(t)
+                    probs[t].in_dwoi = True
                 # Check Convergance rate
                 if not (n + 1) % allocation_delta:
                     start_ind = allocation_delta * ((n + 1) / allocation_delta - 1)
                     end_ind = n
-                    print("Calculating Convergence rate")
+                    # print("Calculating Convergence rate")
+                    if probs[t].in_dwoi or probs[t].paused:
+                        continue
+                    if probs[t].stopped:
+                        to_pop.append(t)
+                        continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % allocation_delta:
+                for p in range(len(to_pop)):
+                    probs.pop(to_pop[p] - p)
                 probs = ra.run(cr, probs)
                 cr = []
             # Update generation
@@ -958,7 +974,7 @@ if __name__ == '__main__':
         print("Finished")
 
 
-# tod0 - concept in DWOI?
+# done - concept in DWOI?
 # todo - local stop condition - spreading (maybe cv = covariance/mean)
 # done - create resource allocation
 # done - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
