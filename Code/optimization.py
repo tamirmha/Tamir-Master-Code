@@ -523,29 +523,39 @@ class DWOI:
 
 
 class ResourceAllocation:
-    def __init__(self, greedy=True, t_low=0.001, t_high=0.003, cont_per_max=40, cont_min=1):
+    def __init__(self, greedy=True, t_low=0.001, t_high=0.003, cont_per_max=40, cont_min=1.0):
         self.t_low = t_low
-        self.t_high = t_high,
+        self.t_high = t_high
         self.cont_per_max = cont_per_max
         self.cont_min = round(cont_min)
         self.greedy = greedy
 
     @staticmethod
-    def sort_cr(cr):
-        cr = np.asarray(cr)
-        sorted_cr = np.sort(cr)
-        sorted_cr_ind = np.argsort(cr)
+    def sort_cr(crs):
+        """ Get list of convergence rate and sort them from high to low
+        :param crs: [list] - convergence rate
+        :return sorted_cr, sorted_cr_ind: [np array, np array] - results sorted, indices of the results sorted
+        """
+        crs = np.asarray(crs)
+        sorted_cr = np.sort(crs)
+        sorted_cr_ind = np.argsort(crs)
         return sorted_cr, sorted_cr_ind[::-1]
 
     def set_group(self, sorted_cr):
-        group_a = sorted_cr[sorted_cr > self.t_high]  # [i[0] for i in np.argwhere(sorted_cr > self.t_high)]
-        group_b = sorted_cr[(sorted_cr <= self.t_high)& (sorted_cr > self.t_low)]  # [i[0] for i in np.argwhere((sorted_cr <= self.t_high)& (sorted_cr > self.t_low))]
-        group_c = sorted_cr[self.t_low >= sorted_cr] # [i[0] for i in np.argwhere(self.t_low >= sorted_cr)]
+        """ Each cr goes to his group:
+        :param sorted_cr: [np array] - sorted lit of the results
+        :return group_a: [np array] - continue any way
+                group_b: [np array] - continue only to fullfil the amount unless paused
+                group_c: [np array] - continue only to fullfil the amount unless stopped
+        """
+        group_a = sorted_cr[sorted_cr > self.t_high]
+        group_b = sorted_cr[(sorted_cr <= self.t_high) & (sorted_cr > self.t_low)]
+        group_c = sorted_cr[self.t_low >= sorted_cr]
         return [group_a, group_b, group_c]
 
     def set_decision(self, groups):
         """Decide if a concepts will continue \ pause \ stop
-        :param groups: [list of 3 lists] - groups[0] - set 1, groups[1] - set 2, groups[2] - set 3
+        :param groups: [list of 3 np arrays] - groups[0] - set 1, groups[1] - set 2, groups[2] - set 3
         :return: con_res, pause_res, stop_res - results to continue, pause, stop
         """
         total_concepts = 0
@@ -574,12 +584,24 @@ class ResourceAllocation:
 
     @staticmethod
     def assign2concepts(desicions, indx):
+        """ decide to each concept's index if it will continue/pause/stopped
+        :param desicions: [list of 3 lists] - decisions of continuation
+        :param indx: [np array] - the original indices of the concepts
+        :return continues, pauses, stopped : [np array, np array, np array]
+        """
         continues = indx[:len(desicions[0])]
-        pauses = indx[len(desicions[0]):len(desicions[1])+len(desicions[0])]
-        stopped = indx[len(desicions[1])+len(desicions[0]):len(desicions[1]) + len(desicions[0]) + len(desicions[2])]
+        pauses = indx[len(desicions[0]):len(desicions[1]) + len(desicions[0])]
+        stopped = indx[len(desicions[1]) + len(desicions[0]):len(desicions[1]) + len(desicions[0]) + len(desicions[2])]
         return continues, pauses, stopped
 
     def run(self, crs, prob):
+        """ Run all the sequance of the resource allocation
+        :param crs: [list] - all the convergences rates
+        :param prob: [list] - all the concepts
+        :return: [list] - all the concepts
+        """
+        if not self.greedy:  # if fair method than no data allocation
+            return prob
         print("Resource Allocation is made")
         cr_sorted, cr_sorted_ind = self.sort_cr(crs)
         decision = self.set_decision(self.set_group(cr_sorted))
@@ -877,11 +899,9 @@ if __name__ == '__main__':
     large_concept = 100  # define what is a large concept
     arms_limit = [1, 0]  # population limit: arms_limit[0]: minimum number of configs, arms_limit[1]: % of population
     allocation_delta = 10  # how many generation between resource allocation
-    threads = 1  # how many threads to use if using parallel
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
     params = "Number of gens: " + str(num_gens) + "\nparents_number: " + str(parents_number) + \
-             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_tim) +  \
-             "\nNumber of Threads used: " + str(threads)
+             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_tim)
     # enter all the results to one folder
     results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
     while os.path.isdir(results_folder):
@@ -903,8 +923,6 @@ if __name__ == '__main__':
     # change the working dir
     os.chdir(results_folder)
     try:
-        # decide how many threads to use
-        # with Pool(threads) as p:
         # running each generation
         for n in (range(num_gens)):
             # simulate the population
@@ -921,10 +939,10 @@ if __name__ == '__main__':
                     print("Calculating Convergence rate")
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
-                # dis[t].append(probs[t].calc_dis())
+            # Resource allocation
             if not (n + 1) % allocation_delta:
                 probs = ra.run(cr, probs)
-            # probs = list(tqdm(p.imap(run, probs), total=len(probs)))
+                cr = []
             # Update generation
             woi.set_gen(n + 1)
             # Check global stop condition
@@ -933,7 +951,6 @@ if __name__ == '__main__':
                 break
     finally:
         print("Saving data...")
-        # p.close()
         save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         # pickle_save_data(woi, "woi")
         # pickle_save_data(probs, "problems")
@@ -941,9 +958,10 @@ if __name__ == '__main__':
         print("Finished")
 
 
+# tod0 - concept in DWOI?
 # todo - local stop condition - spreading (maybe cv = covariance/mean)
-# todo - create resource allocation
-# todo - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
+# done - create resource allocation
+# done - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
 # done - create main results file
 # done - save dwoi to json every iteration?
 # done - check that DWOI archive change only after change
