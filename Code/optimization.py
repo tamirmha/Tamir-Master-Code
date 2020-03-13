@@ -27,17 +27,20 @@ import copy
 from datetime import datetime
 from tqdm import tqdm
 from time import time
-from multiprocessing import Pool
 import os
 import shutil
-np.random.seed(100100)
+
+# np.random.seed(100100)
+# np.random.seed(100101)
+np.random.seed(111111)
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1, number_of_objects=3,
+    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1,
+                 number_of_objects=3,
                  larg_concept=200, delta_allocation=10):
         self.pop_size = pop_size  # size of population
-        self.confs_of_concepts = confs_of_concepts  # [x.keys()[0] for x in confs_of_concepts]  # all possible configs names of the concept
+        self.confs_of_concepts = confs_of_concepts  # all possible configs names of the concept
         self.confs_results = confs_results  # all the configurations of the concept and their indices
         self.confs_archive = []  # Archive of all the selected configurations
         self.large_concept = len(confs_of_concepts) > larg_concept  # True if large False otherwise
@@ -46,7 +49,7 @@ class Problem:
         self.parents_number = parents_number
         self.dof = int(str(concept_name).split(" ")[5].split(",")[0])
         self.stopped = False  # if local condition is true or very slow Cr
-        self.paused = False   # if the Cr is slow
+        self.paused = False  # if the Cr is slow
         self.in_dwoi = False  # the concept in the DWOI - is pasued
         self.number_of_objects = number_of_objects
         self.population = []
@@ -99,23 +102,23 @@ class Problem:
         f2 = []
         f3 = []
         pops = []
-        for p in pop:
-            pops.append(p)
-            res = self.get_result(p)
+        for r in pop:
+            pops.append(r)
+            res = self.get_result(r)
             if len(res) == 0:
                 f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.normal(0.05, 0.01), 3))    # manipulability
+                f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
                 f1.append(np.around(np.random.normal(0.05, 0.01), 3))
             # check if the configuration allready simulated
             elif res["z"] is not None:
-                f3.append(int(res["dof"]))   # dof
+                f3.append(int(res["dof"]))  # dof
                 f2.append(1 - float(res["mu"]))  # manipulability
-                f1.append(float(res["z"]))   # Mid-Range Proximity
+                f1.append(float(res["z"]))  # Mid-Range Proximity
             else:
                 f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.normal(0.05, 0.01), 3))    # manipulability
+                f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
                 f1.append(np.around(np.random.normal(0.05, 0.01), 3))  # Mid-Range Proximity
         return [f1, f2, f3, pops, self.concept_name]
 
@@ -128,19 +131,18 @@ class Problem:
             stop = True
         return stop
 
-    def archive_elitism(self, new_gen):
+    def one_pop_elitism(self, new_gen):
         elite_confs = self.get_elite_confs()
         if not elite_confs:
             self.set_elite_confs(new_gen)
             return new_gen
-        elite_confs[0].append(new_gen[0][0])
-        elite_confs[1].append(new_gen[1][0])
-        elite_confs[2].append(new_gen[2][0])
-        elite_confs[3].append(new_gen[3][0])
+        elite_confs = self.domination_check(new_gen, elite_confs)
+        # elite_confs[0].append(new_gen[0][0])
+        # elite_confs[1].append(new_gen[1][0])
+        # elite_confs[2].append(new_gen[2][0])
+        # elite_confs[3].append(new_gen[3][0])
         self.set_elite_confs(elite_confs)
         return elite_confs
-        # new_elite_gen = []
-        # new_elite_gen_name = []
 
     def elitism(self, new_gen):
         """Elitism - Make sure the offsprings will be better than the previous generation
@@ -155,7 +157,7 @@ class Problem:
         new_elite_gen_name = []
         for i in range(self.pop_size):
             for j in range(self.pop_size):
-                if elite_confs[0][i] > new_gen[0][j] and elite_confs[1][i] > new_gen[1][j]:
+                if elite_confs[0][i] >= new_gen[0][j] and elite_confs[1][i] >= new_gen[1][j]:
                     new_elite = [new_gen[0][j], new_gen[1][j], new_gen[2][j]]
                     new_elite_gen_name.append(new_gen[3][j])
                     new_gen[0][j] = 100
@@ -178,7 +180,7 @@ class Problem:
         :return [np array] of the shortest distance form each point to the DWOI
         """
         dwoi_loc = np.asarray(dwoi[:3]).T
-        dist = distance.cdist(dwoi_loc,  np.asarray(points[:3]).T, 'euclidean')
+        dist = distance.cdist(dwoi_loc, np.asarray(points[:3]).T, 'euclidean')
         return np.amin(np.around(dist, 3), axis=0)
 
     @staticmethod
@@ -190,16 +192,16 @@ class Problem:
         """
         selected = []
         c = 3.
-        fitnes = np.exp(-c*dis)
+        fitnes = np.exp(-c * dis)
         fp = np.asarray([i / sum(fitnes) for i in fitnes])
-        roullete = np.asarray([sum(fp[:x+1]) for x in range(len(fp))])
+        roullete = np.asarray([sum(fp[:x + 1]) for x in range(len(fp))])
         for i in range(num_of_returns):
             wheel = np.random.uniform(0, 1)
             ind = np.where((roullete - wheel) > 0, (roullete - wheel), np.inf).argmin()
             selected.append(round(fitnes[ind], 3))
         if selected == [0.0]:
             return np.asarray([99.028])  # (distance of the point 70,71) if the initial position didnt reach
-        return np.abs(np.round(np.log(selected)/c, 3))  # [10-x for x in selected]
+        return np.abs(np.round(np.log(selected) / c, 3))  # [10-x for x in selected]
 
     def mating(self, parents, mutation_percent=100):
         """
@@ -208,7 +210,7 @@ class Problem:
         :return offspring - [list] names of the offsprings
          """
         offspring_size = self.pop_size
-        num_mutations = int(offspring_size * mutation_percent/100.)
+        num_mutations = int(offspring_size * mutation_percent / 100.)
         num_crossover = offspring_size - num_mutations
         total_attempts = 50  # to prevent infinite loop
         offspring = []
@@ -247,12 +249,12 @@ class Problem:
                 in_concept = cross_ok and mut_ok or cross_ok and mut_offspring == num_mutations
                 if attempt >= total_attempts:
                     # print("mating problem " + str(i))
-                    if len(offspring) > 2*num_mutations-1:
+                    if len(offspring) > 2 * num_mutations - 1:
                         spring = self.rand_pop(1)
                         if spring not in offspring:
                             break
                     else:
-                        rand_spring = self.rand_pop(2 + abs(len(offspring) - 2*i))
+                        rand_spring = self.rand_pop(2 + abs(len(offspring) - 2 * i))
                         for s in rand_spring:
                             if s not in offspring:
                                 spring.append(s)
@@ -290,8 +292,8 @@ class Problem:
 
     def mutation_rand(self, parent, nb_prox=1):
         """ switch randomlly 2 links and joints
-        :param parent- [np array] names of parents
-        :param nb_prox- [int] proximity of the neighboors: 1-first neigboor, 2-second neighboor
+        :param parent: [np array] - names of parents
+        :param nb_prox:  [int] - proximity of the neighboors: 1-first neigboor, 2-second neighboor
         :return -[str] name of offspring
         """
         dof = self.dof
@@ -305,19 +307,19 @@ class Problem:
                     21: [[22, 24, 27], [25, 28]], 22: [[21, 25, 28], [24, 27]], 23: [[26, 29], []],
                     24: [[21, 25, 27], [22, 28]], 25: [[22, 24, 28], [21, 27]], 26: [[23, 29], []],
                     27: [[21, 24, 28], [22, 25]], 28: [[22, 25, 27], [21, 24]], 29: [[23, 26], []]
-        }
-        dict = {'roll z 0.1': 1, 'roll z 0.4': 2, 'roll z 0.7': 3,
-                'roll y 0.1': 4, 'roll y 0.4': 5, 'roll y 0.7': 6,
-                'roll x 0.1': 7, 'roll x 0.4': 8, 'roll x 0.7': 9,
-                'pitch z 0.1': 11, 'pitch z 0.4': 12, 'pitch z 0.7': 13,
-                'pitch y 0.1': 14, 'pitch y 0.4': 15, 'pitch y 0.7': 16,
-                'pitch x 0.1': 17, 'pitch x 0.4': 18, 'pitch x 0.7': 19,
-                'pris z 0.1': 21, 'pris z 0.4': 22, 'pris z 0.7': 23,
-                'pris y 0.1': 24, 'pris y 0.4': 25, 'pris y 0.7': 26,
-                'pris x 0.1': 27, 'pris x 0.4': 28, 'pris x 0.7': 29
-                }
-        for p in parent.T:
-            arm_index.append(dict["_".join(p).replace("_", " ")])
+                    }
+        dict_voc = {'roll z 0.1': 1, 'roll z 0.4': 2, 'roll z 0.7': 3,
+                    'roll y 0.1': 4, 'roll y 0.4': 5, 'roll y 0.7': 6,
+                    'roll x 0.1': 7, 'roll x 0.4': 8, 'roll x 0.7': 9,
+                    'pitch z 0.1': 11, 'pitch z 0.4': 12, 'pitch z 0.7': 13,
+                    'pitch y 0.1': 14, 'pitch y 0.4': 15, 'pitch y 0.7': 16,
+                    'pitch x 0.1': 17, 'pitch x 0.4': 18, 'pitch x 0.7': 19,
+                    'pris z 0.1': 21, 'pris z 0.4': 22, 'pris z 0.7': 23,
+                    'pris y 0.1': 24, 'pris y 0.4': 25, 'pris y 0.7': 26,
+                    'pris x 0.1': 27, 'pris x 0.4': 28, 'pris x 0.7': 29
+                    }
+        for r in parent.T:
+            arm_index.append(dict_voc["_".join(r).replace("_", " ")])
         ind = np.random.randint(1, dof)
         to_replace = arm_index[ind]
         nbs = nbs_dict[to_replace]
@@ -326,7 +328,7 @@ class Problem:
         else:
             rand_nb = np.random.choice(nbs[0] + nbs[1])
         offspring = parent.T
-        offspring[ind] = get_key(rand_nb, dict).split(" ")
+        offspring[ind] = get_key(rand_nb, dict_voc).split(" ")
         offspring = offspring.T
         offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
         return offspring["name"]
@@ -337,7 +339,7 @@ class Problem:
         :return -[str] name of offspring
         """
         dof = self.dof
-        indices = np.concatenate((np.asarray([0, dof-1]), np.arange(1, dof-1)))
+        indices = np.concatenate((np.asarray([0, dof - 1]), np.arange(1, dof - 1)))
         offspring = parent[:, indices]
         offspring = to_urdf(offspring[0], offspring[1], offspring[2], "")
         if offspring["name"][15] == "x":  # for roll\pris x in start
@@ -395,6 +397,7 @@ class Problem:
         """
         for i, j, k, l in zip(conf[0], conf[1], conf[2], conf[3]):  # z, mu, dof, configuration
             added = False
+            point_dominated = False
             for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):
                 # check if the point is dominate the front
                 if i <= i_front and j <= j_front and k <= k_front:
@@ -413,13 +416,17 @@ class Problem:
                         if front[4] != self.concept_name:
                             front[4].append(self.concept_name)
                         added = True
-            # if not added:
-            #     front[0].append(i)
-            #     front[1].append(j)
-            #     front[2].append(k)
-            #     front[3].append(l)
-            #     if front[4] != self.concept_name:
-            #         front[4].append(self.concept_name)
+                # check if front dominate the point
+                elif i >= i_front and j >= j_front and k >= k_front:
+                    point_dominated = True
+                    break
+            if not (added or point_dominated):
+                front[3].append(l)
+                front[0].append(i)
+                front[1].append(j)
+                front[2].append(k)
+                if front[4] != self.concept_name:
+                    front[4].append(self.concept_name)
         return front
 
     def set_prev_confs(self, confs):
@@ -450,7 +457,7 @@ class Problem:
             self.stopped = True
 
     def set_cr(self, dis_start, dis_end):
-        self.cr = (dis_start - dis_end)/self.delta_allocation
+        self.cr = (dis_start - dis_end) / self.delta_allocation
 
     def get_cr(self):
         return self.cr
@@ -467,7 +474,7 @@ class Problem:
     def calc_dis(self):
         """Calc distance of the Non-Dominate (elite) results from the origin """
         elite = self.get_elite_confs()
-        dist = distance.cdist(np.asarray(elite[:2]).T,  np.zeros((1, 2)), 'euclidean')
+        dist = distance.cdist(np.asarray(elite[:2]).T, np.zeros((1, 2)), 'euclidean')
         min_dis = dist.min()
         self.add_dis(min_dis)
         return min_dis
@@ -480,7 +487,7 @@ class DWOI:
         self.dwoi = self.dwoi2conf(load_json(concepts_file))  # , self.gen])
         self.stopped = False
         self.start_time = time()
-        self.run_time = run_time*24*3600  # in seconds
+        self.run_time = run_time * 24 * 3600  # in seconds
 
     def stop_condition(self):
         if self.run_time <= time() - self.start_time:
@@ -556,15 +563,15 @@ class ResourceAllocation:
         return [group_a, group_b, group_c]
 
     def set_decision(self, groups):
-        """Decide if a concepts will continue \ pause \ stop
+        """Decide if a concepts will continue / pause / stop
         :param groups: [list of 3 np arrays] - groups[0] - set 1, groups[1] - set 2, groups[2] - set 3
         :return: con_res, pause_res, stop_res - results to continue, pause, stop
         """
         total_concepts = 0
         for j in groups:
             total_concepts += len(j)
-        if self.cont_per_max/100. * total_concepts > self.cont_min:
-            number_concepts_to_continue = self.cont_per_max/100. * total_concepts
+        if self.cont_per_max / 100. * total_concepts > self.cont_min:
+            number_concepts_to_continue = self.cont_per_max / 100. * total_concepts
         else:
             number_concepts_to_continue = self.cont_min
         con_res = [i for i in groups[0]]
@@ -719,8 +726,8 @@ def init_concepts(larg_concept=1500, arm_limit=None, number_of_parents=1, delta_
         name_of_concept = list(concepts_with_conf)[i]
         number_of_arms = set_pop_size(len(concepts_with_conf[name_of_concept]), arm_limit)
         prob.append(Problem(concept_name=name_of_concept, confs_of_concepts=concepts_with_conf[name_of_concept],
-                    confs_results=confs_results[name_of_concept], parents_number=number_of_parents,
-                    pop_size=number_of_arms, larg_concept=larg_concept, delta_allocation=delta_allocation))
+                            confs_results=confs_results[name_of_concept], parents_number=number_of_parents,
+                            pop_size=number_of_arms, larg_concept=larg_concept, delta_allocation=delta_allocation))
         # initiliaze population
         prob[i].set_population(prob[i].rand_pop())
         # population.append(prob[i].rand_pop())
@@ -775,7 +782,7 @@ def set_new_data(all_concepts_json="jsons/concepts+configs+results", ga_json="js
                     if all_concepts[con][k][dat["name"]]["mu"] is not None:
                         print("Check it!!!")
                     all_concepts[con][k] = {unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"],
-                                                                  "name": unicode(dat["name"])}}
+                                                                   "name": unicode(dat["name"])}}
                     break
                 k += 1
             if second_loop_stop:
@@ -800,13 +807,13 @@ def check_exist(problem):
     """
     pop = problem.get_population()
     to_sim = []
-    for p in pop:
-        res = problem.get_result(p)
+    for r in pop:
+        res = problem.get_result(r)
         # check if the configuration allready simulated
         if len(res) == 0:
-            to_sim.append(p)
+            to_sim.append(r)
         elif res["z"] is None:
-            to_sim.append(p)
+            to_sim.append(r)
     return to_sim
 
 
@@ -825,7 +832,8 @@ def new_data(prob):
                 if dat["name"] == c.keys()[0]:
                     outer_loop_stop = True
                     prob[k].confs_results[j][prob[k].confs_results[j].keys()[0]] = {"mu": dat["mu"],
-                                                    "z": dat["Z"], "dof": dat["dof"], "name": unicode(dat["name"])}
+                                                                                    "z": dat["Z"], "dof": dat["dof"],
+                                                                                    "name": unicode(dat["name"])}
                     break
                 j += 1
             k += 1
@@ -835,13 +843,13 @@ def new_data(prob):
 
 
 def sim(prob):
-    print("start creating urdfs")
+    # print("start creating urdfs")
     # configurations to create urdf
     to_sim = []
     con = Concepts()
     k = 0
-    for p in prob:
-        to_sim.append(check_exist(p))
+    for r in prob:
+        to_sim.append(check_exist(r))
         k += 1
         if k == 10:
             break
@@ -849,7 +857,7 @@ def sim(prob):
     con.create_files2sim(filter(None, to_sim))
     # move the files into the desired place
     # move_folder()
-    print("start simulating")
+    # print("start simulating")
     # simulate()
     # prob = new_data(prob)
     return prob
@@ -874,11 +882,13 @@ def run(prob):
         woi.set_dwoi(front)
     # Stop Condition
     prob.local_stop_condition()
+    # elitism \ Non dominated soloution
+    confs_results_elite = prob.one_pop_elitism(confs_results)
     # Check if large concept
     if prob.large_concept:  # if large concept
-        # elitism
+        # # elitism
         # confs_results_elite = prob.elitism(confs_results)
-        confs_results_elite = prob.archive_elitism(confs_results)
+        # ####confs_results_elite = prob.archive_elitism(confs_results)
         # Assign fitness
         fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
         # Selection (RWS)
@@ -888,8 +898,8 @@ def run(prob):
         # Mating
         population = prob.mating(selected_confs)
     else:  # if small concept
-        # Random Selection
         # todo -  add non dominated archive
+        # Random Selection
         population = prob.rand_pop()
     prob.set_population(population)
     prob.calc_dis()
@@ -901,12 +911,13 @@ if __name__ == '__main__':
     run_tim = 7  # how many dats to run
     num_gens = 150  # how many gens to run
     parents_number = 1  # number of parents
-    large_concept = 100  # define what is a large concept
+    large_concept = 1000  # define what is a large concept
     arms_limit = [1, 0]  # population limit: arms_limit[0]: minimum number of configs, arms_limit[1]: % of population
     allocation_delta = 10  # how many generation between resource allocation
     name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
     params = "Number of gens: " + str(num_gens) + "\nparents_number: " + str(parents_number) + \
-             "\nLarge concept:" + str(large_concept) + "\nRun Time (days): " + str(run_tim)
+             "\nLarge concept: " + str(large_concept) + "\nRun Time (days): " + str(run_tim) +\
+             "\nAllocation Delta: " + str(allocation_delta) + "\nPopulation: " + str(arms_limit[0])
     # enter all the results to one folder
     results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
     while os.path.isdir(results_folder):
@@ -923,7 +934,7 @@ if __name__ == '__main__':
     print("initiliaze data")
     probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, number_of_parents=parents_number,
                           delta_allocation=allocation_delta)
-    ra = ResourceAllocation(cont_min=0.1*len(probs))
+    ra = ResourceAllocation(cont_min=0.1 * len(probs))
     cr = []
     # change the working dir
     os.chdir(results_folder)
@@ -939,7 +950,6 @@ if __name__ == '__main__':
             for t in tqdm(range(len(probs))):  # len(probs)
                 probs[t] = run(probs[t])
                 if probs[t].concept_name in woi.dwoi[-1][4]:
-                    print(t)
                     probs[t].in_dwoi = True
                 # Check Convergance rate
                 if not (n + 1) % allocation_delta:
@@ -972,7 +982,6 @@ if __name__ == '__main__':
         # pickle_save_data(probs, "problems")
         # set_new_data()
         print("Finished")
-
 
 # done - concept in DWOI?
 # todo - local stop condition - spreading (maybe cv = covariance/mean)
