@@ -1033,6 +1033,7 @@ if __name__ == '__main__':
     #                         cont_min=0.1 * len(probs), t_low=low_cr_treshhold, t_high=high_cr_treshhold)
     # cr = []
     # run_folder()
+    tic = time()
     opt = Optimization()
     try:
         opt.run()
@@ -1074,6 +1075,7 @@ if __name__ == '__main__':
         #         break
     finally:
         opt.finish()
+        print( time()-tic)
         # print("Saving data...")
         # save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         # # pickle_save_data(woi, "woi")
