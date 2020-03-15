@@ -20,7 +20,6 @@ def get_key(val, my_dict):
     for key, value in my_dict.items():
         if val == value:
             return key
-
     return "key doesn't exist"
 
 
@@ -1069,7 +1068,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
     if calc_concepts:
@@ -1126,8 +1125,34 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
 
+vm1 = MyCsv.read_csv("results_5dof_with_failed1", "dict")
+vm2 = MyCsv.read_csv("results_5dof_with_failed2", "dict")
+vm1.sort()
+vm2.sort()
+t = 0
+q = 0
+o = 0
+w = 0
+e = 0
+for p in tqdm(vm1):
+    for v in vm2:
+        if v["name"] == p["name"]:
+            if v["Z"] != "70" and p["Z"] != "70":
+                q += 1
+                if v["Z"] == p["Z"] and v["mu"] == p["mu"]:
+                    t += 1
+                elif v["Z"] >= p["Z"] and v["mu"] <= p["mu"] or v["Z"] <= p["Z"] and v["mu"] >= p["mu"]:
+                    o += 1
+                elif v["Z"] > p["Z"] and v["mu"] > p["mu"] or v["Z"] < p["Z"] and v["mu"] < p["mu"]:
+                    e += 1
+                else:
+                    w += 1
+            del vm2[vm2.index(v)]
+            break
+
 
 # todo - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
+# of 3886:  5 is the same, 1908 one bigger than other, 1973 both bigger  (~50%)
 # done - show the configurations that on the woi
 # to?do - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
 #  0	0.4	6	0	1	0.5	 1.5}"
