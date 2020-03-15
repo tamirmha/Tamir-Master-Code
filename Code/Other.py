@@ -1106,8 +1106,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
-    check_num_confs_in_concepts = False
+    pareto_plot = False
+    check_num_confs_in_concepts = True
     create_configs = False
     if calc_concepts:
         con = Concepts()
