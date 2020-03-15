@@ -12,6 +12,7 @@ from simulator import Simulator
 from matplotlib.tri import Triangulation
 from tqdm import tqdm
 import pickle
+from scipy.spatial import distance
 # from multiprocessing import Pool
 # import copy
 
@@ -590,10 +591,11 @@ def sum_data():
             csv_file = MyCsv.read_csv(res_file[:-4], "dict")
         for v in tqdm(csv_file):
             in_data = False
+            if v["Z"] == "Z":
+                continue
             if v["Z"] == -1 or v["Z"] == '70' and v["name"] not in in_list:
                 v["mu"] = mu_penalty
                 v["Z"] = z_penalty
-                # v["time"] = time_penalty
                 v["Passed"] = 0
                 data_no_success.append(v)
                 in_list.append((v["name"]))
@@ -602,12 +604,17 @@ def sum_data():
                 for dat in data:
                     if v["name"] == dat["name"]:
                         dat_index = data[data.index(dat)]
-                        if dat_index["Z"] > v["Z"]:
+                        dis_dat = distance.cdist(np.asarray([[float(dat_index["Z"]), float(dat_index["mu"])]]),
+                                                 np.zeros((1, 2)), 'euclidean')[0]
+                        dis_v = distance.cdist(np.asarray([[float(v["Z"]), float(v["mu"])]]),
+                                                 np.zeros((1, 2)), 'euclidean')[0]
+                        if dis_dat > dis_v:
                             dat_index["Z"] = v["Z"]
-                        if dat_index["mu"] < v["mu"]:
                             dat_index["mu"] = v["mu"]
-                        # if dat_index["time"] > v["time"]:
-                        #     dat_index["time"] = v["time"]
+                        # if dat_index["Z"] > v["Z"]:
+                        #     dat_index["Z"] = v["Z"]
+                        # if dat_index["mu"] < v["mu"]:
+                        #     dat_index["mu"] = v["mu"]
                         in_data = True
                         break
             elif not in_data:
@@ -772,7 +779,6 @@ def assign_conf2concept(conf):
 
 def domination_check(conf):
     """ check domination in 3D"""
-    # front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
     front = [[1], [1], [6], [conf[3][0]]]
     points = [[], [], [], []]
     for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
@@ -797,7 +803,7 @@ def domination_check(conf):
                     points[2].append(j_front)
                     points[3].append(k_front)
             # check if the front dominate the point
-            elif i > i_front and j > j_front and k >= k_front:
+            elif i >= i_front and j >= j_front and k >= k_front:
                 if l not in points[0]:
                     points[0].append(l)
                     points[1].append(i)
@@ -889,7 +895,6 @@ def add_table2plot(pareto):
     colwidths = [0.03]*len(columns)
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
-    # plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
     plt.show()
 
 
@@ -1047,10 +1052,11 @@ def concepts2check(confs_max=1000, confs_min=0, dof="6"):
 
 def check_results():
     # check how many that have been simulated more than once one mu bigger and one z bigger
-    vm1 = MyCsv.read_csv("results_5dof_with_failed1", "dict")
-    vm2 = MyCsv.read_csv("results_5dof_with_failed2", "dict")
+    vm1 = MyCsv.read_csv("firstWOIruns1", "dict")
+    vm2 = MyCsv.read_csv("firstWOIruns2", "dict")
     vm1.sort()
     vm2.sort()
+    delta = 1.4
     t = 0
     q = 0
     o = 0
@@ -1063,14 +1069,18 @@ def check_results():
                     q += 1
                     if v["Z"] == p["Z"] and v["mu"] == p["mu"]:
                         t += 1
-                    elif v["Z"] >= p["Z"] and v["mu"] <= p["mu"] or v["Z"] <= p["Z"] and v["mu"] >= p["mu"]:
+                    elif float(v["Z"]) >= float(p["Z"])*delta and float(v["mu"])*delta <= float(p["mu"]) or\
+                            float(v["Z"])*delta <= float(p["Z"]) and float(v["mu"]) >= float(p["mu"])*delta:
                         o += 1
-                    elif v["Z"] > p["Z"] and v["mu"] > p["mu"] or v["Z"] < p["Z"] and v["mu"] < p["mu"]:
+                    elif float(v["Z"]) > float(p["Z"]) and float(v["mu"]) > float(p["mu"]) \
+                            or float(v["Z"]) < float(p["Z"]) and float(v["mu"]) < float(p["mu"]):
                         e += 1
                     else:
                         w += 1
                 del vm2[vm2.index(v)]
                 break
+    print("delta= " + str(delta) + " q=" + str(q) + " t=" + str(t) + " o=" + str(o) + " e=" + str(e) + " w:" + str(w) +
+          " percent=" + str(1.0*o/q))
 
 
 # def check_dupications_configs_in_concepts(all_concepts=None):
@@ -1096,7 +1106,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
+    pareto_plot = True
     check_num_confs_in_concepts = False
     create_configs = False
     if calc_concepts:
@@ -1152,7 +1162,6 @@ if __name__ == '__main__':
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
-
 
 # done - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
 # of 3886:  5 is the same, 1908 one bigger than other, 1973 both bigger  (~50%)

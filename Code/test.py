@@ -1,25 +1,30 @@
-from Other import MyCsv, save_json
-from tqdm import tqdm
-import numpy as np
-#
-#
-all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-simulated = []
-for dat in all_data:
-    simulated.append(dat["name"])
-save_json("jsons/other/simulated",simulated)
-# confs = []
-# for dat in tqdm(all_data):
-#     if dat["name"] != "name":
-#         confs.append(dat["name"])
-#
-# confs2 = np.asarray(confs)
-# a = np.unique(confs2)
-# a = np.ndarray.tolist(a)
-# b = []
-# for i in tqdm(confs):
-#     if i not in a:
-#         b.append(i)
-#     else:
-#         a.remove(i)
-#
+import sys
+from pathlib import Path
+
+
+class PrintLogger(object):
+    """ PrintLogger prints to a file and to std_out simultaneously. """
+    def __init__(self, log_path):
+        self.terminal = sys.stdout
+        self.log_path = log_path / 'print_log.txt'
+        try:
+            self.log.close()
+        except AttributeError:
+            pass
+        self.log = open(str(self.log_path), 'a')
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def end_log(self):
+        self.log.close()
+        sys.stdout = self.terminal
+
+    def flush(self):
+        pass
+
+# import sys
+# while True:
+#     data = sys.stdin.read()
+#     print 'Data from stdin -', data
