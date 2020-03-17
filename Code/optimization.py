@@ -1029,7 +1029,7 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
-    gen_num = 9
+    gen_num = 30
     time_run = 0.1
     greedy = True
     delta = 2
