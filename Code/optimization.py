@@ -35,13 +35,14 @@ import sys
 
 # np.random.seed(100100)
 # np.random.seed(100101)
-np.random.seed(111111)
+# np.random.seed(111111)
+np.random.seed(0)
 
 
 class Optimization:
     """ This class run all the optimization method using the DWOI & Problem classes"""
-    def __init__(self, run_time=0.1, num_gens=5, parents_number=1, large_concept=1000, arms_limit=[1, 0],
-                 allocation_delta=10, greedy_allocation=True, percent2continue=90,
+    def __init__(self, run_time=7, num_gens=200, parents_number=1, large_concept=1000, arms_limit=[1, 0],
+                 allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10,
                  low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI"):
         # how many dats to run
         self.run_time = run_time
@@ -71,8 +72,9 @@ class Optimization:
         self.woi = DWOI(run_time=self.run_time)
         self.probs = self.init_concepts(larg_concept=self.large_concept, arm_limit=self.arms_limit,
                                     number_of_parents=self.parents_number, delta_allocation=self.allocation_delta)
+        min_cont = min_cont_par * len(self.probs) / 100
         self.ra = ResourceAllocation(greedy=self.greedy_allocation, cont_per_max=self.percent2continue,
-                                cont_min=0.1 * len(self.probs), t_low=self.low_cr_treshhold, t_high=self.high_cr_treshhold)
+                            cont_min=min_cont, t_low=self.low_cr_treshhold, t_high=self.high_cr_treshhold)
         self.run_folder()
 
     def init_concepts(self, larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
@@ -155,7 +157,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs[:10]
+        # a = []
+        # for p in self.probs:
+        #     if len(p.confs_of_concepts) > 10000:
+        #         a.append(p)
+        probs = self.probs
         cr = []
         # running each generation
         for n in (range(self.num_gens)):
@@ -243,10 +249,9 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
-        # data ={"woi: ": self.woi.dwoi, "gen": self.woi.gen, "time": self.woi.run_time, "stopped": self.woi.stopped}
         save_json("woi", self.woi.__dict__)
         for p in self.probs:
-            save_json("problems", [p.__dict__])  # todo - check this
+            save_json("problems", [p.__dict__])
         self.set_new_data()
         print("Finished")
 
@@ -438,23 +443,27 @@ class Problem:
         for r in pop:
             pops.append(r)
             res = self.get_result(r)
-            if len(res) == 0:
-                f3.append(self.dof)  # dof
-                # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
-                f1.append(np.around(np.random.normal(0.05, 0.01), 3))
-            # check if the configuration allready simulated
-            elif res["z"] is not None:
-                f3.append(int(res["dof"]))  # dof
-                f2.append(1 - float(res["mu"]))  # manipulability
-                f1.append(float(res["z"]))  # Mid-Range Proximity
-            # else:
-            #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
+            if with_sim:
+                if res["z"] is not None:
+                    f3.append(int(res["dof"]))  # dof
+                    f2.append(1 - float(res["mu"]))  # manipulability
+                    f1.append(float(res["z"]))  # Mid-Range Proximity
+                else:
+                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
             else:
-                f3.append(self.dof)  # dof
-                # todo - delete this when adding the simulator
-                f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
-                f1.append(np.around(np.random.normal(0.05, 0.01), 3))  # Mid-Range Proximity
+                if len(res) == 0:
+                    f3.append(self.dof)  # dof
+                    f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
+                    f1.append(np.around(np.random.normal(0.05, 0.01), 3))
+                # check if the configuration allready simulated
+                elif res["z"] is not None:
+                    f3.append(int(res["dof"]))  # dof
+                    f2.append(1 - float(res["mu"]))  # manipulability
+                    f1.append(float(res["z"]))  # Mid-Range Proximity
+                else:
+                    f3.append(self.dof)  # dof
+                    f2.append(np.around(np.random.normal(0.05, 0.01), 3))  # manipulability
+                    f1.append(np.around(np.random.normal(0.05, 0.01), 3))  # Mid-Range Proximity
         return [f1, f2, f3, pops, self.concept_name]
 
     def stop_condition(self):
@@ -1029,49 +1038,47 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
-    gen_num = 30
-    time_run = 0.1
+    gen_num = 10
+    time_run = 0.2
     greedy = True
-    delta = 2
+    delta = 10
     per2cont = 90
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
     lar_con = 1000
-    # args = sys.argv
-    # if len(args) > 1:
-    #     greedy = int(args[1])
-    #     print(greedy)
-    #     if greedy > 0:
-    #         greedy = True
-    #     else:
-    #         greedy = False
-    #     print(greedy)
-    #     if len(args) > 2:
-    #         high_cr = float(args[2])
-    #         if len(args) > 3:
-    #             delta = int(args[3])
-    #             if len(args) > 4:
-    #                 per2cont = int(args[4])
-    #                 if len(args) > 5:
-    #                     low_cr = float(args[5])
-    #                     if len(args) > 6:
-    #                         gen_num = int(args[6])
-    #                         if len(args) > 7:
-    #                             time_run = float(args[7])
-    #                             if len(args) > 8:
-    #                                 par_num = float(args[8])
-    #                                 if len(args) > 9:
-    #                                     lar_con = int(args[8])
+    args = sys.argv
+    if len(args) > 1:
+        greedy = int(args[1])
+        if greedy > 0:
+            greedy = True
+        else:
+            greedy = False
+        if len(args) > 2:
+            high_cr = float(args[2])
+            if len(args) > 3:
+                delta = int(args[3])
+                if len(args) > 4:
+                    per2cont = int(args[4])
+                    if len(args) > 5:
+                        low_cr = float(args[5])
+                        if len(args) > 6:
+                            gen_num = int(args[6])
+                            if len(args) > 7:
+                                time_run = float(args[7])
+                                if len(args) > 8:
+                                    par_num = int(args[8])
+                                    if len(args) > 9:
+                                        lar_con = int(args[8])
     tic = time()
-    with_sim = True  # to run with simulatoin or with random results
+    with_sim = False  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
                        run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
                        low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num)
     try:
         opt.run()
     finally:
-        opt.finish()
+        # opt.finish()
         print(time()-tic)
 
 # done - save to archive Cr every delta generations

@@ -314,14 +314,14 @@ def simulate(start_arm=0):
     start_arm = start_arm / nums
     create_urdf = False
     # set parametrs from terminal
-    args = sys.argv
-    if len(args) > 1:
-        dofe = int(args[1])
-        if len(args) > 2:
-            start_arm = int(args[2]) / nums
-            create_urdf = False
-            if len(args) > 3:
-                link_max = float(args[3]) + 0.1
+    # args = sys.argv
+    # if len(args) > 1:
+    #     dofe = int(args[1])
+    #     if len(args) > 2:
+    #         start_arm = int(args[2]) / nums
+    #         create_urdf = False
+    #         if len(args) > 3:
+    #             link_max = float(args[3]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")

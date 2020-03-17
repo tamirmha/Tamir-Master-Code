@@ -1085,6 +1085,66 @@ def check_results():
           " percent=" + str(1.0*o/q))
 
 
+# ###  results check
+def plot_cr(woi_loc="opt_results/17_03-3/woi"):
+    woi = load_json(woi_loc)
+    cr = woi["cr"]
+    # cr_list = []
+    # for c in cr:
+    #     cr_list.append(cr[c])
+    # cr_list = sorted(cr_list, key=lambda l: (len(l), l))
+    # con1 = np.asarray(cr_list[-1])
+    # x1 = np.argwhere(con1 != 0)
+    # con1 = con1[con1 != 0]
+    # con2 = np.asarray(cr_list[-2])
+    # x2 = np.argwhere(con2 != 0)
+    # con2 = con2[con2 != 0]
+    # con3 = np.asarray(cr_list[-3])
+    # x3 = np.argwhere(con3 != 0)
+    # con3 = con3[con3 != 0]
+    # con4 = np.asarray(cr_list[-4])
+    # x4 = np.argwhere(con4 != 0)
+    # con4 = con4[con4 != 0]
+    # plt.subplot(221)
+    # plt.scatter(x1, con1)
+    # plt.subplot(222)
+    # plt.scatter(x2, con2)
+    # plt.subplot(223)
+    # plt.scatter(x3, con3)
+    # plt.subplot(224)
+    # plt.scatter(x4, con4)
+    # plt.legend()
+
+    for c in cr:
+        con = np.asarray(cr[c])
+        x = np.argwhere(con != 0)
+        con = con[con != 0]
+        plt.plot(x, con, label=c)
+    plt.show()
+
+
+def plot_woi(woi_loc="opt_results/17_03-3/optimizaion_WOI"):
+    woi = load_json(woi_loc)
+    points = []
+    labls = []
+    inds2plot = [1, 100, 1000, 5000, 10000]
+    colors = ['r', 'b', 'k', "g", "grey"]
+    for w in woi:
+        d = np.asarray(w[w.keys()[0]])
+        inds = np.argwhere(d[2] == "6")
+        points.append([d[0][inds], d[1][inds]])  # 0-mu , 1 - z
+        labls.append(w.keys()[0])
+    d = 0
+    for p in range(len(points)):
+        if p in inds2plot:
+            plt.scatter(points[p][0], points[p][1], label=labls[p], color=colors[d])
+            d += 1
+    plt.xlabel("Manipulability Index")
+    plt.ylabel("Mid Proximity Joint")
+    plt.legend()
+    plt.show()
+
+
 # def check_dupications_configs_in_concepts(all_concepts=None):
 #     """Check if there are duplicate configurations in the concepts """
 #     if all_concepts is None:
@@ -1165,6 +1225,7 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
 
-# a = load_json("jsons/concepts+configs+resultsnew")
-# b = load_json("jsons/concepts+configs+results")
-# c = load_json("opt_results/16_03-2/woi")
+
+# plot_cr()
+# plot_woi()
+
