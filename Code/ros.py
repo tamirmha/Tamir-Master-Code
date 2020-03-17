@@ -118,7 +118,7 @@ class MoveGroupPythonInterface(object):
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
         self.move_group.set_planner_id("RRTkConfigDefault")
-        self.move_group.set_planning_time(2)
+        self.move_group.set_planning_time(0.2)  # todo - change to 2
         # self.move_group.set_num_planning_attempts(10)
         self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
         self.move_group.clear_pose_targets()
@@ -151,7 +151,7 @@ class MoveGroupPythonInterface(object):
             return mu, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
-            return -1, -1, np.asarray([-1]*len(joints)), jacobian, cur_pos
+            return -1, 1, np.asarray([-1]*len(joints)), jacobian, cur_pos
 
     @staticmethod
     def mid_joint_proximity(cur_pos, joints, link_length):

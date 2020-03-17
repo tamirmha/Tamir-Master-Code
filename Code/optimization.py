@@ -30,17 +30,19 @@ from tqdm import tqdm
 from time import time
 import os
 import shutil
+from multiprocessing import Process
+import sys
 
-np.random.seed(100100)
+# np.random.seed(100100)
 # np.random.seed(100101)
-# np.random.seed(111111)
+np.random.seed(111111)
 
 
 class Optimization:
     """ This class run all the optimization method using the DWOI & Problem classes"""
-    def __init__(self, run_time=7, num_gens=150, parents_number=1, large_concept=1000, arms_limit=[1, 0],
+    def __init__(self, run_time=0.1, num_gens=5, parents_number=1, large_concept=1000, arms_limit=[1, 0],
                  allocation_delta=10, greedy_allocation=True, percent2continue=90,
-                 low_cr_treshhold=0.001, high_cr_treshhold=0.003, name = "optimizaion_WOI"):
+                 low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI"):
         # how many dats to run
         self.run_time = run_time
         # how many gens to run
@@ -153,7 +155,7 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs
+        probs = self.probs[:10]
         cr = []
         # running each generation
         for n in (range(self.num_gens)):
@@ -164,6 +166,8 @@ class Optimization:
             print("Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
             to_pop = []
             for t in tqdm(range(len(probs))):  # len(probs)
+                if n == 0:
+                    self.woi.cr[probs[t].concept_name] = []
                 probs[t] = self.run_gen(probs[t])
                 if probs[t].concept_name in woi.dwoi[-1][4]:
                     probs[t].in_dwoi = True
@@ -172,13 +176,14 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     # print("Calculating Convergence rate")
-                    if probs[t].in_dwoi or probs[t].paused:
-                        continue
+                    # if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
+                    #     continue
                     if probs[t].stopped:
                         to_pop.append(t)
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
+                    self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % self.allocation_delta:
                 for p in range(len(to_pop)):
@@ -217,15 +222,14 @@ class Optimization:
         confs_results_elite = prob.one_pop_elitism(confs_results)
         # Check if large concept
         if prob.large_concept:  # if large concept
-            # # elitism
-            # confs_results_elite = prob.elitism(confs_results)
-            # ####confs_results_elite = prob.archive_elitism(confs_results)
             # Assign fitness
             fitness = prob.assign_fitness(confs_results_elite,
                                           woi.get_last_dwoi())  # calc minimum distance for each config
             # Selection (RWS)
             selection = prob.selection(fitness, prob.parents_number)
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
+            # if selection == [100]:
+            #     selected_confs_ind = [0]
             selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
             # Mating
             population = prob.mating(selected_confs)
@@ -239,8 +243,10 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
-        pickle_save_data(self.woi, "woi")
-        pickle_save_data(self.probs, "problems")
+        # data ={"woi: ": self.woi.dwoi, "gen": self.woi.gen, "time": self.woi.run_time, "stopped": self.woi.stopped}
+        save_json("woi", self.woi.__dict__)
+        for p in self.probs:
+            save_json("problems", [p.__dict__])  # todo - check this
         self.set_new_data()
         print("Finished")
 
@@ -253,15 +259,17 @@ class Optimization:
         for r in prob:
             to_sim.append(self.check_exist(r))
             k += 1
-            if k == 10:
-                break
-        # create urdf files
-        con.create_files2sim(filter(None, to_sim))
-        # # move the files into the desired place
-        # self.move_folder()
-        # print("start simulating")
-        # simulate()
-        # prob = self.new_data(prob)
+        if with_sim:
+            # create urdf files
+            con.create_files2sim(filter(None, to_sim))
+            # move the files into the desired place
+            if self.move_folder():
+                print("start simulating")
+                p = Process(target=simulate, args=(1,))
+                p.start()
+                p.join()  # this blocks until the process terminates
+                # simulate()
+                prob = self.new_data(prob)
         return prob
 
     @staticmethod
@@ -282,17 +290,20 @@ class Optimization:
         return to_sim
 
     @staticmethod
-    def move_folder( src_folder_name="urdf/6dof/", dst_folder_name=""):
+    def move_folder(src_folder_name="urdf/6dof/", dst_folder_name=""):
         if not dst_folder_name:
             dst_folder_name = os.environ['HOME'] + \
                               "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined/"
         if os.path.exists(dst_folder_name):
             shutil.rmtree(dst_folder_name)
-        shutil.move(src_folder_name, dst_folder_name)
+        if os.path.exists(src_folder_name):
+            shutil.move(src_folder_name, dst_folder_name)
+            return True
+        return False
 
     @staticmethod
     def new_data(prob):
-        """ update each concept results agter the simulation
+        """ update each concept results after the simulation
         :param prob - [list of objects] the data of all the objects
         :return prob - [list of objects] updated data of all the objects
         """
@@ -302,11 +313,13 @@ class Optimization:
             outer_loop_stop = False
             for con in prob:
                 j = 0
-                for c in con.confs_results:
-                    if dat["name"] == c.keys()[0]:
+                for c in con.confs_of_concepts:
+                    if dat["name"] == c:
                         outer_loop_stop = True
-                        prob[k].confs_results[j][prob[k].confs_results[j].keys()[0]] =\
-                            {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"], "name": unicode(dat["name"])}
+                        if dat["Z"] == -1:
+                            dat["Z"] = 1
+                        prob[k].confs_results.append({dat["name"]: {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"],
+                                                      "name": unicode(dat["name"])}})
                         break
                     j += 1
                 k += 1
@@ -435,6 +448,8 @@ class Problem:
                 f3.append(int(res["dof"]))  # dof
                 f2.append(1 - float(res["mu"]))  # manipulability
                 f1.append(float(res["z"]))  # Mid-Range Proximity
+            # else:
+            #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
             else:
                 f3.append(self.dof)  # dof
                 # todo - delete this when adding the simulator
@@ -520,7 +535,7 @@ class Problem:
             ind = np.where((roullete - wheel) > 0, (roullete - wheel), np.inf).argmin()
             selected.append(round(fitnes[ind], 3))
         if selected == [0.0]:
-            return np.asarray([99.028])  # (distance of the point 70,71) if the initial position didnt reach
+            return np.asarray([100])  # (distance of the point 70,71) if the initial position didnt reach
         return np.abs(np.round(np.log(selected) / c, 3))  # [10-x for x in selected]
 
     def mating(self, parents, mutation_percent=100):
@@ -677,6 +692,8 @@ class Problem:
         :return indices - [list]  indices of the selected configuration
          """
         indices = []
+        if select[0] > 1:
+            return [0]
         for x in select:
             ind = np.argwhere(fit == x)
             if ind.shape[0] > 1:
@@ -760,7 +777,7 @@ class Problem:
     def get_result(self, config):
         result = []
         for i in range(len(self.confs_results)):
-            if self.confs_results[i].keys()[0] == config:
+            if self.confs_results[i].keys()[-1] == config:
                 result = self.confs_results[i][self.confs_results[i].keys()[0]]
                 break
         return result
@@ -870,6 +887,7 @@ class DWOI:
         self.stopped = False
         self.start_time = time()
         self.run_time = run_time * 24 * 3600  # in seconds
+        self.cr = {}
 
     def stop_condition(self):
         if self.run_time <= time() - self.start_time:
@@ -1011,81 +1029,55 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
-    # ## Setting parameters
-    # run_tim = 7  # how many dats to run
-    # num_gens = 150  # how many gens to run
-    # parents_number = 1  # number of parents
-    # large_concept = 1000  # define what is a large concept
-    # arms_limit = [1, 0]  # population limit: arms_limit[0]: minimum number of configs, arms_limit[1]: % of population
-    # allocation_delta = 10  # how many generation between resource allocation
-    # greedy_allocation = True  # to use greedy aloocation or not
-    # percent2continue = 90  # when using greedy allocation - how many percent will continue
-    # low_cr_treshhold = 0.001  # when using greedy allocation - if Cr < this threshold the concept will be stopped
-    # high_cr_treshhold = 0.003  # when using greedy allocation - if Cr < this threshold the concept will be paused
-    # name = "optimizaion_WOI"  # the name of the json file of the DWOI - saved every gen
-    # # Initilize all the concepts GA
-    # print("initiliaze data")
-    # # load the first WOI
-    # woi = DWOI(run_time=run_tim)
-    # probs = init_concepts(larg_concept=large_concept, arm_limit=arms_limit, number_of_parents=parents_number,
-    #                       delta_allocation=allocation_delta)
-    # ra = ResourceAllocation(greedy=greedy_allocation, cont_per_max=percent2continue,
-    #                         cont_min=0.1 * len(probs), t_low=low_cr_treshhold, t_high=high_cr_treshhold)
-    # cr = []
-    # run_folder()
+    gen_num = 9
+    time_run = 0.1
+    greedy = True
+    delta = 2
+    per2cont = 90
+    low_cr = 0.001
+    high_cr = 0.003
+    par_num = 1
+    lar_con = 1000
+    # args = sys.argv
+    # if len(args) > 1:
+    #     greedy = int(args[1])
+    #     print(greedy)
+    #     if greedy > 0:
+    #         greedy = True
+    #     else:
+    #         greedy = False
+    #     print(greedy)
+    #     if len(args) > 2:
+    #         high_cr = float(args[2])
+    #         if len(args) > 3:
+    #             delta = int(args[3])
+    #             if len(args) > 4:
+    #                 per2cont = int(args[4])
+    #                 if len(args) > 5:
+    #                     low_cr = float(args[5])
+    #                     if len(args) > 6:
+    #                         gen_num = int(args[6])
+    #                         if len(args) > 7:
+    #                             time_run = float(args[7])
+    #                             if len(args) > 8:
+    #                                 par_num = float(args[8])
+    #                                 if len(args) > 9:
+    #                                     lar_con = int(args[8])
     tic = time()
-    opt = Optimization()
+    with_sim = True  # to run with simulatoin or with random results
+    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
+                       run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
+                       low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num)
     try:
         opt.run()
-        # # running each generation
-        # for n in (range(num_gens)):
-        #     # simulate the population
-        #     probs = sim(prob=probs)
-        #     # Save the current WOI
-        #     save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        #     print("Generation " + str(n + 1) + " of " + str(num_gens) + " generations")
-        #     to_pop = []
-        #     for t in tqdm(range(len(probs))):  # len(probs)
-        #         probs[t] = run(probs[t])
-        #         if probs[t].concept_name in woi.dwoi[-1][4]:
-        #             probs[t].in_dwoi = True
-        #         # Check Convergance rate
-        #         if not (n + 1) % allocation_delta:
-        #             start_ind = allocation_delta * ((n + 1) / allocation_delta - 1)
-        #             end_ind = n
-        #             # print("Calculating Convergence rate")
-        #             if probs[t].in_dwoi or probs[t].paused:
-        #                 continue
-        #             if probs[t].stopped:
-        #                 to_pop.append(t)
-        #                 continue
-        #             probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
-        #             cr.append(probs[t].get_cr())
-        #     # Resource allocation
-        #     if not (n + 1) % allocation_delta:
-        #         for p in range(len(to_pop)):
-        #             probs.pop(to_pop[p] - p)
-        #         probs = ra.run(cr, probs)
-        #         cr = []
-        #     # Update generation
-        #     woi.set_gen(n + 1)
-        #     # Check global stop condition
-        #     woi.stop_condition()
-        #     if woi.stopped:
-        #         break
     finally:
         opt.finish()
-        print( time()-tic)
-        # print("Saving data...")
-        # save_json(name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        # # pickle_save_data(woi, "woi")
-        # # pickle_save_data(probs, "problems")
-        # # set_new_data()
-        # print("Finished")
+        print(time()-tic)
 
+# done - save to archive Cr every delta generations
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
 # done - concept in DWOI?
-# todo - local stop condition - spreading (maybe cv = covariance/mean)
+# to?do - local stop condition - spreading (maybe cv = covariance/mean)
 # done - create resource allocation
 # done - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
 # done - create main results file

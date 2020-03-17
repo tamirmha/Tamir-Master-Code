@@ -902,7 +902,7 @@ def add_table2plot(pareto):
 def save_json(name="data_file", data=None, write_method="a"):
     with open(name + ".json", write_method) as write_file:
         json.dump(data, write_file, indent=2)
-                                                             
+
 
 def load_json(name="data_file"):
         try:
@@ -923,6 +923,8 @@ def fix_json(file_name):
                 if len(row) > 0:
                     if '][' in row:
                         row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
                     data.append(row)
                     empty = False
                 else:
@@ -1107,7 +1109,7 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = True
+    check_num_confs_in_concepts = False
     create_configs = False
     if calc_concepts:
         con = Concepts()
@@ -1163,8 +1165,6 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
 
-# done - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
-# of 3886:  5 is the same, 1908 one bigger than other, 1973 both bigger  (~50%)
-# done - show the configurations that on the woi
-# to?do - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
-#  0	0.4	6	0	1	0.5	 1.5}"
+# a = load_json("jsons/concepts+configs+resultsnew")
+# b = load_json("jsons/concepts+configs+results")
+# c = load_json("opt_results/16_03-2/woi")
