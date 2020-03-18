@@ -20,18 +20,22 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from simulator import simulate
 from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv, get_key
 from scipy.spatial import distance
 import numpy as np
 import copy
 from datetime import datetime
 from tqdm import tqdm
-from time import time
+from time import time, sleep
 import os
 import shutil
-from multiprocessing import Process
 import sys
+from ros import Ros
+from multiprocessing import Process
+from simulator import simulate
+import shlex
+import subprocess
+
 
 # np.random.seed(100100)
 # np.random.seed(100101)
@@ -161,7 +165,7 @@ class Optimization:
         # for p in self.probs:
         #     if len(p.confs_of_concepts) > 10000:
         #         a.append(p)
-        probs = self.probs
+        probs = self.probs[:2]
         cr = []
         # running each generation
         for n in (range(self.num_gens)):
@@ -182,8 +186,8 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     # print("Calculating Convergence rate")
-                    # if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
-                    #     continue
+                    if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
+                        continue
                     if probs[t].stopped:
                         to_pop.append(t)
                         continue
@@ -256,7 +260,6 @@ class Optimization:
         print("Finished")
 
     def sim(self, prob):
-        # print("start creating urdfs")
         # configurations to create urdf
         to_sim = []
         con = Concepts()
@@ -270,10 +273,10 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                p = Process(target=simulate, args=(1,))
-                p.start()
-                p.join()  # this blocks until the process terminates
-                # simulate()
+
+                cmd = 'gnome-terminal -- python simulator.py'
+                try_os(cmd)
+
                 prob = self.new_data(prob)
         return prob
 
@@ -1037,8 +1040,23 @@ class ResourceAllocation:
         return prob
 
 
+def try_os(cmd="a"):
+    pth = "/".join(os.getcwd().split("/")[:-2])
+    cmd = shlex.split(cmd)
+    cmd[3] = pth + "/" + cmd[3]
+    subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+    # p = Process(target=simulate)
+    # p = Process(target=Ros.ter_command, args=(cmd,))
+    # p.start()
+    # p.join()  # this blocks until the process terminates
+    # Ros.ter_command(cmd)
+    while not os.path.exists("finish.txt"):
+        sleep(1)
+    os.remove("finish.txt")
+
+
 if __name__ == '__main__':
-    gen_num = 10
+    gen_num = 5
     time_run = 0.2
     greedy = True
     delta = 10
@@ -1046,7 +1064,7 @@ if __name__ == '__main__':
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
-    lar_con = 1000
+    lar_con = int(gen_num/0.08)
     args = sys.argv
     if len(args) > 1:
         greedy = int(args[1])
@@ -1071,7 +1089,7 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = False  # to run with simulatoin or with random results
+    with_sim = True  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
                        run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
                        low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num)
@@ -1082,6 +1100,7 @@ if __name__ == '__main__':
         print(time()-tic)
 
 # done - save to archive Cr every delta generations
+# todo - to start in specific generation
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
 # done - concept in DWOI?
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)

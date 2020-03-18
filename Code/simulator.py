@@ -358,6 +358,9 @@ def simulate(start_arm=0):
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
+    with open("finish.txt", "w+") as f:
+        f.write("finish")
+        f.close()
 
 
 if __name__ == '__main__':
