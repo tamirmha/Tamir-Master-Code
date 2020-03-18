@@ -165,7 +165,7 @@ class Optimization:
         # for p in self.probs:
         #     if len(p.confs_of_concepts) > 10000:
         #         a.append(p)
-        probs = self.probs[:2]
+        probs = self.probs
         cr = []
         # running each generation
         for n in (range(self.num_gens)):
