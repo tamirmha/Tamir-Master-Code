@@ -47,12 +47,14 @@ np.random.seed(111111)
 class Optimization:
     """ This class run all the optimization method using the DWOI & Problem classes"""
     def __init__(self, run_time=7, num_gens=200, parents_number=1, large_concept=1000, arms_limit=[1, 0],
-                 allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10,
+                 allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10, gen_start=0,
                  low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI"):
         # how many dats to run
         self.run_time = run_time
         # how many gens to run
         self.num_gens = num_gens
+        # Start generation
+        self.gen_start = gen_start
         # number of parents
         self.parents_number = parents_number
         # define what is a large concept
@@ -162,14 +164,10 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # a = []
-        # for p in self.probs:
-        #     if len(p.confs_of_concepts) > 10000:
-        #         a.append(p)
         probs = self.probs
         cr = []
         # running each generation
-        for n in (range(self.num_gens)):
+        for n in range(self.gen_start-1, self.num_gens):
             # simulate the population
             probs = self.sim(prob=probs)
             # Save the current WOI
@@ -239,8 +237,6 @@ class Optimization:
             # Selection (RWS)
             selection = prob.selection(fitness, prob.parents_number)
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
-            # if selection == [100]:
-            #     selected_confs_ind = [0]
             selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
             # Mating
             population = prob.mating(selected_confs)
@@ -274,7 +270,7 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                cmd = 'gnome-terminal -- python simulator.py'
+                cmd = 'gnome-terminal -- python simulator.py 6 '  # todo - add configuration number?
                 self.simulating(cmd)
                 prob = self.new_data(prob)
         return prob
@@ -287,7 +283,7 @@ class Optimization:
         if sim_new_win:
             subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
         else:
-            p = Process(target=simulate)
+            p = Process(target=simulate)  # args=(self.gen_start, True)
             p.start()
         while not os.path.exists("finish.txt"):
             sleep(1)
@@ -374,7 +370,7 @@ class Optimization:
                     k += 1
                 if second_loop_stop:
                     break
-        save_json(all_concepts_json + "new", all_concepts, "w+")
+        save_json(all_concepts_json, all_concepts, "w+")
         # pickle_save_data(all_concepts, all_concepts_json + "new")
 
     @staticmethod
@@ -1058,22 +1054,19 @@ if __name__ == '__main__':
     sim_new_win = False
     if username == "tamir":  # tamir laptop
         sim_new_win = True
-    gen_num = 1
+    gen_num = 8
     time_run = 0.2
+    start_gen = 0
     greedy = True
     delta = 10
     per2cont = 90
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
-    lar_con = int(gen_num/0.08)
+    lar_con = 1500 # int(gen_num/0.08)
     args = sys.argv
     if len(args) > 1:
-        greedy = int(args[1])
-        if greedy > 0:
-            greedy = True
-        else:
-            greedy = False
+        start_gen = int(args[1])
         if len(args) > 2:
             high_cr = float(args[2])
             if len(args) > 3:
@@ -1091,14 +1084,14 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = True  # to run with simulatoin or with random results
+    with_sim = False  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
                        run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
-                       low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num)
+                       low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
     try:
         opt.run()
     finally:
-        # opt.finish()
+        opt.finish()
         print(time()-tic)
 
 # todo - to start in specific generation

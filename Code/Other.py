@@ -1088,7 +1088,7 @@ def check_results():
 
 
 # ###  results check
-def plot_cr(woi_loc="opt_results/17_03-3/woi"):
+def plot_cr(woi_loc="opt_results/18_03/woi"):
     woi = load_json(woi_loc)
     cr = woi["cr"]
     # cr_list = []
@@ -1125,7 +1125,7 @@ def plot_cr(woi_loc="opt_results/17_03-3/woi"):
     plt.show()
 
 
-def plot_woi(woi_loc="opt_results/17_03-1/optimizaion_WOI"):
+def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     woi = load_json(woi_loc)
     points = []
     labls = []
@@ -1189,7 +1189,7 @@ if __name__ == '__main__':
     pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
-    woi_plot = False
+    woi_plot = True
     cr_plot = False
     if calc_concepts:
         con = Concepts()
@@ -1248,4 +1248,3 @@ if __name__ == '__main__':
         plot_woi()
     if cr_plot:
         plot_cr()
-
