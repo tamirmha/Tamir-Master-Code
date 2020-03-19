@@ -207,6 +207,7 @@ class Optimization:
                 break
         self.probs = probs
         self.woi = woi
+        save_json("woi_temp", woi.__dict__)
 
     def run_gen(self, prob):
         woi = self.woi
@@ -249,7 +250,7 @@ class Optimization:
 
     def finish(self):
         print("Saving data...")
-        save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
+        # save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
         save_json("woi", self.woi.__dict__)
         for p in self.probs:
             save_json("problems", [p.__dict__])
@@ -1056,7 +1057,7 @@ if __name__ == '__main__':
         sim_new_win = True
     gen_num = 8
     time_run = 0.2
-    start_gen = 0
+    start_gen = 1
     greedy = True
     delta = 10
     per2cont = 90
@@ -1084,10 +1085,10 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = False  # to run with simulatoin or with random results
-    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
-                       run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
-                       low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
+    with_sim = True  # to run with simulatoin or with random results
+    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run,
+                       large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
+                       high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
     try:
         opt.run()
     finally:
