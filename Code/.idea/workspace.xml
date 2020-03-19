@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add: create URDF files to generate first WOI to optimiziation">
-      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +35,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="WARN_ABOUT_CRLF" value="false" />
+    <option name="WARN_ABOUT_DETACHED_HEAD" value="false" />
   </component>
   <component name="JupyterTrust" id="12937fd0-6251-437f-a84f-4c93cc217dd9" />
   <component name="ProjectId" id="1OaHc8Dg1IhlVuTuc5IN52GzuJq" />
@@ -59,11 +59,14 @@
       <recent name="$PROJECT_DIR$/results" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Other">
+  <component name="RunManager" selected="Python.optimization">
     <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -127,9 +130,6 @@
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -137,28 +137,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/optimization.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ros" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ros.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -189,13 +167,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Other" />
         <item itemvalue="Python.optimization" />
+        <item itemvalue="Python.Other" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.simulator" />
         <item itemvalue="Python.SimFilesCreate" />
-        <item itemvalue="Python.ros" />
       </list>
     </recent_temporary>
   </component>
@@ -377,132 +377,14 @@
       <workItem from="1579159787352" duration="9406000" />
       <workItem from="1579171798578" duration="1145000" />
       <workItem from="1579172972446" duration="2383000" />
-    </task>
-    <task id="LOCAL-00018" summary="add file that move the urdf of 6 dof to several folders">
-      <created>1573123022730</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1573123022730</updated>
-    </task>
-    <task id="LOCAL-00019" summary="upload results">
-      <created>1573130824066</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1573130824066</updated>
-    </task>
-    <task id="LOCAL-00020" summary="add logging control">
-      <created>1573581534243</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1573581534243</updated>
-    </task>
-    <task id="LOCAL-00021" summary="change prismatic limit from 2*link_length to link_length">
-      <created>1573714221779</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1573714221779</updated>
-    </task>
-    <task id="LOCAL-00022" summary="fixed: calculation of the mid proximity range index when using exsiting urdfs">
-      <created>1573727348158</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1573727348158</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Start work of merging results for statistical analysys">
-      <created>1573736653508</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1573736653508</updated>
-    </task>
-    <task id="LOCAL-00024" summary="fix bug in Z index calculation">
-      <created>1573738235686</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1573738235686</updated>
-    </task>
-    <task id="LOCAL-00025" summary="add results and sum data">
-      <created>1573746648805</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1573746648805</updated>
-    </task>
-    <task id="LOCAL-00026" summary="add:  merge all the results to one files with results">
-      <created>1573827795968</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1573827795968</updated>
-    </task>
-    <task id="LOCAL-00027" summary="add: plot the variables side by side">
-      <created>1573896908052</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1573896908052</updated>
-    </task>
-    <task id="LOCAL-00028" summary="add:  fix indices">
-      <created>1573991700798</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1573991700798</updated>
-    </task>
-    <task id="LOCAL-00029" summary="add:  fix indices">
-      <created>1573991724730</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1573991724730</updated>
-    </task>
-    <task id="LOCAL-00030" summary="add:  fix indices">
-      <created>1574003017126</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1574003017126</updated>
-    </task>
-    <task id="LOCAL-00031" summary="add:  fix indices">
-      <created>1574154912887</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1574154912887</updated>
-    </task>
-    <task id="LOCAL-00032" summary="add:  fix indices">
-      <created>1574169560117</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1574169560117</updated>
-    </task>
-    <task id="LOCAL-00033" summary="little tunung">
-      <created>1574171459108</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1574171459108</updated>
-    </task>
-    <task id="LOCAL-00034" summary="add results and fix small bugs">
-      <created>1574837513286</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1574837513286</updated>
-    </task>
-    <task id="LOCAL-00035" summary="scale the plot of the indices">
-      <created>1574944548870</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1574944548870</updated>
+      <workItem from="1583840734709" duration="43111000" />
+      <workItem from="1584080255651" duration="16407000" />
+      <workItem from="1584258886744" duration="460000" />
+      <workItem from="1584259898873" duration="29373000" />
+      <workItem from="1584344587244" duration="47849000" />
+      <workItem from="1584464427962" duration="3065000" />
+      <workItem from="1584513511942" duration="19206000" />
+      <workItem from="1584597546753" duration="5486000" />
     </task>
     <task id="LOCAL-00036" summary="set the planner parameters">
       <created>1575211394050</created>
@@ -721,7 +603,133 @@
       <option name="project" value="LOCAL" />
       <updated>1579175462759</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="add resource allocation">
+      <created>1583937985047</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1583937985047</updated>
+    </task>
+    <task id="LOCAL-00068" summary="add: create URDF files to generate first WOI to optimiziation">
+      <created>1583996985410</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1583996985411</updated>
+    </task>
+    <task id="LOCAL-00069" summary="fix check domination and elitism">
+      <created>1584087447226</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1584087447226</updated>
+    </task>
+    <task id="LOCAL-00070" summary="optimization.py - add optimization class">
+      <created>1584096474956</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1584096474956</updated>
+    </task>
+    <task id="LOCAL-00071" summary="reaarange folders">
+      <created>1584267923155</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1584267923155</updated>
+    </task>
+    <task id="LOCAL-00072" summary="rearrange folders">
+      <created>1584268664256</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1584268664256</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Other.py - change the sum_data way of calculation">
+      <created>1584278877351</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1584278877351</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Recalculate results">
+      <created>1584279200135</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1584279200135</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Update results">
+      <created>1584280248584</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1584280248584</updated>
+    </task>
+    <task id="LOCAL-00076" summary="all working version 1">
+      <created>1584432691539</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1584432691539</updated>
+    </task>
+    <task id="LOCAL-00077" summary="add results">
+      <created>1584433699550</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1584433699550</updated>
+    </task>
+    <task id="LOCAL-00078" summary="can send params from terminal">
+      <created>1584454225750</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1584454225750</updated>
+    </task>
+    <task id="LOCAL-00079" summary="simulator.py now open in new terminal window">
+      <created>1584542271242</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1584542271242</updated>
+    </task>
+    <task id="LOCAL-00080" summary="disable debug option">
+      <created>1584542492579</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1584542492579</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Other.py - Fix absoulote path">
+      <created>1584602919211</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1584602919211</updated>
+    </task>
+    <task id="LOCAL-00082" summary="remove urdf folder">
+      <created>1584603002300</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1584603002301</updated>
+    </task>
+    <task id="LOCAL-00083" summary="simulator.py - adjust the parameters set to optimization.py">
+      <created>1584603462922</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1584603462922</updated>
+    </task>
+    <task id="LOCAL-00084" summary="optimization.py fix open simulatoin in VM">
+      <created>1584613956647</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1584613956647</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -756,58 +764,58 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="add concepts calculation" />
-    <MESSAGE value="add: assign configuration in its specefic concept ( without parallel yet)" />
-    <MESSAGE value="recaculate results" />
-    <MESSAGE value="recaculate results and add configuration into combination" />
-    <MESSAGE value="add filters to concepts filter" />
-    <MESSAGE value="minor changes" />
-    <MESSAGE value="add: generate plot and the pareto frint" />
-    <MESSAGE value="add: plot full screen&#10;add : results" />
-    <MESSAGE value="add: 3d Plot and table for legend" />
-    <MESSAGE value="chabge folders names" />
-    <MESSAGE value="add: partial results" />
-    <MESSAGE value="add: small fixes" />
-    <MESSAGE value="fix commits problems" />
-    <MESSAGE value="commits problemsssss" />
-    <MESSAGE value="fixing commits" />
-    <MESSAGE value="add results" />
-    <MESSAGE value="fix domination problem" />
     <MESSAGE value="reorgenize the folders" />
     <MESSAGE value="add features to the 3D plot" />
-    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
     <MESSAGE value="add results to calc pareto front&#10;fix bug in sum_data" />
     <MESSAGE value="fix Z calculation during simulation&#10;add results" />
     <MESSAGE value="add data" />
     <MESSAGE value="fix results files&#10;add (start) how many configurations are simulated per concept" />
     <MESSAGE value="add: create URDF to finish simulation for small concepts" />
-    <option name="LAST_COMMIT_MESSAGE" value="add: create URDF to finish simulation for small concepts" />
+    <MESSAGE value="add resource allocation" />
+    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
+    <MESSAGE value="fix check domination and elitism" />
+    <MESSAGE value="optimization.py - add optimization class" />
+    <MESSAGE value="reaarange folders" />
+    <MESSAGE value="rearrange folders" />
+    <MESSAGE value="Other.py - change the sum_data way of calculation" />
+    <MESSAGE value="Recalculate results" />
+    <MESSAGE value="Update results" />
+    <MESSAGE value="all working version 1" />
+    <MESSAGE value="add results" />
+    <MESSAGE value="can send params from terminal" />
+    <MESSAGE value="simulator.py now open in new terminal window" />
+    <MESSAGE value="disable debug option" />
+    <MESSAGE value="Other.py - Fix absoulote path" />
+    <MESSAGE value="remove urdf folder" />
+    <MESSAGE value="simulator.py - adjust the parameters set to optimization.py" />
+    <MESSAGE value="optimization.py fix open simulatoin in VM" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimization.py fix open simulatoin in VM" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="676" y="280" width="624" height="544" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575552602847">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state x="676" y="280" width="624" height="544" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1575552602847" />
-    <state x="67" y="132" width="1387" height="775" key="#xdebugger.XInspectDialog" timestamp="1579166502786">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog" timestamp="1584444343794">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="138" y="215" key="#xdebugger.XInspectDialog/67.27.1613.1023@67.27.1613.1023" timestamp="1577444822841" />
     <state x="149" y="220" width="1706" height="488" key="#xdebugger.XInspectDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577180825625" />
     <state x="184" y="337" key="#xdebugger.XInspectDialog/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576314259751" />
     <state x="67" y="132" width="1387" height="775" key="#xdebugger.XInspectDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1579166502785" />
-    <state x="254" y="474" width="1364" height="569" key="#xdebugger.evaluate" timestamp="1579174313087">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584444343794" />
+    <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate" timestamp="1584602748101">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="222" y="158" width="1263" height="489" key="#xdebugger.evaluate/67.27.1613.1023@67.27.1613.1023" timestamp="1577444823879" />
     <state x="405" y="155" width="1407" height="533" key="#xdebugger.evaluate/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207068701" />
     <state x="265" y="528" width="823" height="392" key="#xdebugger.evaluate/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577122213942" />
-    <state x="254" y="474" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1579174313087" />
-    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2" timestamp="1579175443038">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
+    <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
+    <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
+    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584614116827">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="317" y="144" width="1342" height="816" key="CommitChangelistDialog2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268133134" />
     <state x="318" y="145" width="860" height="816" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326164318" />
-    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1579175443038" />
+    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110065158" />
+    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614116827" />
     <state x="167" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576399401786">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -816,91 +824,102 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="771" y="296" width="424" height="513" key="FileChooserDialogImpl/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577177060297" />
-    <state width="1807" height="391" key="GridCell.Tab.0.bottom" timestamp="1579174442279">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.0.bottom" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.0.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
     <state width="1807" height="378" key="GridCell.Tab.0.bottom/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.0.bottom/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442279" />
-    <state width="1807" height="391" key="GridCell.Tab.0.center" timestamp="1579174442279">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
+    <state width="1807" height="354" key="GridCell.Tab.0.center" timestamp="1584603242772">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.0.center/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
     <state width="1807" height="378" key="GridCell.Tab.0.center/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.0.center/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442279" />
-    <state width="1807" height="391" key="GridCell.Tab.0.left" timestamp="1579174442279">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242772" />
+    <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
+    <state width="1807" height="354" key="GridCell.Tab.0.left" timestamp="1584603242772">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.0.left/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
     <state width="1807" height="378" key="GridCell.Tab.0.left/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.0.left/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442279" />
-    <state width="1807" height="391" key="GridCell.Tab.0.right" timestamp="1579174442279">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762718" />
+    <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242772" />
+    <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
+    <state width="1807" height="354" key="GridCell.Tab.0.right" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.0.right/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
     <state width="1807" height="378" key="GridCell.Tab.0.right/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.0.right/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442279" />
-    <state width="1807" height="391" key="GridCell.Tab.1.bottom" timestamp="1579174442280">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
+    <state width="1807" height="354" key="GridCell.Tab.1.bottom" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.1.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
     <state width="1807" height="378" key="GridCell.Tab.1.bottom/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.1.bottom/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442280" />
-    <state width="1807" height="391" key="GridCell.Tab.1.center" timestamp="1579174442280">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
+    <state width="1807" height="354" key="GridCell.Tab.1.center" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.1.center/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
     <state width="1807" height="378" key="GridCell.Tab.1.center/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.1.center/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442280" />
-    <state width="1807" height="391" key="GridCell.Tab.1.left" timestamp="1579174442279">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
+    <state width="1807" height="354" key="GridCell.Tab.1.left" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.1.left/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
     <state width="1807" height="378" key="GridCell.Tab.1.left/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.1.left/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442279" />
-    <state width="1807" height="391" key="GridCell.Tab.1.right" timestamp="1579174442280">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764357" />
+    <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
+    <state width="1807" height="354" key="GridCell.Tab.1.right" timestamp="1584603242773">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state width="1567" height="378" key="GridCell.Tab.1.right/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
     <state width="1807" height="378" key="GridCell.Tab.1.right/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
     <state width="1807" height="378" key="GridCell.Tab.1.right/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
-    <state width="1807" height="391" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579174442280" />
-    <state x="698" y="268" width="580" height="568" key="MultipleFileMergeDialog" timestamp="1575552666237">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state x="698" y="268" width="580" height="568" key="MultipleFileMergeDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1575552666237" />
-    <state x="482" y="187" key="SettingsEditor" timestamp="1578925255692">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
+    <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
+    <state x="482" y="205" key="SettingsEditor" timestamp="1584269580725">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577032606912" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576392628391" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1578925255692" />
-    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1579161871896">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
+    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1584613958022">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268140730" />
     <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326290756" />
-    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1579161871896" />
-    <state width="926" height="527" key="XDebugger.FullValuePopup" timestamp="1575642402084">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state width="926" height="527" key="XDebugger.FullValuePopup/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1575642402084" />
+    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110117567" />
+    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584613958022" />
     <state x="751" y="399" width="474" height="307" key="cloudConfig.SelfSettingsDialog" timestamp="1578296305127">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="751" y="399" width="474" height="307" key="cloudConfig.SelfSettingsDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1578296305127" />
-    <state x="473" y="145" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1579165860921">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584522096698">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="473" y="145" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577043159760" />
     <state x="473" y="145" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1579165860921" />
+    <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1173@67.27.1853.1173" timestamp="1584522096698" />
     <state x="549" y="289" width="378" height="526" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog" timestamp="1579175405369">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -910,7 +929,6 @@
     <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1579161778445">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="761" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1575552649924" />
     <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053@67.27.1853.1053" timestamp="1579161778445" />
   </component>
   <component name="XDebuggerManager">
@@ -920,6 +938,16 @@
           <url>file://$USER_HOME$/Downloads/colormaps_reference.py</url>
           <line>75</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Other.py</url>
+          <line>787</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/optimization.py</url>
+          <line>730</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -934,9 +962,9 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1575206142100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$colormaps_reference.coverage" NAME="colormaps_reference Coverage Results" MODIFIED="1576419486141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads" />
-    <SUITE FILE_PATH="coverage/Code$Other.coverage" NAME="Other Coverage Results" MODIFIED="1579173829931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$optimization.coverage" NAME="optimization Coverage Results" MODIFIED="1578934139705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1573575339708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$Other.coverage" NAME="Other Coverage Results" MODIFIED="1584603238991" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$optimization.coverage" NAME="optimization Coverage Results" MODIFIED="1584541844635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1584525289469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$merge_csv.coverage" NAME="merge_csv Coverage Results" MODIFIED="1572616595992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$merge_data.coverage" NAME="merge_data Coverage Results" MODIFIED="1573745224510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1574766471377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

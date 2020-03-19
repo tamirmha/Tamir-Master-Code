@@ -288,7 +288,7 @@ class Simulator(object):
         self.ros.stop_launch(self.main)
 
 
-def simulate(start_arm=0):
+def simulate(start_arm=0, from_opt=True):
     # from which set of arms to start
     # default values
     dofe = 6  # number degrees of freedom of the manipulator
@@ -306,22 +306,27 @@ def simulate(start_arm=0):
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.1
+        wait2_replace = 2.3
+    elif username == "inbarb":  # VM
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     else:
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.1
+        wait2_replace = 2.3
     start_arm = start_arm / nums
     create_urdf = False
-    # set parametrs from terminal
-    # args = sys.argv
-    # if len(args) > 1:
-    #     dofe = int(args[1])
-    #     if len(args) > 2:
-    #         start_arm = int(args[2]) / nums
-    #         create_urdf = False
-    #         if len(args) > 3:
-    #             link_max = float(args[3]) + 0.1
+    if not from_opt:
+        # set parametrs from terminal
+        args = sys.argv
+        if len(args) > 1:
+            dofe = int(args[1])
+            if len(args) > 2:
+                start_arm = int(args[2]) / nums
+                create_urdf = False
+                if len(args) > 3:
+                    link_max = float(args[3]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
@@ -358,34 +363,14 @@ def simulate(start_arm=0):
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
     ros.ros_core_stop()
+    with open("finish.txt", "w+") as f:
+        f.write("finish")
+        f.close()
 
 
 if __name__ == '__main__':
-    simulate()
+    simulate(from_opt=False)
 
 # Todo - get errors from terminal
-# todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# todo change link0 to the platform - github
-# done check planner parameters
-# tod - fix the Json save format
-# tod the file name wont change when date change
-# tod change the base_link to 0 meters - check difference
-# tod add to rename the total of success
-# done fix obstacle parameters
-# Done - when not creating an urdf dont use defualt!!!
-# done - check the prismatic limits
-# done - save URDFS in several files -disabled
-# done save to JSON file  - disabled
-# done - change rpy!!!!!!!
-# done change defination of success
-# done delete created files
-# done change length from terminal
-# done get pc name for specific configuration
-# done set parametrs from terminal
-# done -add roll for each manipulator in last joint
-# done add floor at 3 meter
-# done change detection points
-# Done - set for first joint the current location as target.
-# # done  calculate indicies
-# # done change links weight according length
-# # done delete base link visuality and change link0 to box
+# tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
+# tod?o change link0 to the platform - github

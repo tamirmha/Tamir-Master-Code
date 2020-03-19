@@ -20,23 +20,28 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from simulator import simulate
 from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv, get_key
 from scipy.spatial import distance
 import numpy as np
 import copy
 from datetime import datetime
 from tqdm import tqdm
-from time import time
+from time import time, sleep
 import os
 import shutil
-from multiprocessing import Process
 import sys
+from ros import Ros
+from multiprocessing import Process
+from simulator import simulate
+import shlex
+import subprocess
+import getpass
+
 
 # np.random.seed(100100)
 # np.random.seed(100101)
-# np.random.seed(111111)
-np.random.seed(0)
+np.random.seed(111111)
+# np.random.seed(0)
 
 
 class Optimization:
@@ -182,8 +187,8 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     # print("Calculating Convergence rate")
-                    # if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
-                    #     continue
+                    if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
+                        continue
                     if probs[t].stopped:
                         to_pop.append(t)
                         continue
@@ -256,7 +261,6 @@ class Optimization:
         print("Finished")
 
     def sim(self, prob):
-        # print("start creating urdfs")
         # configurations to create urdf
         to_sim = []
         con = Concepts()
@@ -270,12 +274,24 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                p = Process(target=simulate, args=(1,))
-                p.start()
-                p.join()  # this blocks until the process terminates
-                # simulate()
+                cmd = 'gnome-terminal -- python simulator.py'
+                self.simulating(cmd)
                 prob = self.new_data(prob)
         return prob
+
+    @staticmethod
+    def simulating(cmd="a"):
+        pth = "/".join(os.getcwd().split("/")[:-2])
+        cmd = shlex.split(cmd)
+        cmd[3] = pth + "/" + cmd[3]
+        if sim_new_win:
+            subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+        else:
+            p = Process(target=simulate)
+            p.start()
+        while not os.path.exists("finish.txt"):
+            sleep(1)
+        os.remove("finish.txt")
 
     @staticmethod
     def check_exist(problem):
@@ -1038,7 +1054,11 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
-    gen_num = 10
+    username = getpass.getuser()
+    sim_new_win = False
+    if username == "tamir":  # tamir laptop
+        sim_new_win = True
+    gen_num = 1
     time_run = 0.2
     greedy = True
     delta = 10
@@ -1046,7 +1066,7 @@ if __name__ == '__main__':
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
-    lar_con = 1000
+    lar_con = int(gen_num/0.08)
     args = sys.argv
     if len(args) > 1:
         greedy = int(args[1])
@@ -1071,7 +1091,7 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = False  # to run with simulatoin or with random results
+    with_sim = True  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta,
                        run_time=time_run, large_concept=lar_con, percent2continue=per2cont,
                        low_cr_treshhold=low_cr, high_cr_treshhold=high_cr, parents_number=par_num)
@@ -1081,26 +1101,10 @@ if __name__ == '__main__':
         # opt.finish()
         print(time()-tic)
 
-# done - save to archive Cr every delta generations
+# todo - to start in specific generation
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
-# done - concept in DWOI?
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)
-# done - create resource allocation
-# done - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
-# done - create main results file
-# done - save dwoi to json every iteration?
-# done - check that DWOI archive change only after change
-# done - add elitism check
-# done - set each concept relative numbers of arms (init concepts)
-# done - parents number to each concept
-# done - in mating- if doesnt succeeded to create offspring? no  - stop concept
-# done - set json file with the desired concepts
-# done - how to evalute?  run simulation for all ?
-# done - how to get the results from the simulator
-# done - to check from main results file if allready simulated
-# done - check the differences with parallel - doesnt share global vars - need to change the code
-# nottodo- play with the follow parameters: mutation rate, parents number, number of offsprings
-# to?do - take a concept with ~10000 conf and fully simulate him
+
 
 
 

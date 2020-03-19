@@ -235,7 +235,9 @@ class FixFromJson(object):
 
 
 class Concepts:
-    def __init__(self, file_name="/home/tamir/Tamir/Master/Code/all_configs"):
+    def __init__(self, file_name=None):
+        if file_name is None:
+            file_name = environ['HOME'] + "/Tamir/Master/Code/all_configs"
         self.concepts = []
         self.joints_combs = []
         self.links = []
@@ -1123,26 +1125,42 @@ def plot_cr(woi_loc="opt_results/17_03-3/woi"):
     plt.show()
 
 
-def plot_woi(woi_loc="opt_results/17_03-3/optimizaion_WOI"):
+def plot_woi(woi_loc="opt_results/17_03-1/optimizaion_WOI"):
     woi = load_json(woi_loc)
     points = []
     labls = []
-    inds2plot = [1, 100, 1000, 5000, 10000]
-    colors = ['r', 'b', 'k', "g", "grey"]
+    inds2plot = [0, 2, 4]
+    colors = ['g', 'r', 'grey', "purple", "k", "b"]
+    # markers = ["_", "|", "+", "4", 4]
+    fig, axs = plt.subplots(len(inds2plot), 2, figsize=(15, 6), facecolor='w', edgecolor='k')
+    # fig.subplots_adjust(hspace=.5, wspace=.1)
     for w in woi:
         d = np.asarray(w[w.keys()[0]])
-        inds = np.argwhere(d[2] == "6")
+        inds1 = np.argwhere(d[2] == "6")
+        inds2 = np.argwhere(d[2] == "6.0")
+        inds = np.concatenate((inds1, inds2))
         points.append([d[0][inds], d[1][inds]])  # 0-mu , 1 - z
         labls.append(w.keys()[0])
     d = 0
     for p in range(len(points)):
         if p in inds2plot:
-            plt.scatter(points[p][0], points[p][1], label=labls[p], color=colors[d])
-            d += 1
-    plt.xlabel("Manipulability Index")
-    plt.ylabel("Mid Proximity Joint")
-    plt.legend()
+            # plt.scatter(points[p][0], points[p][1], label=labls[p], color=colors[d], marker=markers[d])
+            plot(axs[d/2], points[p][0], points[p][1], points[p+1][0], points[p+1][1],
+                 label1=labls[d], label2=labls[d+1], color1=colors[d], color2=colors[d+1])
+            d += 2
+    # plt.ylabel("Manipulability Index")
+    # plt.xlabel("Mid Proximity Joint")
+    fig.legend(loc="center left")
     plt.show()
+
+
+def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
+    axrow[0].scatter(x1, y1, label=label1, color=color1)
+    axrow[1].scatter(x2, y2, label=label2, color=color2)
+    axrow[0].set_xlabel("Mid Proximity Joint")
+    axrow[0].set_ylabel("Manipulability Index")
+    axrow[1].set_xlabel("Mid Proximity Joint")
+    axrow[1].set_ylabel("Manipulability Index")
 
 
 # def check_dupications_configs_in_concepts(all_concepts=None):
@@ -1171,6 +1189,8 @@ if __name__ == '__main__':
     pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
+    woi_plot = False
+    cr_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1224,8 +1244,8 @@ if __name__ == '__main__':
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
-
-
-# plot_cr()
-# plot_woi()
+    if woi_plot:
+        plot_woi()
+    if cr_plot:
+        plot_cr()
 

@@ -51,20 +51,21 @@ def try_os(cmd):
     # os.system(cmd)
     cmd = shlex.split(cmd)
     subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
-    # a = Ros.checkroscorerun()
-    # print a
+
+    while not os.path.exists("finish.txt"):
+        sleep(1)
+    os.remove("finish.txt")
 
 
 if __name__ == '__main__':
 
     # cmd = 'gnome-terminal -e roscore'
-    # cmd = 'gnome-terminal -- python simulator.py 6 1'
-    # p = Process(target=Ros.ter_command, args=(cmd,))
+    cmd = 'gnome-terminal -- python simulator.py 6 1'
+    Ros.ter_command(cmd)
     # p = Process(target=try_os, args=(cmd,))
-    p = Process(target=simulate, args=(1,))
-    p.start()
-    p.join()  # this blocks until the process terminates
+    # p = Process(target=simulate, args=(1,))
+    # p.start()
+    # p.join()  # this blocks until the process terminates
     # result = queue.get()
     print "finish"
-
 
