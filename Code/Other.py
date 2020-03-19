@@ -1189,6 +1189,8 @@ if __name__ == '__main__':
     pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
+    woi_plot = False
+    cr_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1242,7 +1244,8 @@ if __name__ == '__main__':
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
+    if woi_plot:
+        plot_woi()
+    if cr_plot:
+        plot_cr()
 
-
-# plot_cr()
-# plot_woi()

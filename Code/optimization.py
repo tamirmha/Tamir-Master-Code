@@ -35,6 +35,7 @@ from multiprocessing import Process
 from simulator import simulate
 import shlex
 import subprocess
+import getpass
 
 
 # np.random.seed(100100)
@@ -273,12 +274,24 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-
                 cmd = 'gnome-terminal -- python simulator.py'
-                try_os(cmd)
-
+                self.simulating(cmd)
                 prob = self.new_data(prob)
         return prob
+
+    @staticmethod
+    def simulating(cmd="a"):
+        pth = "/".join(os.getcwd().split("/")[:-2])
+        cmd = shlex.split(cmd)
+        cmd[3] = pth + "/" + cmd[3]
+        if sim_new_win:
+            subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+        else:
+            p = Process(target=simulate)
+            p.start()
+        while not os.path.exists("finish.txt"):
+            sleep(1)
+        os.remove("finish.txt")
 
     @staticmethod
     def check_exist(problem):
@@ -1040,23 +1053,12 @@ class ResourceAllocation:
         return prob
 
 
-def try_os(cmd="a"):
-    pth = "/".join(os.getcwd().split("/")[:-2])
-    cmd = shlex.split(cmd)
-    cmd[3] = pth + "/" + cmd[3]
-    subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
-    # p = Process(target=simulate)
-    # p = Process(target=Ros.ter_command, args=(cmd,))
-    # p.start()
-    # p.join()  # this blocks until the process terminates
-    # Ros.ter_command(cmd)
-    while not os.path.exists("finish.txt"):
-        sleep(1)
-    os.remove("finish.txt")
-
-
 if __name__ == '__main__':
-    gen_num = 20
+    username = getpass.getuser()
+    sim_new_win = False
+    if username == "tamir":  # tamir laptop
+        sim_new_win = True
+    gen_num = 1
     time_run = 0.2
     greedy = True
     delta = 10
@@ -1099,27 +1101,10 @@ if __name__ == '__main__':
         # opt.finish()
         print(time()-tic)
 
-# done - save to archive Cr every delta generations
 # todo - to start in specific generation
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
-# done - concept in DWOI?
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)
-# done - create resource allocation
-# done - add to each problem (concept): 1)Cr 2)if in DWOI 3) if Paused/eliminted/continue
-# done - create main results file
-# done - save dwoi to json every iteration?
-# done - check that DWOI archive change only after change
-# done - add elitism check
-# done - set each concept relative numbers of arms (init concepts)
-# done - parents number to each concept
-# done - in mating- if doesnt succeeded to create offspring? no  - stop concept
-# done - set json file with the desired concepts
-# done - how to evalute?  run simulation for all ?
-# done - how to get the results from the simulator
-# done - to check from main results file if allready simulated
-# done - check the differences with parallel - doesnt share global vars - need to change the code
-# nottodo- play with the follow parameters: mutation rate, parents number, number of offsprings
-# to?do - take a concept with ~10000 conf and fully simulate him
+
 
 
 

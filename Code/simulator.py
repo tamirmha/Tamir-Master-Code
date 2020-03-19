@@ -372,28 +372,5 @@ if __name__ == '__main__':
     simulate(from_opt=False)
 
 # Todo - get errors from terminal
-# todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# todo change link0 to the platform - github
-# done check planner parameters
-# tod - fix the Json save format
-# tod the file name wont change when date change
-# tod change the base_link to 0 meters - check difference
-# tod add to rename the total of success
-# done fix obstacle parameters
-# Done - when not creating an urdf dont use defualt!!!
-# done - check the prismatic limits
-# done - save URDFS in several files -disabled
-# done save to JSON file  - disabled
-# done - change rpy!!!!!!!
-# done change defination of success
-# done delete created files
-# done change length from terminal
-# done get pc name for specific configuration
-# done set parametrs from terminal
-# done -add roll for each manipulator in last joint
-# done add floor at 3 meter
-# done change detection points
-# Done - set for first joint the current location as target.
-# # done  calculate indicies
-# # done change links weight according length
-# # done delete base link visuality and change link0 to box
+# tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
+# tod?o change link0 to the platform - github
