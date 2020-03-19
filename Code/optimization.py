@@ -284,6 +284,8 @@ class Optimization:
         if sim_new_win:
             subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
         else:
+            # cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
+            # subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
             p = Process(target=simulate)  # args=(self.gen_start, True)
             p.start()
         while not os.path.exists("finish.txt"):
@@ -1086,7 +1088,7 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = False  # to run with simulatoin or with random results
+    with_sim = True  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run,
                        large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
                        high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)

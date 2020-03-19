@@ -48,8 +48,7 @@ class Simulator(object):
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
-        # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
-        self.replace_model(0)  # set the first arm
+        # self.replace_model(-1)  # set the first arm
 
     @staticmethod
     def save_json(name="data_file", data=None):
@@ -267,9 +266,10 @@ class Simulator(object):
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
-        # self.json_data = []
+        # self.json_data =
+        # []
         for arm in range(0, len(self.arms)):
-            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            print(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
             joints = self.arms[arm]["arm"].joint_data
             links = self.arms[arm]["arm"].links
@@ -372,5 +372,6 @@ if __name__ == '__main__':
     simulate(from_opt=False)
 
 # Todo - get errors from terminal
+# tOdo - run with 1 configuration
 # tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
 # tod?o change link0 to the platform - github
