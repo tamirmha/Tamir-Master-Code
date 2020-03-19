@@ -288,7 +288,7 @@ class Simulator(object):
         self.ros.stop_launch(self.main)
 
 
-def simulate(start_arm=0):
+def simulate(start_arm=0, from_opt=True):
     # from which set of arms to start
     # default values
     dofe = 6  # number degrees of freedom of the manipulator
@@ -306,22 +306,27 @@ def simulate(start_arm=0):
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.1
+        wait2_replace = 2.3
+    elif username == "inbarb":  # VM
+        nums = 25  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2.3
     else:
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.1
+        wait2_replace = 2.3
     start_arm = start_arm / nums
     create_urdf = False
-    # set parametrs from terminal
-    # args = sys.argv
-    # if len(args) > 1:
-    #     dofe = int(args[1])
-    #     if len(args) > 2:
-    #         start_arm = int(args[2]) / nums
-    #         create_urdf = False
-    #         if len(args) > 3:
-    #             link_max = float(args[3]) + 0.1
+    if not from_opt:
+        # set parametrs from terminal
+        args = sys.argv
+        if len(args) > 1:
+            dofe = int(args[1])
+            if len(args) > 2:
+                start_arm = int(args[2]) / nums
+                create_urdf = False
+                if len(args) > 3:
+                    link_max = float(args[3]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
@@ -364,7 +369,7 @@ def simulate(start_arm=0):
 
 
 if __name__ == '__main__':
-    simulate()
+    simulate(from_opt=False)
 
 # Todo - get errors from terminal
 # todO - failed with error PATH_TOLERANCE_VIOLATED:?
