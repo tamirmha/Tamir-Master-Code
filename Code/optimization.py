@@ -371,7 +371,8 @@ class Optimization:
                     k += 1
                 if second_loop_stop:
                     break
-        save_json(all_concepts_json, all_concepts, "w+")
+        if with_sim:
+            save_json(all_concepts_json, all_concepts, "w+")
         # pickle_save_data(all_concepts, all_concepts_json + "new")
 
     @staticmethod
@@ -1055,8 +1056,8 @@ if __name__ == '__main__':
     sim_new_win = False
     if username == "tamir":  # tamir laptop
         sim_new_win = True
-    gen_num = 8
-    time_run = 0.2
+    gen_num = 1000000
+    time_run = 0.2  # /1000.
     start_gen = 1
     greedy = True
     delta = 10
@@ -1085,7 +1086,7 @@ if __name__ == '__main__':
                                     if len(args) > 9:
                                         lar_con = int(args[8])
     tic = time()
-    with_sim = True  # to run with simulatoin or with random results
+    with_sim = False  # to run with simulatoin or with random results
     opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run,
                        large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
                        high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
