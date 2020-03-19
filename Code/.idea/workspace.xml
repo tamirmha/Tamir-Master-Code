@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add: create URDF files to generate first WOI to optimiziation">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -384,14 +384,7 @@
       <workItem from="1584344587244" duration="47849000" />
       <workItem from="1584464427962" duration="3065000" />
       <workItem from="1584513511942" duration="19206000" />
-      <workItem from="1584597546753" duration="5486000" />
-    </task>
-    <task id="LOCAL-00036" summary="set the planner parameters">
-      <created>1575211394050</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1575211394050</updated>
+      <workItem from="1584597546753" duration="6033000" />
     </task>
     <task id="LOCAL-00037" summary="change the Z calculation to use norm number">
       <created>1575212980407</created>
@@ -729,7 +722,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584613956647</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="add files">
+      <created>1584614204810</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1584614204811</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -764,7 +764,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="reorgenize the folders" />
     <MESSAGE value="add features to the 3D plot" />
     <MESSAGE value="add results to calc pareto front&#10;fix bug in sum_data" />
     <MESSAGE value="fix Z calculation during simulation&#10;add results" />
@@ -789,7 +788,8 @@
     <MESSAGE value="remove urdf folder" />
     <MESSAGE value="simulator.py - adjust the parameters set to optimization.py" />
     <MESSAGE value="optimization.py fix open simulatoin in VM" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimization.py fix open simulatoin in VM" />
+    <MESSAGE value="add files" />
+    <option name="LAST_COMMIT_MESSAGE" value="add files" />
   </component>
   <component name="WindowStateProjectService">
     <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog" timestamp="1584444343794">
@@ -809,17 +809,18 @@
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584614116827">
+    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584614204451">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="317" y="144" width="1342" height="816" key="CommitChangelistDialog2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268133134" />
     <state x="318" y="145" width="860" height="816" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326164318" />
     <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110065158" />
-    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614116827" />
-    <state x="167" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576399401786">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614204451" />
+    <state x="167" y="136" width="1653" height="855" key="DiffContextDialog" timestamp="1584614153457">
+      <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="167" y="125" width="1653" height="855" key="DiffContextDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1576399401786" />
+    <state x="167" y="136" key="DiffContextDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584614153457" />
     <state x="771" y="296" width="424" height="513" key="FileChooserDialogImpl" timestamp="1577177060297">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -903,13 +904,13 @@
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576392628391" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1578925255692" />
     <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
-    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1584613958022">
+    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1584614206475">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268140730" />
     <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326290756" />
     <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110117567" />
-    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584613958022" />
+    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614206475" />
     <state x="751" y="399" width="474" height="307" key="cloudConfig.SelfSettingsDialog" timestamp="1578296305127">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
