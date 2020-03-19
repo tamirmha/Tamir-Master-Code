@@ -235,7 +235,9 @@ class FixFromJson(object):
 
 
 class Concepts:
-    def __init__(self, file_name="/home/tamir/Tamir/Master/Code/all_configs"):
+    def __init__(self, file_name=None):
+        if file_name is None:
+            file_name = environ['HOME'] + "/Tamir/Master/Code/all_configs"
         self.concepts = []
         self.joints_combs = []
         self.links = []
@@ -1244,4 +1246,3 @@ if __name__ == '__main__':
 
 # plot_cr()
 # plot_woi()
-

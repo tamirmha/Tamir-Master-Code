@@ -39,8 +39,8 @@ import subprocess
 
 # np.random.seed(100100)
 # np.random.seed(100101)
-# np.random.seed(111111)
-np.random.seed(0)
+np.random.seed(111111)
+# np.random.seed(0)
 
 
 class Optimization:
@@ -1056,7 +1056,7 @@ def try_os(cmd="a"):
 
 
 if __name__ == '__main__':
-    gen_num = 5
+    gen_num = 20
     time_run = 0.2
     greedy = True
     delta = 10
