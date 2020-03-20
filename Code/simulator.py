@@ -13,7 +13,7 @@ import json
 
 class Simulator(object):
 
-    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
+    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait0=2, wait1=2.3, wait2=2.7, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -21,6 +21,7 @@ class Simulator(object):
         self.ros = Ros()  # for work with Ros
         self.arm_control = 0
         self.arms = []
+        self.wait0 = wait0
         self.wait1 = wait1
         self.wait2 = wait2
         self.json_data = []
@@ -257,6 +258,7 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         else:
             self.ros.ter_command("rosnode kill /robot_state_publisher")
+        # sleep(self.wait0)
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         sleep(self.wait1)
@@ -299,22 +301,27 @@ def simulate(start_arm=0, from_opt=True):
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.0
-    elif username == "arl_main":  # lab
+        wait0_replace = 0.01
+    elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
+        wait0_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
+        wait0_replace = 2
     elif username == "inbarb":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
+        wait0_replace = 2
     else:
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
+        wait0_replace = 2
     start_arm = start_arm / nums
     create_urdf = False
     if not from_opt:
@@ -354,10 +361,12 @@ def simulate(start_arm=0, from_opt=True):
             ros.ter_command(command)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:],
+                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums],
+                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:  # first run
             sim.arms = arms[:nums]
@@ -372,6 +381,6 @@ if __name__ == '__main__':
     simulate(from_opt=False)
 
 # Todo - get errors from terminal
-# tOdo - run with 1 configuration
+# done - run with 1 configuration
 # tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
 # tod?o change link0 to the platform - github

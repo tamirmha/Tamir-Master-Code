@@ -203,11 +203,11 @@ class Optimization:
             woi.set_gen(n + 1)
             # Check global stop condition
             woi.stop_condition()
+            save_json("woi_temp", woi.__dict__)
             if woi.stopped:
                 break
         self.probs = probs
         self.woi = woi
-        save_json("woi_temp", woi.__dict__)
 
     def run_gen(self, prob):
         woi = self.woi
@@ -291,6 +291,7 @@ class Optimization:
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
+        # sleep(1)
 
     @staticmethod
     def check_exist(problem):
@@ -1058,7 +1059,7 @@ if __name__ == '__main__':
     sim_new_win = False
     if username == "tamir":  # tamir laptop
         sim_new_win = True
-    gen_num = 1000000
+    gen_num = 1000
     time_run = 0.2  # /1000.
     start_gen = 1
     greedy = True
@@ -1067,7 +1068,7 @@ if __name__ == '__main__':
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
-    lar_con = 1500 # int(gen_num/0.08)
+    lar_con = 1500  # int(gen_num/0.08)
     args = sys.argv
     if len(args) > 1:
         start_gen = int(args[1])
