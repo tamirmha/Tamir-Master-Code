@@ -164,7 +164,7 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs
+        probs = self.probs[5:7]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):

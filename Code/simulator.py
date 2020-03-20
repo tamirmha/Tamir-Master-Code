@@ -49,7 +49,7 @@ class Simulator(object):
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
-        # self.replace_model(-1)  # set the first arm
+        self.replace_model(-1)  # set the first arm
 
     @staticmethod
     def save_json(name="data_file", data=None):
