@@ -1091,37 +1091,11 @@ def check_results():
 def plot_cr(woi_loc="opt_results/18_03/woi"):
     woi = load_json(woi_loc)
     cr = woi["cr"]
-    # cr_list = []
-    # for c in cr:
-    #     cr_list.append(cr[c])
-    # cr_list = sorted(cr_list, key=lambda l: (len(l), l))
-    # con1 = np.asarray(cr_list[-1])
-    # x1 = np.argwhere(con1 != 0)
-    # con1 = con1[con1 != 0]
-    # con2 = np.asarray(cr_list[-2])
-    # x2 = np.argwhere(con2 != 0)
-    # con2 = con2[con2 != 0]
-    # con3 = np.asarray(cr_list[-3])
-    # x3 = np.argwhere(con3 != 0)
-    # con3 = con3[con3 != 0]
-    # con4 = np.asarray(cr_list[-4])
-    # x4 = np.argwhere(con4 != 0)
-    # con4 = con4[con4 != 0]
-    # plt.subplot(221)
-    # plt.scatter(x1, con1)
-    # plt.subplot(222)
-    # plt.scatter(x2, con2)
-    # plt.subplot(223)
-    # plt.scatter(x3, con3)
-    # plt.subplot(224)
-    # plt.scatter(x4, con4)
-    # plt.legend()
-
     for c in cr:
-        con = np.asarray(cr[c])
-        x = np.argwhere(con != 0)
-        con = con[con != 0]
-        plt.plot(x, con, label=c)
+        conc = np.asarray(cr[c])
+        x = np.argwhere(conc != 0)
+        conc = conc[conc != 0]
+        plt.plot(x, conc, label=c)
     plt.show()
 
 
@@ -1129,11 +1103,12 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     woi = load_json(woi_loc)
     points = []
     labls = []
-    inds2plot = [0, 2, 4]
-    colors = ['g', 'r', 'grey', "purple", "k", "b"]
-    # markers = ["_", "|", "+", "4", 4]
+    inds2plot = np.arange(0, len(woi)+1, len(woi)/4)
+    while len(inds2plot) > 5:
+        inds2plot = np.delete(inds2plot, len(inds2plot)/2)
+    inds2plot[-1] -= 2
+    colors = ['g', 'r', 'grey', "purple", "k", "b", "cyan", "y", "brown", "Orange"]
     fig, axs = plt.subplots(len(inds2plot), 2, figsize=(15, 6), facecolor='w', edgecolor='k')
-    # fig.subplots_adjust(hspace=.5, wspace=.1)
     for w in woi:
         d = np.asarray(w[w.keys()[0]])
         inds1 = np.argwhere(d[2] == "6")
@@ -1144,12 +1119,9 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     d = 0
     for p in range(len(points)):
         if p in inds2plot:
-            # plt.scatter(points[p][0], points[p][1], label=labls[p], color=colors[d], marker=markers[d])
             plot(axs[d/2], points[p][0], points[p][1], points[p+1][0], points[p+1][1],
-                 label1=labls[d], label2=labls[d+1], color1=colors[d], color2=colors[d+1])
+                 label1=labls[p], label2=labls[p+1], color1=colors[d], color2=colors[d+1])
             d += 2
-    # plt.ylabel("Manipulability Index")
-    # plt.xlabel("Mid Proximity Joint")
     fig.legend(loc="center left")
     plt.show()
 
@@ -1189,8 +1161,8 @@ if __name__ == '__main__':
     pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
-    woi_plot = True
-    cr_plot = False
+    woi_plot = False
+    cr_plot = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1245,7 +1217,9 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        plot_woi()
+        opt_folder = "17_03"
+        plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        plot_cr()
+        cr_folder = "20_03-2"
+        plot_cr("opt_results/" + cr_folder + "/woi")
 
