@@ -40,8 +40,8 @@ import getpass
 
 # np.random.seed(100100)
 # np.random.seed(100101)
-np.random.seed(111111)
-# np.random.seed(0)
+# np.random.seed(111111)
+np.random.seed(0)
 
 
 class Optimization:
@@ -164,17 +164,17 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs[5:7]
+        probs = self.probs
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
-            # simulate the population
-            probs = self.sim(prob=probs)
             # Save the current WOI
             save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             print("Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
+            # simulate the population
+            probs = self.sim(prob=probs)
             to_pop = []
-            for t in tqdm(range(len(probs))):  # len(probs)
+            for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
                 probs[t] = self.run_gen(probs[t])
@@ -203,7 +203,7 @@ class Optimization:
             woi.set_gen(n + 1)
             # Check global stop condition
             woi.stop_condition()
-            save_json("woi_temp", woi.__dict__)
+            save_json("woi_temp", woi.__dict__, "w+")
             if woi.stopped:
                 break
         self.probs = probs
@@ -461,6 +461,7 @@ class Problem:
             pops.append(r)
             res = self.get_result(r)
             if with_sim:
+                print(res)
                 if res["z"] is not None:
                     f3.append(int(res["dof"]))  # dof
                     f2.append(1 - float(res["mu"]))  # manipulability

@@ -977,11 +977,11 @@ def remain_to_sim(all_concept, dof2check="5"):
     return create_urdf
 
 
-def remain_conf_in_conc(all_concept, min_confs=500):
+def remain_conf_in_conc(all_concept, min_confs=750):
     print("Start remain_conf_in_conc")
     ga_concept = {}
     for concept in all_concept:
-        if len(all_concepts[concept]) > min_confs and concept[43:44] == "6":
+        if len(all_concept[concept]) > min_confs and concept[43:44] == "6":
             ga_concept[concept] = all_concept[concept]
     save_json("jsons/concepts2ga", ga_concept, "w+")
     return ga_concept
@@ -1188,8 +1188,8 @@ if __name__ == '__main__':
     fix_from_json = False
     pareto_plot = False
     check_num_confs_in_concepts = False
-    create_configs = False
-    woi_plot = True
+    create_configs = True
+    woi_plot = False
     cr_plot = False
     if calc_concepts:
         con = Concepts()
@@ -1232,15 +1232,15 @@ if __name__ == '__main__':
         # create CSV file with how many configs simulated and left at each concept
         left_confs_concepts()
         # Create json file of the remaining concepts and their configurations
-        ga_concepts = remain_conf_in_conc(all_concepts)
+        ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
     if create_configs:
         all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 750  # all the concecpts with less than X configurations
+        confs_in_concepts = 1000  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
         save_json("jsons/other/simulated", simulated_confs, "w+")
         # which concepts we want to simulte
-        check_concept = concepts2check(confs_max=confs_in_concepts, confs_min=0, dof="6")
+        check_concept = concepts2check(confs_max=confs_in_concepts, confs_min=750, dof="6")
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
@@ -1248,3 +1248,4 @@ if __name__ == '__main__':
         plot_woi()
     if cr_plot:
         plot_cr()
+
