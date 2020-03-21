@@ -2,8 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add: create URDF files to generate first WOI to optimiziation">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/front_concept.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/front_concept.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/other/confs_number.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/confs_number.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/other/results_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/results_all.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/other/simulated.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/simulated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/left_concepts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/left_concepts.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results_all.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/Figure_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/Figure_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all_with_failed.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof_all_with_failed.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/calculated/results_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/results_all.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/calculated/results_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/results_all_with_failed.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file16_03_6dof_4d_.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file16_03_6dof_4d_.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_2.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_3.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_4.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_4.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,14 +82,11 @@
       <recent name="$PROJECT_DIR$/results" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.optimization">
+  <component name="RunManager" selected="Python.Other">
     <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -130,6 +150,9 @@
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -191,8 +214,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.optimization" />
         <item itemvalue="Python.Other" />
+        <item itemvalue="Python.optimization" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.simulator" />
         <item itemvalue="Python.SimFilesCreate" />
@@ -385,6 +408,7 @@
       <workItem from="1584464427962" duration="3065000" />
       <workItem from="1584513511942" duration="19206000" />
       <workItem from="1584597546753" duration="6033000" />
+      <workItem from="1584784813329" duration="2920000" />
     </task>
     <task id="LOCAL-00037" summary="change the Z calculation to use norm number">
       <created>1575212980407</created>
@@ -809,12 +833,12 @@
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584614204451">
-      <screen x="67" y="27" width="1853" height="1173" />
+    <state x="317" y="144" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584804741060">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="317" y="144" width="1342" height="816" key="CommitChangelistDialog2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268133134" />
     <state x="318" y="145" width="860" height="816" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326164318" />
-    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110065158" />
+    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584804741060" />
     <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614204451" />
     <state x="167" y="136" width="1653" height="855" key="DiffContextDialog" timestamp="1584614153457">
       <screen x="67" y="27" width="1853" height="1173" />

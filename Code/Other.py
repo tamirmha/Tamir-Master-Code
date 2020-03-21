@@ -1188,8 +1188,8 @@ if __name__ == '__main__':
     fix_from_json = False
     pareto_plot = False
     check_num_confs_in_concepts = False
-    create_configs = True
-    woi_plot = False
+    create_configs = False
+    woi_plot = True
     cr_plot = False
     if calc_concepts:
         con = Concepts()
