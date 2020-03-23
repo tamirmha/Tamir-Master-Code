@@ -39,9 +39,9 @@ import getpass
 
 
 # np.random.seed(100100)
-# np.random.seed(100101)
+np.random.seed(1010101)
 # np.random.seed(111111)
-np.random.seed(0)
+# np.random.seed(0)
 
 
 class Optimization:
@@ -165,6 +165,7 @@ class Optimization:
     def run(self):
         woi = self.woi
         probs = self.probs
+        # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -203,7 +204,7 @@ class Optimization:
             woi.set_gen(n + 1)
             # Check global stop condition
             woi.stop_condition()
-            save_json("woi_temp", woi.__dict__, "w+")
+            save_json("woi_All", woi.__dict__)
             if woi.stopped:
                 break
         self.probs = probs
@@ -238,7 +239,7 @@ class Optimization:
             # Selection (RWS)
             selection = prob.selection(fitness, prob.parents_number)
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
-            selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
+            selected_confs = prob.get_conifgs_by_indices(selected_confs_ind, confs_results_elite)
             # Mating
             population = prob.mating(selected_confs)
         else:  # if small concept
@@ -251,7 +252,7 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         # save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
-        save_json("woi", self.woi.__dict__)
+        save_json("woi_last", self.woi.__dict__)
         for p in self.probs:
             save_json("problems", [p.__dict__])
         self.set_new_data()
@@ -271,27 +272,19 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                cmd = 'gnome-terminal -- python simulator.py 6 '  # todo - add configuration number?
-                self.simulating(cmd)
+                # cmd = 'gnome-terminal -- python simulator.py 6 '  # todo - add configuration number?
+                self.simulating()
                 prob = self.new_data(prob)
         return prob
 
     @staticmethod
-    def simulating(cmd="a"):
-        pth = "/".join(os.getcwd().split("/")[:-2])
-        cmd = shlex.split(cmd)
-        cmd[3] = pth + "/" + cmd[3]
-        if sim_new_win:
-            subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
-        else:
-            # cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
-            # subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
-            p = Process(target=simulate)  # args=(self.gen_start, True)
-            p.start()
+    def simulating():
+        p = Process(target=simulate)  # args=(self.gen_start, True)
+        p.start()
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
-        # sleep(1)
+        # sleep(5)
 
     @staticmethod
     def check_exist(problem):
@@ -363,13 +356,13 @@ class Optimization:
             second_loop_stop = False
             for con in ga_concepts:
                 k = 0
-                for concept in all_concepts[con]:
-                    if dat["name"] in concept:
+                for concept in ga_concepts[con]:
+                    if dat["name"] == concept:
                         second_loop_stop = True
-                        if all_concepts[con][k][dat["name"]]["mu"] is not None:
-                            print("Check it!!!")
-                        all_concepts[con][k] = {unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"],
-                                                                       "name": unicode(dat["name"])}}
+                        # if all_concepts[con][k][dat["name"]]["mu"] is not None:
+                        #     print("Check it!!!")
+                        all_concepts[con].append({unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"],
+                                                "dof": dat["dof"], "name": unicode(dat["name"])}})
                         break
                     k += 1
                 if second_loop_stop:
@@ -414,6 +407,7 @@ class Problem:
 
     def set_population(self, pop):
         self.population = pop
+        save_json("pop", pop)
 
     def get_population(self):
         return self.population
@@ -461,13 +455,18 @@ class Problem:
             pops.append(r)
             res = self.get_result(r)
             if with_sim:
-                print(res)
-                if res["z"] is not None:
-                    f3.append(int(res["dof"]))  # dof
-                    f2.append(1 - float(res["mu"]))  # manipulability
-                    f1.append(float(res["z"]))  # Mid-Range Proximity
-                else:
-                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
+                try:
+                    if res["z"] is not None:
+                        f3.append(int(res["dof"]))  # dof
+                        f2.append(1 - float(res["mu"]))  # manipulability
+                        if res["z"] != -1.0:
+                            f1.append(float(res["z"]))  # Mid-Range Proximity
+                        else:
+                            f1.append(2.0)
+                    else:
+                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
+                except:
+                    print(res)
             else:
                 if len(res) == 0:
                     f3.append(self.dof)  # dof
@@ -576,6 +575,7 @@ class Problem:
         num_crossover = offspring_size - num_mutations
         total_attempts = 50  # to prevent infinite loop
         offspring = []
+        prev_confs = self.get_prev_confs()
         mut_offspring = 0
         cross_offspring = 0
         for i in range(num_mutations):
@@ -603,7 +603,7 @@ class Problem:
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
                     mut_spring = self.mutation_rand(parent_1)
-                    mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring
+                    mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
                         spring.append(mut_spring)
@@ -733,17 +733,17 @@ class Problem:
                 print("ind=" + str(ind) + "  fit=" + str(fit) + "\nx=" + str(x) + "\nselect=" + str(select))
         return indices
 
-    def get_conifgs_by_indices(self, conf_indices):
+    def get_conifgs_by_indices(self, conf_indices, get_configs):
         """get configuration by indices
         :param conf_indices - [list] indices of the configurations
         :return - [list] - names of the configurations in the selected indices
         """
-        get_configs = np.asarray(self.get_configs())
-        return np.ndarray.tolist(get_configs[conf_indices])
+        get_configs = np.asarray(get_configs)
+        return np.ndarray.tolist(np.asarray(get_configs.T[3])[conf_indices])
         # return np.ndarray.tolist(np.unique(get_configs[conf_indices]))
 
     def check_conf(self, confs):
-        """Ceck if the configurations are belongs to the concept
+        """Check if the configurations are belongs to the concept
         :param confs: [str] configuration to check if in the concept
         :return :[boolean] True if in the concept False otherwise
         """
@@ -918,6 +918,7 @@ class DWOI:
 
     def stop_condition(self):
         if self.run_time <= time() - self.start_time:
+            print("Time Limit passed")
             self.stopped = True
 
     def set_dwoi(self, dwoi):
@@ -1060,16 +1061,16 @@ if __name__ == '__main__':
     sim_new_win = False
     if username == "tamir":  # tamir laptop
         sim_new_win = True
-    gen_num = 1000
-    time_run = 0.2  # /1000.
+    gen_num = 2000
+    time_run = 0.5  # /1000.
     start_gen = 1
     greedy = True
-    delta = 10
+    delta = 5
     per2cont = 90
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
-    lar_con = 1500  # int(gen_num/0.08)
+    lar_con = 1500
     args = sys.argv
     if len(args) > 1:
         start_gen = int(args[1])
@@ -1100,305 +1101,10 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
 
-# todo - to start in specific generation
+# done - to start in specific generation
+# done - save which configurations selected every gen
+# todo - add mutation second nbs
+# todo - simulator error - results
+# todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)
-
-
-
-
-# def set_pop_size(num_concept_confs, min_configs=None):
-#     """decide the population size: going to be the bigger between min_configs[1] % of concepts number or min_configs[0]
-#      :param num_concept_confs: [int] number of configurations in this concept
-#      :param min_configs: [2 elements list] the limits: min_configs[0] is the minimum number of the population
-#                         min_configs[1] is the percent of number of configurations in the concept
-#     :return pop_size: [int] size of the pipulation
-#      """
-#     if min_configs is None:
-#         min_configs = [1, 0]
-#     if num_concept_confs * min_configs[1] / 100 > min_configs[0]:
-#         pop_size = num_concept_confs * min_configs[1] / 100
-#     else:
-#         pop_size = min_configs[0]
-#     return pop_size
-
-
-# def init_concepts(larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
-#     """ Initilize all the concept and the first populations
-#     :param larg_concept: [int] minimum number of configurations in concept in order to concept will be large
-#     :param arm_limit: [2 elements list] the limits: arm_limit[0] is the minimum number of the population
-#             arm_limit[1] is the percent of number of configurations in the concept
-#     :param number_of_parents: [int] how much from the populatoin will be parents
-#     :param delta_allocation: how many generation between resource allocation
-#     :return prob - [list of objects] all the data of each concept
-#     """
-#     if arm_limit is None:
-#         arm_limit = [1, 0]
-#     # load all the concepts
-#     concepts_with_conf, confs_results = get_prev_data()
-#     prob = []
-#     # population = []
-#     for i in range(len(concepts_with_conf)):
-#         # Initiliaze each concept
-#         name_of_concept = list(concepts_with_conf)[i]
-#         number_of_arms = set_pop_size(len(concepts_with_conf[name_of_concept]), arm_limit)
-#         prob.append(Problem(concept_name=name_of_concept, confs_of_concepts=concepts_with_conf[name_of_concept],
-#                             confs_results=confs_results[name_of_concept], parents_number=number_of_parents,
-#                             pop_size=number_of_arms, larg_concept=larg_concept, delta_allocation=delta_allocation))
-#         # initiliaze population
-#         prob[i].set_population(prob[i].rand_pop())
-#         # population.append(prob[i].rand_pop())
-#     return prob  # , population
-
-
-# def get_prev_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
-#     """ get all the previous data and the concepts to enter into the ga and return only the relevant data
-#     :param all_concepts_json - [str] json file with all the simulated data
-#     :param ga_json - [str] all the concepts to check in the GA
-#     :return ga_data- dictoinary with all the configurations and there results per concept
-#     """
-#     all_concepts = load_json(all_concepts_json)
-#     ga_concepts = load_json(ga_json)
-#     ga_data = {}
-#     for k in ga_concepts:
-#         if k in all_concepts:
-#             ga_data[k] = all_concepts[k]
-#     return ga_concepts, ga_data
-
-
-# def csvs2data():
-#     """ Take all the created CSVs and insert them into one variable
-#      :return data -[list of dicts] the results of all the simulated configuration in this run
-#      """
-#     data = []
-#     for file_csv in os.listdir(os.getcwd()):
-#         if file_csv.endswith(".csv"):
-#             data.append(MyCsv.load_csv(file_csv[:-4]))
-#     data = [val for sublist in data for val in sublist]
-#     return data
-
-
-# def set_new_data(all_concepts_json="jsons/concepts+configs+results", ga_json="jsons/concepts2ga"):
-#     """ get all the previous data and the concepts to enter into the ga and return only the relevant data
-#     :param all_concepts_json - [str] json file with all the simulated data
-#     :param ga_json - [str] all the concepts to check in the GA
-#     """
-#     data = csvs2data()
-#     jsons_folder = os.environ['HOME'] + "/Tamir/Master/Code/"
-#     all_concepts_json = jsons_folder + all_concepts_json
-#     ga_json = jsons_folder + ga_json
-#     all_concepts = load_json(all_concepts_json)
-#     ga_concepts = load_json(ga_json)
-#     for dat in data:
-#         second_loop_stop = False
-#         for con in ga_concepts:
-#             k = 0
-#             for concept in all_concepts[con]:
-#                 if dat["name"] in concept:
-#                     second_loop_stop = True
-#                     if all_concepts[con][k][dat["name"]]["mu"] is not None:
-#                         print("Check it!!!")
-#                     all_concepts[con][k] = {unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"], "dof": dat["dof"],
-#                                                                    "name": unicode(dat["name"])}}
-#                     break
-#                 k += 1
-#             if second_loop_stop:
-#                 break
-#     save_json(all_concepts_json + "new", all_concepts, "w+")
-#     # pickle_save_data(all_concepts, all_concepts_json + "new")
-
-
-# def move_folder(src_folder_name="urdf/6dof/", dst_folder_name=""):
-#     if not dst_folder_name:
-#         dst_folder_name = os.environ['HOME'] + \
-#                           "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/6dof/combined/"
-#     if os.path.exists(dst_folder_name):
-#         shutil.rmtree(dst_folder_name)
-#     shutil.move(src_folder_name, dst_folder_name)
-
-
-# def check_exist(problem):
-#     """ return which urdfs to create for simulation
-#     :param problem: [object] of specific concept
-#     :return to_sim: [list] names of urdfs to create
-#     """
-#     pop = problem.get_population()
-#     to_sim = []
-#     for r in pop:
-#         res = problem.get_result(r)
-#         # check if the configuration allready simulated
-#         if len(res) == 0:
-#             to_sim.append(r)
-#         elif res["z"] is None:
-#             to_sim.append(r)
-#     return to_sim
-
-
-# def new_data(prob):
-#     """ update each concept results agter the simulation
-#     :param prob - [list of objects] the data of all the objects
-#     :return prob - [list of objects] updated data of all the objects
-#     """
-#     data = MyCsv.load_csv("results_file" + datetime.now().strftime("%d_%m_") + "6dof_4d_")
-#     for dat in data:
-#         k = 0
-#         outer_loop_stop = False
-#         for con in prob:
-#             j = 0
-#             for c in con.confs_results:
-#                 if dat["name"] == c.keys()[0]:
-#                     outer_loop_stop = True
-#                     prob[k].confs_results[j][prob[k].confs_results[j].keys()[0]] = {"mu": dat["mu"],
-#                                                                                     "z": dat["Z"], "dof": dat["dof"],
-#                                                                                     "name": unicode(dat["name"])}
-#                     break
-#                 j += 1
-#             k += 1
-#             if outer_loop_stop:
-#                 break
-#     return prob
-
-
-# def sim(prob):
-#     # print("start creating urdfs")
-#     # configurations to create urdf
-#     to_sim = []
-#     con = Concepts()
-#     k = 0
-#     for r in prob:
-#         to_sim.append(check_exist(r))
-#         k += 1
-#         if k == 10:
-#             break
-#     # create urdf files
-#     con.create_files2sim(filter(None, to_sim))
-#     # move the files into the desired place
-#     # move_folder()
-#     # print("start simulating")
-#     # simulate()
-#     # prob = new_data(prob)
-#     return prob
-
-
-# def run(prob):
-#     global woi
-#     # check if the local stop condition applied
-#     if prob.stopped:
-#         return prob
-#     elif prob.paused or prob.in_dwoi:
-#         prob.add_dis(1.5)
-#         return prob
-#     population = prob.get_population()
-#     # insert previous configurations into archive
-#     prob.set_prev_confs(population)
-#     # Evaluation
-#     confs_results = prob.evalute(np.asarray(population))
-#     # Update DWOI if necessary
-#     front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
-#     if front != woi.get_last_dwoi():
-#         woi.set_dwoi(front)
-#     # Stop Condition
-#     prob.local_stop_condition()
-#     # elitism \ Non dominated soloution
-#     confs_results_elite = prob.one_pop_elitism(confs_results)
-#     # Check if large concept
-#     if prob.large_concept:  # if large concept
-#         # # elitism
-#         # confs_results_elite = prob.elitism(confs_results)
-#         # ####confs_results_elite = prob.archive_elitism(confs_results)
-#         # Assign fitness
-#         fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
-#         # Selection (RWS)
-#         selection = prob.selection(fitness, prob.parents_number)
-#         selected_confs_ind = prob.confs_by_indices(selection, fitness)
-#         selected_confs = prob.get_conifgs_by_indices(selected_confs_ind)
-#         # Mating
-#         population = prob.mating(selected_confs)
-#     else:  # if small concept
-#         # Random Selection
-#         population = prob.rand_pop()
-#     prob.set_population(population)
-#     prob.calc_dis()
-#     return prob
-
-
-# def run_folder():
-#     params = "Number of gens: " + str(num_gens) + "\nparents_number: " + str(parents_number) + \
-#              "\nLarge concept: " + str(large_concept) + "\nRun Time (days): " + str(run_tim) + \
-#              "\nAllocation Delta: " + str(allocation_delta) + "\nPopulation: " + str(arms_limit[0]) + \
-#              "\nGreedy Allocation: " + str(greedy_allocation) + "\nPercent to continue: " + str(percent2continue) + \
-#              "\nLow Cr treshhold: " + str(low_cr_treshhold) + "\nHigh Cr treshhold: " + str(high_cr_treshhold)
-#     # enter all the results to one folder
-#     results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
-#     while os.path.isdir(results_folder):
-#         results_folder = results_folder[:-1] + str(int(results_folder[-1]) + 1)
-#     os.mkdir(results_folder)
-#     os.mkdir(results_folder + "/urdf")
-#     print(results_folder + " folder created \nStart Optimization")
-#     with open(results_folder + "/parameters.txt", "w+") as f:
-#         f.write(params)
-#         f.close()
-#     # change the working dir
-#     os.chdir(results_folder)
-#
-#
-# def to_urdf(interface_joints, joint_parent_axis, links, folder):
-#     """Create the desired confiuration
-#     :param interface_joints- [list] roll,pitch or prismatic (roll -revolute around own Z axis,
-#                                     pitch - revolute that not roll,  pris - prismatic along z)
-#     :param links -[list] length of links
-#     :param joint_parent_axis - [list] the axe, in the parent frame, which each joint use
-#     :param folder - [str] where the urdf saved - not in use
-#     :return -[dict] -contain the configuration name and all the data to the urdf file
-#         """
-#     joints = []
-#     joint_axis = []
-#     rpy = []
-#     # file_name = os.environ['HOME'] + "\Tamir_Ws\src\manipulator_ros\Manipulator\man_gazebo\urdf\"
-#     # + str(dof) + "dof\combined\"
-#     file_name = ""
-#     rolly_number = -1
-#     pitchz_number = 1
-#     prisy_number = -1
-#     for i in range(len(joint_parent_axis)):
-#         # file_name += interface_joints[i].replace(" ", "") + "_" + joint_parent_axis[i].replace(" ", "") + "_" + \
-#         #              links[i].replace(".", "_")
-#         file_name += interface_joints[i] + "_" + joint_parent_axis[i] + "_" + str(links[i]).replace(".", "_")
-#         if interface_joints[i] == "roll":
-#             joints.append("revolute")
-#             joint_axis.append('z')
-#             if joint_parent_axis[i] == "y":
-#                 rolly_rot = '${' + str(rolly_number) + '/2*pi} '
-#                 rpy.append([rolly_rot, '0 ', '0 '])
-#                 rolly_number = rolly_number * -1
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '${pi/2} ', '0 '])
-#             elif joint_parent_axis[i] == "z":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#         elif interface_joints[i] == "pitch":
-#             joints.append("revolute")
-#             joint_axis.append('y')
-#             if joint_parent_axis[i] == "y":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '0 ', '${-pi/2} '])
-#             elif joint_parent_axis[i] == "z":
-#                 # rpy.append(['${pi/2} ', '0 ', '0 '])
-#                 pitchz = '${' + str(pitchz_number) + '/2*pi} '
-#                 rpy.append([pitchz, '0 ', '0 '])
-#                 pitchz_number = pitchz_number * -1
-#         elif interface_joints[i] == "pris":
-#             joints.append("prismatic")
-#             joint_axis.append('z')
-#             if joint_parent_axis[i] == "y":
-#                 # rpy.append(['${pi/2} ', '0 ', '0 '])
-#                 prisy = '${' + str(prisy_number) + '/2*pi} '
-#                 rpy.append([prisy, '0 ', '0 '])
-#                 prisy_number = prisy_number * -1
-#             elif joint_parent_axis[i] == "x":
-#                 rpy.append(['0 ', '${-pi/2} ', '0 '])
-#             elif joint_parent_axis[i] == "z":
-#                 rpy.append(['0 ', '0 ', '0 '])
-#     arm = UrdfClass(links, joints, joint_axis, rpy)
-#     # arm.urdf_write(arm.urdf_data(), file_name)
-#     return {"arm": arm, "name": file_name, "folder": folder}

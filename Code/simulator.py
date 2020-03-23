@@ -9,6 +9,7 @@ from rosnode import get_node_names
 import getpass
 import sys
 import json
+import rospy
 
 
 class Simulator(object):
@@ -299,8 +300,8 @@ def simulate(start_arm=0, from_opt=True):
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2.0
+        wait1_replace = 3
+        wait2_replace = 3
         wait0_replace = 0.01
     elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
@@ -378,8 +379,9 @@ def simulate(start_arm=0, from_opt=True):
 
 
 if __name__ == '__main__':
+    # rs = start_ros()
     simulate(from_opt=False)
-
+    # stop_ros(rs)
 # Todo - get errors from terminal
 # done - run with 1 configuration
 # tod?O - failed with error PATH_TOLERANCE_VIOLATED:?

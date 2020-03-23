@@ -1095,7 +1095,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi"):
         conc = np.asarray(cr[c])
         x = np.argwhere(conc != 0)
         conc = conc[conc != 0]
-        plt.plot(x, conc, label=c)
+        plt.plot(x, conc, label=c, color="k", marker="+")
     plt.show()
 
 
@@ -1161,8 +1161,8 @@ if __name__ == '__main__':
     pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
-    woi_plot = False
-    cr_plot = True
+    woi_plot = True
+    cr_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1217,9 +1217,8 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "17_03"
+        opt_folder = "23_03-4"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "20_03-2"
-        plot_cr("opt_results/" + cr_folder + "/woi")
-
+        cr_folder = "23_03-4"
+        plot_cr("opt_results/" + cr_folder + "/woi_last")
