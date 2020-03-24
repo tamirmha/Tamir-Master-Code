@@ -24,7 +24,7 @@ from Other import load_json, save_json, pickle_load_data, pickle_save_data, Conc
 from scipy.spatial import distance
 import numpy as np
 import copy
-from datetime import datetime
+from datetime import datetime, timedelta
 from tqdm import tqdm
 from time import time, sleep
 import os
@@ -39,8 +39,8 @@ import getpass
 
 
 # np.random.seed(100100)
-np.random.seed(1010101)
-# np.random.seed(111111)
+# np.random.seed(1010101)
+np.random.seed(111111)
 # np.random.seed(0)
 
 
@@ -321,7 +321,10 @@ class Optimization:
         :param prob - [list of objects] the data of all the objects
         :return prob - [list of objects] updated data of all the objects
         """
-        data = MyCsv.load_csv("results_file" + datetime.now().strftime("%d_%m_") + "6dof_4d_")
+        pth = "results_file" + datetime.now().strftime("%d_%m_") + "6dof_4d_"
+        if not os.path.exists(pth):
+            pth = "results_file" + datetime.strftime(datetime.now() - timedelta(1), "%d_%m_") + "6dof_4d_"
+        data = MyCsv.load_csv(pth)
         for dat in data:
             k = 0
             outer_loop_stop = False
