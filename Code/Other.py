@@ -1159,9 +1159,9 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = False
-    create_configs = False
-    woi_plot = True
+    check_num_confs_in_concepts = True
+    create_configs = True
+    woi_plot = False
     cr_plot = False
     if calc_concepts:
         con = Concepts()
@@ -1217,8 +1217,8 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "23_03-4"
+        opt_folder = "24_03-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "23_03-4"
+        cr_folder = "24_03-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")

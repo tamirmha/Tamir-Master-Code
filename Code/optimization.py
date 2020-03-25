@@ -30,17 +30,18 @@ from time import time, sleep
 import os
 import shutil
 import sys
-from ros import Ros
+import getpass
 from multiprocessing import Process
 from simulator import simulate
-import shlex
-import subprocess
-import getpass
+# from ros_error_check import listener
+# import shlex
+# import subprocess
+# from ros import Ros
 
 
-# np.random.seed(100100)
+np.random.seed(100100)
 # np.random.seed(1010101)
-np.random.seed(111111)
+# np.random.seed(111111)
 # np.random.seed(0)
 
 
@@ -164,8 +165,8 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs
-        # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
+        # probs = self.probs
+        probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -279,8 +280,9 @@ class Optimization:
 
     @staticmethod
     def simulating():
-        p = Process(target=simulate)  # args=(self.gen_start, True)
+        p = Process(target=simulate)
         p.start()
+        # listener()
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
@@ -322,7 +324,7 @@ class Optimization:
         :return prob - [list of objects] updated data of all the objects
         """
         pth = "results_file" + datetime.now().strftime("%d_%m_") + "6dof_4d_"
-        if not os.path.exists(pth):
+        if not os.path.isfile(pth+".csv"):
             pth = "results_file" + datetime.strftime(datetime.now() - timedelta(1), "%d_%m_") + "6dof_4d_"
         data = MyCsv.load_csv(pth)
         for dat in data:
@@ -457,6 +459,11 @@ class Problem:
         for r in pop:
             pops.append(r)
             res = self.get_result(r)
+            if not res:  # If error occured and the simulation stopped
+                break
+            if res["z"] == "70":
+                res["z"] = 2
+                res["mu"] = -1
             if with_sim:
                 try:
                     if res["z"] is not None:
@@ -467,7 +474,7 @@ class Problem:
                         else:
                             f1.append(2.0)
                     else:
-                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + str(r))
+                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + str(r))
                 except:
                     print(res)
             else:
@@ -1064,8 +1071,8 @@ if __name__ == '__main__':
     sim_new_win = False
     if username == "tamir":  # tamir laptop
         sim_new_win = True
-    gen_num = 2000
-    time_run = 0.5  # /1000.
+    gen_num = 1000
+    time_run = 0.15  # /1000.
     start_gen = 1
     greedy = True
     delta = 5
@@ -1107,7 +1114,7 @@ if __name__ == '__main__':
 # done - to start in specific generation
 # done - save which configurations selected every gen
 # todo - add mutation second nbs
-# todo - simulator error - results
+# done - simulator error - results
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)
