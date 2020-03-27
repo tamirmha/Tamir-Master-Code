@@ -1222,3 +1222,6 @@ if __name__ == '__main__':
     if cr_plot:
         cr_folder = "24_03-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
+
+
+# todo sum_data parallel

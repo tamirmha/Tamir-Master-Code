@@ -39,10 +39,10 @@ from simulator import simulate
 # from ros import Ros
 
 
-np.random.seed(100100)
-# np.random.seed(1010101)
-# np.random.seed(111111)
-# np.random.seed(0)
+# np.random.seed(100100)
+# # np.random.seed(1010101)
+# # np.random.seed(111111)
+# # np.random.seed(0)
 
 
 class Optimization:
@@ -273,7 +273,7 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                # cmd = 'gnome-terminal -- python simulator.py 6 '  # todo - add configuration number?
+                # cmd = 'gnome-terminal -- python simulator.py 6 '
                 self.simulating()
                 prob = self.new_data(prob)
         return prob
@@ -286,7 +286,7 @@ class Optimization:
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
-        # sleep(5)
+        p.terminate()
 
     @staticmethod
     def check_exist(problem):
@@ -1068,7 +1068,6 @@ class ResourceAllocation:
 
 if __name__ == '__main__':
     username = getpass.getuser()
-
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)
     elif username == "tamirm":
@@ -1078,7 +1077,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 1000
-    time_run = 0.1  # /1000.
+    time_run = 1  # /1000.
     start_gen = 1
     greedy = False
     delta = 5
@@ -1124,3 +1123,5 @@ if __name__ == '__main__':
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
 # to?do - local stop condition - spreading (maybe cv = covariance/mean)
+# cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
+# subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)
