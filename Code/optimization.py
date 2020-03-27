@@ -662,7 +662,7 @@ class Problem:
             child = self.to_urdf(child[0], child[1], child[2], "")
         return child["name"]
 
-    def mutation_rand(self, parent, nb_prox=1):
+    def mutation_rand(self, parent, nb_prox=2):
         """ switch randomlly 2 links and joints
         :param parent: [np array] - names of parents
         :param nb_prox:  [int] - proximity of the neighboors: 1-first neigboor, 2-second neighboor
@@ -1068,13 +1068,19 @@ class ResourceAllocation:
 
 if __name__ == '__main__':
     username = getpass.getuser()
-    sim_new_win = False
+
     if username == "tamir":  # tamir laptop
-        sim_new_win = True
+        np.random.seed(100100)
+    elif username == "tamirm":
+        np.random.seed(1010101)
+    elif username == "inbarb":
+        np.random.seed(111111)
+    elif username == "shayo":
+        np.random.seed(0)
     gen_num = 1000
-    time_run = 0.15  # /1000.
+    time_run = 0.1  # /1000.
     start_gen = 1
-    greedy = True
+    greedy = False
     delta = 5
     per2cont = 90
     low_cr = 0.001
