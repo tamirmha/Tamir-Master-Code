@@ -1077,7 +1077,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 1000
-    time_run = 1  # /1000.
+    time_run = 0.1  # /1000.
     start_gen = 1
     greedy = False
     delta = 5
