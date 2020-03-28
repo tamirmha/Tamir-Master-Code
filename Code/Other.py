@@ -1158,9 +1158,9 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
-    check_num_confs_in_concepts = True
-    create_configs = True
+    pareto_plot = True
+    check_num_confs_in_concepts = False
+    create_configs = False
     woi_plot = False
     cr_plot = False
     if calc_concepts:
@@ -1222,3 +1222,5 @@ if __name__ == '__main__':
     if cr_plot:
         cr_folder = "24_03-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
+
+# todo sum_data parallel

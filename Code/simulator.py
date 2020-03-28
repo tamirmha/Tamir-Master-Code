@@ -41,6 +41,7 @@ class Simulator(object):
                         + str(len(self.poses)) + "d_"
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
+        sleep(0.1)
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
