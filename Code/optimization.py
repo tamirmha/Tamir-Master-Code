@@ -166,7 +166,13 @@ class Optimization:
     def run(self):
         woi = self.woi
         # probs = self.probs
-        probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
+        probs = []
+        for p in self.probs:
+            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+                probs.append(p)
+        # 6	2	0.7	0	4	0	 2.6}
+        # 6	2	0.7	0	3	0	 2.6}
+        # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -1077,7 +1083,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 1000
-    time_run = 0.1  # /1000.
+    time_run = 1  # /1000.
     start_gen = 1
     greedy = False
     delta = 5

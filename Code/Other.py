@@ -1093,9 +1093,10 @@ def plot_cr(woi_loc="opt_results/18_03/woi"):
     cr = woi["cr"]
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc != 0)
-        conc = conc[conc != 0]
-        plt.plot(x, conc, label=c, color="k", marker="+")
+        x = np.argwhere(conc >= 0)
+        # conc = conc[conc != 0]
+        plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
+    plt.legend()
     plt.show()
 
 
@@ -1158,11 +1159,11 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = False
+    cr_plot = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1220,7 +1221,7 @@ if __name__ == '__main__':
         opt_folder = "24_03-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "24_03-0"
+        cr_folder = "29_03-4"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
 
 # todo sum_data parallel
