@@ -762,7 +762,7 @@ def assign_results(res_name="results_all"):
 
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
-    concepts = load_json("jsons/concepts")
+    concepts = load_json("archive/concepts")
     dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
     res_data = []  # [[] for i in conf_name]
     for k in range(len(conf_name)):
@@ -1159,11 +1159,11 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = False
+    pareto_plot = True
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = True
+    cr_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1218,10 +1218,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "24_03-0"
+        opt_folder = "29_03"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "29_03-4"
+        cr_folder = "29_03"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
 
 # todo sum_data parallel
