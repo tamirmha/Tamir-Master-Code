@@ -383,7 +383,7 @@ if __name__ == '__main__':
     # rs = start_ros()
     simulate(from_opt=False)
     # stop_ros(rs)
-# Todo - get errors from terminal
+# done - get errors from terminal
 # done - run with 1 configuration
 # tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
 # tod?o change link0 to the platform - github

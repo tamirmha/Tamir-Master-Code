@@ -33,7 +33,7 @@ import sys
 import getpass
 from multiprocessing import Process
 from simulator import simulate
-# from ros_error_check import listener
+from ros_error_check import listener
 # import shlex
 # import subprocess
 # from ros import Ros
@@ -287,12 +287,16 @@ class Optimization:
 
     @staticmethod
     def simulating():
+
         p = Process(target=simulate)
         p.start()
         # listener()
+        p2 = Process(target=listener)
+        p2.start()
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
+        p2.terminate()
         p.terminate()
 
     @staticmethod
@@ -397,8 +401,8 @@ class Optimization:
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1,
-                 number_of_objects=3, larg_concept=200, delta_allocation=10):
+    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=1, parents_number=1,
+                 number_of_objects=3, larg_concept=1500, delta_allocation=10):
         self.pop_size = pop_size  # size of population
         self.confs_of_concepts = confs_of_concepts  # all possible configs names of the concept
         self.confs_results = confs_results  # all the configurations of the concept and their indices
@@ -587,6 +591,7 @@ class Problem:
         :param mutation_percent - [int] how much mutation wanted
         :return offspring - [list] names of the offsprings
          """
+        cr = self.get_cr()
         offspring_size = self.pop_size
         num_mutations = int(offspring_size * mutation_percent / 100.)
         num_crossover = offspring_size - num_mutations
@@ -619,7 +624,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    mut_spring = self.mutation_rand(parent_1)
+                    nb = 1
+                    if cr == 0 or len(self.get_population()) > 100:  # if the Cr=zero or more than 100 gens- mutate more
+                        nb = 2
+                    mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -669,7 +677,7 @@ class Problem:
             child = self.to_urdf(child[0], child[1], child[2], "")
         return child["name"]
 
-    def mutation_rand(self, parent, nb_prox=2):
+    def mutation_rand(self, parent, nb_prox=1):
         """ switch randomlly 2 links and joints
         :param parent: [np array] - names of parents
         :param nb_prox:  [int] - proximity of the neighboors: 1-first neigboor, 2-second neighboor
@@ -750,9 +758,11 @@ class Problem:
                 print("ind=" + str(ind) + "  fit=" + str(fit) + "\nx=" + str(x) + "\nselect=" + str(select))
         return indices
 
-    def get_conifgs_by_indices(self, conf_indices, get_configs):
+    @staticmethod
+    def get_conifgs_by_indices(conf_indices, get_configs):
         """get configuration by indices
         :param conf_indices - [list] indices of the configurations
+        :param get_configs - [list] the configs that we want their indices
         :return - [list] - names of the configurations in the selected indices
         """
         get_configs = np.asarray(get_configs)
@@ -1083,11 +1093,11 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 1000
-    time_run = 1  # /1000.
+    gen_num = 1240
+    time_run = 0.1  # 7
     start_gen = 1
     greedy = False
-    delta = 5
+    delta = 10
     per2cont = 90
     low_cr = 0.001
     high_cr = 0.003
@@ -1123,12 +1133,11 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
 
-# done - to start in specific generation
-# done - save which configurations selected every gen
-# todo - add mutation second nbs
+
+# done - add mutation second nbs
 # done - simulator error - results
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
-# to?do - local stop condition - spreading (maybe cv = covariance/mean)
+
 # cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
 # subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)

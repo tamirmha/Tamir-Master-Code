@@ -1159,11 +1159,11 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = False
+    cr_plot = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1221,7 +1221,7 @@ if __name__ == '__main__':
         opt_folder = "29_03"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "29_03"
+        cr_folder = "30_03-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
 
 # todo sum_data parallel
