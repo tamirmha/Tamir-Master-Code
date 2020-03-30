@@ -13,6 +13,7 @@ from matplotlib.tri import Triangulation
 from tqdm import tqdm
 import pickle
 from scipy.spatial import distance
+from time import time, sleep
 # from multiprocessing import Pool
 # import copy
 
@@ -558,6 +559,18 @@ class Concepts:
 
     def get_concepts_with_configuration(self):
         return self.concepts_with_configuration
+
+
+def clock(total):
+
+    ended = False
+    start_time = time()
+    while not ended:
+        sleep(60)
+        now_time = time() - start_time
+        print("\033[34m" + "\033[47m" + "Elpased  {:.0f} seconds from {} seconds".format(now_time, total) + "\033[0m")
+        if now_time >= total:
+            ended = True
 
 
 def split_files_to_several_folders(files_in_folder=5000):

@@ -19,8 +19,8 @@ Constrains:
 # from typing import Iterable
 
 # from simulator import simulate
-from ros import UrdfClass
-from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv, get_key
+from ros import UrdfClass, listener
+from Other import load_json, save_json, clock , Concepts, MyCsv, get_key
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -33,7 +33,7 @@ import sys
 import getpass
 from multiprocessing import Process
 from simulator import simulate
-from ros_error_check import listener
+# from ros_error_check import listener
 # import shlex
 # import subprocess
 # from ros import Ros
@@ -170,15 +170,13 @@ class Optimization:
         for p in self.probs:
             if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
                 probs.append(p)
-        # 6	2	0.7	0	4	0	 2.6}
-        # 6	2	0.7	0	3	0	 2.6}
         # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
             # Save the current WOI
             save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-            print("Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
+            print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
             # simulate the population
             probs = self.sim(prob=probs)
             to_pop = []
@@ -1084,6 +1082,7 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
+
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)
@@ -1104,6 +1103,8 @@ if __name__ == '__main__':
     par_num = 1
     lar_con = 1500
     args = sys.argv
+    c = Process(target=clock, args=(time_run*3600*24,))
+    c.start()
     if len(args) > 1:
         start_gen = int(args[1])
         if len(args) > 2:
@@ -1132,6 +1133,7 @@ if __name__ == '__main__':
     finally:
         opt.finish()
         print(time()-tic)
+        c.terminate()
 
 
 # done - add mutation second nbs
