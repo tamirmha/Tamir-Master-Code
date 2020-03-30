@@ -672,25 +672,6 @@ class HandleCSV(object):
         return manip_array_of_dict
 
 
-def callback(data):
-    if "Ignoring transform for child_frame_id" in data.msg:
-        # Get the problematic configuration name
-        param = rospy.get_param("/robot_description")
-        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
-        save_json("no_good_confs", conf_name)
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
-        with open("finish.txt", "w+") as f:
-            f.write("finish")
-            f.close()
-
-
-def listener():
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("rosout", Log, callback)
-    rospy.spin()
-
-
 def main_move_group():
     rospy.init_node('move_group_interface1', anonymous=True)
     Ros()

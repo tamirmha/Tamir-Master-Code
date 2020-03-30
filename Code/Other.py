@@ -1,3 +1,4 @@
+import os
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
@@ -15,7 +16,8 @@ import pickle
 from scipy.spatial import distance
 from time import time, sleep
 # from multiprocessing import Pool
-# import copy
+import rospy
+from rosgraph_msgs.msg import Log
 
 
 def get_key(val, my_dict):
@@ -571,6 +573,25 @@ def clock(total):
         print("\033[34m" + "\033[47m" + "Elpased  {:.0f} seconds from {} seconds".format(now_time, total) + "\033[0m")
         if now_time >= total:
             ended = True
+
+
+def callback(data):
+    if "Ignoring transform for child_frame_id" in data.msg:
+        # Get the problematic configuration name
+        param = rospy.get_param("/robot_description")
+        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+        save_json("no_good_confs", conf_name)
+        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        os.system(cmd)
+        with open("finish.txt", "w+") as f:
+            f.write("finish")
+            f.close()
+
+
+def listener():
+    rospy.init_node('listener', anonymous=True)
+    rospy.Subscriber("rosout", Log, callback)
+    rospy.spin()
 
 
 def split_files_to_several_folders(files_in_folder=5000):
