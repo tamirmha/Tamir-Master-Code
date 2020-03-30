@@ -258,8 +258,9 @@ class Optimization:
 
     def finish(self):
         print("Saving data...")
-        # save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
-        save_json("woi_last", self.woi.__dict__)
+        save_json("woi_last", self.woi.__dict__, "w+")
+        if os.path.isfile("problems.json"):
+            os.remove("problems.json")
         for p in self.probs:
             save_json("problems", [p.__dict__])
         self.set_new_data()
