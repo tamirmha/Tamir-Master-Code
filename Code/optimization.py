@@ -191,7 +191,7 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     # print("Calculating Convergence rate")
-                    if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
+                    if probs[t].in_dwoi or probs[t].paused:
                         continue
                     if probs[t].stopped:
                         to_pop.append(t)
@@ -1068,7 +1068,7 @@ class ResourceAllocation:
         cr_sorted, cr_sorted_ind = self.sort_cr(crs)
         decision = self.set_decision(self.set_group(cr_sorted))
         decisions = self.assign2concepts(decision, cr_sorted_ind)
-        for i in tqdm(range(len(prob))):  # len(prob) todo change
+        for i in tqdm(range(len(prob))):
             if i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -1093,7 +1093,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 1240
-    time_run = 0.1  # 7
+    time_run = 1  # 7
     start_gen = 1
     greedy = False
     delta = 10

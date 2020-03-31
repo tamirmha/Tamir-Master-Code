@@ -615,7 +615,6 @@ def sum_data():
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = -70
-    # time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
@@ -647,10 +646,6 @@ def sum_data():
                         if dis_dat > dis_v:
                             dat_index["Z"] = v["Z"]
                             dat_index["mu"] = v["mu"]
-                        # if dat_index["Z"] > v["Z"]:
-                        #     dat_index["Z"] = v["Z"]
-                        # if dat_index["mu"] < v["mu"]:
-                        #     dat_index["mu"] = v["mu"]
                         in_data = True
                         break
             elif not in_data:
@@ -1194,10 +1189,10 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = False
+    check_num_confs_in_concepts = True
     create_configs = False
     woi_plot = False
-    cr_plot = True
+    cr_plot = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1229,7 +1224,7 @@ if __name__ == '__main__':
     if check_num_confs_in_concepts:
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         save_json("jsons/other/results_all", all_data, "w+")
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         # create one file of configurations with there results via concepts
         combine_data = combine_res(all_data, all_concepts)
         save_json("jsons/concepts+configs+results", combine_data, "w+")
@@ -1255,7 +1250,5 @@ if __name__ == '__main__':
         opt_folder = "29_03"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "30_03-0"
+        cr_folder = "tamir/30_03"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
-
-# todo sum_data parallel
