@@ -176,7 +176,8 @@ class Optimization:
         for n in range(self.gen_start-1, self.num_gens):
             # Save the current WOI
             save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-            print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
+            print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations"
+                  + "\033[0m")
             # simulate the population
             probs = self.sim(prob=probs)
             to_pop = []
@@ -1082,7 +1083,6 @@ class ResourceAllocation:
 
 
 if __name__ == '__main__':
-
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)

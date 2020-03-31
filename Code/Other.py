@@ -60,9 +60,9 @@ class MyCsv(object):
             return result
 
     @staticmethod
-    def save_csv(data, file_name, csv_type="list"):
+    def save_csv(data, file_name, csv_type="list", save_mode='ab'):
         """Save to csv format"""
-        with open(file_name + ".csv", 'ab') as name:
+        with open(file_name + ".csv", save_mode) as name:
             if csv_type == "list":
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
@@ -579,8 +579,8 @@ def callback(data):
     if "Ignoring transform for child_frame_id" in data.msg:
         # Get the problematic configuration name
         param = rospy.get_param("/robot_description")
-        conf_name = param[param.index("combined/") + 9:param.index(".urdf") + "\n"]
-        save_json("no_good_confs", conf_name)
+        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+        save_json("no_good_confs", conf_name + "\n")
         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
         os.system(cmd)
         sleep(2)
@@ -1027,7 +1027,7 @@ def left_confs_concepts():
     c = [[]] * len(b)
     for i in range(len(b)):
         c[i] = [b[i], a[b[i]][0], a[b[i]][1], a[b[i]][2]]
-    MyCsv.save_csv(c, "left_concepts")
+    MyCsv.save_csv(c, "left_concepts", save_mode="w+")
 
 
 def combine_res(all_data, all_concepts):
@@ -1192,9 +1192,9 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = True
+    check_num_confs_in_concepts = False
     create_configs = False
-    woi_plot = False
+    woi_plot = True
     cr_plot = False
     if calc_concepts:
         con = Concepts()
@@ -1250,8 +1250,8 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "laptop/30_03-2"
+        opt_folder = "laptop/31_03-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "laptop/30_03-2"
+        cr_folder = "laptop/31_03-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
