@@ -583,6 +583,9 @@ def callback(data):
         save_json("no_good_confs", conf_name)
         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
         os.system(cmd)
+        sleep(2)
+        os.system(cmd)
+        sleep(2)
         with open("finish.txt", "w+") as f:
             f.write("finish")
             f.close()
@@ -1189,10 +1192,10 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = True
+    check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = False
+    cr_plot = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1247,8 +1250,8 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "29_03"
+        opt_folder = "laptop/30_03-2"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "tamir/30_03"
+        cr_folder = "laptop/30_03-2"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
