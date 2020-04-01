@@ -1125,9 +1125,11 @@ def plot_cr(woi_loc="opt_results/18_03/woi"):
     cr = woi["cr"]
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc >= 0)
+        x = np.argwhere(conc >= 0)*10
         # conc = conc[conc != 0]
         plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
+        plt.xlabel("Generations")
+        plt.ylabel("Concept Convergence Rate")
     plt.legend()
     plt.show()
 
@@ -1192,9 +1194,9 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = False
+    check_num_confs_in_concepts = True
     create_configs = False
-    woi_plot = True
+    woi_plot = False
     cr_plot = False
     if calc_concepts:
         con = Concepts()
@@ -1253,5 +1255,5 @@ if __name__ == '__main__':
         opt_folder = "laptop/31_03-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "laptop/31_03-0"
+        cr_folder = "31_03-3"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
