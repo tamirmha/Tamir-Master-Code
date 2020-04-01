@@ -165,11 +165,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs
-        probs = []
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
@@ -1092,8 +1092,8 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 1240
-    time_run = 0.2  # 7
+    gen_num = 1500
+    time_run = 0.5  # 7
     start_gen = 1
     greedy = False
     delta = 10
@@ -1134,20 +1134,17 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
         c.terminate()
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
-        sleep(2)
-        cmd = "killall -9 python2"
-        os.system(cmd)
-        sleep(2)
-        cmd = "killall -9 python"
-        os.system(cmd)
+        # cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        # os.system(cmd)
+        # sleep(2)
+        # cmd = "killall -9 python2"
+        # os.system(cmd)
+        # sleep(2)
+        # cmd = "killall -9 python"
+        # os.system(cmd)
 
 
 # done - add mutation second nbs
 # done - simulator error - results
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
-
-# cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
-# subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)

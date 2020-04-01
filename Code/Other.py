@@ -1174,6 +1174,14 @@ def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
     axrow[1].set_ylabel("Manipulability Index")
 
 
+def problematic_confs():
+    with open("sim_results/problematic confs/no_good_confs.txt", "r") as read_file:
+        no_good = read_file.read().split("\n")
+    con = Concepts()
+    for ng in no_good:
+        con.create_files2sim([[ng.replace("\"", "")]])
+
+
 # def check_dupications_configs_in_concepts(all_concepts=None):
 #     """Check if there are duplicate configurations in the concepts """
 #     if all_concepts is None:
@@ -1202,6 +1210,7 @@ if __name__ == '__main__':
     create_configs = False
     woi_plot = False
     cr_plot = False
+    check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1261,3 +1270,5 @@ if __name__ == '__main__':
     if cr_plot:
         cr_folder = "31_03-3"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
+    if check_problematic_confs:
+        problematic_confs()
