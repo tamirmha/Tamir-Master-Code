@@ -264,12 +264,6 @@ class Optimization:
             save_json("problems", [p.__dict__])
         self.set_new_data()
         print("Finished")
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
-        cmd = "killall -9 python2"
-        os.system(cmd)
-        cmd = "killall -9 python2"
-        os.system(cmd)
 
     def sim(self, prob):
         # configurations to create urdf
@@ -1099,7 +1093,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 1240
-    time_run = 0.02  # 7
+    time_run = 0.2  # 7
     start_gen = 1
     greedy = False
     delta = 10
@@ -1140,8 +1134,14 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
         c.terminate()
-
-
+        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        os.system(cmd)
+        sleep(2)
+        cmd = "killall -9 python2"
+        os.system(cmd)
+        sleep(2)
+        cmd = "killall -9 python"
+        os.system(cmd)
 
 
 # done - add mutation second nbs
