@@ -1206,10 +1206,10 @@ if __name__ == '__main__':
     plotdata = False
     fix_from_json = False
     pareto_plot = False
-    check_num_confs_in_concepts = True
+    check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = False
+    cr_plot = True
     check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
@@ -1268,7 +1268,7 @@ if __name__ == '__main__':
         opt_folder = "laptop/31_03-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "31_03-3"
+        cr_folder = "01_04-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
