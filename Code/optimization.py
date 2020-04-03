@@ -20,7 +20,7 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, clock , Concepts, MyCsv, get_key, listener
+from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -84,6 +84,8 @@ class Optimization:
         self.ra = ResourceAllocation(greedy=self.greedy_allocation, cont_per_max=self.percent2continue,
                             cont_min=min_cont, t_low=self.low_cr_treshhold, t_high=self.high_cr_treshhold)
         self.run_folder()
+        save_name = 'results_file' + datetime.now().strftime("%d_%m_") +  "6dof_4d_"
+        MyCsv.save_csv([], save_name)
 
     def init_concepts(self, larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
         """ Initilize all the concept and the first populations
@@ -1093,7 +1095,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 6500
-    time_run = 1  # 7
+    time_run = 0.4  # 7
     start_gen = 1
     greedy = False
     delta = 10

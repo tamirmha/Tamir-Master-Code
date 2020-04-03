@@ -994,7 +994,7 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
-        if conc[43:44] == dof2check:
+        if conc[43:44] == dof2check and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
             for conf in all_concepts[conc]:
                 if conf not in simulated:
                     conf2create.append([conf])
@@ -1209,7 +1209,7 @@ if __name__ == '__main__':
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
-    cr_plot = True
+    cr_plot = False
     check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
@@ -1241,7 +1241,7 @@ if __name__ == '__main__':
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-        save_json("jsons/other/results_all", all_data, "w+")
+        save_json("archive/results_all", all_data, "w+")
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         # create one file of configurations with there results via concepts
         combine_data = combine_res(all_data, all_concepts)
@@ -1254,8 +1254,8 @@ if __name__ == '__main__':
         # Create json file of the remaining concepts and their configurations
         ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
     if create_configs:
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 1000  # all the concecpts with less than X configurations
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
+        confs_in_concepts = 7000  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
         save_json("jsons/other/simulated", simulated_confs, "w+")
@@ -1265,10 +1265,12 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "laptop/31_03-0"
+        opt_folder = "02_04-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "01_04-0"
+        cr_folder = "02_04-1"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
+
+
