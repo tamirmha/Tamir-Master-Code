@@ -167,11 +167,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs
-        probs = []
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation

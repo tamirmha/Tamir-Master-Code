@@ -994,7 +994,7 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
-        if conc[43:44] == dof2check and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
+        if conc[43:44] == dof2check :  # and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
             for conf in all_concepts[conc]:
                 if conf not in simulated:
                     conf2create.append([conf])
@@ -1201,11 +1201,11 @@ if __name__ == '__main__':
     calc_concepts = False
     create_urdf = False
     fix_all_from_json = False
-    sumdata = False
+    fix_from_json = False
     to_merge = False
     plotdata = False
-    fix_from_json = False
     pareto_plot = False
+    sumdata = False
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
@@ -1255,7 +1255,7 @@ if __name__ == '__main__':
         ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
     if create_configs:
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 7000  # all the concecpts with less than X configurations
+        confs_in_concepts = 1000  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
         save_json("jsons/other/simulated", simulated_confs, "w+")
@@ -1268,7 +1268,7 @@ if __name__ == '__main__':
         opt_folder = "02_04-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "02_04-1"
+        cr_folder = "tamir/03_04-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
