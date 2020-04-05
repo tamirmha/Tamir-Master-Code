@@ -1,0 +1,5 @@
+1,"30/03/20, 16:27",roll_z_0_1roll_y_0_4pitch_y_0_4roll_x_0_1pitch_y_0_7pitch_x_0_7,"[True, True, False, False]","[-1, -1, -1, -1]",False,-1,-1,-1
+1,"30/03/20, 16:27",roll_z_0_1pitch_y_0_4pitch_x_0_7roll_x_0_7pitch_y_0_4roll_z_0_7,"[True, True, False, True]","[1.636, 2.244, 1.479, 2.628]",True,2.0,0.419,0.003
+2,"30/03/20, 16:27",roll_z_0_1pitch_y_0_4pitch_z_0_1pitch_x_0_4roll_y_0_7roll_y_0_7,"[True, True, True, False]","[-1, -1, -1, -1]",False,-1,-1,-1
+3,"30/03/20, 16:28",roll_z_0_1pitch_y_0_1pitch_z_0_7roll_y_0_7pitch_y_0_4pitch_y_0_4,"[True, True, True, True]","[2.225, 2.245, 1.849, 2.644]",True,2.24,0.158,0.011
+4,"30/03/20, 16:28",roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_x_0_1roll_z_0_4pitch_y_0_7,"[True, True, True, True]","[3.837, 2.243, 2.644, 5.067]",True,3.45,0.033,0.003

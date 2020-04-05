@@ -5,6 +5,7 @@ import rospy
 # from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import rosgraph
+from rosgraph_msgs.msg import Log
 # Moveit libs
 import moveit_commander
 import moveit_msgs.msg

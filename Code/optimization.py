@@ -20,7 +20,7 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, pickle_load_data, pickle_save_data, Concepts, MyCsv, get_key
+from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -84,6 +84,8 @@ class Optimization:
         self.ra = ResourceAllocation(greedy=self.greedy_allocation, cont_per_max=self.percent2continue,
                             cont_min=min_cont, t_low=self.low_cr_treshhold, t_high=self.high_cr_treshhold)
         self.run_folder()
+        save_name = 'results_file' + datetime.now().strftime("%d_%m_") +  "6dof_4d_"
+        MyCsv.save_csv([], save_name)
 
     def init_concepts(self, larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
         """ Initilize all the concept and the first populations
@@ -165,14 +167,19 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs
-        probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
+        probs = self.probs
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
+        # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
             # Save the current WOI
             save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-            print("Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations")
+            print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations"
+                  + "\033[0m")
             # simulate the population
             probs = self.sim(prob=probs)
             to_pop = []
@@ -187,7 +194,7 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     # print("Calculating Convergence rate")
-                    if probs[t].in_dwoi or probs[t].paused:  # todo disable comment
+                    if probs[t].in_dwoi or probs[t].paused:
                         continue
                     if probs[t].stopped:
                         to_pop.append(t)
@@ -252,8 +259,9 @@ class Optimization:
 
     def finish(self):
         print("Saving data...")
-        # save_json(self.name, [{"gen_" + str(self.woi.get_gen()): self.woi.get_last_dwoi()}])
-        save_json("woi_last", self.woi.__dict__)
+        save_json("woi_last", self.woi.__dict__, "w+")
+        if os.path.isfile("problems.json"):
+            os.remove("problems.json")
         for p in self.probs:
             save_json("problems", [p.__dict__])
         self.set_new_data()
@@ -280,12 +288,16 @@ class Optimization:
 
     @staticmethod
     def simulating():
+
         p = Process(target=simulate)
         p.start()
         # listener()
+        p2 = Process(target=listener)
+        p2.start()
         while not os.path.exists("finish.txt"):
             sleep(1)
         os.remove("finish.txt")
+        p2.terminate()
         p.terminate()
 
     @staticmethod
@@ -390,8 +402,8 @@ class Optimization:
 
 
 class Problem:
-    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=100, parents_number=1,
-                 number_of_objects=3, larg_concept=200, delta_allocation=10):
+    def __init__(self, concept_name, confs_of_concepts, confs_results, pop_size=1, parents_number=1,
+                 number_of_objects=3, larg_concept=1500, delta_allocation=10):
         self.pop_size = pop_size  # size of population
         self.confs_of_concepts = confs_of_concepts  # all possible configs names of the concept
         self.confs_results = confs_results  # all the configurations of the concept and their indices
@@ -580,6 +592,7 @@ class Problem:
         :param mutation_percent - [int] how much mutation wanted
         :return offspring - [list] names of the offsprings
          """
+        cr = self.get_cr()
         offspring_size = self.pop_size
         num_mutations = int(offspring_size * mutation_percent / 100.)
         num_crossover = offspring_size - num_mutations
@@ -612,7 +625,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    mut_spring = self.mutation_rand(parent_1)
+                    nb = 1
+                    if cr == 0 or len(self.get_population()) > 100:  # if the Cr=zero or more than 100 gens- mutate more
+                        nb = 2
+                    mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -662,7 +678,7 @@ class Problem:
             child = self.to_urdf(child[0], child[1], child[2], "")
         return child["name"]
 
-    def mutation_rand(self, parent, nb_prox=2):
+    def mutation_rand(self, parent, nb_prox=1):
         """ switch randomlly 2 links and joints
         :param parent: [np array] - names of parents
         :param nb_prox:  [int] - proximity of the neighboors: 1-first neigboor, 2-second neighboor
@@ -743,9 +759,11 @@ class Problem:
                 print("ind=" + str(ind) + "  fit=" + str(fit) + "\nx=" + str(x) + "\nselect=" + str(select))
         return indices
 
-    def get_conifgs_by_indices(self, conf_indices, get_configs):
+    @staticmethod
+    def get_conifgs_by_indices(conf_indices, get_configs):
         """get configuration by indices
         :param conf_indices - [list] indices of the configurations
+        :param get_configs - [list] the configs that we want their indices
         :return - [list] - names of the configurations in the selected indices
         """
         get_configs = np.asarray(get_configs)
@@ -1053,7 +1071,7 @@ class ResourceAllocation:
         cr_sorted, cr_sorted_ind = self.sort_cr(crs)
         decision = self.set_decision(self.set_group(cr_sorted))
         decisions = self.assign2concepts(decision, cr_sorted_ind)
-        for i in tqdm(range(len(prob))):  # len(prob) todo change
+        for i in tqdm(range(len(prob))):
             if i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -1076,17 +1094,19 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 1000
-    time_run = 0.1  # /1000.
+    gen_num = 6500
+    time_run = 0.4  # 7
     start_gen = 1
     greedy = False
-    delta = 5
+    delta = 10
     per2cont = 90
     low_cr = 0.001
     high_cr = 0.003
     par_num = 1
     lar_con = 1500
     args = sys.argv
+    c = Process(target=clock, args=(time_run*3600*24,))
+    c.start()
     if len(args) > 1:
         start_gen = int(args[1])
         if len(args) > 2:
@@ -1115,13 +1135,18 @@ if __name__ == '__main__':
     finally:
         opt.finish()
         print(time()-tic)
+        c.terminate()
+        # cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        # os.system(cmd)
+        # sleep(2)
+        # cmd = "killall -9 python2"
+        # os.system(cmd)
+        # sleep(2)
+        # cmd = "killall -9 python"
+        # os.system(cmd)
 
-# done - to start in specific generation
-# done - save which configurations selected every gen
-# todo - add mutation second nbs
+
+# done - add mutation second nbs
 # done - simulator error - results
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
-# to?do - local stop condition - spreading (maybe cv = covariance/mean)
-# cmd = shlex.split("xterm -e python " + pth + "/simulator.py")
-# subprocess.Popen(cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid)

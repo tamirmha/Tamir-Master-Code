@@ -1,3 +1,4 @@
+import os
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
@@ -13,8 +14,10 @@ from matplotlib.tri import Triangulation
 from tqdm import tqdm
 import pickle
 from scipy.spatial import distance
+from time import time, sleep
 # from multiprocessing import Pool
-# import copy
+import rospy
+from rosgraph_msgs.msg import Log
 
 
 def get_key(val, my_dict):
@@ -57,9 +60,9 @@ class MyCsv(object):
             return result
 
     @staticmethod
-    def save_csv(data, file_name, csv_type="list"):
+    def save_csv(data, file_name, csv_type="list", save_mode='ab'):
         """Save to csv format"""
-        with open(file_name + ".csv", 'ab') as name:
+        with open(file_name + ".csv", save_mode) as name:
             if csv_type == "list":
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
@@ -560,6 +563,44 @@ class Concepts:
         return self.concepts_with_configuration
 
 
+def clock(total):
+
+    ended = False
+    start_time = time()
+    while not ended:
+        sleep(60)
+        now_time = time() - start_time
+        print("\033[34m" + "\033[47m" + "Elpased  {:.0f} seconds from {} seconds".format(now_time, total) + "\033[0m")
+        if now_time >= total:
+            ended = True
+
+
+def callback(data):
+    if "Ignoring transform for child_frame_id" in data.msg:
+        # Get the problematic configuration name
+        param = rospy.get_param("/robot_description")
+        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+        save_json("no_good_confs", conf_name + "\n")
+        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        os.system(cmd)
+        sleep(2)
+        os.system(cmd)
+        sleep(2)
+        with open("finish.txt", "w+") as f:
+            f.write("finish")
+            f.close()
+    elif data.function == "service::waitForService" and \
+            "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
+        print("\033[34m" + "\033[47m" + "TESTTTTTTTT"+ "\033[0m")
+        save_json("test", "test")
+
+
+def listener():
+    rospy.init_node('listener', anonymous=True)
+    rospy.Subscriber("rosout", Log, callback)
+    rospy.spin()
+
+
 def split_files_to_several_folders(files_in_folder=5000):
     name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
     if not path.exists(name):
@@ -581,7 +622,6 @@ def sum_data():
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = -70
-    # time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
@@ -613,10 +653,6 @@ def sum_data():
                         if dis_dat > dis_v:
                             dat_index["Z"] = v["Z"]
                             dat_index["mu"] = v["mu"]
-                        # if dat_index["Z"] > v["Z"]:
-                        #     dat_index["Z"] = v["Z"]
-                        # if dat_index["mu"] < v["mu"]:
-                        #     dat_index["mu"] = v["mu"]
                         in_data = True
                         break
             elif not in_data:
@@ -762,7 +798,7 @@ def assign_results(res_name="results_all"):
 
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
-    concepts = load_json("jsons/concepts")
+    concepts = load_json("archive/concepts")
     dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
     res_data = []  # [[] for i in conf_name]
     for k in range(len(conf_name)):
@@ -958,7 +994,7 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
-        if conc[43:44] == dof2check:
+        if conc[43:44] == dof2check :  # and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
             for conf in all_concepts[conc]:
                 if conf not in simulated:
                     conf2create.append([conf])
@@ -995,7 +1031,7 @@ def left_confs_concepts():
     c = [[]] * len(b)
     for i in range(len(b)):
         c[i] = [b[i], a[b[i]][0], a[b[i]][1], a[b[i]][2]]
-    MyCsv.save_csv(c, "left_concepts")
+    MyCsv.save_csv(c, "left_concepts", save_mode="w+")
 
 
 def combine_res(all_data, all_concepts):
@@ -1093,9 +1129,12 @@ def plot_cr(woi_loc="opt_results/18_03/woi"):
     cr = woi["cr"]
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc != 0)
-        conc = conc[conc != 0]
-        plt.plot(x, conc, label=c, color="k", marker="+")
+        x = np.argwhere(conc >= 0)*10
+        # conc = conc[conc != 0]
+        plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
+        plt.xlabel("Generations")
+        plt.ylabel("Concept Convergence Rate")
+    plt.legend()
     plt.show()
 
 
@@ -1135,6 +1174,14 @@ def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
     axrow[1].set_ylabel("Manipulability Index")
 
 
+def problematic_confs():
+    with open("sim_results/problematic confs/no_good_confs.txt", "r") as read_file:
+        no_good = read_file.read().split("\n")
+    con = Concepts()
+    for ng in no_good:
+        con.create_files2sim([[ng.replace("\"", "")]])
+
+
 # def check_dupications_configs_in_concepts(all_concepts=None):
 #     """Check if there are duplicate configurations in the concepts """
 #     if all_concepts is None:
@@ -1154,15 +1201,16 @@ if __name__ == '__main__':
     calc_concepts = False
     create_urdf = False
     fix_all_from_json = False
-    sumdata = False
+    fix_from_json = False
     to_merge = False
     plotdata = False
-    fix_from_json = False
-    pareto_plot = True
+    pareto_plot = False
+    sumdata = False
     check_num_confs_in_concepts = False
     create_configs = False
     woi_plot = False
     cr_plot = False
+    check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1193,8 +1241,8 @@ if __name__ == '__main__':
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-        save_json("jsons/other/results_all", all_data, "w+")
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
+        save_json("archive/results_all", all_data, "w+")
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         # create one file of configurations with there results via concepts
         combine_data = combine_res(all_data, all_concepts)
         save_json("jsons/concepts+configs+results", combine_data, "w+")
@@ -1206,7 +1254,7 @@ if __name__ == '__main__':
         # Create json file of the remaining concepts and their configurations
         ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
     if create_configs:
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         confs_in_concepts = 1000  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
@@ -1217,10 +1265,12 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "24_03-0"
+        opt_folder = "02_04-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "24_03-0"
+        cr_folder = "tamir/03_04-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
+    if check_problematic_confs:
+        problematic_confs()
 
-# todo sum_data parallel
+

@@ -1,0 +1,7 @@
+1,"30/03/20, 16:21",roll_z_0_1roll_y_0_4pitch_y_0_4roll_x_0_1pitch_y_0_7pitch_x_0_7,"[True, True, False, False]","[-1, -1, -1, -1]",False,-1,-1,-1
+1,"30/03/20, 16:22",roll_z_0_1pitch_y_0_4pitch_x_0_7roll_x_0_7pitch_y_0_4roll_z_0_7,"[True, True, False, False]","[-1, -1, -1, -1]",False,-1,-1,-1
+2,"30/03/20, 16:22",roll_z_0_1pitch_y_0_4pitch_z_0_1pitch_x_0_4roll_y_0_7roll_y_0_7,"[True, True, False, True]","[3.461, 2.043, 2.082, 4.249]",True,2.96,0.253,0.002
+3,"30/03/20, 16:22",roll_z_0_1pitch_y_0_1pitch_z_0_7roll_y_0_7pitch_y_0_4pitch_y_0_4,"[True, True, True, True]","[2.224, 2.244, 1.838, 2.444]",True,2.19,0.176,0.012
+4,"30/03/20, 16:23",roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_x_0_1roll_z_0_4pitch_y_0_7,"[True, True, True, True]","[2.233, 2.443, 2.042, 2.665]",True,2.35,0.18,0.005
+1,"30/03/20, 16:23",roll_z_0_1pitch_y_0_1pitch_z_0_1pitch_x_0_4roll_y_0_7roll_y_0_7,"[True, True, True, True]","[3.435, 2.644, 2.665, 3.042]",True,2.95,0.023,0.003
+2,"30/03/20, 16:23",roll_z_0_1pitch_y_0_7roll_y_0_7pitch_y_0_1pitch_x_0_4roll_z_0_7,"[True, True, True, True]","[3.458, 3.265, 3.645, 2.24]",True,3.15,0.035,0.001

@@ -1,0 +1,6 @@
+1,"01/04/20,17,56",roll_z_0_1pitch_y_0_1pitch_z_0_4roll_x_0_7pitch_y_0_1pitch_y_0_7,"[True, True, True, True]","[1.613,2.243,2.444, 2.645]",True,2.24,0.16,0.011
+2,"01/04/20,17,56",roll_z_0_1pitch_y_0_1pitch_y_0_7roll_y_0_4pitch_y_0_1pitch_y_0_7,"[True, True, True, True]","[2.224,2.243,2.645, 2.463]",True,2.39,0.197,0.012
+3,"01/04/20,17,57",roll_z_0_1pitch_y_0_7pitch_x_0_1pitch_x_0_4roll_x_0_1pitch_y_0_7,"[True, True, True, True]","[4.933,4.486,2.664, 2.644]",True,3.68,0.141,0.007
+4,"01/04/20,17,57",roll_z_0_1pitch_y_0_4roll_x_0_7roll_y_0_1pitch_y_0_1roll_y_0_7,"[True, True, True, True]","[4.687,3.666,3.667, 5.669]",True,4.42,0.032,0.027
+5,"01/04/20,17,57",roll_z_0_1pitch_y_0_7roll_z_0_1pitch_y_0_1roll_x_0_4roll_y_0_7,"[True, True, False, True]","[7.888,2.042,1.264, 2.641]",True,3.46,0.314,0.001
+6,"01/04/20,17,57",roll_z_0_1pitch_y_0_7pitch_y_0_4roll_y_0_1pitch_y_0_1pitch_x_0_7,"[False, False, False, False]","[-1,-1,-1, -1]",False,-1,-1,-1
