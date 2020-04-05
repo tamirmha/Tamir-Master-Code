@@ -1206,10 +1206,10 @@ if __name__ == '__main__':
     plotdata = False
     pareto_plot = False
     sumdata = False
-    check_num_confs_in_concepts = False
-    create_configs = False
-    woi_plot = False
+    check_num_confs_in_concepts = True
+    create_configs = True
     cr_plot = False
+    woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
         con = Concepts()

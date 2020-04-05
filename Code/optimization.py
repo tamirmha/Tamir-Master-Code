@@ -172,7 +172,6 @@ class Optimization:
         # for p in self.probs:
         #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
         #         probs.append(p)
-        # probs = [self.probs[40], self.probs[25], self.probs[26], self.probs[76]]
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
