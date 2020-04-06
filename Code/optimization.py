@@ -20,7 +20,7 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener
+from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener, plot_cr
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -168,9 +168,9 @@ class Optimization:
     def run(self):
         woi = self.woi
         probs = self.probs
-        # probs = []
+        # probs = []  # todo - uncomment
         # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 2500:
         #         probs.append(p)
         cr = []
         # running each generation
@@ -210,7 +210,7 @@ class Optimization:
             # Update generation
             woi.set_gen(n + 1)
             # Check global stop condition
-            woi.stop_condition()
+            woi.stop_condition(probs)
             save_json("woi_All", woi.__dict__)
             if woi.stopped:
                 break
@@ -219,6 +219,8 @@ class Optimization:
 
     def run_gen(self, prob):
         woi = self.woi
+        # Stop Condition
+        prob.local_stop_condition()
         # check if the local stop condition applied
         if prob.stopped:
             return prob
@@ -234,15 +236,13 @@ class Optimization:
         front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
         if front != woi.get_last_dwoi():
             woi.set_dwoi(front)
-        # Stop Condition
-        prob.local_stop_condition()
+
         # elitism \ Non dominated soloution
         confs_results_elite = prob.one_pop_elitism(confs_results)
         # Check if large concept
         if prob.large_concept:  # if large concept
             # Assign fitness
-            fitness = prob.assign_fitness(confs_results_elite,
-                                          woi.get_last_dwoi())  # calc minimum distance for each config
+            fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
             # Selection (RWS)
             selection = prob.selection(fitness, prob.parents_number)
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
@@ -259,11 +259,13 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         save_json("woi_last", self.woi.__dict__, "w+")
+        # todo - uncomment
         if os.path.isfile("problems.json"):
             os.remove("problems.json")
         for p in self.probs:
             save_json("problems", [p.__dict__])
         self.set_new_data()
+        plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
 
     def sim(self, prob):
@@ -647,6 +649,9 @@ class Problem:
                                 spring.append(s)
                         if spring:
                             break
+                        else:
+                            self.stopped = True
+                            break
                 attempt += 1
             for s in spring:
                 offspring.append(unicode(s))
@@ -943,9 +948,16 @@ class DWOI:
         self.run_time = run_time * 24 * 3600  # in seconds
         self.cr = {}
 
-    def stop_condition(self):
+    def stop_condition(self, prbs):
         if self.run_time <= time() - self.start_time:
             print("Time Limit passed")
+            self.stopped = True
+        stopped = 0
+        for q in prbs:
+            if q.in_dwoi or q.stopped:
+                stopped += 1
+        if stopped == len(prbs):
+            print("All concepts stopped or in DWOI")
             self.stopped = True
 
     def set_dwoi(self, dwoi):
@@ -1093,7 +1105,7 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 6500
+    gen_num = 2000
     time_run = 0.4  # 7
     start_gen = 1
     greedy = False
@@ -1135,17 +1147,9 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
         c.terminate()
-        # cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        # os.system(cmd)
-        # sleep(2)
-        # cmd = "killall -9 python2"
-        # os.system(cmd)
-        # sleep(2)
-        # cmd = "killall -9 python"
-        # os.system(cmd)
-
 
 # done - add mutation second nbs
 # done - simulator error - results
+# done - stop code when all paused\stopped
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
