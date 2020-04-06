@@ -182,8 +182,6 @@ class Optimization:
             # simulate the population
             probs = self.sim(prob=probs)
             to_pop = []
-            if n >= 3329:
-                print("a")
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
@@ -212,7 +210,7 @@ class Optimization:
             # Update generation
             woi.set_gen(n + 1)
             # Check global stop condition
-            woi.stop_condition()
+            woi.stop_condition(probs)
             save_json("woi_All", woi.__dict__)
             if woi.stopped:
                 break
@@ -949,9 +947,16 @@ class DWOI:
         self.run_time = run_time * 24 * 3600  # in seconds
         self.cr = {}
 
-    def stop_condition(self):
+    def stop_condition(self, prbs):
         if self.run_time <= time() - self.start_time:
             print("Time Limit passed")
+            self.stopped = True
+        stopped = 0
+        for q in prbs:
+            if q.in_dwoi or q.stopped:
+                stopped += 1
+        if stopped == len(prbs):
+            print("All concepts stopped or in DWOI")
             self.stopped = True
 
     def set_dwoi(self, dwoi):
@@ -1154,6 +1159,6 @@ if __name__ == '__main__':
 
 # done - add mutation second nbs
 # done - simulator error - results
-# todo - stop code when all paused\stopped
+# done - stop code when all paused\stopped
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation

@@ -1129,12 +1129,12 @@ def plot_cr(woi_loc="opt_results/18_03/woi"):
     cr = woi["cr"]
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc >= 0)*10
+        x = np.argwhere(conc >= 0)*10 + 10
         # conc = conc[conc != 0]
         plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
         plt.xlabel("Generations")
         plt.ylabel("Concept Convergence Rate")
-    plt.legend()
+    # plt.legend()
     plt.show()
 
 
@@ -1265,12 +1265,11 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "02_04-0"
+        opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "05_04-110"
+        cr_folder = "inbar/05_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
-
 
