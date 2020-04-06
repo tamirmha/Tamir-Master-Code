@@ -1206,9 +1206,9 @@ if __name__ == '__main__':
     plotdata = False
     pareto_plot = False
     sumdata = False
-    check_num_confs_in_concepts = True
-    create_configs = True
-    cr_plot = False
+    check_num_confs_in_concepts = False
+    create_configs = False
+    cr_plot = True
     woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
@@ -1268,7 +1268,7 @@ if __name__ == '__main__':
         opt_folder = "02_04-0"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "tamir/03_04-0"
+        cr_folder = "05_04-110"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

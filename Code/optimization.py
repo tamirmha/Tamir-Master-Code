@@ -167,11 +167,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs
-        # probs = []
-        # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-        #         probs.append(p)
+        # probs = self.probs
+        probs = []
+        for p in self.probs:
+            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+                probs.append(p)
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -182,6 +182,8 @@ class Optimization:
             # simulate the population
             probs = self.sim(prob=probs)
             to_pop = []
+            if n >= 3329:
+                print("a")
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
@@ -219,6 +221,8 @@ class Optimization:
 
     def run_gen(self, prob):
         woi = self.woi
+        # Stop Condition
+        prob.local_stop_condition()
         # check if the local stop condition applied
         if prob.stopped:
             return prob
@@ -234,15 +238,13 @@ class Optimization:
         front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
         if front != woi.get_last_dwoi():
             woi.set_dwoi(front)
-        # Stop Condition
-        prob.local_stop_condition()
+
         # elitism \ Non dominated soloution
         confs_results_elite = prob.one_pop_elitism(confs_results)
         # Check if large concept
         if prob.large_concept:  # if large concept
             # Assign fitness
-            fitness = prob.assign_fitness(confs_results_elite,
-                                          woi.get_last_dwoi())  # calc minimum distance for each config
+            fitness = prob.assign_fitness(confs_results_elite, woi.get_last_dwoi())  # calc minimum distance for each config
             # Selection (RWS)
             selection = prob.selection(fitness, prob.parents_number)
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
@@ -259,11 +261,12 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         save_json("woi_last", self.woi.__dict__, "w+")
-        if os.path.isfile("problems.json"):
-            os.remove("problems.json")
-        for p in self.probs:
-            save_json("problems", [p.__dict__])
-        self.set_new_data()
+        # todo - uncomment
+        # if os.path.isfile("problems.json"):
+        #     os.remove("problems.json")
+        # for p in self.probs:
+        #     save_json("problems", [p.__dict__])
+        # self.set_new_data()
         print("Finished")
 
     def sim(self, prob):
@@ -646,6 +649,9 @@ class Problem:
                             if s not in offspring:
                                 spring.append(s)
                         if spring:
+                            break
+                        else:
+                            self.stopped = True
                             break
                 attempt += 1
             for s in spring:
@@ -1086,14 +1092,15 @@ class ResourceAllocation:
 if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        np.random.seed(100100)
+        # np.random.seed(100100)
+        np.random.seed(16540641)
     elif username == "tamirm":
         np.random.seed(1010101)
     elif username == "inbarb":
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 6500
+    gen_num = 7000
     time_run = 0.4  # 7
     start_gen = 1
     greedy = False
@@ -1147,5 +1154,6 @@ if __name__ == '__main__':
 
 # done - add mutation second nbs
 # done - simulator error - results
+# todo - stop code when all paused\stopped
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
