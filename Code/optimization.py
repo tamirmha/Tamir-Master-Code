@@ -20,7 +20,7 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener
+from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener, plot_cr
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -167,11 +167,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs
-        probs = []
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -260,11 +260,12 @@ class Optimization:
         print("Saving data...")
         save_json("woi_last", self.woi.__dict__, "w+")
         # todo - uncomment
-        # if os.path.isfile("problems.json"):
-        #     os.remove("problems.json")
-        # for p in self.probs:
-        #     save_json("problems", [p.__dict__])
-        # self.set_new_data()
+        if os.path.isfile("problems.json"):
+            os.remove("problems.json")
+        for p in self.probs:
+            save_json("problems", [p.__dict__])
+        self.set_new_data()
+        plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
 
     def sim(self, prob):
@@ -1105,7 +1106,7 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 7000
+    gen_num = 200
     time_run = 0.4  # 7
     start_gen = 1
     greedy = False
@@ -1147,15 +1148,6 @@ if __name__ == '__main__':
         opt.finish()
         print(time()-tic)
         c.terminate()
-        # cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        # os.system(cmd)
-        # sleep(2)
-        # cmd = "killall -9 python2"
-        # os.system(cmd)
-        # sleep(2)
-        # cmd = "killall -9 python"
-        # os.system(cmd)
-
 
 # done - add mutation second nbs
 # done - simulator error - results

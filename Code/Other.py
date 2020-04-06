@@ -870,7 +870,7 @@ def plot_pareto(other_points, pareto_concepts):
     # plot settings
     plt.figure(figsize=(24.0, 10.0))
     ax = plt.axes(projection='3d')
-    plt.subplots_adjust(left=0.23, bottom=0.17, right=1.0, top=1.0, wspace=0.2, hspace=0.16 )
+    plt.subplots_adjust(left=0.23, bottom=0.17, right=1.0, top=1.0, wspace=0.2, hspace=0.16)
     ax.view_init(azim=-145, elev=15)
     ax.set_ylim(0, 1)
     ax.set_xlim(0, 0.5)
@@ -1124,18 +1124,29 @@ def check_results():
 
 
 # ###  results check
-def plot_cr(woi_loc="opt_results/18_03/woi"):
+def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
+    delta = 10
     woi = load_json(woi_loc)
     cr = woi["cr"]
+    plt.ioff()
+    plt.figure(figsize=(24.0, 10.0))
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.98, top=0.98)
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc >= 0)*10 + 10
+        x = np.argwhere(conc >= 0)*delta + delta
         # conc = conc[conc != 0]
         plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
-        plt.xlabel("Generations")
-        plt.ylabel("Concept Convergence Rate")
-    # plt.legend()
-    plt.show()
+    plt.xlabel("Generations")
+    plt.ylabel("Concept Convergence Rate")
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.xticks(np.arange(0, x[-1], step=delta))
+    if len(cr) < 10:
+        plt.legend()
+    if to_save:
+        plt.savefig("cr")
+    else:
+        plt.show()
 
 
 def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
@@ -1268,7 +1279,7 @@ if __name__ == '__main__':
         opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "inbar/05_04"
+        cr_folder = "06_04-0"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
