@@ -168,9 +168,9 @@ class Optimization:
     def run(self):
         woi = self.woi
         probs = self.probs
-        # probs = []
+        # probs = []  # todo - uncomment
         # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 2500:
         #         probs.append(p)
         cr = []
         # running each generation
@@ -1098,15 +1098,14 @@ class ResourceAllocation:
 if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        # np.random.seed(100100)
-        np.random.seed(16540641)
+        np.random.seed(100100)
     elif username == "tamirm":
         np.random.seed(1010101)
     elif username == "inbarb":
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 200
+    gen_num = 2000
     time_run = 0.4  # 7
     start_gen = 1
     greedy = False

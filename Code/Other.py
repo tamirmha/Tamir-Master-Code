@@ -1140,7 +1140,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     plt.ylabel("Concept Convergence Rate")
     plt.xlim(0)
     plt.ylim(0)
-    plt.xticks(np.arange(0, x[-1], step=delta))
+    plt.xticks(np.arange(0, x[-1], step=delta*4), rotation='vertical')
     if len(cr) < 10:
         plt.legend()
     if to_save:
@@ -1216,10 +1216,10 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = False
+    sumdata = True
     check_num_confs_in_concepts = False
     create_configs = False
-    cr_plot = True
+    cr_plot = False
     woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
