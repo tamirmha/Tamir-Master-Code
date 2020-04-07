@@ -1111,8 +1111,8 @@ if __name__ == '__main__':
     greedy = False
     delta = 10
     per2cont = 90
-    low_cr = 0.001
-    high_cr = 0.003
+    low_cr = 0.005
+    high_cr = 0.01
     par_num = 1
     lar_con = 1500
     args = sys.argv
@@ -1151,5 +1151,6 @@ if __name__ == '__main__':
 # done - add mutation second nbs
 # done - simulator error - results
 # done - stop code when all paused\stopped
+# todo - start in specific time
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
