@@ -580,7 +580,7 @@ def callback(data):
         # Get the problematic configuration name
         param = rospy.get_param("/robot_description")
         conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
-        save_json("no_good_confs", conf_name + "\n")
+        save_json("no_good_confs", conf_name)
         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
         os.system(cmd)
         sleep(2)
@@ -1130,18 +1130,23 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     cr = woi["cr"]
     plt.ioff()
     plt.figure(figsize=(24.0, 10.0))
-    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.98, top=0.98)
+    plt.subplots_adjust(left=0.07, bottom=0.10, right=0.98, top=0.98)
+    max_x = 10
     for c in cr:
         conc = np.asarray(cr[c])
         x = np.argwhere(conc >= 0)*delta + delta
+        if x.shape[0] > 1:
+            if x[-1] > max_x:
+                max_x = x[-1]
         # conc = conc[conc != 0]
         plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
-    plt.xlabel("Generations")
-    plt.ylabel("Concept Convergence Rate")
+    plt.xlabel("Generations", fontsize=26)
+    plt.ylabel("Concept Convergence Rate", fontsize=26)
     plt.xlim(0)
     plt.ylim(0)
-    plt.xticks(np.arange(0, x[-1], step=delta*4), rotation='vertical')
-    if len(cr) < 10:
+    plt.xticks(np.arange(0, max_x, step=delta*4), rotation='vertical', fontsize=14)
+    plt.yticks(fontsize=14)
+    if len(cr) < 16:
         plt.legend()
     if to_save:
         plt.savefig("cr")
@@ -1216,10 +1221,10 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
+    sumdata = False
     check_num_confs_in_concepts = False
     create_configs = False
-    cr_plot = False
+    cr_plot = True
     woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
@@ -1279,7 +1284,7 @@ if __name__ == '__main__':
         opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "06_04-0"
+        cr_folder = "inbar/06_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

@@ -270,8 +270,6 @@ class Simulator(object):
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
-        # self.json_data =
-        # []
         for arm in range(0, len(self.arms)):
             print(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
@@ -377,6 +375,7 @@ def simulate(start_arm=0, from_opt=True):
     with open("finish.txt", "w+") as f:
         f.write("finish")
         f.close()
+    sleep(3)
 
 
 if __name__ == '__main__':
