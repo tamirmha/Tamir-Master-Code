@@ -170,7 +170,7 @@ class Optimization:
         probs = self.probs
         # probs = []  # todo - uncomment
         # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 2500:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
         #         probs.append(p)
         cr = []
         # running each generation
@@ -260,10 +260,10 @@ class Optimization:
         print("Saving data...")
         save_json("woi_last", self.woi.__dict__, "w+")
         # todo - uncomment
-        if os.path.isfile("problems.json"):
-            os.remove("problems.json")
-        for p in self.probs:
-            save_json("problems", [p.__dict__])
+        # if os.path.isfile("problems.json"):
+        #     os.remove("problems.json")
+        # for p in self.probs:
+        #     save_json("problems", [p.__dict__])
         self.set_new_data()
         plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
@@ -1106,6 +1106,7 @@ if __name__ == '__main__':
     elif username == "shayo":
         np.random.seed(0)
     gen_num = 2000
+    start_time = 0
     time_run = 0.4  # 7
     start_gen = 1
     greedy = False
@@ -1116,12 +1117,10 @@ if __name__ == '__main__':
     par_num = 1
     lar_con = 1500
     args = sys.argv
-    c = Process(target=clock, args=(time_run*3600*24,))
-    c.start()
     if len(args) > 1:
-        start_gen = int(args[1])
+        start_time = int(args[1])
         if len(args) > 2:
-            high_cr = float(args[2])
+            start_gen = int(args[2])
             if len(args) > 3:
                 delta = int(args[3])
                 if len(args) > 4:
@@ -1136,9 +1135,12 @@ if __name__ == '__main__':
                                     par_num = int(args[8])
                                     if len(args) > 9:
                                         lar_con = int(args[8])
+    start_time = start_time/(3600.*24)
+    c = Process(target=clock, args=((time_run-start_time)*3600*24,))
+    c.start()
     tic = time()
     with_sim = True  # to run with simulatoin or with random results
-    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run,
+    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run-start_time,
                        large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
                        high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
     try:
@@ -1151,6 +1153,6 @@ if __name__ == '__main__':
 # done - add mutation second nbs
 # done - simulator error - results
 # done - stop code when all paused\stopped
-# todo - start in specific time
+# done - start in specific time
 # todo - Cr doesnt update when no sim
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
