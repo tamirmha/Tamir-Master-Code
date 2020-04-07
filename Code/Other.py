@@ -580,7 +580,7 @@ def callback(data):
         # Get the problematic configuration name
         param = rospy.get_param("/robot_description")
         conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
-        save_json("no_good_confs", conf_name + "\n")
+        save_json("no_good_confs", conf_name)
         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
         os.system(cmd)
         sleep(2)
@@ -1141,7 +1141,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     plt.xlim(0)
     plt.ylim(0)
     plt.xticks(np.arange(0, x[-1], step=delta*4), rotation='vertical')
-    if len(cr) < 10:
+    if len(cr) < 16:
         plt.legend()
     if to_save:
         plt.savefig("cr")
@@ -1216,8 +1216,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
-    check_num_confs_in_concepts = False
+    sumdata = False
+    check_num_confs_in_concepts = True
     create_configs = False
     cr_plot = False
     woi_plot = False
@@ -1279,7 +1279,7 @@ if __name__ == '__main__':
         opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "06_04-0"
+        cr_folder = "tamir/06_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
