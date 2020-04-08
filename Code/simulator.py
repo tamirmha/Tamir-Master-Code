@@ -371,11 +371,15 @@ def simulate(start_arm=0, from_opt=True):
         else:  # first run
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
+    sleep(2)
     ros.ros_core_stop()
     with open("finish.txt", "w+") as f:
         f.write("finish")
         f.close()
-    sleep(3)
+    sleep(2)
+    roscore = ros.checkroscorerun()
+    if roscore:
+        ros.ter_command("kill -9 " + str(roscore))
 
 
 if __name__ == '__main__':

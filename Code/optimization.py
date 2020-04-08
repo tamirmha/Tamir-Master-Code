@@ -202,7 +202,7 @@ class Optimization:
                     cr.append(probs[t].get_cr())
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
-            if not (n + 1) % self.allocation_delta:
+            if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
                 for p in range(len(to_pop)):
                     probs.pop(to_pop[p] - p)
                 probs = self.ra.run(cr, probs)
@@ -289,17 +289,17 @@ class Optimization:
 
     @staticmethod
     def simulating():
-
         p = Process(target=simulate)
         p.start()
         # listener()
         p2 = Process(target=listener)
         p2.start()
         while not os.path.exists("finish.txt"):
-            sleep(1)
+            sleep(5)
         os.remove("finish.txt")
         p2.terminate()
         p.terminate()
+        sleep(2)
 
     @staticmethod
     def check_exist(problem):
