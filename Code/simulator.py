@@ -383,9 +383,8 @@ def simulate(start_arm=0, from_opt=True):
 
 
 if __name__ == '__main__':
-    # rs = start_ros()
     simulate(from_opt=False)
-    # stop_ros(rs)
+
 # done - get errors from terminal
 # done - run with 1 configuration
 # tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
