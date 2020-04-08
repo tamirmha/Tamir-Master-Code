@@ -1221,8 +1221,9 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
+    sumdata = False
     check_num_confs_in_concepts = True
+    sum_all = False
     create_configs = False
     cr_plot = False
     woi_plot = False
@@ -1259,16 +1260,19 @@ if __name__ == '__main__':
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         save_json("archive/results_all", all_data, "w+")
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
+        # Create json file of the remaining concepts and their configurations
+        ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
         # create one file of configurations with there results via concepts
-        combine_data = combine_res(all_data, all_concepts)
+        combine_data = combine_res(all_data, ga_concepts)
         save_json("jsons/concepts+configs+results", combine_data, "w+")
+        if sum_all:
+            combine_data = combine_res(all_data, all_concepts)
+            save_json("archive/concepts+configs+results_all", combine_data, "w+")
         # how many confs simulated
         conf_number = confs_number()
         save_json("jsons/other/confs_number", conf_number, "w+")
         # create CSV file with how many configs simulated and left at each concept
         left_confs_concepts()
-        # Create json file of the remaining concepts and their configurations
-        ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
     if create_configs:
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         confs_in_concepts = 1000  # all the concecpts with less than X configurations
