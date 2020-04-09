@@ -298,19 +298,19 @@ def simulate(start_arm=0, from_opt=True):
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
-        nums = 25  # how many arms to send to simulator each time
+        nums = 3  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2
         wait0_replace = 0.01
     elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2
+        wait2_replace = 2.3
         wait0_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2
+        wait2_replace = 2.3
         wait0_replace = 2
     elif username == "inbarb":  # VM
         nums = 25  # how many arms to send to simulator each time

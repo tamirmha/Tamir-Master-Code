@@ -259,13 +259,15 @@ class Optimization:
     def finish(self):
         print("Saving data...")
         save_json("woi_last", self.woi.__dict__, "w+")
+        print("saved_last_woi")
+        sleep(1)
         # todo - uncomment
         # if os.path.isfile("problems.json"):
         #     os.remove("problems.json")
         # for p in self.probs:
         #     save_json("problems", [p.__dict__])
         self.set_new_data()
-        plot_cr(os.getcwd() + "/woi_last", to_save=True)
+        # plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
 
     def sim(self, prob):
@@ -370,7 +372,7 @@ class Optimization:
         ga_json = jsons_folder + ga_json
         all_concepts = load_json(all_concepts_json)
         ga_concepts = load_json(ga_json)
-        for dat in data:
+        for dat in tqdm(data):
             second_loop_stop = False
             for con in ga_concepts:
                 k = 0
@@ -1107,7 +1109,7 @@ if __name__ == '__main__':
         np.random.seed(0)
     gen_num = 2000
     start_time = 0
-    time_run = 0.4  # 7
+    time_run = 0.45  # 7
     start_gen = 1
     greedy = False
     delta = 10

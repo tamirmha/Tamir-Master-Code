@@ -1073,7 +1073,7 @@ def confs_number(all=None):
     """Calculate how many configs simulated and how many left in each concept"""
     print("Start confs_number")
     if all is None:
-        all = load_json("jsons/concepts+configs+results")
+        all = load_json("archive/concepts+configs+results_all")
     conf_number = {}
     for i in tqdm(all_concepts):
         conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
@@ -1268,11 +1268,11 @@ if __name__ == '__main__':
         if sum_all:
             combine_data = combine_res(all_data, all_concepts)
             save_json("archive/concepts+configs+results_all", combine_data, "w+")
-        # how many confs simulated
-        conf_number = confs_number()
-        save_json("jsons/other/confs_number", conf_number, "w+")
-        # create CSV file with how many configs simulated and left at each concept
-        left_confs_concepts()
+            # how many confs simulated
+            conf_number = confs_number()
+            save_json("jsons/other/confs_number", conf_number, "w+")
+            # create CSV file with how many configs simulated and left at each concept
+            left_confs_concepts()
     if create_configs:
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         confs_in_concepts = 1000  # all the concecpts with less than X configurations
@@ -1288,7 +1288,7 @@ if __name__ == '__main__':
         opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "inbar/06_04"
+        cr_folder = "shay/08_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
