@@ -262,10 +262,11 @@ class Optimization:
         print("saved_last_woi")
         sleep(1)
         # todo - uncomment
-        # if os.path.isfile("problems.json"):
-        #     os.remove("problems.json")
-        # for p in self.probs:
-        #     save_json("problems", [p.__dict__])
+        if os.path.isfile("problems.json"):
+            os.remove("problems.json")
+        for p in tqdm(self.probs):
+            save_json("problems", [p.__dict__])
+        print("saved problems")
         self.set_new_data()
         # plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
@@ -1109,7 +1110,7 @@ if __name__ == '__main__':
         np.random.seed(0)
     gen_num = 2000
     start_time = 0
-    time_run = 0.45  # 7
+    time_run = 0.3  # 7
     start_gen = 1
     greedy = False
     delta = 10
