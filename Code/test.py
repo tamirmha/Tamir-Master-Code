@@ -46,29 +46,38 @@ import os
 from Other import save_json
 #
 #
-def callback(data):
-    if "Ignoring transform for child_frame_id" in data.msg:
-        # Get the problematic configuration name
-        param = rospy.get_param("/robot_description")
-        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
-        save_json("no_good_confs", conf_name)
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
-        with open("finish.txt", "w+") as f:
-            f.write("finish")
-            f.close()
-    elif data.function == "service::waitForService" and \
-            "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
-        print("\033[34m" + "\033[47m" + "TESTTTTTTTT"+ "\033[0m")
-        save_json("test", "test")
+# def callback(data):
+#     if "Ignoring transform for child_frame_id" in data.msg:
+#         # Get the problematic configuration name
+#         param = rospy.get_param("/robot_description")
+#         conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+#         save_json("no_good_confs", conf_name)
+#         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+#         os.system(cmd)
+#         with open("finish.txt", "w+") as f:
+#             f.write("finish")
+#             f.close()
+#     elif data.function == "service::waitForService" and \
+#             "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
+#         print("\033[34m" + "\033[47m" + "TESTTTTTTTT"+ "\033[0m")
+#         save_json("test", "test")
+#
+#
+# def listener():
+#     rospy.init_node('listener', anonymous=True)
+#     rospy.Subscriber("rosout", Log, callback)
+#     rospy.spin()
+#
+#
+# if __name__ == '__main__':
+#     listener()
+#     print("ssda")
 
+import json
+from optimization import Problem
+from Other import pickle_load_data
 
-def listener():
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("rosout", Log, callback)
-    rospy.spin()
-
-
-if __name__ == '__main__':
-    listener()
-    print("ssda")
+# a=Other.load_json("opt_results/10_04-0/problems")
+# with open("opt_results/10_04-0/problems" + ".json", "r") as read_file:
+#     a = json.load(read_file, object_hook=Problem())
+a= pickle_load_data("opt_results/10_04-0/problems")

@@ -20,7 +20,7 @@ Constrains:
 
 # from simulator import simulate
 from ros import UrdfClass
-from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener, plot_cr
+from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener, pickle_load_data, pickle_save_data
 from scipy.spatial import distance
 import numpy as np
 import copy
@@ -83,7 +83,12 @@ class Optimization:
         min_cont = min_cont_par * len(self.probs) / 100
         self.ra = ResourceAllocation(greedy=self.greedy_allocation, cont_per_max=self.percent2continue,
                             cont_min=min_cont, t_low=self.low_cr_treshhold, t_high=self.high_cr_treshhold)
-        self.run_folder()
+        if self.run_folder():
+            self.probs = pickle_load_data("problems")
+            self.woi = pickle_load_data("woi")
+            self.woi.start_time = time()
+            self.woi.run_time = self.run_time* 24 * 3600
+            self.woi.stopped = False
         save_name = 'results_file' + datetime.now().strftime("%d_%m_") +  "6dof_4d_"
         MyCsv.save_csv([], save_name)
 
@@ -101,7 +106,6 @@ class Optimization:
         # load all the concepts
         concepts_with_conf, confs_results = self.get_prev_data()
         prob = []
-        # population = []
         for i in range(len(concepts_with_conf)):
             # Initiliaze each concept
             name_of_concept = list(concepts_with_conf)[i]
@@ -153,24 +157,29 @@ class Optimization:
                  "\nLow Cr treshhold: " + str(self.low_cr_treshhold) +\
                  "\nHigh Cr treshhold: " + str(self.high_cr_treshhold)
         # enter all the results to one folder
-        results_folder = "opt_results/" + datetime.now().strftime("%d_%m") + "-0"
-        while os.path.isdir(results_folder):
-            results_folder = results_folder[:-1] + str(int(results_folder[-1]) + 1)
-        os.mkdir(results_folder)
-        os.mkdir(results_folder + "/urdf")
-        print(results_folder + " folder created \nStart Optimization")
-        with open(results_folder + "/parameters.txt", "w+") as f:
-            f.write(params)
-            f.close()
+        results_folder = "opt_results/" + datetime.now().strftime("%d_%m")  # + "-0"
+        # while os.path.isdir(results_folder):
+        #     results_folder = results_folder[:-1] + str(int(results_folder[-1]) + 1)
+        if not os.path.isdir(results_folder):
+            exist = False
+            os.mkdir(results_folder)
+            os.mkdir(results_folder + "/urdf")
+            print(results_folder + " folder created \nStart Optimization")
+            with open(results_folder + "/parameters.txt", "w+") as f:
+                f.write(params)
+                f.close()
+        else:
+            exist = True
         # change the working dir
         os.chdir(results_folder)
+        return exist
 
     def run(self):
         woi = self.woi
         probs = self.probs
         # probs = []  # todo - uncomment
         # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 2500:
         #         probs.append(p)
         cr = []
         # running each generation
@@ -236,7 +245,6 @@ class Optimization:
         front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
         if front != woi.get_last_dwoi():
             woi.set_dwoi(front)
-
         # elitism \ Non dominated soloution
         confs_results_elite = prob.one_pop_elitism(confs_results)
         # Check if large concept
@@ -262,10 +270,12 @@ class Optimization:
         print("saved_last_woi")
         sleep(1)
         # todo - uncomment
-        if os.path.isfile("problems.json"):
-            os.remove("problems.json")
-        for p in tqdm(self.probs):
-            save_json("problems", [p.__dict__])
+        if os.path.isfile("problems.pkl"):
+            os.remove("problems.pkl")
+        # for p in tqdm(self.probs):
+            # save_json("problems", [p.__dict__])
+        pickle_save_data(self.probs, "problems")
+        pickle_save_data(self.woi, "woi")
         print("saved problems")
         self.set_new_data()
         # plot_cr(os.getcwd() + "/woi_last", to_save=True)
@@ -1108,9 +1118,9 @@ if __name__ == '__main__':
         np.random.seed(111111)
     elif username == "shayo":
         np.random.seed(0)
-    gen_num = 2000
+    gen_num = 1000
     start_time = 0
-    time_run = 0.3  # 7
+    time_run = 0.55  # 7
     start_gen = 1
     greedy = False
     delta = 10

@@ -986,7 +986,7 @@ def pickle_load_data(file_name="bin.pkl"):
 
 def pickle_save_data(data, file_name):
     with open(file_name + ".pkl", "wb") as f:
-        pickle.dump(data, f)
+        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
 #  ###how many configurations allready simulated and which to create  ###
@@ -1288,7 +1288,7 @@ if __name__ == '__main__':
         opt_folder = "tamir/05_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "09_04-0"
+        cr_folder = "10_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
