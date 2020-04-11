@@ -660,7 +660,7 @@ def sum_data():
                 data.append(v)
                 in_list.append((v["name"]))
     data_no_success = [dict(t) for t in {tuple(d.items()) for d in data_no_success}]
-    MyCsv.save_csv(data, new_file_name, "dict")
+    # MyCsv.save_csv(data, new_file_name, "dict")
     MyCsv.save_csv(data + data_no_success, new_file_name + "_with_failed", "dict")
     return data
 
@@ -1144,7 +1144,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     plt.ylabel("Concept Convergence Rate", fontsize=26)
     plt.xlim(0)
     plt.ylim(0)
-    plt.xticks(np.arange(0, max_x, step=delta*4), rotation='vertical', fontsize=14)
+    plt.xticks(np.arange(0, max_x, step=delta), rotation='vertical', fontsize=14)
     plt.yticks(fontsize=14)
     if len(cr) < 16:
         plt.legend()
@@ -1212,7 +1212,6 @@ def problematic_confs():
 #     twice = all_configs[twice_inds]
 
 if __name__ == '__main__':
-    # while True:
     split = False
     calc_concepts = False
     create_urdf = False
@@ -1221,7 +1220,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
+    sumdata = False
     check_num_confs_in_concepts = True
     sum_all = True
     create_configs = False
@@ -1285,10 +1284,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "tamir/05_04"
+        opt_folder = "10_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "tamir/10_04"
+        cr_folder = "10_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

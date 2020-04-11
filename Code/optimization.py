@@ -1120,9 +1120,9 @@ if __name__ == '__main__':
         np.random.seed(0)
     gen_num = 1000
     start_time = 0
-    time_run = 0.55  # 7
+    time_run = 0.5  # 7
     start_gen = 1
-    greedy = False
+    greedy = True
     delta = 10
     per2cont = 90
     low_cr = 0.005

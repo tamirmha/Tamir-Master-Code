@@ -1,7 +1,7 @@
-Number of gens: 2000
+Number of gens: 1000
 parents_number: 1
 Large concept: 1500
-Run Time (days): 0.3
+Run Time (days): 0.55
 Allocation Delta: 10
 Population: 1
 Greedy Allocation: False
