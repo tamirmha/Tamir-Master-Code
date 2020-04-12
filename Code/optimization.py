@@ -201,7 +201,6 @@ class Optimization:
                 if not (n + 1) % self.allocation_delta:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
-                    # print("Calculating Convergence rate")
                     if probs[t].in_dwoi or probs[t].paused:
                         continue
                     if probs[t].stopped:
@@ -269,7 +268,6 @@ class Optimization:
         save_json("woi_last", self.woi.__dict__, "w+")
         print("saved_last_woi")
         sleep(1)
-        # todo - uncomment
         if os.path.isfile("problems.pkl"):
             os.remove("problems.pkl")
         # for p in tqdm(self.probs):
@@ -1094,7 +1092,7 @@ class ResourceAllocation:
         print("Resource Allocation is made")
         cr_sorted, cr_sorted_ind = self.sort_cr(crs)
         decision = self.set_decision(self.set_group(cr_sorted))
-        decisions = self.assign2concepts(decision, cr_sorted_ind)
+        decisions = self.assign2concepts(decision, cr_sorted_ind[::-1])
         for i in tqdm(range(len(prob))):
             if i in decisions[0]:
                 prob[i].stopped = False
