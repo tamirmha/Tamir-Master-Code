@@ -660,12 +660,12 @@ def sum_data():
                 data.append(v)
                 in_list.append((v["name"]))
     data_no_success = [dict(t) for t in {tuple(d.items()) for d in data_no_success}]
-    MyCsv.save_csv(data, new_file_name, "dict")
+    # MyCsv.save_csv(data, new_file_name, "dict")
     MyCsv.save_csv(data + data_no_success, new_file_name + "_with_failed", "dict")
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -986,7 +986,7 @@ def pickle_load_data(file_name="bin.pkl"):
 
 def pickle_save_data(data, file_name):
     with open(file_name + ".pkl", "wb") as f:
-        pickle.dump(data, f)
+        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
 #  ###how many configurations allready simulated and which to create  ###
@@ -1073,7 +1073,7 @@ def confs_number(all=None):
     """Calculate how many configs simulated and how many left in each concept"""
     print("Start confs_number")
     if all is None:
-        all = load_json("jsons/concepts+configs+results")
+        all = load_json("archive/concepts+configs+results_all")
     conf_number = {}
     for i in tqdm(all_concepts):
         conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
@@ -1144,7 +1144,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     plt.ylabel("Concept Convergence Rate", fontsize=26)
     plt.xlim(0)
     plt.ylim(0)
-    plt.xticks(np.arange(0, max_x, step=delta*4), rotation='vertical', fontsize=14)
+    plt.xticks(np.arange(0, max_x+delta, step=delta), rotation='vertical', fontsize=14)
     plt.yticks(fontsize=14)
     if len(cr) < 16:
         plt.legend()
@@ -1191,7 +1191,7 @@ def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
 
 
 def problematic_confs():
-    with open("sim_results/problematic confs/no_good_confs.txt", "r") as read_file:
+    with open("results/problematic confs/no_good_confs.txt", "r") as read_file:
         no_good = read_file.read().split("\n")
     con = Concepts()
     for ng in no_good:
@@ -1212,7 +1212,6 @@ def problematic_confs():
 #     twice = all_configs[twice_inds]
 
 if __name__ == '__main__':
-    # while True:
     split = False
     calc_concepts = False
     create_urdf = False
@@ -1223,10 +1222,11 @@ if __name__ == '__main__':
     pareto_plot = False
     sumdata = False
     check_num_confs_in_concepts = False
+    sum_all = False
     create_configs = False
-    cr_plot = True
+    cr_plot = False
     woi_plot = False
-    check_problematic_confs = False
+    check_problematic_confs = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1259,16 +1259,19 @@ if __name__ == '__main__':
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
         save_json("archive/results_all", all_data, "w+")
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
-        # create one file of configurations with there results via concepts
-        combine_data = combine_res(all_data, all_concepts)
-        save_json("jsons/concepts+configs+results", combine_data, "w+")
-        # how many confs simulated
-        conf_number = confs_number()
-        save_json("jsons/other/confs_number", conf_number, "w+")
-        # create CSV file with how many configs simulated and left at each concept
-        left_confs_concepts()
         # Create json file of the remaining concepts and their configurations
         ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
+        # create one file of configurations with there results via concepts
+        combine_data = combine_res(all_data, ga_concepts)
+        save_json("jsons/concepts+configs+results", combine_data, "w+")
+        if sum_all:
+            combine_data = combine_res(all_data, all_concepts)
+            save_json("archive/concepts+configs+results_all", combine_data, "w+")
+            # how many confs simulated
+            conf_number = confs_number()
+            save_json("jsons/other/confs_number", conf_number, "w+")
+            # create CSV file with how many configs simulated and left at each concept
+            left_confs_concepts()
     if create_configs:
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         confs_in_concepts = 1000  # all the concecpts with less than X configurations
@@ -1281,10 +1284,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "tamir/05_04"
+        opt_folder = "13_04_"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "inbar/06_04"
+        cr_folder = "13_04_"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
