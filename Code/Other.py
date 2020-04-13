@@ -665,7 +665,7 @@ def sum_data():
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -1191,7 +1191,7 @@ def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
 
 
 def problematic_confs():
-    with open("sim_results/problematic confs/no_good_confs.txt", "r") as read_file:
+    with open("results/problematic confs/no_good_confs.txt", "r") as read_file:
         no_good = read_file.read().split("\n")
     con = Concepts()
     for ng in no_good:
@@ -1222,11 +1222,11 @@ if __name__ == '__main__':
     pareto_plot = False
     sumdata = False
     check_num_confs_in_concepts = False
-    sum_all = True
+    sum_all = False
     create_configs = False
-    cr_plot = True
-    woi_plot = True
-    check_problematic_confs = False
+    cr_plot = False
+    woi_plot = False
+    check_problematic_confs = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1284,10 +1284,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "12_04"
+        opt_folder = "13_04_"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "12_04"
+        cr_folder = "13_04_"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

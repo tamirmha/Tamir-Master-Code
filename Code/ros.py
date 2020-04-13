@@ -199,14 +199,13 @@ class MoveGroupPythonInterface(object):
         self.move_group.clear_pose_targets()
         if plan:
             ind = self.indices_calc(joints, links)
-        # orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
-        # goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
-        # pos = self.get_current_position()
-        # orien = self.get_current_orientain()
-        # current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        # accuracy = self.all_close(goal, current, self.tolerance)
-        # print(goal, current)
-        accuracy = True
+        orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
+        goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
+        pos = self.get_current_position()
+        orien = self.get_current_orientain()
+        current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
+        accuracy = self.all_close(goal, current, self.tolerance)
+        # accuracy = True
         return accuracy and plan, sim_time, ind
 
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):

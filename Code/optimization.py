@@ -388,8 +388,6 @@ class Optimization:
                 for concept in ga_concepts[con]:
                     if dat["name"] == concept:
                         second_loop_stop = True
-                        # if all_concepts[con][k][dat["name"]]["mu"] is not None:
-                        #     print("Check it!!!")
                         all_concepts[con].append({unicode(dat["name"]): {"mu": dat["mu"], "z": dat["Z"],
                                                 "dof": dat["dof"], "name": unicode(dat["name"])}})
                         break
@@ -1110,17 +1108,11 @@ if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)
-    elif username == "tamirm":
-        np.random.seed(1010101)
-    elif username == "inbarb":
-        np.random.seed(111111)
-    elif username == "shayo":
-        np.random.seed(0)
     gen_num = 1000
     start_time = 0
     time_run = 0.5  # 7
     start_gen = 1
-    greedy = True
+    greedy = False
     delta = 10
     per2cont = 90
     low_cr = 0.005
