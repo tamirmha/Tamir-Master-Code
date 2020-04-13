@@ -591,7 +591,7 @@ def callback(data):
             f.close()
     elif data.function == "service::waitForService" and \
             "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
-        print("\033[34m" + "\033[47m" + "TESTTTTTTTT"+ "\033[0m")
+        save_json("wait_service", rospy.get_param("/robot_description"))
         save_json("test", "test")
 
 

@@ -311,6 +311,12 @@ class Optimization:
         p2.terminate()
         p.terminate()
         sleep(2)
+        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        os.system(cmd)
+        sleep(2)
+        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+        os.system(cmd)
+        sleep(2)
 
     @staticmethod
     def check_exist(problem):
