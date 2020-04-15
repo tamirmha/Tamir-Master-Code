@@ -591,7 +591,7 @@ def callback(data):
             f.close()
     elif data.function == "service::waitForService" and \
             "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
-        save_json("wait_service", rospy.get_param("/robot_description"))
+        # save_json("wait_service", rospy.get_param("/robot_description"))
         save_json("test", "test")
 
 
@@ -1129,7 +1129,7 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     woi = load_json(woi_loc)
     cr = woi["cr"]
     plt.ioff()
-    plt.figure(figsize=(24.0, 10.0))
+    plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title('Cr')
     plt.subplots_adjust(left=0.07, bottom=0.10, right=0.98, top=0.98)
     max_x = 10
     for c in cr:
@@ -1163,7 +1163,8 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
         inds2plot = np.delete(inds2plot, len(inds2plot)/2)
     inds2plot[-1] -= 2
     colors = ['g', 'r', 'grey', "purple", "k", "b", "cyan", "y", "brown", "Orange"]
-    fig, axs = plt.subplots(len(inds2plot), 2, figsize=(15, 6), facecolor='w', edgecolor='k')
+    fig, axs = plt.subplots(len(inds2plot), 2, figsize=(24, 10), facecolor='w', edgecolor='k')
+    plt.subplots_adjust(left=0.11, bottom=0.06, right=0.98, top=0.98, hspace=0.4)
     for w in woi:
         d = np.asarray(w[w.keys()[0]])
         inds1 = np.argwhere(d[2] == "6")
@@ -1178,6 +1179,7 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
                  label1=labls[p], label2=labls[p+1], color1=colors[d], color2=colors[d+1])
             d += 2
     fig.legend(loc="center left")
+    fig.canvas.set_window_title('WOI')
     plt.show()
 
 
@@ -1222,11 +1224,11 @@ if __name__ == '__main__':
     pareto_plot = False
     sumdata = False
     check_num_confs_in_concepts = False
-    sum_all = False
+    sum_all = True
     create_configs = False
-    cr_plot = False
+    cr_plot = True
     woi_plot = False
-    check_problematic_confs = True
+    check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1284,10 +1286,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "13_04_"
+        opt_folder = "15_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "13_04_"
+        cr_folder = "15_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

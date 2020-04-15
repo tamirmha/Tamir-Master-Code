@@ -306,7 +306,7 @@ class Optimization:
         p2 = Process(target=listener)
         p2.start()
         while not os.path.exists("finish.txt"):
-            sleep(5)
+            sleep(3)
         os.remove("finish.txt")
         p2.terminate()
         p.terminate()
@@ -1116,9 +1116,9 @@ if __name__ == '__main__':
         np.random.seed(100100)
     gen_num = 1000
     start_time = 0
-    time_run = 0.5  # 7
+    time_run = 0.4  # 7
     start_gen = 1
-    greedy = False
+    greedy = True
     delta = 10
     per2cont = 90
     low_cr = 0.005
