@@ -80,4 +80,7 @@ from Other import pickle_load_data
 # a=Other.load_json("opt_results/10_04-0/problems")
 # with open("opt_results/10_04-0/problems" + ".json", "r") as read_file:
 #     a = json.load(read_file, object_hook=Problem())
-a= pickle_load_data("opt_results/10_04-0/problems")
+a=pickle_load_data("opt_results/16_04/problems")
+for i in a:
+    if i.in_dwoi:
+        print(i.concept_name)
