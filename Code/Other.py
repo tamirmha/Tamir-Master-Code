@@ -1158,38 +1158,46 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     woi = load_json(woi_loc)
     points = []
     labls = []
-    inds2plot = np.arange(0, len(woi)+1, len(woi)/4)
+    confs_name = []
+    coce_name = []
+    inds2plot = np.arange(0, len(woi), len(woi)/4)
     while len(inds2plot) > 5:
         inds2plot = np.delete(inds2plot, len(inds2plot)/2)
-    inds2plot[-1] -= 2
-    colors = ['g', 'r', 'grey', "purple", "k", "b", "cyan", "y", "brown", "Orange"]
-    fig, axs = plt.subplots(len(inds2plot), 2, figsize=(24, 10), facecolor='w', edgecolor='k')
-    plt.subplots_adjust(left=0.11, bottom=0.06, right=0.98, top=0.98, hspace=0.4)
+    inds2plot[-1] =  len(woi) -1
+    fig, axs = plt.subplots(len(inds2plot), 1, figsize=(24, 10), facecolor='w', edgecolor='k')
+    plt.subplots_adjust(left=0.47, bottom=0.05, right=0.99, top=0.98, hspace=0.5, wspace=0.1)
     for w in woi:
         d = np.asarray(w[w.keys()[0]])
         inds1 = np.argwhere(d[2] == "6")
         inds2 = np.argwhere(d[2] == "6.0")
         inds = np.concatenate((inds1, inds2))
         points.append([d[0][inds], d[1][inds]])  # 0-mu , 1 - z
+        confs_name.append(d[3][inds])
+        coce_name.append(d[4][inds])
         labls.append(w.keys()[0])
     d = 0
+    points = np.asarray(points, dtype=float)
     for p in range(len(points)):
         if p in inds2plot:
-            plot(axs[d/2], points[p][0], points[p][1], points[p+1][0], points[p+1][1],
-                 label1=labls[p], label2=labls[p+1], color1=colors[d], color2=colors[d+1])
+            plot(axs[d/2], points[p][0], points[p][1], label=labls[p],
+                 name=confs_name[p], conc=coce_name[p])
             d += 2
-    fig.legend(loc="center left")
     fig.canvas.set_window_title('WOI')
     plt.show()
 
 
-def plot(axrow, x1, y1, x2, y2, label1, label2, color1, color2):
-    axrow[0].scatter(x1, y1, label=label1, color=color1)
-    axrow[1].scatter(x2, y2, label=label2, color=color2)
-    axrow[0].set_xlabel("Mid Proximity Joint")
-    axrow[0].set_ylabel("Manipulability Index")
-    axrow[1].set_xlabel("Mid Proximity Joint")
-    axrow[1].set_ylabel("Manipulability Index")
+def plot(axrow, x, y, label, name, conc):
+    colors = ['g', 'r', "k", "b",  "purple",  'grey', "cyan", "y", "brown", "Orange"]
+    k = 0
+    for n in name:
+        axrow.scatter(x[k], y[k], label=str(n[0]), c=colors[k])
+        axrow.scatter(x[k], y[k], label=str(conc[k][0]), c=colors[k])
+        axrow.annotate(str(x[k][0]) + "," + str(y[k][0]), (x[k], y[k]), ha="center",  va="top")
+        k += 1
+    axrow.set_title(label)
+    axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.2))
+    axrow.set_xlabel("Mid Proximity Joint")
+    axrow.set_ylabel("Manipulability Index")
 
 
 def problematic_confs():
@@ -1222,11 +1230,11 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = False
+    sumdata = True
     check_num_confs_in_concepts = False
     sum_all = True
     create_configs = False
-    cr_plot = True
+    cr_plot = False
     woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
@@ -1286,10 +1294,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "15_04"
+        opt_folder = "shay/run1_fair/17_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "15_04"
+        cr_folder = "tamir/run1_fair/17_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()

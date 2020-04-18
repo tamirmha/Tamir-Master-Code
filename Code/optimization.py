@@ -177,10 +177,6 @@ class Optimization:
     def run(self):
         woi = self.woi
         probs = self.probs
-        # probs = []  # todo - uncomment
-        # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 2500:
-        #         probs.append(p)
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -201,8 +197,8 @@ class Optimization:
                 if not (n + 1) % self.allocation_delta:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
-                    if probs[t].in_dwoi or probs[t].paused:
-                        continue
+                    # if probs[t].in_dwoi or probs[t].paused:
+                    #     continue
                     if probs[t].stopped:
                         to_pop.append(t)
                         continue
@@ -310,9 +306,6 @@ class Optimization:
         os.remove("finish.txt")
         p2.terminate()
         p.terminate()
-        sleep(2)
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
         sleep(2)
         cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
         os.system(cmd)
@@ -488,7 +481,7 @@ class Problem:
             pops.append(r)
             res = self.get_result(r)
             if not res:  # If error occured and the simulation stopped
-                break
+                continue  # were break
             if res["z"] == "70":
                 res["z"] = 2
                 res["mu"] = -1
@@ -868,7 +861,7 @@ class Problem:
             self.stopped = True
 
     def set_cr(self, dis_start, dis_end):
-        self.cr = (dis_start - dis_end) / self.delta_allocation
+        self.cr = abs((dis_start - dis_end) / self.delta_allocation)
 
     def get_cr(self):
         return self.cr
@@ -1030,7 +1023,7 @@ class ResourceAllocation:
         crs = np.asarray(crs)
         sorted_cr = np.sort(crs)
         sorted_cr_ind = np.argsort(crs)
-        return sorted_cr, sorted_cr_ind[::-1]
+        return sorted_cr, sorted_cr_ind  # [::-1]
 
     def set_group(self, sorted_cr):
         """ Each cr goes to his group:
@@ -1098,7 +1091,9 @@ class ResourceAllocation:
         decision = self.set_decision(self.set_group(cr_sorted))
         decisions = self.assign2concepts(decision, cr_sorted_ind[::-1])
         for i in tqdm(range(len(prob))):
-            if i in decisions[0]:
+            if prob[i].in_dwoi:
+                continue
+            elif i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
             elif i in decisions[1]:
@@ -1114,9 +1109,10 @@ if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)
-    gen_num = 1000
+        # np.random.seed(111011)
+    gen_num = 50
     start_time = 0
-    time_run = 0.4  # 7
+    time_run = 0.5  # 7
     start_gen = 1
     greedy = True
     delta = 10
@@ -1155,13 +1151,13 @@ if __name__ == '__main__':
     try:
         opt.run()
     finally:
-        opt.finish()
+        if with_sim:
+            opt.finish()
+        else:
+            save_json("woi_last", opt.woi.__dict__, "w+")
         print(time()-tic)
         c.terminate()
 
-# done - add mutation second nbs
-# done - simulator error - results
-# done - stop code when all paused\stopped
-# done - start in specific time
-# todo - Cr doesnt update when no sim
+
+# todo - check if after concept not in woi is return to run
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
