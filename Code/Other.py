@@ -34,7 +34,7 @@ class MyCsv(object):
         with open(file_name + ".csv", "r") as data_file:
             csv_file_reader = csv.reader(data_file)
             result = []
-            dof = data_file.name[data_file.name.find("dof")-1]
+            dof = data_file.name[data_file.name.find("dof") - 1]
             for row in csv_file_reader:
                 while "" in row:
                     row.remove("")
@@ -46,15 +46,15 @@ class MyCsv(object):
                     prev_axe = ["z"]
                     link_length = ["0.1"]
                     arm = name.split("_")
-                    for a in range(3, len(arm)-1):
+                    for a in range(3, len(arm) - 1):
                         if a % 3 == 0:
                             joints.append(arm[a][1:] + "_")
                         elif a % 3 == 1:
                             prev_axe.append(arm[a] + "_")
                         elif a % 3 == 2:
-                            link_length.append(arm[a] + "." + arm[a+1][:1] + "_")
+                            link_length.append(arm[a] + "." + arm[a + 1][:1] + "_")
                     result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "Z": float(row[8]),
-                         "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
+                                   "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
                                    "link_length": "_".join(link_length)})
             result.sort()
             return result
@@ -221,19 +221,19 @@ class FixFromJson(object):
         for joint in joints:
             if "pris" not in joint:
                 theta_mean.append(0)
-                to_norm.append(2*np.pi)
+                to_norm.append(2 * np.pi)
             else:
-                theta_mean.append(float(link_length[joints.index(joint)])/2)
+                theta_mean.append(float(link_length[joints.index(joint)]) / 2)
                 to_norm.append(float(link_length[joints.index(joint)]))
-        dis = (cur_pos[:-1]-theta_mean)
-        nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
+        dis = (cur_pos[:-1] - theta_mean)
+        nor_dis = np.asarray(np.abs(dis)) / np.asarray(to_norm)
         while np.isin(nor_dis > 1, True).argmax():
             # some simulations calculated with pris limit 2*length instead of length
             ind_wrong = np.isin(nor_dis > 1, True).argmax()
             to_norm[ind_wrong] = to_norm[ind_wrong] * 2
             nor_dis = np.asarray(np.abs(dis)) / np.asarray(to_norm)
-        w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
-        z = np.around(0.5*np.transpose(nor_dis)*w, 3)
+        w = np.identity(len(joints) + 1) * nor_dis  # weighted diagonal matrix
+        z = np.around(0.5 * np.transpose(nor_dis) * w, 3)
         return z
 
 
@@ -260,18 +260,18 @@ class Concepts:
         :param percent_from_concept: percent from each concept configurations to choose
         return: confs2sim- names of configurations to simulate
         """
-        percent_from_concept = percent_from_concept/100.0
+        percent_from_concept = percent_from_concept / 100.0
         confs2sim = []
         # cons_of_sim = []
         for k in concepts_with_values:
             if len(k[1]) < min_configurations:  # 1352 configurations  & 129 concepts
                 confs2sim.append(k[1])
             else:
-                number_of_confs2sim = int(len(k[1])*percent_from_concept)
+                number_of_confs2sim = int(len(k[1]) * percent_from_concept)
                 # check if the minimum desired percent is enough
                 if number_of_confs2sim < min_configurations:  # 9875 confiurations & 395 concepts
                     number_of_confs2sim = min_configurations
-                indices = np.arange(len(k[1]))                # 47970 confiurations & 270 concepts
+                indices = np.arange(len(k[1]))  # 47970 confiurations & 270 concepts
                 np.random.shuffle(indices)
                 confs2sim.append(np.ndarray.tolist(np.take(k[1], indices[:number_of_confs2sim])))
             # cons_of_sim.append(k[0])
@@ -358,6 +358,7 @@ class Concepts:
             i += 1
             i_length = 0
         return i_length, i
+
     ###
 
     def calc(self):
@@ -396,11 +397,12 @@ class Concepts:
         """ set all the concepts variables and each variable range (unfiltered)"""
         acc_length = [1.5, 2, 2.6, 3.1, 3.6]
         concept_general = {"dof": range(4, 7), "pitch_joint": [], "#long_link": [], "par_axes_y": [], "acc_length": [],
-           "long_link": [0.4, 0.7], "p/r_ratio": [[0.0, 0.33, 1.0, 3.0], [0.0, 0.25, 0.67, 1.5], [0.0, 0.2, 0.5, 1.0]]}
+                           "long_link": [0.4, 0.7],
+                           "p/r_ratio": [[0.0, 0.33, 1.0, 3.0], [0.0, 0.25, 0.67, 1.5], [0.0, 0.2, 0.5, 1.0]]}
         for c in concept_general["dof"]:
             concept_general["pitch_joint"].append(range(0, c))
             concept_general["#long_link"].append(range(0, c))
-            concept_general["par_axes_y"].append([0]+range(2, c))
+            concept_general["par_axes_y"].append([0] + range(2, c))
             concept_general["acc_length"].append(acc_length[:c - 1])
         return concept_general
 
@@ -411,8 +413,8 @@ class Concepts:
         for c in concept_general["dof"]:
             ind = concept_general["dof"].index(c)
             concepts.append(list(product(concept_general["#long_link"][ind], concept_general["pitch_joint"][ind],
-                                concept_general["p/r_ratio"][ind], concept_general["par_axes_y"][ind],
-                                concept_general["acc_length"][ind], concept_general["long_link"], repeat=1)))
+                                         concept_general["p/r_ratio"][ind], concept_general["par_axes_y"][ind],
+                                         concept_general["acc_length"][ind], concept_general["long_link"], repeat=1)))
         return concepts
 
     @staticmethod
@@ -423,7 +425,7 @@ class Concepts:
         for cs in concepts:
             for c in cs:
                 # the sum of the links cant be more than the accumalated length
-                if c[0] * 0.7 + 0.4 * (k+3-c[0]) < c[4] - 0.6 or c[0]*0.7+0.1*(k+4-c[0]) > c[4]:
+                if c[0] * 0.7 + 0.4 * (k + 3 - c[0]) < c[4] - 0.6 or c[0] * 0.7 + 0.1 * (k + 4 - c[0]) > c[4]:
                     continue
                 # if there is longest link (c[0]) isn't possible to have longest link(c[5]) equal to 0.4
                 if c[5] == 0.4 and c[0] > 0:
@@ -466,7 +468,7 @@ class Concepts:
             links_length = [[0.1] + list(tup) for tup in list(product(lengths_2_check, repeat=(dof - 1)))]
             for link in links_length:
                 if sum(link) > min_length:
-                    links[dof-4].append([str(x) for x in link])
+                    links[dof - 4].append([str(x) for x in link])
         self.links = links
 
     def set_configurations(self):
@@ -534,7 +536,8 @@ class Concepts:
                 else:
                     acc_length = 3.6
                 conf_concept = {"dof": dof, 'par_axes_y': par_axes_y, '#long_link': long_links, 'long_link': longest,
-                             'pitch_joint': pitch, 'p/r_ratio': round(pris/(dof-pris), 2), 'acc_length': acc_length}
+                                'pitch_joint': pitch, 'p/r_ratio': round(pris / (dof - pris), 2),
+                                'acc_length': acc_length}
                 concepts_with_configuration[str(conf_concept)].append(conf_name)
         self.set_concepts_with_configuration(concepts_with_configuration)
 
@@ -564,7 +567,6 @@ class Concepts:
 
 
 def clock(total):
-
     ended = False
     start_time = time()
     while not ended:
@@ -607,12 +609,13 @@ def split_files_to_several_folders(files_in_folder=5000):
         mkdir(name)
     full_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/combined/"
     files = listdir(full_path)
-    for j in range(len(files)/files_in_folder):
+    for j in range(len(files) / files_in_folder):
         if not path.exists(name + str(j)):
             mkdir(name + str(j))
         for i in range(files_in_folder):
             # shutil.copy(full_path + files[j*files_in_folder+i], name + str(j) + files[j*files_in_folder+i])
-            shutil.move(full_path + files[j*files_in_folder+i], name + str(j) + "/" + files[j*files_in_folder+i])
+            shutil.move(full_path + files[j * files_in_folder + i],
+                        name + str(j) + "/" + files[j * files_in_folder + i])
 
 
 def sum_data():
@@ -649,7 +652,7 @@ def sum_data():
                         dis_dat = distance.cdist(np.asarray([[float(dat_index["Z"]), float(dat_index["mu"])]]),
                                                  np.zeros((1, 2)), 'euclidean')[0]
                         dis_v = distance.cdist(np.asarray([[float(v["Z"]), float(v["mu"])]]),
-                                                 np.zeros((1, 2)), 'euclidean')[0]
+                                               np.zeros((1, 2)), 'euclidean')[0]
                         if dis_dat > dis_v:
                             dat_index["Z"] = v["Z"]
                             dat_index["mu"] = v["mu"]
@@ -675,7 +678,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all"):
     for dat in all_data:
         if dat["mu"] != "-1.0" and dat["mu"] != "mu":
             mu.append(float(dat["mu"]))
-            time .append(float(dat["time"]))
+            time.append(float(dat["time"]))
             z.append(float(dat["Z"]))
             lci.append(float(dat["LCI"]))
             dof.append(float(dat["dof"]))
@@ -799,7 +802,7 @@ def assign_results(res_name="results_all"):
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
     concepts = load_json("archive/concepts")
-    dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
+    dict_type = {"configuration": "", "concept": "", "mu": 1, "z": 0.5, "dof": 7}
     res_data = []  # [[] for i in conf_name]
     for k in range(len(conf_name)):
         for concept in concepts:
@@ -821,7 +824,8 @@ def domination_check(conf):
     points = [[], [], [], []]
     for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
         added = False
-        for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):  # zip(x_front, y_front, z_front, conf_front):
+        for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2],
+                                                      front[3]):  # zip(x_front, y_front, z_front, conf_front):
             # check if the point is dominate the front
             if i <= i_front and j <= j_front and k <= k_front:
                 if not added:
@@ -892,7 +896,7 @@ def plot_pareto(other_points, pareto_concepts):
     for c in pareto_concepts:
         confs.append(str(i) + " " + c["configuration"])
         i += 1
-    plt.legend(confs, loc=6, fontsize=10,  bbox_to_anchor=(-0.33, 0.5))
+    plt.legend(confs, loc=6, fontsize=10, bbox_to_anchor=(-0.33, 0.5))
     # Make 3D surface of the front
     tri = Triangulation(pareto[1], pareto[3]).triangles
     ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.49), edgecolor='')
@@ -930,7 +934,7 @@ def add_table2plot(pareto):
     cell_text = []
     for row in range(len(rows)):
         cell_text.append(data[row])
-    colwidths = [0.03]*len(columns)
+    colwidths = [0.03] * len(columns)
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
     plt.show()
@@ -943,34 +947,34 @@ def save_json(name="data_file", data=None, write_method="a"):
 
 
 def load_json(name="data_file"):
-        try:
-            with open(name + ".json", "r") as read_file:
-                return json.load(read_file)
-        except:
-            fix_json(name)
-            with open(name + ".json", "r") as read_file:
-                return json.load(read_file)
+    try:
+        with open(name + ".json", "r") as read_file:
+            return json.load(read_file)
+    except:
+        fix_json(name)
+        with open(name + ".json", "r") as read_file:
+            return json.load(read_file)
 
 
 def fix_json(file_name):
-        with open(file_name + ".json", 'r') as filehandler:
-            file_reader = filehandler.readlines()
-            data = []
-            empty = True
-            for row in file_reader:
-                if len(row) > 0:
-                    if '][' in row:
-                        row = ',\n'
-                    elif '}{' in row:
-                        row = '},\n{\n'
-                    data.append(row)
-                    empty = False
-                else:
-                    if not empty:
-                        data = []
-                    empty = True
-        with open(file_name + ".json", 'w') as name:
-            name.writelines(data)
+    with open(file_name + ".json", 'r') as filehandler:
+        file_reader = filehandler.readlines()
+        data = []
+        empty = True
+        for row in file_reader:
+            if len(row) > 0:
+                if '][' in row:
+                    row = ',\n'
+                elif '}{' in row:
+                    row = '},\n{\n'
+                data.append(row)
+                empty = False
+            else:
+                if not empty:
+                    data = []
+                empty = True
+    with open(file_name + ".json", 'w') as name:
+        name.writelines(data)
 
 
 #  ### Pickle handling
@@ -994,13 +998,14 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
-        if conc[43:44] == dof2check :  # and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
+        if conc[43:44] == dof2check:  # and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
             for conf in all_concepts[conc]:
                 if conf not in simulated:
                     conf2create.append([conf])
     total = len(conf2create)
     print("About " + str(total) + " configurations lefts. with Avg time of 15 seconds per configuration"
-        " it will take about\n " + str(total * 15 / 3600. / 24) + " days to simulate all of them")
+                                  " it will take about\n " + str(
+        total * 15 / 3600. / 24) + " days to simulate all of them")
     return conf2create
 
 
@@ -1076,7 +1081,7 @@ def confs_number(all=None):
         all = load_json("archive/concepts+configs+results_all")
     conf_number = {}
     for i in tqdm(all_concepts):
-        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
+        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i]) - len(all[i])]
     return conf_number
 
 
@@ -1109,8 +1114,8 @@ def check_results():
                     q += 1
                     if v["Z"] == p["Z"] and v["mu"] == p["mu"]:
                         t += 1
-                    elif float(v["Z"]) >= float(p["Z"])*delta and float(v["mu"])*delta <= float(p["mu"]) or\
-                            float(v["Z"])*delta <= float(p["Z"]) and float(v["mu"]) >= float(p["mu"])*delta:
+                    elif float(v["Z"]) >= float(p["Z"]) * delta and float(v["mu"]) * delta <= float(p["mu"]) or \
+                            float(v["Z"]) * delta <= float(p["Z"]) and float(v["mu"]) >= float(p["mu"]) * delta:
                         o += 1
                     elif float(v["Z"]) > float(p["Z"]) and float(v["mu"]) > float(p["mu"]) \
                             or float(v["Z"]) < float(p["Z"]) and float(v["mu"]) < float(p["mu"]):
@@ -1120,7 +1125,7 @@ def check_results():
                 del vm2[vm2.index(v)]
                 break
     print("delta= " + str(delta) + " q=" + str(q) + " t=" + str(t) + " o=" + str(o) + " e=" + str(e) + " w:" + str(w) +
-          " percent=" + str(1.0*o/q))
+          " percent=" + str(1.0 * o / q))
 
 
 # ###  results check
@@ -1134,17 +1139,17 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     max_x = 10
     for c in cr:
         conc = np.asarray(cr[c])
-        x = np.argwhere(conc >= 0)*delta + delta
+        x = np.argwhere(conc >= 0) * delta + delta
         if x.shape[0] > 1:
             if x[-1] > max_x:
                 max_x = x[-1]
         # conc = conc[conc != 0]
-        plt.plot(x, conc, label=c, color=np.random.rand(3,), marker="+")
+        plt.plot(x, conc, label=c, color=np.random.rand(3, ), marker="+")
     plt.xlabel("Generations", fontsize=26)
     plt.ylabel("Concept Convergence Rate", fontsize=26)
     plt.xlim(0)
     plt.ylim(0)
-    plt.xticks(np.arange(0, max_x+delta, step=delta), rotation='vertical', fontsize=14)
+    plt.xticks(np.arange(0, max_x + delta, step=delta), rotation='vertical', fontsize=14)
     plt.yticks(fontsize=14)
     if len(cr) < 16:
         plt.legend()
@@ -1160,10 +1165,10 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     labls = []
     confs_name = []
     coce_name = []
-    inds2plot = np.arange(0, len(woi), len(woi)/4)
+    inds2plot = np.arange(0, len(woi), len(woi) / 4)
     while len(inds2plot) > 5:
-        inds2plot = np.delete(inds2plot, len(inds2plot)/2)
-    inds2plot[-1] =  len(woi) -1
+        inds2plot = np.delete(inds2plot, len(inds2plot) / 2)
+    inds2plot[-1] = len(woi) - 1
     fig, axs = plt.subplots(len(inds2plot), 1, figsize=(24, 10), facecolor='w', edgecolor='k')
     plt.subplots_adjust(left=0.47, bottom=0.05, right=0.99, top=0.98, hspace=0.5, wspace=0.1)
     for w in woi:
@@ -1179,7 +1184,7 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
     points = np.asarray(points, dtype=float)
     for p in range(len(points)):
         if p in inds2plot:
-            plot(axs[d/2], points[p][0], points[p][1], label=labls[p],
+            plot(axs[d / 2], points[p][0], points[p][1], label=labls[p],
                  name=confs_name[p], conc=coce_name[p])
             d += 2
     fig.canvas.set_window_title('WOI')
@@ -1187,12 +1192,12 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
 
 
 def plot(axrow, x, y, label, name, conc):
-    colors = ['g', 'r', "k", "b",  "purple",  'grey', "cyan", "y", "brown", "Orange"]
+    colors = ['g', 'r', "k", "b", "purple", 'grey', "cyan", "y", "brown", "Orange"]
     k = 0
     for n in name:
         axrow.scatter(x[k], y[k], label=str(n[0]), c=colors[k])
         axrow.scatter(x[k], y[k], label=str(conc[k][0]), c=colors[k])
-        axrow.annotate(str(x[k][0]) + "," + str(y[k][0]), (x[k], y[k]), ha="center",  va="top")
+        axrow.annotate(str(x[k][0]) + "," + str(y[k][0]), (x[k], y[k]), ha="center", va="top")
         k += 1
     axrow.set_title(label)
     axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.2))
@@ -1204,8 +1209,14 @@ def problematic_confs():
     with open("results/problematic confs/no_good_confs.txt", "r") as read_file:
         no_good = read_file.read().split("\n")
     con = Concepts()
+    results = MyCsv.read_csv("results_all")
+    confs = []
+    for r in results:
+        confs.append(r[0])
     for ng in no_good:
-        con.create_files2sim([[ng.replace("\"", "")]])
+        ng = ng.replace("\"", "")
+        if ng not in confs:
+            con.create_files2sim([[ng]])
 
 
 # def check_dupications_configs_in_concepts(all_concepts=None):
@@ -1230,8 +1241,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
-    check_num_confs_in_concepts = False
+    sumdata = False
+    check_num_confs_in_concepts = True
     sum_all = True
     create_configs = False
     cr_plot = False
@@ -1294,11 +1305,10 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "shay/run1_fair/17_04"
+        opt_folder = "tamir/run1_fair/17_04"
         plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
     if cr_plot:
-        cr_folder = "tamir/run1_fair/17_04"
+        cr_folder = "shay/run1_fair/17_04"
         plot_cr("opt_results/" + cr_folder + "/woi_last")
     if check_problematic_confs:
         problematic_confs()
-

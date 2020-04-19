@@ -1110,9 +1110,9 @@ if __name__ == '__main__':
     if username == "tamir":  # tamir laptop
         np.random.seed(100100)
         # np.random.seed(111011)
-    gen_num = 50
+    gen_num = 1240
     start_time = 0
-    time_run = 0.5  # 7
+    time_run = 1 # 7
     start_gen = 1
     greedy = True
     delta = 10
