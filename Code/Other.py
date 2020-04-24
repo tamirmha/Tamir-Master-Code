@@ -978,7 +978,7 @@ def fix_json(file_name):
 
 
 #  ### Pickle handling
-def pickle_load_data(file_name="bin.pkl"):
+def pickle_load_data(file_name="bin"):
     try:
         with open(file_name + ".pkl") as f:
             x = pickle.load(f)
@@ -1159,13 +1159,19 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
         plt.show()
 
 
-def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
-    woi = load_json(woi_loc)
+def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI"):
+    woi = load_json(folder_loc + "/optimizaion_WOI")
+    try:
+        scores = load_json(folder_loc + "/first_gen_res")
+        elits = load_json(folder_loc + "/elits")
+    except:
+        scores = [[]]
+        elits = []
     points = []
     labls = []
     confs_name = []
     coce_name = []
-    inds2plot = np.arange(0, len(woi), len(woi) / 4)
+    inds2plot = np.arange(0, len(woi), len(woi) / 3)
     while len(inds2plot) > 5:
         inds2plot = np.delete(inds2plot, len(inds2plot) / 2)
     inds2plot[-1] = len(woi) - 1
@@ -1176,31 +1182,37 @@ def plot_woi(woi_loc="opt_results/17_03/optimizaion_WOI"):
         inds1 = np.argwhere(d[2] == "6")
         inds2 = np.argwhere(d[2] == "6.0")
         inds = np.concatenate((inds1, inds2))
-        points.append([d[0][inds], d[1][inds]])  # 0-mu , 1 - z
+        point = np.asarray([d[0][inds], d[1][inds]], dtype=float)
+        points.append(point)  # d[0][inds], d[1][inds]])  # 0-mu , 1 - z
         confs_name.append(d[3][inds])
         coce_name.append(d[4][inds])
         labls.append(w.keys()[0])
     d = 0
-    points = np.asarray(points, dtype=float)
+    # points = np.asarray(points, dtype=float)
     for p in range(len(points)):
         if p in inds2plot:
             plot(axs[d / 2], points[p][0], points[p][1], label=labls[p],
-                 name=confs_name[p], conc=coce_name[p])
+                 name=confs_name[p], conc=coce_name[p], scores=scores, elits=elits)
             d += 2
     fig.canvas.set_window_title('WOI')
     plt.show()
 
 
-def plot(axrow, x, y, label, name, conc):
-    colors = ['g', 'r', "k", "b", "purple", 'grey', "cyan", "y", "brown", "Orange"]
+def plot(axrow, x, y, label, name, conc, scores, elits):
+    colors = ['g',  "b", "purple", 'grey',"Orange", "cyan", "y", "brown", 'r', "k"]
     k = 0
     for n in name:
         axrow.scatter(x[k], y[k], label=str(n[0]), c=colors[k])
         axrow.scatter(x[k], y[k], label=str(conc[k][0]), c=colors[k])
         axrow.annotate(str(x[k][0]) + "," + str(y[k][0]), (x[k], y[k]), ha="center", va="top")
         k += 1
+    for j in range(len(scores[0])):
+        axrow.scatter(scores[0][j][0], scores[0][j][1], marker="+", color="k")
+    for e in elits:
+        for i in range(len(e[0])):
+            axrow.scatter(e[0][i], e[1][i], marker="*", color="r", alpha=0.2)
     axrow.set_title(label)
-    axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.2))
+    axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.0))
     axrow.set_xlabel("Mid Proximity Joint")
     axrow.set_ylabel("Manipulability Index")
 
@@ -1242,11 +1254,11 @@ if __name__ == '__main__':
     plotdata = False
     pareto_plot = False
     sumdata = False
-    check_num_confs_in_concepts = True
+    check_num_confs_in_concepts = False
     sum_all = True
     create_configs = False
-    cr_plot = False
-    woi_plot = False
+    cr_plot = True
+    woi_plot = True
     check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
@@ -1305,10 +1317,12 @@ if __name__ == '__main__':
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
     if woi_plot:
-        opt_folder = "tamir/run1_fair/17_04"
-        plot_woi("opt_results/" + opt_folder + "/optimizaion_WOI")
+        opt_folder = os.getcwd() + "/results/mutauioncheck/22_04_tamir_mut/"
+        plot_woi(opt_folder)  # "opt_results/"
     if cr_plot:
-        cr_folder = "shay/run1_fair/17_04"
-        plot_cr("opt_results/" + cr_folder + "/woi_last")
+        cr_folder = "22_04_ami_mut"
+        # plot_cr("opt_results/" + cr_folder + "/woi_last")
+        plot_cr("results/mutauioncheck/22_04_tamir_mut/woi_last")
     if check_problematic_confs:
         problematic_confs()
+
