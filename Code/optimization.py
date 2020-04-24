@@ -158,8 +158,6 @@ class Optimization:
                  "\nHigh Cr treshhold: " + str(self.high_cr_treshhold)
         # enter all the results to one folder
         results_folder = "opt_results/" + datetime.now().strftime("%d_%m")  # + "-0"
-        # while os.path.isdir(results_folder):
-        #     results_folder = results_folder[:-1] + str(int(results_folder[-1]) + 1)
         if not os.path.isdir(results_folder):
             exist = False
             os.mkdir(results_folder)
@@ -177,6 +175,10 @@ class Optimization:
     def run(self):
         woi = self.woi
         probs = self.probs
+        probs = []  # todo - uncomment
+        for p in self.probs:
+            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+                probs.append(p)
         cr = []
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
@@ -191,6 +193,7 @@ class Optimization:
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
                 probs[t] = self.run_gen(probs[t])
+                probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
                 if probs[t].concept_name in woi.dwoi[-1][4]:
                     probs[t].in_dwoi = True
                 # Check Convergance rate
@@ -239,7 +242,7 @@ class Optimization:
         # Update DWOI if necessary
         front = prob.domination_check(confs_results, copy.deepcopy(woi.get_last_dwoi()))
         if front != woi.get_last_dwoi():
-            woi.set_dwoi(front)
+            woi.set_dwoi(copy.deepcopy(front))
         # elitism \ Non dominated soloution
         confs_results_elite = prob.one_pop_elitism(confs_results)
         # Check if large concept
@@ -430,6 +433,7 @@ class Problem:
         self.dis = []  # distance from the origin
         self.cr = 0  # Convergence rate of the concept
         self.delta_allocation = delta_allocation
+        self.elit_confs_archive = []
 
     def set_population(self, pop):
         self.population = pop
@@ -528,12 +532,12 @@ class Problem:
         if not elite_confs:
             self.set_elite_confs(new_gen)
             return new_gen
-        elite_confs = self.domination_check(new_gen, elite_confs)
+        elite_confs_new = self.domination_check(new_gen, elite_confs)
         # elite_confs[0].append(new_gen[0][0])
         # elite_confs[1].append(new_gen[1][0])
         # elite_confs[2].append(new_gen[2][0])
         # elite_confs[3].append(new_gen[3][0])
-        self.set_elite_confs(elite_confs)
+        self.set_elite_confs(elite_confs_new)
         return elite_confs
 
     def elitism(self, new_gen):
@@ -634,9 +638,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    nb = 1
-                    if cr == 0 or len(self.get_population()) > 100:  # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 2
+                    nb = 2  # 1
+                    # if cr == 0 or len(self.get_population()) > 100:
+                    if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
+                        nb = 1  # 2
                     mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
@@ -1114,7 +1119,7 @@ if __name__ == '__main__':
     start_time = 0
     time_run = 1 # 7
     start_gen = 1
-    greedy = True
+    greedy = False
     delta = 10
     per2cont = 90
     low_cr = 0.005
