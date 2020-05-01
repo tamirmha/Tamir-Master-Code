@@ -579,18 +579,22 @@ def clock(total):
 
 def callback(data):
     if "Ignoring transform for child_frame_id" in data.msg:
-        # Get the problematic configuration name
-        param = rospy.get_param("/robot_description")
-        conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
-        save_json("no_good_confs", conf_name)
-        cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
-        os.system(cmd)
-        sleep(2)
-        os.system(cmd)
-        sleep(2)
-        with open("finish.txt", "w+") as f:
-            f.write("finish")
-            f.close()
+        try:
+            # Get the problematic configuration name
+            param = rospy.get_param("/robot_description")
+            conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+            save_json("no_good_confs", conf_name)
+        except:
+            print("Ros Param not found")
+        finally:
+            cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+            os.system(cmd)
+            sleep(2)
+            os.system(cmd)
+            sleep(2)
+            with open("finish.txt", "w+") as f:
+                f.write("finish")
+                f.close()
     elif data.function == "service::waitForService" and \
             "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
         # save_json("wait_service", rospy.get_param("/robot_description"))
@@ -1085,8 +1089,9 @@ def confs_number(all=None):
     return conf_number
 
 
-def concepts2check(confs_max=1000, confs_min=0, dof="6"):
+def concepts2check(concepts, confs_max=1000, confs_min=0, dof="6"):
     """Which concepts we want to select to simulate """
+    all_concepts = concepts
     print("Start concepts2check")
     check_concepts = []
     for k in tqdm(all_concepts):
@@ -1154,12 +1159,12 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     if len(cr) < 16:
         plt.legend()
     if to_save:
-        plt.savefig("cr")
+        plt.savefig(woi_loc + "cr")
     else:
         plt.show()
 
 
-def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI"):
+def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI", to_save=False):
     woi = load_json(folder_loc + "/optimizaion_WOI")
     try:
         scores = load_json(folder_loc + "/first_gen_res")
@@ -1175,6 +1180,7 @@ def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI"):
     while len(inds2plot) > 5:
         inds2plot = np.delete(inds2plot, len(inds2plot) / 2)
     inds2plot[-1] = len(woi) - 1
+    plt.ioff()
     fig, axs = plt.subplots(len(inds2plot), 1, figsize=(24, 10), facecolor='w', edgecolor='k')
     plt.subplots_adjust(left=0.47, bottom=0.05, right=0.99, top=0.98, hspace=0.5, wspace=0.1)
     for w in woi:
@@ -1195,7 +1201,10 @@ def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI"):
                  name=confs_name[p], conc=coce_name[p], scores=scores, elits=elits)
             d += 2
     fig.canvas.set_window_title('WOI')
-    plt.show()
+    if to_save:
+        plt.savefig(folder_loc + "WOI")
+    else:
+        plt.show()
 
 
 def plot(axrow, x, y, label, name, conc, scores, elits):
@@ -1254,11 +1263,11 @@ if __name__ == '__main__':
     plotdata = False
     pareto_plot = False
     sumdata = False
-    check_num_confs_in_concepts = False
-    sum_all = True
+    check_num_confs_in_concepts = True
+    sum_all = False
     create_configs = False
-    cr_plot = True
-    woi_plot = True
+    cr_plot = False
+    woi_plot = False
     check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
@@ -1307,12 +1316,12 @@ if __name__ == '__main__':
             left_confs_concepts()
     if create_configs:
         all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 1000  # all the concecpts with less than X configurations
+        confs_in_concepts = 1500  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
         save_json("jsons/other/simulated", simulated_confs, "w+")
         # which concepts we want to simulte
-        check_concept = concepts2check(confs_max=confs_in_concepts, confs_min=750, dof="6")
+        check_concept = concepts2check(concepts=all_concepts, confs_max=confs_in_concepts, confs_min=1000, dof="6")
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")

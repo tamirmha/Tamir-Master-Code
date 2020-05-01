@@ -174,16 +174,16 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs
-        probs = []  # todo - uncomment
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs  # todo - uncomment
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         cr = []
+        cr_total = [[], [], [], [], [], []]  # for mutation check
+        cr_change = 3  # todo  for mutation check
         # running each generation
         for n in range(self.gen_start-1, self.num_gens):
-            # Save the current WOI
-            save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations"
                   + "\033[0m")
             # simulate the population
@@ -192,21 +192,20 @@ class Optimization:
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
+                # if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
+                #     continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
-                if probs[t].concept_name in woi.dwoi[-1][4]:
-                    probs[t].in_dwoi = True
                 # Check Convergance rate
                 if not (n + 1) % self.allocation_delta:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
-                    # if probs[t].in_dwoi or probs[t].paused:
-                    #     continue
                     if probs[t].stopped:
                         to_pop.append(t)
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
+                    cr_total[t].append(probs[t].get_cr())  # for mutaion check
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
@@ -214,11 +213,19 @@ class Optimization:
                     probs.pop(to_pop[p] - p)
                 probs = self.ra.run(cr, probs)
                 cr = []
+            # check which concepts are inside the DWOI
+            for t in range(len(probs)):
+                if probs[t].concept_name in woi.dwoi[-1][4]:
+                    probs[t].in_dwoi = True
+                else:
+                    probs[t].in_dwoi = False
             # Update generation
             woi.set_gen(n + 1)
             # Check global stop condition
             woi.stop_condition(probs)
             save_json("woi_All", woi.__dict__)
+            # Save the current WOI
+            save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
             if woi.stopped:
                 break
         self.probs = probs
@@ -264,6 +271,7 @@ class Optimization:
 
     def finish(self):
         print("Saving data...")
+        # save_json("woi_All", self.woi.__dict__)
         save_json("woi_last", self.woi.__dict__, "w+")
         print("saved_last_woi")
         sleep(1)
@@ -638,10 +646,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    nb = 2  # 1
-                    # if cr == 0 or len(self.get_population()) > 100:
-                    if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 1  # 2
+                    nb = 1  # Todo 1
+                    if cr == 0 or  len(self.get_population()) > 100:
+                    # if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
+                        nb = 2  # 2
                     mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
@@ -966,6 +974,7 @@ class DWOI:
             print("Time Limit passed")
             self.stopped = True
         stopped = 0
+        naems = []
         for q in prbs:
             if q.in_dwoi or q.stopped:
                 stopped += 1

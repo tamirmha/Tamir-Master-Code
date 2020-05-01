@@ -1,4 +1,4 @@
-from Other import save_json, load_json
+from Other import save_json, load_json, plot_cr, plot_woi
 import os
 import pickle
 import matplotlib.pyplot as plt
@@ -7,6 +7,7 @@ import numpy as np
 from tqdm import tqdm
 from optimization import Problem
 from scipy.spatial import distance
+import copy
 
 
 def run_results(prob, gen_num=1, elite_archive=True):
@@ -51,10 +52,10 @@ def calc_dis(elite):
     return dis_a_min
 
 
-def mutation_check():
-    folder_name = os.getcwd() + "/results/mutauioncheck/23_04_ami_mut/"
-    folder_name_t = os.getcwd() + "/results/mutauioncheck/22_04_tamir_mut/"
-    folder_name_c= os.getcwd() + "/results/mutauioncheck/23_04_com_mut/"
+def mutation_check(ami,  tamir, comb):
+    folder_name = os.getcwd() + ami
+    folder_name_t = os.getcwd() + tamir
+    folder_name_c= os.getcwd() + comb
     with open(folder_name+"problems.pkl") as f:
         a = pickle.load(f)
     with open(folder_name_t+"problems.pkl") as f:
@@ -153,38 +154,44 @@ def domination_check(conf, front, concept_name):
             front[2].append(k)
             if front[4] != concept_name:
                 front[4].append(concept_name)
+    # print(front)
     return front
 
 
-def woi_comprasion():
-    name = "/results/mutauioncheck/22_04_tamir_mut/"
-    folder_name = os.getcwd() + name
+def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
+    folder_name = os.getcwd() + names[0]
+    t = load_json(os.getcwd() + names[1] + "woi_last")
+    a = load_json(os.getcwd() + names[0] + "woi_last")
+    c = load_json(os.getcwd() + names[2] + "woi_last")
+    pre_woi = copy.deepcopy(t["dwoi"][0])
+    t_woi = copy.deepcopy(t["dwoi"][-1])
+    c_woi = copy.deepcopy(c["dwoi"][-1])
+    a_woi = copy.deepcopy(a["dwoi"][-1])
+    all_points = [[], [], [], [], [], []]
+    k = 0
+    concepts_names = []
     with open(folder_name+"problems.pkl") as f:
         problems = pickle.load(f)
-    front = [[1], [0.5], [6], [""], [""]]
-    # for res in problems[0].confs_results:
-    #     confs = [[float(res[res.keys()[0]]["mu"])], [float(res[res.keys()[0]]["z"])],
-    #              [float(res[res.keys()[0]]["dof"])], [res[res.keys()[0]]["name"]]]
-    #     front = domination_check(confs, front, problems[0].concept_name)
+    front = copy.deepcopy([ pre_woi[1], pre_woi[0], pre_woi[2], pre_woi[3],  pre_woi[4]])  # [[1], [0.5], [6], [""], [""]]
+    # [1-i for i in pre_woi[1]]
+    d = []
     for prob in problems:
         for res in prob.confs_results:
-            conf = [[float(res[res.keys()[0]]["mu"])], [float(res[res.keys()[0]]["z"])],
+            conf = [[1-float(res[res.keys()[0]]["mu"])], [float(res[res.keys()[0]]["z"])],
                     [float(res[res.keys()[0]]["dof"])], [res[res.keys()[0]]["name"]]]
             front = domination_check(conf, front, prob.concept_name)
-    t = load_json("results/mutauioncheck/22_04_tamir_mut/woi_last")
-    a = load_json("results/mutauioncheck/23_04_ami_mut/woi_last")
-    c = load_json("results/mutauioncheck/23_04_com_mut/woi_last")
-    pre_woi = t["dwoi"][0]
-    t_woi = t["dwoi"][-1]
-    c_woi = c["dwoi"][-1]
-    a_woi = a["dwoi"][-1]
+            if conf[0][0] == 71 or conf[1] == 70 or conf[0][0] == 2.0 or conf[1] == 2.0:
+                conf[0] = [1]
+                conf[1] = [0.5]
+            d.append(conf[0][0])
+            all_points[k].append([conf[0][0], conf[1][0]])
+        all_points[k] = np.asarray(all_points[k], dtype=float).T
+        concepts_names.append(prob.concept_name)
+        k += 1
     plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title('WOI_comprasion')
     plt.subplots_adjust(left=0.07, bottom=0.05, right=0.98, top=0.95)
     x = [[], [], [], [], []]
     y = [[], [], [], [], []]
-    # for xt, yt, dt, xa, ya, da, xc, yc, dc, xp, yp, dp, xf, yf, df in zip(t_woi[0],
-    #     t_woi[1], t_woi[2], a_woi[0], a_woi[1], a_woi[2], c_woi[0], c_woi[1],
-    #         c_woi[2], pre_woi[0], pre_woi[1], pre_woi[2], front[0], front[1], front[2]):
     for xt, yt, dt in zip(t_woi[0], t_woi[1], t_woi[2]):
         if dt == 6 or dt == 6.0:
            x[0].append(xt)
@@ -201,30 +208,44 @@ def woi_comprasion():
         if dp == 6 or dp == 6.0:
             x[3].append(xp)
             y[3].append(yp)
-    for xf, yf, df in zip(front[0], front[1], front[2]):
+    for xf, yf, df in zip(front[1], front[0], front[2]):
         if df == 6 or df == 6.0:
             x[4].append(xf)
             y[4].append(yf)
     colors = ["b", "k", "r", "g", "orange"]
     shapes = ["*", "^", ">", "8", "."]
     labels = ["Tamir_mut", "Ami_mut", "Com_mut", "pre_DWOI", "Best_DWOI"]
+    # labels = ["Vm1", "Vm2", "Vm3", "pre_DWOI", "Best_DWOI"]
     for i in range(5):
         a = np.asarray([x[i], y[i]])
         inds = np.argsort(a[0])
         x[i] = a[0, inds]
         y[i] = a[1, inds]
         plt.plot(x[i], y[i], color=colors[i], marker=shapes[i], label=labels[i])
+    for conc_points, label in zip(all_points,concepts_names):
+        x = conc_points[1]
+        y = conc_points[0]
+        plt.scatter(x, y, alpha=0.2, label=label)
     plt.xlabel("Mid Proximity", fontsize=20)
     plt.ylabel("1 - Manipulability Index", fontsize=20)
     plt.title("Mutation Comprasion", fontsize=26)
-    plt.legend(fontsize=16)
+    plt.legend(fontsize=10)
+    plt.grid(True)
     plt.show()
 
 
-mutation_check()
-# first_gen_and_elite_res(name="/results/mutauioncheck/23_04_com_mut/")
-# woi_comprasion()
-
+fol = "/results/mutauioncheck/mut_cr_30/"
+# fol = "/results/runs/greedy_1/"
+# fol = "/opt_results/tamir/run3_greedy_ami/"
+# end_fol = "run2_greedy/25_04/"
+# names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
+names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
+mutation_check(names[0], names[1], names[2])
+woi_comprasion(names=names)
+for name in names:
+    first_gen_and_elite_res(name=name)
+    plot_cr(os.getcwd() + name + "woi_last", to_save=True)
+    plot_woi(os.getcwd() + name, to_save=True)
 
 # t = load_json("opt_results/23_04/optimizaion_WOI")
 # # a = load_json("results/mutauioncheck/22_04_ami_mut/woi_last")
