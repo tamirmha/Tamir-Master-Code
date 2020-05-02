@@ -1262,8 +1262,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
-    check_num_confs_in_concepts = False
+    sumdata = False
+    check_num_confs_in_concepts = True
     sum_all = True
     create_configs = False
     cr_plot = False
@@ -1272,7 +1272,7 @@ if __name__ == '__main__':
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
-        # create random urdf
+        # create urdf
         if create_urdf:
             all_to_sim = con.confs2simulate(concepts_with_values)
             filter2sim, res = con.filter_confs(all_to_sim)
