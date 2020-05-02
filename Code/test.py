@@ -55,13 +55,13 @@ def calc_dis(elite):
 def mutation_check(ami,  tamir, comb):
     folder_name = os.getcwd() + ami
     folder_name_t = os.getcwd() + tamir
-    folder_name_c= os.getcwd() + comb
+    folder_name_c = os.getcwd() + comb
     with open(folder_name+"problems.pkl") as f:
         a = pickle.load(f)
     with open(folder_name_t+"problems.pkl") as f:
         t = pickle.load(f)
     with open(folder_name_c + "problems.pkl") as f:
-       c = pickle.load(f)
+        c = pickle.load(f)
     mut_a = []
     mut_t = []
     mut_c = []
@@ -172,8 +172,7 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     concepts_names = []
     with open(folder_name+"problems.pkl") as f:
         problems = pickle.load(f)
-    front = copy.deepcopy([ pre_woi[1], pre_woi[0], pre_woi[2], pre_woi[3],  pre_woi[4]])  # [[1], [0.5], [6], [""], [""]]
-    # [1-i for i in pre_woi[1]]
+    front = copy.deepcopy([pre_woi[1], pre_woi[0], pre_woi[2], pre_woi[3],  pre_woi[4]])
     d = []
     for prob in problems:
         for res in prob.confs_results:
@@ -234,85 +233,101 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     plt.show()
 
 
-fol = "/results/mutauioncheck/mut_cr_30/"
-# fol = "/results/runs/greedy_1/"
-# fol = "/opt_results/tamir/run3_greedy_ami/"
-# end_fol = "run2_greedy/25_04/"
-# names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
-names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
-mutation_check(names[0], names[1], names[2])
-woi_comprasion(names=names)
-for name in names:
-    first_gen_and_elite_res(name=name)
-    plot_cr(os.getcwd() + name + "woi_last", to_save=True)
-    plot_woi(os.getcwd() + name, to_save=True)
+# For animation
+def init_lines():
+    for line in lines:
+        line.set_data([],[])
+    return lines
 
-# t = load_json("opt_results/23_04/optimizaion_WOI")
-# # a = load_json("results/mutauioncheck/22_04_ami_mut/woi_last")
-# # c = load_json("results/mutauioncheck/22_04_com_mut/woi_last")
-# t_woi = []
-# for k in range(len(t)):
-#     t_woi.append([])
-#     woi = np.asarray(t[k][t[k].keys()[0]][:3])
-#     inds = np.argsort(woi[0])
-#     woi[0] = woi[0, inds]
-#     woi[1] = woi[1, inds]
-#     woi[2] = woi[2, inds]
-#     for j in range(len(woi[2])):
-#         if woi[2][j] == 6.0 or woi[2][j] == 6:
-#             t_woi[k].append([woi[0][j], woi[1][j]])
-# # c_woi = c["dwoi"][-1]
-# # a_woi = a["dwoi"][-1]
-# # First set up the figure, the axis, and the plot element we want to animate
-# fig = plt.figure()
-# ax = plt.axes(xlim=(0, 0.5), ylim=(0, 1))
-# line, = ax.plot([], [], lw=2)
-# ttl = ax.text(.5, 1.05, '', transform = ax.transAxes, va='center')
-# ax.set_ylabel("1 - Manipulability")
-# ax.set_xlabel("Mid Proximity")
-#
-# plotlays, plotcols = [2], ["black","red"]
-# lines = []
-# for index in range(2):
-#     lobj = ax.plot([],[],lw=2,color=plotcols[index])[0]
-#     lines.append(lobj)
-#
-# # initialization function: plot the background of each frame
-# def init():
-#     for line in lines:
-#         line.set_data([],[])
-#     return lines
-#     line.set_data([], [])
-#     ttl.set_text('')
-#     return line,
-#
-# # animation function.  This is called sequentially
-# def animate(i):
-#     x = []
-#     y = []
-#     x1 = []
-#     y1 = []
-#     for p in range(len(t_woi[i % 1240])):
-#         x.append(t_woi[i % 1240][p][0])
-#         y.append(t_woi[i % 1240][p][1])
-#         x1 = x[p] + 0.2
-#         y1 = y[p] + 0.2
-#     xlist = [x1, x]
-#     ylist = [y1, y]
-#     for lnum,line in enumerate(lines):
-#         line.set_data(xlist[lnum], ylist[lnum]) # set data for each line separately.
-#
-#     return lines
-#     # line.set_data(x, y)
-#     ttl.set_text(str(i))
-#     return line,
-#
-# # call the animator.  blit=True means only re-draw the parts that have changed.
-# anim = animation.FuncAnimation(fig, animate, init_func=init,
-#                                frames=1240, interval=1)
-#
-# # anim.save('basic_animation.gif', writer='imagemagick', fps=30)
-# # x = t["all"][0]["dwoi"][0][0]
-# # y = t["all"][0]["dwoi"][0][1]
-# # plt.scatter(x, y)
-# plt.show()
+
+def animate_lines(o):
+    i = o * d + d
+    colors = ["b", "r", "k"]
+    for j, line in enumerate(lines):
+        x = []
+        y = []
+        for p in range(len(woi[j][i % 1240])):
+            # print(p)
+            x.append(woi[j][i % 1240][p][0])
+            y.append(woi[j][i % 1240][p][1])
+        line.set_data(x, y)
+        line.set_label(labels[j])
+        line.set_color(colors[j])
+    ttl.set_text("Generation: " + str(i))
+    plt.legend()
+    return lines
+
+
+def add_data(t):
+        wo = []
+        for k in range(len(t)):
+            wo.append([])
+            woi = np.asarray(t[k][t[k].keys()[0]][:3])
+            inds = np.argsort(woi[0])
+            woi[0] = woi[0, inds]
+            woi[1] = woi[1, inds]
+            woi[2] = woi[2, inds]
+            for j in range(len(woi[2])):
+                if woi[2][j] == 6.0 or woi[2][j] == 6:
+                    wo[k].append([woi[0][j], woi[1][j]])
+        if len(wo) < 1240:
+            for t in range(len(wo), 1240):
+                wo.append(wo[-1])
+        return wo
+
+
+def plot_init_woi():
+    x = []
+    y = []
+    for k in range(len(woi[0][0])):
+        x.append([woi[0][0][k][0]])
+        y.append([woi[0][0][k][1]])
+    plt.plot(x, y, label="Initial DWOI", color="g")
+
+
+woi_n_generate = False
+anim = True
+if anim:
+    # labels = ["Tamir", "Comb", "ami"]
+    labels = ["VM1", "VM2", "VM3"]
+    fol_name = "/fair_run"  # "/mut_cr_30"
+    end = "/"
+    start = "/results/runs" # "/results/mutauioncheck"
+    # fols = [start + fol_name + "/ami" + end, start + fol_name + "/Tamir" + end,
+    #           start + fol_name + "/comb" + end]
+    fols = [start + fol_name + "/inbar" + end, start + fol_name + "/tamir" + end,
+              start + fol_name + "/shay" + end]
+    t_woi = add_data(load_json(os.getcwd() + fols[1] + "optimizaion_WOI"))
+    c_woi = add_data(load_json(os.getcwd() + fols[0] + "optimizaion_WOI"))
+    a_woi = add_data(load_json(os.getcwd() + fols[2] + "optimizaion_WOI"))
+    woi = [t_woi, c_woi, a_woi]
+
+    # # First set up the figure, the axis, and the plot element we want to animate
+    fig = plt.figure()
+    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.98, top=0.95)
+    ax = plt.axes(xlim=(-0.01, 0.5), ylim=(0, 1))
+    line, = ax.plot([], [], lw=2)
+    ttl = ax.text(.5, 1.02, '', transform=ax.transAxes, va='center')
+    ax.set_ylabel("1 - Manipulability")
+    ax.set_xlabel("Mid Proximity")
+    n = 3
+    lines = [plt.plot([], [])[0] for _ in range(n)]
+    plot_init_woi()
+    d = 3
+    anim = animation.FuncAnimation(fig, animate_lines, init_func=init_lines,
+                           frames=1240/d, interval=50)
+    anim.save('WOI_comprasion.gif', writer='imagemagick')
+    plt.show()
+if woi_n_generate:
+    fol = "/results/mutauioncheck/mut_cr_30/"
+    # fol = "/results/runs/greedy_1/"
+    # fol = "/opt_results/tamir/run3_greedy_ami/"
+    # end_fol = "run2_greedy/25_04/"
+    # names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
+    names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
+    mutation_check(names[0], names[1], names[2])
+    woi_comprasion(names=names)
+    for name in names:
+        first_gen_and_elite_res(name=name)
+        plot_cr(os.getcwd() + name + "woi_last", to_save=True)
+        plot_woi(os.getcwd() + name, to_save=True)

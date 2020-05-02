@@ -174,15 +174,16 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs  # todo - uncomment
-        # probs = []
-        # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-        #         probs.append(p)
+        # probs = self.probs  # todo - uncomment
+        probs = []
+        for p in self.probs:
+            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+                probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
         cr_change = 3  # todo  for mutation check
         # running each generation
+        save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         for n in range(self.gen_start-1, self.num_gens):
             print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations"
                   + "\033[0m")
@@ -192,8 +193,8 @@ class Optimization:
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
-                # if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
-                #     continue
+                if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
+                    continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
                 # Check Convergance rate
@@ -208,6 +209,11 @@ class Optimization:
                     cr_total[t].append(probs[t].get_cr())  # for mutaion check
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
+            if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
+                for p in range(len(to_pop)):
+                    probs.pop(to_pop[p] - p)
+                probs = self.ra.run(cr, probs)
+                cr = []
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
                 for p in range(len(to_pop)):
                     probs.pop(to_pop[p] - p)
@@ -646,10 +652,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    nb = 1  # Todo 1
-                    if cr == 0 or  len(self.get_population()) > 100:
+                    nb = 2  # Todo 1
+                    if cr == 0 or len(self.get_population()) > 100:
                     # if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 2  # 2
+                        nb = 1  # 2
                     mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
