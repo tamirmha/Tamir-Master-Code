@@ -1262,7 +1262,7 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = False
+    sumdata = True
     check_num_confs_in_concepts = True
     sum_all = True
     create_configs = False

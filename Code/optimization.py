@@ -174,11 +174,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs  # todo - uncomment
-        probs = []
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs  # todo - uncomment
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
         cr_change = 3  # todo  for mutation check
@@ -193,8 +193,8 @@ class Optimization:
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
-                if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
-                    continue
+                # if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
+                #     continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
                 # Check Convergance rate
@@ -206,7 +206,7 @@ class Optimization:
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
-                    cr_total[t].append(probs[t].get_cr())  # for mutaion check
+                    # cr_total[t].append(probs[t].get_cr())  # todo for mutaion check
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
@@ -652,10 +652,10 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    nb = 2  # Todo 1
+                    nb = 1  # Todo 1
                     if cr == 0 or len(self.get_population()) > 100:
                     # if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 1  # 2
+                        nb = 2  # 2
                     mut_spring = self.mutation_rand(parent_1, nb)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
@@ -1179,5 +1179,4 @@ if __name__ == '__main__':
         c.terminate()
 
 
-# todo - check if after concept not in woi is return to run
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation

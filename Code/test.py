@@ -167,10 +167,10 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     t_woi = copy.deepcopy(t["dwoi"][-1])
     c_woi = copy.deepcopy(c["dwoi"][-1])
     a_woi = copy.deepcopy(a["dwoi"][-1])
-    all_points = [[], [], [], [], [], []]
+    all_points =[[]] * 220  # [[], [], [], [], [], []]
     k = 0
     concepts_names = []
-    with open(folder_name+"problems.pkl") as f:
+    with open(folder_name+"last_problems.pkl") as f:
         problems = pickle.load(f)
     front = copy.deepcopy([pre_woi[1], pre_woi[0], pre_woi[2], pre_woi[3],  pre_woi[4]])
     d = []
@@ -214,7 +214,7 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     colors = ["b", "k", "r", "g", "orange"]
     shapes = ["*", "^", ">", "8", "."]
     labels = ["Tamir_mut", "Ami_mut", "Com_mut", "pre_DWOI", "Best_DWOI"]
-    # labels = ["Vm1", "Vm2", "Vm3", "pre_DWOI", "Best_DWOI"]
+    labels = ["Vm1", "Vm2", "Vm3", "pre_DWOI", "Best_DWOI"]
     for i in range(5):
         a = np.asarray([x[i], y[i]])
         inds = np.argsort(a[0])
@@ -224,14 +224,14 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     for conc_points, label in zip(all_points,concepts_names):
         x = conc_points[1]
         y = conc_points[0]
-        plt.scatter(x, y, alpha=0.2, label=label)
+        plt.scatter(x, y, alpha=0.1)
     plt.xlabel("Mid Proximity", fontsize=20)
     plt.ylabel("1 - Manipulability Index", fontsize=20)
-    plt.title("Mutation Comprasion", fontsize=26)
+    plt.title("WOI Comprasion", fontsize=26)
     plt.legend(fontsize=10)
     plt.grid(True)
     plt.show()
-
+    # plt.savefig()
 
 # For animation
 def init_lines():
@@ -285,8 +285,8 @@ def plot_init_woi():
     plt.plot(x, y, label="Initial DWOI", color="g")
 
 
-woi_n_generate = False
-anim = True
+woi_n_generate = True
+anim = False
 if anim:
     # labels = ["Tamir", "Comb", "ami"]
     labels = ["VM1", "VM2", "VM3"]
@@ -319,13 +319,14 @@ if anim:
     anim.save('WOI_comprasion.gif', writer='imagemagick')
     plt.show()
 if woi_n_generate:
-    fol = "/results/mutauioncheck/mut_cr_30/"
-    # fol = "/results/runs/greedy_1/"
+    # fol = "/results/mutauioncheck/mut_cr_30/"
+    fol = "/results/runs/fair_run/"
     # fol = "/opt_results/tamir/run3_greedy_ami/"
-    # end_fol = "run2_greedy/25_04/"
-    # names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
-    names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
-    mutation_check(names[0], names[1], names[2])
+    end_fol = ""
+    names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
+    # names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
+    # names = [fol + "02_05/"]
+    # mutation_check(names[0], names[1], names[2])
     woi_comprasion(names=names)
     for name in names:
         first_gen_and_elite_res(name=name)
