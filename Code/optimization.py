@@ -306,9 +306,10 @@ class Optimization:
             # move the files into the desired place
             if self.move_folder():
                 print("start simulating")
-                # cmd = 'gnome-terminal -- python simulator.py 6 '
                 self.simulating()
+                print("start new_data")
                 prob = self.new_data(prob)
+                print("end new_data")
         return prob
 
     @staticmethod
