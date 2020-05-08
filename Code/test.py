@@ -8,6 +8,8 @@ from tqdm import tqdm
 from optimization import Problem
 from scipy.spatial import distance
 import copy
+from hv import HyperVolume
+from scipy.stats import wilcoxon
 
 
 def run_results(prob, gen_num=1, elite_archive=True):
@@ -158,19 +160,41 @@ def domination_check(conf, front, concept_name):
     return front
 
 
+def no_woi_front(elites):
+    front = elites[0]
+    concepts = []
+    for i in range(len(front[0])):
+        concepts.append(front[4])
+    front[4] = concepts
+    for elite in elites[1:]:
+        front = domination_check(elite, front, elite[4])
+    return front
+
+
 def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
-    folder_name = os.getcwd() + names[0]
+    # folder_name = os.getcwd() + names[1]
+    folder_name = os.getcwd() + "/results/mutauioncheck/"
     t = load_json(os.getcwd() + names[1] + "woi_last")
-    a = load_json(os.getcwd() + names[0] + "woi_last")
-    c = load_json(os.getcwd() + names[2] + "woi_last")
     pre_woi = copy.deepcopy(t["dwoi"][0])
-    t_woi = copy.deepcopy(t["dwoi"][-1])
-    c_woi = copy.deepcopy(c["dwoi"][-1])
-    a_woi = copy.deepcopy(a["dwoi"][-1])
-    all_points =[[]] * 220  # [[], [], [], [], [], []]
+    # a = load_json(os.getcwd() + names[0] + "woi_last")
+    # c = load_json(os.getcwd() + names[3] + "woi_last")
+    # r = load_json(os.getcwd() + names[2] + "woi_last")
+    # t_woi = copy.deepcopy(t["dwoi"][-1])
+    # c_woi = copy.deepcopy(c["dwoi"][-1])
+    # a_woi = copy.deepcopy(a["dwoi"][-1])
+    # r_woi = copy.deepcopy(r["dwoi"][-1])
+    t_woi = load_json(os.getcwd() + names[1] + "elits")
+    t_woi = no_woi_front(t_woi)
+    a_woi = load_json(os.getcwd() + names[0] + "elits")
+    a_woi = no_woi_front(a_woi)
+    c_woi = load_json(os.getcwd() + names[3] + "elits")
+    c_woi = no_woi_front(c_woi)
+    r_woi = load_json(os.getcwd() + names[2] + "elits")
+    r_woi = no_woi_front(r_woi)
+    all_points =[[], [], [], [], [], []]   # [[]] * 220  #
     k = 0
     concepts_names = []
-    with open(folder_name+"last_problems.pkl") as f:
+    with open(folder_name+"problems.pkl") as f:
         problems = pickle.load(f)
     front = copy.deepcopy([pre_woi[1], pre_woi[0], pre_woi[2], pre_woi[3],  pre_woi[4]])
     d = []
@@ -189,8 +213,8 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
         k += 1
     plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title('WOI_comprasion')
     plt.subplots_adjust(left=0.07, bottom=0.05, right=0.98, top=0.95)
-    x = [[], [], [], [], []]
-    y = [[], [], [], [], []]
+    x = [[], [], [], [], [], []]
+    y = [[], [], [], [], [], []]
     for xt, yt, dt in zip(t_woi[0], t_woi[1], t_woi[2]):
         if dt == 6 or dt == 6.0:
            x[0].append(xt)
@@ -201,8 +225,12 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
             y[1].append(ya)
     for xc, yc, dc in zip(c_woi[0], c_woi[1], c_woi[2]):
         if dc == 6 or dc == 6.0:
-            x[2].append(xc)
-            y[2].append(yc)
+            x[5].append(xc)
+            y[5].append(yc)
+    for xr, yr, dr in zip(r_woi[0], r_woi[1], r_woi[2]):
+        if dr == 6 or dr == 6.0:
+            x[2].append(xr)
+            y[2].append(yr)
     for xp, yp, dp in zip(pre_woi[0], pre_woi[1], pre_woi[2]):
         if dp == 6 or dp == 6.0:
             x[3].append(xp)
@@ -211,11 +239,12 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
         if df == 6 or df == 6.0:
             x[4].append(xf)
             y[4].append(yf)
-    colors = ["b", "k", "r", "g", "orange"]
-    shapes = ["*", "^", ">", "8", "."]
-    labels = ["Tamir_mut", "Ami_mut", "Com_mut", "pre_DWOI", "Best_DWOI"]
-    labels = ["Vm1", "Vm2", "Vm3", "pre_DWOI", "Best_DWOI"]
-    for i in range(5):
+    colors = ["b", "k", "r", "g", "orange", "cyan"]
+    shapes = ["*", "^", ">", "8", ".", "<"]
+    # labels = ["Tamir_mut", "Ami_mut", "Com_mut", "pre_DWOI", "Best_DWOI"]
+    labels = ["Tamir_mut", "Ami_mut", "Rand_mut", "pre_DWOI", "Best_DWOI", "Com_mut"]
+    # labels = ["Vm1", "Vm2", "Vm3", "pre_DWOI", "Best_DWOI"]
+    for i in range(6):
         a = np.asarray([x[i], y[i]])
         inds = np.argsort(a[0])
         x[i] = a[0, inds]
@@ -224,7 +253,7 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     for conc_points, label in zip(all_points,concepts_names):
         x = conc_points[1]
         y = conc_points[0]
-        plt.scatter(x, y, alpha=0.1)
+        plt.scatter(x, y, alpha=0.1, s=60)
     plt.xlabel("Mid Proximity", fontsize=20)
     plt.ylabel("1 - Manipulability Index", fontsize=20)
     plt.title("WOI Comprasion", fontsize=26)
@@ -232,6 +261,30 @@ def woi_comprasion(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
     plt.grid(True)
     plt.show()
     # plt.savefig()
+
+
+def all_points():
+    folder_name = os.getcwd() + "/results/mutauioncheck/"
+    all_points =[[], [], [], [], [], []]
+    k = 0
+    concepts_names = []
+    with open(folder_name+"problems.pkl") as f:
+        problems = pickle.load(f)
+    d = []
+    for prob in problems:
+        for res in prob.confs_results:
+            conf = [[1-float(res[res.keys()[0]]["mu"])], [float(res[res.keys()[0]]["z"])],
+                    [float(res[res.keys()[0]]["dof"])], [res[res.keys()[0]]["name"]]]
+            if conf[0][0] == 71 or conf[1] == 70 or conf[0][0] == 2.0 or conf[1] == 2.0:
+                conf[0] = [1]
+                conf[1] = [0.5]
+            d.append(conf[0][0])
+            all_points[k].append([conf[0][0], conf[1][0]])
+        all_points[k] = np.asarray(all_points[k], dtype=float).T
+        concepts_names.append(prob.concept_name)
+        k += 1
+    return all_points, concepts_names
+
 
 # For animation
 def init_lines():
@@ -242,12 +295,11 @@ def init_lines():
 
 def animate_lines(o):
     i = o * d + d
-    colors = ["b", "r", "k"]
+    colors = ["b", "r", "k", "cyan"]
     for j, line in enumerate(lines):
         x = []
         y = []
         for p in range(len(woi[j][i % 1240])):
-            # print(p)
             x.append(woi[j][i % 1240][p][0])
             y.append(woi[j][i % 1240][p][1])
         line.set_data(x, y)
@@ -285,50 +337,114 @@ def plot_init_woi():
     plt.plot(x, y, label="Initial DWOI", color="g")
 
 
-woi_n_generate = True
-anim = False
-if anim:
-    # labels = ["Tamir", "Comb", "ami"]
-    labels = ["VM1", "VM2", "VM3"]
-    fol_name = "/fair_run"  # "/mut_cr_30"
-    end = "/"
-    start = "/results/runs" # "/results/mutauioncheck"
-    # fols = [start + fol_name + "/ami" + end, start + fol_name + "/Tamir" + end,
-    #           start + fol_name + "/comb" + end]
-    fols = [start + fol_name + "/inbar" + end, start + fol_name + "/tamir" + end,
-              start + fol_name + "/shay" + end]
-    t_woi = add_data(load_json(os.getcwd() + fols[1] + "optimizaion_WOI"))
-    c_woi = add_data(load_json(os.getcwd() + fols[0] + "optimizaion_WOI"))
-    a_woi = add_data(load_json(os.getcwd() + fols[2] + "optimizaion_WOI"))
-    woi = [t_woi, c_woi, a_woi]
+create_woi_cr = False
+woi_n_generate = False
+anim = True
+plot_conceot_front = False
+calc_hv = False
 
-    # # First set up the figure, the axis, and the plot element we want to animate
-    fig = plt.figure()
-    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.98, top=0.95)
-    ax = plt.axes(xlim=(-0.01, 0.5), ylim=(0, 1))
-    line, = ax.plot([], [], lw=2)
-    ttl = ax.text(.5, 1.02, '', transform=ax.transAxes, va='center')
-    ax.set_ylabel("1 - Manipulability")
-    ax.set_xlabel("Mid Proximity")
-    n = 3
-    lines = [plt.plot([], [])[0] for _ in range(n)]
-    plot_init_woi()
-    d = 3
-    anim = animation.FuncAnimation(fig, animate_lines, init_func=init_lines,
-                           frames=1240/d, interval=50)
-    anim.save('WOI_comprasion.gif', writer='imagemagick')
-    plt.show()
+fol = "/results/mutauioncheck/woi_nadir/"
+end_fol = ""
+names = [fol + "ami/", fol + "Tamir/", fol + "rand/", fol + "comb/"]
+# names = [fol + "ami/", fol + "Tamir/", fol + "rand/", fol + "comb/"]
+if calc_hv:  # HV calculation
+    referencePoint = [0.5, 1]
+    volumes = []
+    medians = []
+    min_manip = []
+    k = 0
+    hv = HyperVolume(referencePoint)
+    for fol in tqdm(names):
+        volumes.append([])
+        min_manip.append([])
+        for dircetor in os.listdir(os.getcwd() + fol):
+            if dircetor == "hv.json":
+                continue
+            name = fol + dircetor
+            woi = load_json(os.getcwd() + name + "/woi_last")["dwoi"][-1]
+            front = np.asarray(woi[:2]).T
+            volumes[k].append(round(hv.compute(front), 4))
+            min_manip[k].append(np.min(front[:,1] ))
+        save_json(os.getcwd() + fol + "hv", volumes[k], "w+")
+        medians.append(np.median(volumes[k]))
+        k += 1
+    # wil = wilcoxon(medians)
+    wil2 = wilcoxon(volumes[1], volumes[0])
+    wil3 = wilcoxon(volumes[0], volumes[1])
+if create_woi_cr:
+    for fol in tqdm(names):
+        for dircetor in os.listdir(os.getcwd()+fol):
+            created = False
+            if os.path.isdir(os.getcwd() + fol + "/" + dircetor) and dircetor != "urdf":
+                name = fol + "/" + dircetor + "/"
+                first_gen_and_elite_res(name=name)
+                plot_cr(os.getcwd() + name + "woi_last", to_save=True)
+                plot_woi(os.getcwd() + name, to_save=True)
+                created = True
+            else:
+                name = fol
+                continue
+        if not created:
+            first_gen_and_elite_res(name=name)
+            plot_cr(os.getcwd() + name + "woi_last", to_save=True)
+            plot_woi(os.getcwd() + name, to_save=True)
 if woi_n_generate:
-    # fol = "/results/mutauioncheck/mut_cr_30/"
-    fol = "/results/runs/fair_run/"
-    # fol = "/opt_results/tamir/run3_greedy_ami/"
-    end_fol = ""
-    names = [fol + "tamir/" + end_fol, fol + "inbar/" + end_fol, fol + "shay/" + end_fol ]
-    # names = [fol + "ami/", fol + "Tamir/", fol + "comb/"]
-    # names = [fol + "02_05/"]
     # mutation_check(names[0], names[1], names[2])
     woi_comprasion(names=names)
-    for name in names:
-        first_gen_and_elite_res(name=name)
-        plot_cr(os.getcwd() + name + "woi_last", to_save=True)
-        plot_woi(os.getcwd() + name, to_save=True)
+if plot_conceot_front:
+    fig, axs = plt.subplots(6, 1, figsize=(24, 10), facecolor='w', edgecolor='k')
+    plt.subplots_adjust(left=0.05, bottom=0.07, right=0.99, top=0.99)
+    colors = ["b", "k", "r", "cyan", "y", "purple"]
+    points, names = all_points()
+    i = 0
+    major_ticks = np.arange(0, 0.5, 0.1)
+    minor_ticks = np.arange(0, 0.5, 0.01)
+
+    for conc_points, label in zip(points, names):
+        x = conc_points[1]
+        y = conc_points[0]
+        mid_delta = 0.01
+        man_delta = 0.7
+        mid = x < mid_delta
+        man = y < man_delta
+        com = np.logical_and(mid, man)
+        label = str(round(100.*np.sum(com)/np.sum(x<0.6), 1)) \
+                + "% of the result are smaller than " + str((mid_delta, man_delta))
+        axs[i].scatter(x, y,  label=label, color=colors[i])
+        axs[i].legend()
+        axs[i].set_xticks(major_ticks)
+        axs[i].set_xticks(minor_ticks, minor=True)
+        axs[i].grid(which='both')
+        axs[i].grid(which='minor', alpha=0.3)
+        i += 1
+    plt.xlabel("Mid Proximity", fontsize=26)
+    axs[3].set_ylabel("1 - Manipulability", fontsize=26)
+if anim:
+    for cr in ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]:
+        d = 3
+        total_frames = 1240
+        labels = ["ami","Tamir", "rand", "Comb"]
+        # labels = ["VM1", "VM2", "VM3"]
+        woi = []
+        names = [fol + cr + "ami/", fol + cr  + "Tamir/", fol + cr  + "rand/", fol + cr  + "comb/"]
+        for fold in names:
+            woi.append(add_data(load_json(os.getcwd() + fold + "optimizaion_WOI")))
+        fig = plt.figure()
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.98, top=0.95)
+        ax = plt.axes(xlim=(-0.01, 0.5), ylim=(0, 1))
+        line, = ax.plot([], [], lw=2)
+        plt.grid()
+        ttl = ax.text(.5, 1.02, '', transform=ax.transAxes, va='center')
+        ax.set_ylabel("1 - Manipulability")
+        ax.set_xlabel("Mid Proximity")
+        n = 4
+        lines = [plt.plot([], [])[0] for _ in range(n)]
+        plot_init_woi()
+        anim = animation.FuncAnimation(fig, animate_lines, init_func=init_lines,
+                               frames=total_frames/d, interval=70, repeat=False)
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
+        anim.save(os.getcwd() + fol + cr+ 'WOI_comprasion.mp4',  writer=writer)
+        # anim.save(os.getcwd() + names[0][:-4] + str(total_frames)
+        #           + '_WOI_comprasion.gif',  writer='imagemagick')
+        plt.show()

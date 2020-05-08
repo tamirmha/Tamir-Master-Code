@@ -1159,7 +1159,8 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     if len(cr) < 16:
         plt.legend()
     if to_save:
-        plt.savefig(woi_loc + "cr")
+        plt.savefig(woi_loc[:-8] + "cr")
+        plt.close()
     else:
         plt.show()
 
@@ -1203,6 +1204,7 @@ def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI", to_save=False):
     fig.canvas.set_window_title('WOI')
     if to_save:
         plt.savefig(folder_loc + "WOI")
+        plt.close()
     else:
         plt.show()
 
