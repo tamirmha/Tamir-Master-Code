@@ -201,7 +201,7 @@ class Optimization:
                 if not (n + 1) % self.allocation_delta:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
-                    if probs[t].stopped: # todo - uncomment
+                    if probs[t].stopped:  # todo - uncomment
                         # to_pop.append(t)
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
@@ -244,7 +244,7 @@ class Optimization:
         # check if the local stop condition applied
         if prob.stopped:
             return prob
-        elif prob.paused or prob.in_dwoi:
+        elif prob.paused:  # todo or prob.in_dwoi:
             prob.add_dis(1.5)
             return prob
         population = prob.get_population()
@@ -653,12 +653,12 @@ class Problem:
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
-                    nb = 2  # Todo 1
+                    nb = 1  # Todo 1
                     if len(self.get_population()) > 100:  # cr == 0 or
                     # if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 1  # 2
-                    mut_spring = self.mutation_rand(parent_1, nb)
-                    # mut_spring = self.rand_pop(1)
+                        nb = 2  # 2
+                    # mut_spring = self.mutation_rand(parent_1, nb)
+                    mut_spring = self.rand_pop(1)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -983,12 +983,13 @@ class DWOI:
             self.stopped = True
         stopped = 0
         naems = []
-        for q in prbs:
-            if q.in_dwoi or q.stopped:
-                stopped += 1
-        if stopped == len(prbs):
-            print("All concepts stopped or in DWOI")
-            self.stopped = True
+        # todo - uncomment alll
+        # for q in prbs:
+        #     if q.in_dwoi or q.stopped:
+        #         stopped += 1
+        # if stopped == len(prbs):
+        #     print("All concepts stopped or in DWOI")
+        #     self.stopped = True
 
     def set_dwoi(self, dwoi):
         for i in range(len(dwoi[3])):
@@ -1114,7 +1115,7 @@ class ResourceAllocation:
         decisions = self.assign2concepts(decision, cr_sorted_ind[::-1])
         for i in tqdm(range(len(prob))):
             if prob[i].in_dwoi:
-                continue
+                qqq = 3  # todo continue
             elif i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -1125,6 +1126,7 @@ class ResourceAllocation:
                 prob[i].stopped = True
                 prob[i].paused = False
         return prob
+
 
 with_sim = True  # todo
 if __name__ == '__main__':
