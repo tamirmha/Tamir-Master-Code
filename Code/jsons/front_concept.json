@@ -1,7 +1,11 @@
 [
   {
     "concept": "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 1.0, 'acc_length': 3.1}", 
+<<<<<<< HEAD
+    "mu": 0.76, 
+=======
     "mu": 0.75, 
+>>>>>>> 493efb28e35bf1218c69cce2417e02e9524569b7
     "configuration": "roll_z_0_1pitch_y_0_7pitch_y_0_4pitch_z_0_4pitch_z_0_4pitch_x_0_7", 
     "dof": 6.0, 
     "z": 0.01
@@ -11,6 +15,16 @@
     "mu": 0.75, 
     "configuration": "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_7roll_x_0_1", 
     "dof": 6.0, 
+<<<<<<< HEAD
+    "z": 0.25
+  }, 
+  {
+    "concept": "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 1.0, 'acc_length': 2}", 
+    "mu": 0.6, 
+    "configuration": "roll_z_0_1pitch_y_0_4pitch_y_0_1pitch_x_0_4pitch_x_0_7pitch_y_0_1", 
+    "dof": 6.0, 
+    "z": 0.26
+=======
     "z": 0.25
   }, 
   {
@@ -19,5 +33,6 @@
     "configuration": "roll_z_0_1pitch_y_0_4pitch_y_0_1pitch_x_0_4pitch_x_0_7pitch_y_0_1", 
     "dof": 6.0, 
     "z": 0.25
+>>>>>>> 493efb28e35bf1218c69cce2417e02e9524569b7
   }
 ]

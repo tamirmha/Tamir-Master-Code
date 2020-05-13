@@ -181,7 +181,7 @@ class Optimization:
                 probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
-        cr_change = 5  # todo  for mutation check
+        cr_change = 10000                 # todo  for mutation check
         # running each generation
         save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         for n in range(self.gen_start-1, self.num_gens):
@@ -277,7 +277,6 @@ class Optimization:
 
     def finish(self):
         print("Saving data...")
-        # save_json("woi_All", self.woi.__dict__)
         save_json("woi_last", self.woi.__dict__, "w+")
         print("saved_last_woi")
         sleep(1)
@@ -654,11 +653,11 @@ class Problem:
                 if not mut_ok and mut_offspring < num_mutations:
                     # mut_spring = self.mutation_round(parent_1)
                     nb = 1  # Todo 1
-                    if len(self.get_population()) > 100:  # cr == 0 or
-                    # if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
+                    # if len(self.get_population()) > 100:  # cr == 0 or
+                    if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
                         nb = 2  # 2
-                    # mut_spring = self.mutation_rand(parent_1, nb)
-                    mut_spring = self.rand_pop(1)
+                    mut_spring = self.mutation_rand(parent_1, nb)
+                    # mut_spring = self.rand_pop(1)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()

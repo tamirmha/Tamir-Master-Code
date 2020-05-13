@@ -960,23 +960,36 @@ def load_json(name="data_file"):
             return json.load(read_file)
 
 
-def fix_json(file_name):
-    with open(file_name + ".json", 'r') as filehandler:
-        file_reader = filehandler.readlines()
-        data = []
-        empty = True
-        for row in file_reader:
-            if len(row) > 0:
-                if '][' in row:
-                    row = ',\n'
-                elif '}{' in row:
-                    row = '},\n{\n'
-                data.append(row)
-                empty = False
-            else:
-                if not empty:
-                    data = []
-                empty = True
+def fix_json(file_name, fix_type="regular"):
+    if fix_type == "regular":
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = []
+            empty = True
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
+                    data.append(row)
+                    empty = False
+                else:
+                    if not empty:
+                        data = []
+                    empty = True
+    elif fix_type == "woi_all":
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = ["["]
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
+                    data.append(row)
+            data.append("]")
     with open(file_name + ".json", 'w') as name:
         name.writelines(data)
 
@@ -1223,9 +1236,14 @@ def plot(axrow, x, y, label, name, conc, scores, elits):
         for i in range(len(e[0])):
             axrow.scatter(e[0][i], e[1][i], marker="*", color="r", alpha=0.2)
     axrow.set_title(label)
-    axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.0))
-    axrow.set_xlabel("Mid Proximity Joint")
-    axrow.set_ylabel("Manipulability Index")
+    try:
+        axrow.legend(loc=4, bbox_to_anchor=(-0.08, 0.0))
+    except:
+        qqqqqqqqq =1
+        # print(ValueError)
+    finally:
+        axrow.set_xlabel("Mid Proximity Joint")
+        axrow.set_ylabel("Manipulability Index")
 
 
 def problematic_confs():
