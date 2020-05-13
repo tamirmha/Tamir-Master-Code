@@ -477,7 +477,7 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
 
 
 if __name__ == '__main__':
-    calc_hv = False
+    calc_hv = False-
     create_woi_cr = False
     woi_n_generate = False
     anim = True
