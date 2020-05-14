@@ -174,11 +174,11 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        # probs = self.probs  # todo - uncomment
-        probs = []
-        for p in self.probs:
-            if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-                probs.append(p)
+        probs = self.probs  # todo - uncomment
+        # probs = []
+        # for p in self.probs:
+        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #         probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
         cr_change = 10000                 # todo  for mutation check
@@ -193,8 +193,8 @@ class Optimization:
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
-                if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
-                    continue
+                # if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
+                #     continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
                 # Check Convergance rate
@@ -282,13 +282,10 @@ class Optimization:
         sleep(1)
         if os.path.isfile("problems.pkl"):
             os.remove("problems.pkl")
-        # for p in tqdm(self.probs):
-            # save_json("problems", [p.__dict__])
         pickle_save_data(self.probs, "problems")
         pickle_save_data(self.woi, "woi")
         print("saved problems")
         self.set_new_data()
-        # plot_cr(os.getcwd() + "/woi_last", to_save=True)
         print("Finished")
 
     def sim(self, prob):

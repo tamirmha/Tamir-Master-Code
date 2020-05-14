@@ -391,7 +391,10 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
         tex.append([])
         for j, y in enumerate(x):
             tex[i].append(str(y))
-            ax.text(i,j, str(round(y, 2)), va='center', ha='center', color="white")
+            color = "white"
+            if round(y, 2) <=5:
+                color = "red"
+            ax.text(i,j, str(round(y, 2)), va='center', ha='center', color=color)
     ax.set_xticks(np.arange(16))
     ax.set_yticks(np.arange(16))
     ax.set_xticklabels(labels, rotation="vertical")
@@ -606,6 +609,7 @@ def set_labels(labels):
     labels = []
     for l in labes:
         labels.append(l[0] + l[1])
+        print(l)
     return labels
 
 
@@ -764,7 +768,9 @@ if __name__ == '__main__':
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
         labels2 = labels
+        labels3 = set_labels(labels)
         # labels = set_labels(labels)
+        labels4 = range(16)
         plot_wilcoxon(volumes_last, medians_v, variance_v, labels3)
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
