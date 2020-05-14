@@ -14,3 +14,4 @@
 /.idea/
 /archive/concepts.json
 /archive/concepts+configs+results_all.json
+/results/runs/last_problems.pkl

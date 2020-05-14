@@ -377,16 +377,15 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     plt.subplots_adjust(left=0.03, bottom=0.17, right=0.98, top=0.95)
     grid = plt.GridSpec(1, 3, wspace=0.2)
     ax = fig.add_subplot(grid[0, :-1])
-    wil = np.zeros((len(volumes), len(volumes)))
+    wil = np.ones((len(volumes), len(volumes)))
     for i in range(len(volumes)):
         for j in range(i+1, len(volumes)):
-            # _, p_value = wilcoxon(volumes[i], volumes[j])
-            _, p_value = stats.ranksums(volumes[i], volumes[j])
+            _, p_value = wilcoxon(volumes[i], volumes[j])
             wil[i, j] = p_value * 100
             wil[j, i] = p_value * 100
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size='5%', pad=0)
-    fig.colorbar(ax.matshow(wil),cax)
+    fig.colorbar(ax.matshow(wil), cax)
     tex = []
     for i, x in enumerate(wil):
         tex.append([])
@@ -405,11 +404,12 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     ax.set_xticklabels(labels, rotation="vertical")
     ax.set_title("Medians")
     ax.grid(True, axis="x")
-    for i, med in enumerate(medians_v):
-        ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
+    # for i, med in enumerate(medians_v):
+    #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
 
 
 def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
+    hv = HyperVolume([0.5, 1])
     colors = ["k", "r", "b", "c"]  # Tamir, Ami, Rand, Comb
     shapes = [".", "+", "*", "^"]  # 30, 50, 100, regular
     volume = []
@@ -436,6 +436,110 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
     plt.subplots_adjust(left=0.07, bottom=0.07, right=0.98, top=0.95)
     for i, gen in enumerate(gens):
         label = labels[i]
+        if "comb" in label or "Comb" in label:
+            color = colors[3]
+        elif "Tamir" in label or "Exploration" in label:
+            color = colors[1]
+        elif "ami" in label or "Exploitation" in label:
+            color = colors[0]
+        elif "rand" in label or "Random" in label:
+            color = colors[2]
+        if "30" in label or "Aggressive" in label:
+            shape = shapes[3]
+        elif "50" in label or "Medium" in label:
+            shape = shapes[1]
+        elif "100" in label or "Ease" in label:
+            shape = shapes[0]
+        elif "regular" in label or "Regular" in label:
+            shape = shapes[2]
+        ind = 0
+        x = []
+        y = []
+        for g in gen:
+            k = len(g)
+            x += g
+            y += ind2plot[i][ind: ind + k]
+            ind += k
+        x_new = []
+        y_new = []
+        for i in range(1240):
+            med = np.median(np.asarray(y)[np.argwhere(np.asarray(x) == i)])
+            if math.isnan(med):
+                continue
+            y_new.append(med)
+            x_new.append(i)
+        plt.scatter(x_new, y_new, marker=shape, color=color, label=label)
+    plt.xlabel("Generation Number", fontsize=20)
+    plt.ylabel(title, fontsize=20)
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+
+def concepts_data2plot(names, conc_to_check, title = "Hyper Volume"):
+    hv = HyperVolume([0.5, 1])
+    elites_hv = []
+    generations = []
+    concepts_names = []
+    k = 0
+    labels = []
+    for n in names:
+        labels.append(n[47:-1])
+    for fol in tqdm(names):
+        elites_hv.append([])
+        generations.append([])
+        concepts_names.append([])
+        d = 0
+        for dircetor in os.listdir(os.getcwd() + fol):
+            generations[k].append([])
+            if "hv.json" in dircetor:
+                continue
+            folder_name = os.getcwd() + fol + dircetor
+            with open(folder_name + "/problems.pkl") as f:
+                problems = pickle.load(f)
+            for p, probl in enumerate(problems):
+                if conc_to_check == probl.concept_name:
+                    elites_hv[k].append(probl.elit_confs_archive)
+                    generations[k][d].append([])
+                    concepts_names[k].append(probl.concept_name)
+                    for e, elit in enumerate(probl.elit_confs_archive):
+                        generations[k][d][0].append(e)
+            d += 1
+        k += 1
+    dwoi = elites_hv
+    gens = generations
+    hv = HyperVolume([0.5, 1])
+    volume = []
+    manip = []
+    for i, woi in enumerate(dwoi):
+        volume.append([])
+        manip.append([])
+        for j, d in enumerate(woi):
+            volume[i].append([])
+            manip[i].append([])
+            fronts = []
+            for w in d:
+                front = np.asarray(w[:2]).T
+                fronts.append(front)
+                if title == "Hyper Volume":
+                    h_v = round(hv.compute(front), 4)
+                    volume[i][j].append(h_v)
+                else:
+                    manip[i][j].append(round(np.min(fronts[-1][:, 1]), 3))
+    if title == "Hyper Volume":
+        ind2plot = volume
+    else:
+        ind2plot = manip
+    return ind2plot, gens, labels
+
+
+def plot_ind_vs_gen_concept(ind2plot, gens, labels, title="Hyper Volume"):
+    colors = ["k", "r", "b", "c"]  # Tamir, Ami, Rand, Comb
+    shapes = [".", "+", "*", "^"]  # 30, 50, 100, regular
+    plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title(title)
+    plt.subplots_adjust(left=0.07, bottom=0.07, right=0.98, top=0.95)
+    for i, gen in enumerate(gens):
+        label = labels[i]
         if "comb" in label:
             color = colors[3]
         elif "Tamir" in label:
@@ -456,37 +560,66 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
         x = []
         y = []
         for g in gen:
+            if not g:
+                continue
             k = len(g)
             x += g
             y += ind2plot[i][ind: ind + k]
             ind += k
-        x_new = []
-        y_new = []
-        for i in range(1240):
-                med = np.median(np.asarray(y)[np.argwhere(np.asarray(x) == i)])
+            x_new = []
+            y_new = []
+            for o in range(1240):
+                med = np.median(np.asarray(y[0])[np.argwhere(np.asarray(x[0]) == o)])
                 if math.isnan(med):
                     continue
                 y_new.append(med)
-                x_new.append(i)
-        plt.scatter(x_new, y_new, marker=shape, color=color, label=label)
+                x_new.append(o)
+        plt.scatter(x_new, y_new,color=color, marker=shape,  label=label)
     plt.xlabel("Generation Number", fontsize=20)
     plt.ylabel(title, fontsize=20)
+    plt.title("Concept: " + conc_to_check)
     plt.grid(True)
     plt.legend()
     plt.show()
 
 
+def set_labels(labels):
+    labes = []
+    for l, label in enumerate(labels):
+        labes.append([])
+        if "comb" in label:
+            labes[l].append("Combine_")
+        elif "Tamir" in label:
+            labes[l].append("Exploration_")
+        elif "ami" in label:
+            labes[l].append("Exploitation_")
+        elif "rand" in label:
+            labes[l].append("Random_")
+        if "30" in label:
+            labes[l] += ["Aggressive"]
+        elif "50" in label:
+            labes[l] += ["Medium"]
+        elif "100" in label:
+            labes[l] += ["Ease"]
+        elif "regular" in label:
+            labes[l] += ["Regular"]
+    labels = []
+    for l in labes:
+        labels.append(l[0] + l[1])
+    return labels
+
+
 if __name__ == '__main__':
-    calc_hv = False-
+    calc_hv = True
     create_woi_cr = False
     woi_n_generate = False
-    anim = True
+    anim = False
     plot_concept_front = False
     woi_n_generate_all = False
-
+    concept_woi = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
-    sub_fols = ["mut_cr_30/", "mut_cr_50/" , "mut_cr_100/", "mut_cr_regular/"]
+    sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
     names = []
     for sub in sub_fols:
         names.append([fol + sub + "ami/", fol + sub + "Tamir/", fol + sub + "rand/", fol + sub + "comb/"])
@@ -595,7 +728,6 @@ if __name__ == '__main__':
                 if "hv.json" in dircetor:
                     continue
                 name = fol + dircetor
-                # woi_last = load_json(os.getcwd() + name + "/woi_last")["dwoi"]
                 try:
                     woi_all = load_json(os.getcwd() + name + "/woi_All")
                 except:
@@ -622,7 +754,6 @@ if __name__ == '__main__':
                 last_vol.append(volumes[k][i][-1])
                 last_min_manip.append(min_manip[k][i][-1])
                 i += 1
-            # save_json(os.getcwd() + fol + "last_hv", last_vol, "w+")
             volumes_last.append(last_vol)
             min_manip_last.append(last_min_manip)
             save_json(os.getcwd() + fol + "all_hv", volumes[k], "w+")
@@ -632,11 +763,33 @@ if __name__ == '__main__':
             variance_l.append(round(variance(last_min_manip), 5))
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
+        # labes = []
+        # for l,label in enumerate(labels):
+        #     labes.append([])
+        #     if "comb" in label:
+        #         labes[l].append("Combine_")
+        #     elif "Tamir" in label:
+        #         labes[l].append("Exploration_")
+        #     elif "ami" in label:
+        #         labes[l].append("Explotaion_")
+        #     elif "rand" in label:
+        #         labes[l].append("Random_")
+        #     if "30" in label:
+        #         labes[l] += ["Aggressive"]
+        #     elif "50" in label:
+        #         labes[l] += ["Medium"]
+        #     elif "100" in label:
+        #         labes[l] += ["Ease"]
+        #     elif "regular" in label:
+        #         labes[l] += ["regular"]
+        # labels = []
+        # for l in labes:
+        #     labels.append(l[0]+l[1])
+        labels = set_labels(labels)
         plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
-
     if woi_n_generate_all:
         if not calc_hv:
             names = list(itertools.chain(*names))
@@ -674,3 +827,14 @@ if __name__ == '__main__':
         plt.show()
         # plt.savefig(os.getcwd() + save_folder + "/" + tit)
         # plt.close()
+    if concept_woi:
+        names = list(itertools.chain(*names))
+        title = "Hyper Volume"
+        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 2, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_2_4_0.0_2.6
+        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_4_0.0_2.6
+        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_3_0.0_2.6
+        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 2, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_2_0.0_2.6
+        conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_4_0.0_3.1
+        conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_3_0.0_3.1
+        ind2plot, gens, labels = concepts_data2plot(names, conc_to_check)
+        plot_ind_vs_gen_concept(ind2plot, gens, labels, title)
