@@ -377,7 +377,7 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     plt.subplots_adjust(left=0.03, bottom=0.17, right=0.98, top=0.95)
     grid = plt.GridSpec(1, 3, wspace=0.2)
     ax = fig.add_subplot(grid[0, :-1])
-    wil = np.ones((len(volumes), len(volumes)))
+    wil = np.ones((len(volumes), len(volumes))) * 100
     for i in range(len(volumes)):
         for j in range(i+1, len(volumes)):
             _, p_value = wilcoxon(volumes[i], volumes[j])
@@ -763,30 +763,9 @@ if __name__ == '__main__':
             variance_l.append(round(variance(last_min_manip), 5))
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
-        # labes = []
-        # for l,label in enumerate(labels):
-        #     labes.append([])
-        #     if "comb" in label:
-        #         labes[l].append("Combine_")
-        #     elif "Tamir" in label:
-        #         labes[l].append("Exploration_")
-        #     elif "ami" in label:
-        #         labes[l].append("Explotaion_")
-        #     elif "rand" in label:
-        #         labes[l].append("Random_")
-        #     if "30" in label:
-        #         labes[l] += ["Aggressive"]
-        #     elif "50" in label:
-        #         labes[l] += ["Medium"]
-        #     elif "100" in label:
-        #         labes[l] += ["Ease"]
-        #     elif "regular" in label:
-        #         labes[l] += ["regular"]
-        # labels = []
-        # for l in labes:
-        #     labels.append(l[0]+l[1])
-        labels = set_labels(labels)
-        plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
+        labels2 = labels
+        # labels = set_labels(labels)
+        plot_wilcoxon(volumes_last, medians_v, variance_v, labels3)
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
