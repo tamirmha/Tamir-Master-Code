@@ -376,6 +376,14 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     fig.canvas.set_window_title(titl)
     plt.subplots_adjust(left=0.03, bottom=0.17, right=0.98, top=0.95)
     grid = plt.GridSpec(1, 3, wspace=0.2)
+    ax = fig.add_subplot(grid[0, -1])
+    ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
+    ax.set_xticklabels(labels, rotation="vertical")
+    ax.set_title("Medians")
+    ax.grid(True, axis="x")
+    # for i, med in enumerate(medians_v):
+    #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
+    labels = set_labels(labels)
     ax = fig.add_subplot(grid[0, :-1])
     wil = np.ones((len(volumes), len(volumes))) * 100
     for i in range(len(volumes)):
@@ -401,14 +409,13 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     ax.xaxis.set_ticks_position('bottom')
     ax.set_yticklabels(labels)
     ax.set_title("Wilcoxon", y=1, fontsize=24)
-    ax = fig.add_subplot(grid[0, -1])
-    ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt=".r")
-    ax.set_xticks(np.arange(len(medians_v)))
-    ax.set_xticklabels(labels, rotation="vertical")
-    ax.set_title("Medians")
-    ax.grid(True, axis="x")
-    # for i, med in enumerate(medians_v):
-    #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
+    # ax = fig.add_subplot(grid[0, -1])
+    # ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
+    # ax.set_xticklabels(labels, rotation="vertical")
+    # ax.set_title("Medians")
+    # # ax.grid(True, axis="x")
+    # # for i, med in enumerate(medians_v):
+    # #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
 
 
 def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
@@ -591,13 +598,13 @@ def set_labels(labels):
     for l, label in enumerate(labels):
         labes.append([])
         if "comb" in label:
-            labes[l].append("Combine_")
+            labes[l].append("Combine")
         elif "Tamir" in label:
-            labes[l].append("Exploration_")
+            labes[l].append("Exploitation")
         elif "ami" in label:
-            labes[l].append("Exploitation_")
+            labes[l].append("Exploration")
         elif "rand" in label:
-            labes[l].append("Random_")
+            labes[l].append("Random")
         if "30" in label:
             labes[l] += ["Aggressive"]
         elif "50" in label:
@@ -608,8 +615,7 @@ def set_labels(labels):
             labes[l] += ["Regular"]
     labels = []
     for l in labes:
-        labels.append(l[0] + l[1])
-        print(l)
+        labels.append(l[1] + "_"+ l[0])
     return labels
 
 
@@ -767,12 +773,9 @@ if __name__ == '__main__':
             variance_l.append(round(variance(last_min_manip), 5))
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
-        labels2 = labels
-        labels3 = set_labels(labels)
-        # labels = set_labels(labels)
-        labels4 = range(16)
-        plot_wilcoxon(volumes_last, medians_v, variance_v, labels3)
+        plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
+        labels = set_labels(labels)
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
     if woi_n_generate_all:
@@ -823,3 +826,4 @@ if __name__ == '__main__':
         conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_3_0.0_3.1
         ind2plot, gens, labels = concepts_data2plot(names, conc_to_check)
         plot_ind_vs_gen_concept(ind2plot, gens, labels, title)
+
