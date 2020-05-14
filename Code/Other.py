@@ -960,23 +960,36 @@ def load_json(name="data_file"):
             return json.load(read_file)
 
 
-def fix_json(file_name):
-    with open(file_name + ".json", 'r') as filehandler:
-        file_reader = filehandler.readlines()
-        data = []
-        empty = True
-        for row in file_reader:
-            if len(row) > 0:
-                if '][' in row:
-                    row = ',\n'
-                elif '}{' in row:
-                    row = '},\n{\n'
-                data.append(row)
-                empty = False
-            else:
-                if not empty:
-                    data = []
-                empty = True
+def fix_json(file_name, fix_type="regular"):
+    if fix_type == "regular":
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = []
+            empty = True
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
+                    data.append(row)
+                    empty = False
+                else:
+                    if not empty:
+                        data = []
+                    empty = True
+    elif fix_type == "woi_all":
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = ["["]
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
+                    data.append(row)
+            data.append("]")
     with open(file_name + ".json", 'w') as name:
         name.writelines(data)
 
@@ -1159,7 +1172,8 @@ def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
     if len(cr) < 16:
         plt.legend()
     if to_save:
-        plt.savefig(woi_loc + "cr")
+        plt.savefig(woi_loc[:-8] + "cr")
+        plt.close()
     else:
         plt.show()
 
@@ -1203,6 +1217,7 @@ def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI", to_save=False):
     fig.canvas.set_window_title('WOI')
     if to_save:
         plt.savefig(folder_loc + "WOI")
+        plt.close()
     else:
         plt.show()
 
@@ -1221,9 +1236,14 @@ def plot(axrow, x, y, label, name, conc, scores, elits):
         for i in range(len(e[0])):
             axrow.scatter(e[0][i], e[1][i], marker="*", color="r", alpha=0.2)
     axrow.set_title(label)
-    axrow.legend(loc=4, bbox_to_anchor=(-0.08, -0.0))
-    axrow.set_xlabel("Mid Proximity Joint")
-    axrow.set_ylabel("Manipulability Index")
+    try:
+        axrow.legend(loc=4, bbox_to_anchor=(-0.08, 0.0))
+    except:
+        qqqqqqqqq =1
+        # print(ValueError)
+    finally:
+        axrow.set_xlabel("Mid Proximity Joint")
+        axrow.set_ylabel("Manipulability Index")
 
 
 def problematic_confs():
@@ -1262,8 +1282,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
-    check_num_confs_in_concepts = False
+    sumdata = False
+    check_num_confs_in_concepts = True
     sum_all = True
     create_configs = False
     cr_plot = False
@@ -1272,7 +1292,7 @@ if __name__ == '__main__':
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
-        # create random urdf
+        # create urdf
         if create_urdf:
             all_to_sim = con.confs2simulate(concepts_with_values)
             filter2sim, res = con.filter_confs(all_to_sim)
