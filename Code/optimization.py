@@ -653,8 +653,8 @@ class Problem:
                     # if len(self.get_population()) > 100:  # cr == 0 or
                     if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
                         nb = 1  # 2
-                    mut_spring = self.mutation_rand(parent_1, nb)
-                    # mut_spring = self.rand_pop(1)
+                    # mut_spring = self.mutation_rand(parent_1, nb)
+                    mut_spring = self.rand_pop(1)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
