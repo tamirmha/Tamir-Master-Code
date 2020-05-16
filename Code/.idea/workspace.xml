@@ -4,7 +4,8 @@
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add: create URDF files to generate first WOI to optimiziation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/results_all_with_failed.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimization.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_mutation.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_mutation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +60,7 @@
       <recent name="$PROJECT_DIR$/results" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Other">
+  <component name="RunManager" selected="Python.test_mutation">
     <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,28 +75,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Other.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SimFilesCreate" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/archive" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/archive/SimFilesCreate.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -192,13 +171,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_mutation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_mutation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_mutation" />
         <item itemvalue="Python.Other" />
         <item itemvalue="Python.optimization" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.simulator" />
-        <item itemvalue="Python.SimFilesCreate" />
       </list>
     </recent_temporary>
   </component>
@@ -377,20 +375,8 @@
       <workItem from="1584597546753" duration="6033000" />
       <workItem from="1584784813329" duration="2920000" />
       <workItem from="1589617613599" duration="1181000" />
-    </task>
-    <task id="LOCAL-00039" summary="add concepts calculation">
-      <created>1575359532317</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1575359532317</updated>
-    </task>
-    <task id="LOCAL-00040" summary="add: assign configuration in its specefic concept ( without parallel yet)">
-      <created>1575444017146</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1575444017146</updated>
+      <workItem from="1589619265755" duration="308000" />
+      <workItem from="1589619585894" duration="751000" />
     </task>
     <task id="LOCAL-00041" summary="recaculate results">
       <created>1575446597859</created>
@@ -721,7 +707,21 @@
       <option name="project" value="LOCAL" />
       <updated>1589618791534</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="fix git">
+      <created>1589619296178</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1589619296178</updated>
+    </task>
+    <task id="LOCAL-00089" summary="add: create URDF files to generate first WOI to optimiziation">
+      <created>1589619428459</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1589619428459</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -755,12 +755,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="fix Z calculation during simulation&#10;add results" />
     <MESSAGE value="add data" />
     <MESSAGE value="fix results files&#10;add (start) how many configurations are simulated per concept" />
     <MESSAGE value="add: create URDF to finish simulation for small concepts" />
     <MESSAGE value="add resource allocation" />
-    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
     <MESSAGE value="fix check domination and elitism" />
     <MESSAGE value="optimization.py - add optimization class" />
     <MESSAGE value="reaarange folders" />
@@ -780,7 +778,9 @@
     <MESSAGE value="add files" />
     <MESSAGE value="ix git errors" />
     <MESSAGE value="triyng" />
-    <option name="LAST_COMMIT_MESSAGE" value="triyng" />
+    <MESSAGE value="fix git" />
+    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: create URDF files to generate first WOI to optimiziation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog" timestamp="1584444343794">
@@ -793,10 +793,10 @@
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1589619032231">
+    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1589619428346">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1589619032231" />
+    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1589619428346" />
     <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614204451" />
     <state x="167" y="136" width="1653" height="855" key="DiffContextDialog" timestamp="1584614153457">
       <screen x="67" y="27" width="1853" height="1173" />
@@ -854,10 +854,10 @@
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1589619054939">
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1589619430871">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589619054939" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589619430871" />
     <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614206475" />
     <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584522096698">
       <screen x="67" y="27" width="1853" height="1173" />
@@ -881,6 +881,10 @@
           <url>file://$PROJECT_DIR$/optimization.py</url>
           <line>1119</line>
           <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_mutation.py</url>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

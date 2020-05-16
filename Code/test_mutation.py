@@ -617,12 +617,30 @@ def set_labels(labels):
     return labels
 
 
+def csv_from_pkl():
+    with open("check/1problems.pkl") as f:
+        a = pickle.load(f)
+
+    from Other import MyCsv
+
+    confs= a[0].confs_results
+    to_save = []
+    for conf in confs:
+        name = conf[conf.keys()[0]]["name"]
+        mu = conf[conf.keys()[0]]["mu"]
+        z = conf[conf.keys()[0]]["z"]
+        to_save.append(["1", "15/05/20", name, "1", "1", "1", "1",
+                        "1", "1", "1", "1", "1", "1", "2", mu, z])
+
+    MyCsv.save_csv(to_save,"test")
+
+
 if __name__ == '__main__':
     calc_hv = False
     create_woi_cr = False
     woi_n_generate = False
     anim = False
-    plot_concept_front = True
+    plot_concept_front = False
     woi_n_generate_all = False
     concept_woi = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
