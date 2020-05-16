@@ -5,28 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsons/front_concept.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/front_concept.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsons/other/confs_number.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/confs_number.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsons/other/results_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/results_all.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsons/other/simulated.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/simulated.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/left_concepts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/left_concepts.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results_all.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/Figure_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/Figure_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof/6dof_all_with_failed.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/calculated/6dof_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/6dof_all_with_failed.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/calculated/results_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/results_all.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/calculated/results_all_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/sim_results/calculated/results_all_with_failed.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file16_03_6dof_4d_.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file16_03_6dof_4d_.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sim_results/to add/results_file18_03_6dof_4d_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimization.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/6dof_all_with_failed.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/calculated/6dof_all_with_failed.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/calculated/results_all_with_failed.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/to_add/1problems.pkl" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +48,6 @@
   <component name="ProjectId" id="1OaHc8Dg1IhlVuTuc5IN52GzuJq" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -94,28 +77,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Other.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SimFilesCreate" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Code" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/archive" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/archive/SimFilesCreate.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -212,28 +173,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_mutation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_mutation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Other" />
+        <item itemvalue="Python.test_mutation" />
         <item itemvalue="Python.optimization" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.simulator" />
-        <item itemvalue="Python.SimFilesCreate" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-    <option name="showServicesTree" value="false" />
   </component>
   <component name="SpellCheckerSettings" BundledDictionaries="32" BundledDictionary0="@types.dic" BundledDictionary1="lodash.dic" BundledDictionary2="pythonExtras.dic" BundledDictionary3="eslint-config-airbnb.dic" BundledDictionary4="jetbrains.dic" BundledDictionary5="firebase.dic" BundledDictionary6="english.dic" BundledDictionary7="vuex.dic" BundledDictionary8="django.dic" BundledDictionary9="eslint.dic" BundledDictionary10="redux.dic" BundledDictionary11="less.dic" BundledDictionary12="core-js.dic" BundledDictionary13="express.dic" BundledDictionary14="prettier.dic" BundledDictionary15="angular.dic" BundledDictionary16="rxjs.dic" BundledDictionary17="vuetify.dic" BundledDictionary18="css.dic" BundledDictionary19="request.dic" BundledDictionary20="zone.js.dic" BundledDictionary21="@angular.dic" BundledDictionary22="async.dic" BundledDictionary23="bluebird.dic" BundledDictionary24="_javascript.dic" BundledDictionary25="cloudfront.dic" BundledDictionary26="python.dic" BundledDictionary27="graphql.dic" BundledDictionary28="javascript.dic" BundledDictionary29="heroku.dic" BundledDictionary30="vue.dic" BundledDictionary31="debug.dic" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="project-level" UseSingleDictionary="true" />
   <component name="TaskManager">
@@ -409,41 +376,9 @@
       <workItem from="1584513511942" duration="19206000" />
       <workItem from="1584597546753" duration="6033000" />
       <workItem from="1584784813329" duration="2920000" />
-    </task>
-    <task id="LOCAL-00037" summary="change the Z calculation to use norm number">
-      <created>1575212980407</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1575212980407</updated>
-    </task>
-    <task id="LOCAL-00038" summary="change the Z calculation to use norm number">
-      <created>1575213005049</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1575213005049</updated>
-    </task>
-    <task id="LOCAL-00039" summary="add concepts calculation">
-      <created>1575359532317</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1575359532317</updated>
-    </task>
-    <task id="LOCAL-00040" summary="add: assign configuration in its specefic concept ( without parallel yet)">
-      <created>1575444017146</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1575444017146</updated>
-    </task>
-    <task id="LOCAL-00041" summary="recaculate results">
-      <created>1575446597859</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1575446597859</updated>
+      <workItem from="1589617613599" duration="1181000" />
+      <workItem from="1589619265755" duration="308000" />
+      <workItem from="1589619585894" duration="1515000" />
     </task>
     <task id="LOCAL-00042" summary="recaculate results and add configuration into combination">
       <created>1575448112433</created>
@@ -753,20 +688,53 @@
       <option name="project" value="LOCAL" />
       <updated>1584614204811</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="ix git errors">
+      <created>1589617779594</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1589617779594</updated>
+    </task>
+    <task id="LOCAL-00087" summary="triyng">
+      <created>1589618791534</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1589618791534</updated>
+    </task>
+    <task id="LOCAL-00088" summary="fix git">
+      <created>1589619296178</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1589619296178</updated>
+    </task>
+    <task id="LOCAL-00089" summary="add: create URDF files to generate first WOI to optimiziation">
+      <created>1589619428459</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1589619428459</updated>
+    </task>
+    <task id="LOCAL-00090" summary="add: create URDF files to generate first WOI to optimiziation">
+      <created>1589620372813</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1589620372814</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -785,17 +753,14 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="add features to the 3D plot" />
-    <MESSAGE value="add results to calc pareto front&#10;fix bug in sum_data" />
-    <MESSAGE value="fix Z calculation during simulation&#10;add results" />
     <MESSAGE value="add data" />
     <MESSAGE value="fix results files&#10;add (start) how many configurations are simulated per concept" />
     <MESSAGE value="add: create URDF to finish simulation for small concepts" />
     <MESSAGE value="add resource allocation" />
-    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
     <MESSAGE value="fix check domination and elitism" />
     <MESSAGE value="optimization.py - add optimization class" />
     <MESSAGE value="reaarange folders" />
@@ -813,148 +778,93 @@
     <MESSAGE value="simulator.py - adjust the parameters set to optimization.py" />
     <MESSAGE value="optimization.py fix open simulatoin in VM" />
     <MESSAGE value="add files" />
-    <option name="LAST_COMMIT_MESSAGE" value="add files" />
+    <MESSAGE value="ix git errors" />
+    <MESSAGE value="triyng" />
+    <MESSAGE value="fix git" />
+    <MESSAGE value="add: create URDF files to generate first WOI to optimiziation" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: create URDF files to generate first WOI to optimiziation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog" timestamp="1584444343794">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="138" y="215" key="#xdebugger.XInspectDialog/67.27.1613.1023@67.27.1613.1023" timestamp="1577444822841" />
-    <state x="149" y="220" width="1706" height="488" key="#xdebugger.XInspectDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577180825625" />
-    <state x="184" y="337" key="#xdebugger.XInspectDialog/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576314259751" />
-    <state x="67" y="132" width="1387" height="775" key="#xdebugger.XInspectDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1579166502785" />
     <state x="202" y="283" width="1140" height="443" key="#xdebugger.XInspectDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584444343794" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate" timestamp="1584602748101">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="222" y="158" width="1263" height="489" key="#xdebugger.evaluate/67.27.1613.1023@67.27.1613.1023" timestamp="1577444823879" />
-    <state x="405" y="155" width="1407" height="533" key="#xdebugger.evaluate/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207068701" />
-    <state x="265" y="528" width="823" height="392" key="#xdebugger.evaluate/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577122213942" />
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="317" y="144" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1584804741060">
+    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1589620372418">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="317" y="144" width="1342" height="816" key="CommitChangelistDialog2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268133134" />
-    <state x="318" y="145" width="860" height="816" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326164318" />
-    <state x="317" y="144" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584804741060" />
+    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1589620372418" />
     <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614204451" />
     <state x="167" y="136" width="1653" height="855" key="DiffContextDialog" timestamp="1584614153457">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="167" y="125" width="1653" height="855" key="DiffContextDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1576399401786" />
     <state x="167" y="136" key="DiffContextDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584614153457" />
-    <state x="771" y="296" width="424" height="513" key="FileChooserDialogImpl" timestamp="1577177060297">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state x="771" y="296" width="424" height="513" key="FileChooserDialogImpl/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577177060297" />
     <state width="1807" height="354" key="GridCell.Tab.0.bottom" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.0.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
-    <state width="1807" height="378" key="GridCell.Tab.0.bottom/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.0.bottom/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
     <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
     <state width="1807" height="354" key="GridCell.Tab.0.center" timestamp="1584603242772">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.0.center/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
-    <state width="1807" height="378" key="GridCell.Tab.0.center/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.0.center/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
     <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242772" />
     <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
     <state width="1807" height="354" key="GridCell.Tab.0.left" timestamp="1584603242772">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.0.left/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
-    <state width="1807" height="378" key="GridCell.Tab.0.left/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.0.left/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762718" />
     <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242772" />
     <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
     <state width="1807" height="354" key="GridCell.Tab.0.right" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.0.right/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
-    <state width="1807" height="378" key="GridCell.Tab.0.right/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.0.right/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
     <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
     <state width="1807" height="354" key="GridCell.Tab.1.bottom" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.1.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
-    <state width="1807" height="378" key="GridCell.Tab.1.bottom/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.1.bottom/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
     <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
     <state width="1807" height="354" key="GridCell.Tab.1.center" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.1.center/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
-    <state width="1807" height="378" key="GridCell.Tab.1.center/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.1.center/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
     <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
     <state width="1807" height="354" key="GridCell.Tab.1.left" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.1.left/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662185" />
-    <state width="1807" height="378" key="GridCell.Tab.1.left/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.1.left/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764357" />
     <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
     <state width="1807" height="354" key="GridCell.Tab.1.right" timestamp="1584603242773">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state width="1567" height="378" key="GridCell.Tab.1.right/67.27.1613.1023@67.27.1613.1023" timestamp="1577454662186" />
-    <state width="1807" height="378" key="GridCell.Tab.1.right/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577207449581" />
-    <state width="1807" height="378" key="GridCell.Tab.1.right/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1577123444405" />
     <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
     <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.1853.1173@67.27.1853.1173" timestamp="1584603242773" />
     <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
     <state x="482" y="205" key="SettingsEditor" timestamp="1584269580725">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="482" y="187" key="SettingsEditor/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577032606912" />
-    <state x="482" y="187" key="SettingsEditor/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576392628391" />
-    <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1578925255692" />
     <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
-    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1584614206475">
-      <screen x="67" y="27" width="1853" height="1173" />
-    </state>
-    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577268140730" />
-    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576326290756" />
-    <state x="588" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1584110117567" />
-    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614206475" />
-    <state x="751" y="399" width="474" height="307" key="cloudConfig.SelfSettingsDialog" timestamp="1578296305127">
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1589620374587">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="751" y="399" width="474" height="307" key="cloudConfig.SelfSettingsDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1578296305127" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589620374587" />
+    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614206475" />
     <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584522096698">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="473" y="145" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577043159760" />
-    <state x="473" y="145" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1579165860921" />
     <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1173@67.27.1853.1173" timestamp="1584522096698" />
-    <state x="549" y="289" width="378" height="526" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog" timestamp="1579175405369">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state x="549" y="289" width="378" height="526" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog/67.27.1853.1053/0.0.1920.1080@67.27.1853.1053" timestamp="1577086780533" />
-    <state x="549" y="289" width="386" height="526" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog/67.27.1853.1053/1920.0.1920.1080@67.27.1853.1053" timestamp="1576325512484" />
-    <state x="549" y="289" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1579175405369" />
-    <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1579161778445">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053@67.27.1853.1053" timestamp="1579161778445" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -966,13 +876,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Other.py</url>
-          <line>787</line>
+          <line>844</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/optimization.py</url>
-          <line>730</line>
+          <line>1119</line>
           <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_mutation.py</url>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -985,13 +899,13 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1575206142100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$colormaps_reference.coverage" NAME="colormaps_reference Coverage Results" MODIFIED="1576419486141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads" />
+    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1584525289469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$Other.coverage" NAME="Other Coverage Results" MODIFIED="1584603238991" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$optimization.coverage" NAME="optimization Coverage Results" MODIFIED="1584541844635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1584525289469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$merge_csv.coverage" NAME="merge_csv Coverage Results" MODIFIED="1572616595992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$merge_data.coverage" NAME="merge_data Coverage Results" MODIFIED="1573745224510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1574766471377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$merge_data.coverage" NAME="merge_data Coverage Results" MODIFIED="1573745224510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$merge_csv.coverage" NAME="merge_csv Coverage Results" MODIFIED="1572616595992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1575206142100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$colormaps_reference.coverage" NAME="colormaps_reference Coverage Results" MODIFIED="1576419486141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads" />
   </component>
 </project>

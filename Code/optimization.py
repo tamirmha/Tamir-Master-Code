@@ -177,11 +177,12 @@ class Optimization:
         probs = self.probs  # todo - uncomment
         # probs = []
         # for p in self.probs:
-        #     if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #     # if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
+        #     if p.concept_name == u"{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}":
         #         probs.append(p)
         cr = []
-        cr_total = [[], [], [], [], [], []]  # for mutation check
-        cr_change = 10000                 # todo  for mutation check
+        # cr_total = [[], [], [], [], [], []]  # for mutation check
+        # cr_change = 10000                 # todo  for mutation check
         # running each generation
         save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         for n in range(self.gen_start-1, self.num_gens):
@@ -206,7 +207,7 @@ class Optimization:
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
-                    cr_total[t].append(probs[t].get_cr())  # todo for mutaion check
+                    # cr_total[t].append(probs[t].get_cr())  # todo for mutaion check
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
@@ -648,11 +649,10 @@ class Problem:
                         spring.append(cross_spring)
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
-                    # mut_spring = self.mutation_round(parent_1)
-                    nb = 1  # Todo 1
+                    nb = 2  # Todo 1
                     # if len(self.get_population()) > 100:  # cr == 0 or
                     if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 2  # 2
+                        nb = 1  # 2
                     # mut_spring = self.mutation_rand(parent_1, nb)
                     mut_spring = self.rand_pop(1)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
@@ -1112,7 +1112,7 @@ class ResourceAllocation:
         for i in tqdm(range(len(prob))):
             if prob[i].in_dwoi:
                 continue
-                qqq = 3  # todo continue
+                qqq = 3  # todo
             elif i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -1133,10 +1133,10 @@ if __name__ == '__main__':
         # np.random.seed(111011)
     gen_num = 1240
     start_time = 0
-    time_run = 1 # 7
+    time_run = 1
     start_gen = 1
     greedy = False
-    delta = 10
+    delta = 30
     per2cont = 90
     low_cr = 0.005
     high_cr = 0.01
@@ -1178,6 +1178,5 @@ if __name__ == '__main__':
             save_json("woi_last", opt.woi.__dict__, "w+")
         print(time()-tic)
         c.terminate()
-
 
 # todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
