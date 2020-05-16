@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add: create URDF files to generate first WOI to optimiziation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/opt_tries_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results/calculated/6dof/opt_tries_with_failed.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results_all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results_all.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -374,14 +371,7 @@
       <workItem from="1584784813329" duration="2920000" />
       <workItem from="1589617613599" duration="1181000" />
       <workItem from="1589619265755" duration="308000" />
-      <workItem from="1589619585894" duration="5051000" />
-    </task>
-    <task id="LOCAL-00043" summary="add filters to concepts filter">
-      <created>1575627777089</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1575627777090</updated>
+      <workItem from="1589619585894" duration="6309000" />
     </task>
     <task id="LOCAL-00044" summary="minor changes">
       <created>1575898738289</created>
@@ -719,7 +709,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589621144222</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="add results">
+      <created>1589628853213</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1589628853213</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -791,10 +788,10 @@
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="412" y="527" width="656" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1584602748101" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1589621142358">
+    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1589628846481">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1589621142358" />
+    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1589628846481" />
     <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614204451" />
     <state x="167" y="136" width="1653" height="855" key="DiffContextDialog" timestamp="1584614153457">
       <screen x="67" y="27" width="1853" height="1173" />
@@ -852,10 +849,10 @@
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1589621146159">
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1589628855727">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589621146159" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589628855727" />
     <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1584614206475" />
     <state x="405" y="260" width="1167" height="584" key="com.intellij.execution.console.ConsoleHistoryController$MyBrowseAction$1" timestamp="1589622739957">
       <screen x="67" y="27" width="1853" height="1053" />
