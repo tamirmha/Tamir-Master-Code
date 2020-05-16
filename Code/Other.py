@@ -1,3 +1,4 @@
+import os
 from os import environ, listdir, mkdir, path
 import shutil
 import csv
@@ -12,8 +13,18 @@ from simulator import Simulator
 from matplotlib.tri import Triangulation
 from tqdm import tqdm
 import pickle
+from scipy.spatial import distance
+from time import time, sleep
 # from multiprocessing import Pool
-# import copy
+import rospy
+from rosgraph_msgs.msg import Log
+
+
+def get_key(val, my_dict):
+    for key, value in my_dict.items():
+        if val == value:
+            return key
+    return "key doesn't exist"
 
 
 class MyCsv(object):
@@ -23,7 +34,7 @@ class MyCsv(object):
         with open(file_name + ".csv", "r") as data_file:
             csv_file_reader = csv.reader(data_file)
             result = []
-            dof = data_file.name[data_file.name.find("dof")-1]
+            dof = data_file.name[data_file.name.find("dof") - 1]
             for row in csv_file_reader:
                 while "" in row:
                     row.remove("")
@@ -35,23 +46,23 @@ class MyCsv(object):
                     prev_axe = ["z"]
                     link_length = ["0.1"]
                     arm = name.split("_")
-                    for a in range(3, len(arm)-1):
+                    for a in range(3, len(arm) - 1):
                         if a % 3 == 0:
                             joints.append(arm[a][1:] + "_")
                         elif a % 3 == 1:
                             prev_axe.append(arm[a] + "_")
                         elif a % 3 == 2:
-                            link_length.append(arm[a] + "." + arm[a+1][:1] + "_")
+                            link_length.append(arm[a] + "." + arm[a + 1][:1] + "_")
                     result.append({"name": row[2], "time": float(row[6]), "mu": float(row[7]), "Z": float(row[8]),
-                         "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
+                                   "dof": dof, "joints": "_".join(joints), "prev_axe": "_".join(prev_axe),
                                    "link_length": "_".join(link_length)})
             result.sort()
             return result
 
     @staticmethod
-    def save_csv(data, file_name, csv_type="list"):
+    def save_csv(data, file_name, csv_type="list", save_mode='ab'):
         """Save to csv format"""
-        with open(file_name + ".csv", 'ab') as name:
+        with open(file_name + ".csv", save_mode) as name:
             if csv_type == "list":
                 writer = csv.writer(name, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
@@ -210,24 +221,26 @@ class FixFromJson(object):
         for joint in joints:
             if "pris" not in joint:
                 theta_mean.append(0)
-                to_norm.append(2*np.pi)
+                to_norm.append(2 * np.pi)
             else:
-                theta_mean.append(float(link_length[joints.index(joint)])/2)
+                theta_mean.append(float(link_length[joints.index(joint)]) / 2)
                 to_norm.append(float(link_length[joints.index(joint)]))
-        dis = (cur_pos[:-1]-theta_mean)
-        nor_dis = np.asarray(np.abs(dis))/np.asarray(to_norm)
+        dis = (cur_pos[:-1] - theta_mean)
+        nor_dis = np.asarray(np.abs(dis)) / np.asarray(to_norm)
         while np.isin(nor_dis > 1, True).argmax():
             # some simulations calculated with pris limit 2*length instead of length
             ind_wrong = np.isin(nor_dis > 1, True).argmax()
             to_norm[ind_wrong] = to_norm[ind_wrong] * 2
             nor_dis = np.asarray(np.abs(dis)) / np.asarray(to_norm)
-        w = np.identity(len(joints)+1)*nor_dis  # weighted diagonal matrix
-        z = np.around(0.5*np.transpose(nor_dis)*w, 3)
+        w = np.identity(len(joints) + 1) * nor_dis  # weighted diagonal matrix
+        z = np.around(0.5 * np.transpose(nor_dis) * w, 3)
         return z
 
 
 class Concepts:
-    def __init__(self, file_name="/home/tamir/Tamir/Master/Code/all_configs"):
+    def __init__(self, file_name=None):
+        if file_name is None:
+            file_name = environ['HOME'] + "/Tamir/Master/Code/all_configs"
         self.concepts = []
         self.joints_combs = []
         self.links = []
@@ -247,18 +260,18 @@ class Concepts:
         :param percent_from_concept: percent from each concept configurations to choose
         return: confs2sim- names of configurations to simulate
         """
-        percent_from_concept = percent_from_concept/100.0
+        percent_from_concept = percent_from_concept / 100.0
         confs2sim = []
         # cons_of_sim = []
         for k in concepts_with_values:
             if len(k[1]) < min_configurations:  # 1352 configurations  & 129 concepts
                 confs2sim.append(k[1])
             else:
-                number_of_confs2sim = int(len(k[1])*percent_from_concept)
+                number_of_confs2sim = int(len(k[1]) * percent_from_concept)
                 # check if the minimum desired percent is enough
                 if number_of_confs2sim < min_configurations:  # 9875 confiurations & 395 concepts
                     number_of_confs2sim = min_configurations
-                indices = np.arange(len(k[1]))                # 47970 confiurations & 270 concepts
+                indices = np.arange(len(k[1]))  # 47970 confiurations & 270 concepts
                 np.random.shuffle(indices)
                 confs2sim.append(np.ndarray.tolist(np.take(k[1], indices[:number_of_confs2sim])))
             # cons_of_sim.append(k[0])
@@ -345,6 +358,7 @@ class Concepts:
             i += 1
             i_length = 0
         return i_length, i
+
     ###
 
     def calc(self):
@@ -383,11 +397,12 @@ class Concepts:
         """ set all the concepts variables and each variable range (unfiltered)"""
         acc_length = [1.5, 2, 2.6, 3.1, 3.6]
         concept_general = {"dof": range(4, 7), "pitch_joint": [], "#long_link": [], "par_axes_y": [], "acc_length": [],
-           "long_link": [0.4, 0.7], "p/r_ratio": [[0.0, 0.33, 1.0, 3.0], [0.0, 0.25, 0.67, 1.5], [0.0, 0.2, 0.5, 1.0]]}
+                           "long_link": [0.4, 0.7],
+                           "p/r_ratio": [[0.0, 0.33, 1.0, 3.0], [0.0, 0.25, 0.67, 1.5], [0.0, 0.2, 0.5, 1.0]]}
         for c in concept_general["dof"]:
             concept_general["pitch_joint"].append(range(0, c))
             concept_general["#long_link"].append(range(0, c))
-            concept_general["par_axes_y"].append([0]+range(2, c))
+            concept_general["par_axes_y"].append([0] + range(2, c))
             concept_general["acc_length"].append(acc_length[:c - 1])
         return concept_general
 
@@ -398,8 +413,8 @@ class Concepts:
         for c in concept_general["dof"]:
             ind = concept_general["dof"].index(c)
             concepts.append(list(product(concept_general["#long_link"][ind], concept_general["pitch_joint"][ind],
-                                concept_general["p/r_ratio"][ind], concept_general["par_axes_y"][ind],
-                                concept_general["acc_length"][ind], concept_general["long_link"], repeat=1)))
+                                         concept_general["p/r_ratio"][ind], concept_general["par_axes_y"][ind],
+                                         concept_general["acc_length"][ind], concept_general["long_link"], repeat=1)))
         return concepts
 
     @staticmethod
@@ -410,7 +425,7 @@ class Concepts:
         for cs in concepts:
             for c in cs:
                 # the sum of the links cant be more than the accumalated length
-                if c[0] * 0.7 + 0.4 * (k+3-c[0]) < c[4] - 0.6 or c[0]*0.7+0.1*(k+4-c[0]) > c[4]:
+                if c[0] * 0.7 + 0.4 * (k + 3 - c[0]) < c[4] - 0.6 or c[0] * 0.7 + 0.1 * (k + 4 - c[0]) > c[4]:
                     continue
                 # if there is longest link (c[0]) isn't possible to have longest link(c[5]) equal to 0.4
                 if c[5] == 0.4 and c[0] > 0:
@@ -453,7 +468,7 @@ class Concepts:
             links_length = [[0.1] + list(tup) for tup in list(product(lengths_2_check, repeat=(dof - 1)))]
             for link in links_length:
                 if sum(link) > min_length:
-                    links[dof-4].append([str(x) for x in link])
+                    links[dof - 4].append([str(x) for x in link])
         self.links = links
 
     def set_configurations(self):
@@ -521,7 +536,8 @@ class Concepts:
                 else:
                     acc_length = 3.6
                 conf_concept = {"dof": dof, 'par_axes_y': par_axes_y, '#long_link': long_links, 'long_link': longest,
-                             'pitch_joint': pitch, 'p/r_ratio': round(pris/(dof-pris), 2), 'acc_length': acc_length}
+                                'pitch_joint': pitch, 'p/r_ratio': round(pris / (dof - pris), 2),
+                                'acc_length': acc_length}
                 concepts_with_configuration[str(conf_concept)].append(conf_name)
         self.set_concepts_with_configuration(concepts_with_configuration)
 
@@ -550,18 +566,60 @@ class Concepts:
         return self.concepts_with_configuration
 
 
+def clock(total):
+    ended = False
+    start_time = time()
+    while not ended:
+        sleep(60)
+        now_time = time() - start_time
+        print("\033[34m" + "\033[47m" + "Elpased  {:.0f} seconds from {} seconds".format(now_time, total) + "\033[0m")
+        if now_time >= total:
+            ended = True
+
+
+def callback(data):
+    if "Ignoring transform for child_frame_id" in data.msg:
+        try:
+            # Get the problematic configuration name
+            param = rospy.get_param("/robot_description")
+            conf_name = param[param.index("combined/") + 9:param.index(".urdf")]
+            save_json("no_good_confs", conf_name)
+        except:
+            print("Ros Param not found")
+        finally:
+            cmd = "kill -9 $(ps aux | grep [r]os | grep -v grep | grep -v arya | awk '{print $2}')"
+            os.system(cmd)
+            sleep(2)
+            os.system(cmd)
+            sleep(2)
+            with open("finish.txt", "w+") as f:
+                f.write("finish")
+                f.close()
+    elif data.function == "service::waitForService" and \
+            "waitForService: Service [/gazebo/set_physics_properties] has not been advertised" in data.msg:
+        # save_json("wait_service", rospy.get_param("/robot_description"))
+        save_json("test", "test")
+
+
+def listener():
+    rospy.init_node('listener', anonymous=True)
+    rospy.Subscriber("rosout", Log, callback)
+    rospy.spin()
+
+
 def split_files_to_several_folders(files_in_folder=5000):
     name = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/to_run/"
     if not path.exists(name):
         mkdir(name)
     full_path = environ['HOME'] + "/Tamir_Ws/src/manipulator_ros/Manipulator/man_gazebo/urdf/5dof/combined/"
     files = listdir(full_path)
-    for j in range(len(files)/files_in_folder):
+    for j in range(len(files) / files_in_folder):
         if not path.exists(name + str(j)):
             mkdir(name + str(j))
         for i in range(files_in_folder):
             # shutil.copy(full_path + files[j*files_in_folder+i], name + str(j) + files[j*files_in_folder+i])
-            shutil.move(full_path + files[j*files_in_folder+i], name + str(j) + "/" + files[j*files_in_folder+i])
+            shutil.move(full_path + files[j * files_in_folder + i],
+                        name + str(j) + "/" + files[j * files_in_folder + i])
 
 
 def sum_data():
@@ -571,7 +629,6 @@ def sum_data():
     root.destroy()
     new_file_name = "/".join(res_files[0].split("/")[:8]) + "/" + "/".join(res_files[0].split("/")[8:10])
     mu_penalty = -70
-    # time_penalty = 20
     z_penalty = 70
     data = []
     data_no_success = []
@@ -583,10 +640,11 @@ def sum_data():
             csv_file = MyCsv.read_csv(res_file[:-4], "dict")
         for v in tqdm(csv_file):
             in_data = False
+            if v["Z"] == "Z":
+                continue
             if v["Z"] == -1 or v["Z"] == '70' and v["name"] not in in_list:
                 v["mu"] = mu_penalty
                 v["Z"] = z_penalty
-                # v["time"] = time_penalty
                 v["Passed"] = 0
                 data_no_success.append(v)
                 in_list.append((v["name"]))
@@ -595,12 +653,13 @@ def sum_data():
                 for dat in data:
                     if v["name"] == dat["name"]:
                         dat_index = data[data.index(dat)]
-                        if dat_index["Z"] > v["Z"]:
+                        dis_dat = distance.cdist(np.asarray([[float(dat_index["Z"]), float(dat_index["mu"])]]),
+                                                 np.zeros((1, 2)), 'euclidean')[0]
+                        dis_v = distance.cdist(np.asarray([[float(v["Z"]), float(v["mu"])]]),
+                                               np.zeros((1, 2)), 'euclidean')[0]
+                        if dis_dat > dis_v:
                             dat_index["Z"] = v["Z"]
-                        if dat_index["mu"] < v["mu"]:
                             dat_index["mu"] = v["mu"]
-                        # if dat_index["time"] > v["time"]:
-                        #     dat_index["time"] = v["time"]
                         in_data = True
                         break
             elif not in_data:
@@ -608,12 +667,12 @@ def sum_data():
                 data.append(v)
                 in_list.append((v["name"]))
     data_no_success = [dict(t) for t in {tuple(d.items()) for d in data_no_success}]
-    MyCsv.save_csv(data, new_file_name, "dict")
+    # MyCsv.save_csv(data, new_file_name, "dict")
     MyCsv.save_csv(data + data_no_success, new_file_name + "_with_failed", "dict")
     return data
 
 
-def plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all"):
+def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all"):
     all_data = MyCsv.read_csv(result_file, "dict")
     mu = []
     time = []
@@ -623,7 +682,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all
     for dat in all_data:
         if dat["mu"] != "-1.0" and dat["mu"] != "mu":
             mu.append(float(dat["mu"]))
-            time .append(float(dat["time"]))
+            time.append(float(dat["time"]))
             z.append(float(dat["Z"]))
             lci.append(float(dat["LCI"]))
             dof.append(float(dat["dof"]))
@@ -746,8 +805,8 @@ def assign_results(res_name="results_all"):
 
 def assign_conf2concept(conf):
     conf_name, z, mu, dof = conf
-    concepts = load_json("jsons/concepts")
-    dict_type = {"configuration": "", "concept": "",  "mu": 1, "z": 0.5, "dof": 7}
+    concepts = load_json("archive/concepts")
+    dict_type = {"configuration": "", "concept": "", "mu": 1, "z": 0.5, "dof": 7}
     res_data = []  # [[] for i in conf_name]
     for k in range(len(conf_name)):
         for concept in concepts:
@@ -765,14 +824,12 @@ def assign_conf2concept(conf):
 
 def domination_check(conf):
     """ check domination in 3D"""
-    # front = [[conf[0][0]], [conf[1][0]], [conf[2][0]], [conf[3][0]]]
     front = [[1], [1], [6], [conf[3][0]]]
     points = [[], [], [], []]
     for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
-        # if k == 4 or k == 6:
-        #     continue
         added = False
-        for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2], front[3]):  # zip(x_front, y_front, z_front, conf_front):
+        for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2],
+                                                      front[3]):  # zip(x_front, y_front, z_front, conf_front):
             # check if the point is dominate the front
             if i <= i_front and j <= j_front and k <= k_front:
                 if not added:
@@ -792,7 +849,7 @@ def domination_check(conf):
                     points[2].append(j_front)
                     points[3].append(k_front)
             # check if the front dominate the point
-            elif i > i_front and j > j_front and k >= k_front:
+            elif i >= i_front and j >= j_front and k >= k_front:
                 if l not in points[0]:
                     points[0].append(l)
                     points[1].append(i)
@@ -810,7 +867,6 @@ def domination_check(conf):
             front[1].append(j)
             front[2].append(k)
             front[3].append(l)
-
     ind = np.ndarray.tolist(np.asarray(front[2]).argsort(axis=0))
     front = [map(front[3].__getitem__, ind), map(front[0].__getitem__, ind), map(front[1].__getitem__, ind),
              map(front[2].__getitem__, ind)]
@@ -822,7 +878,7 @@ def plot_pareto(other_points, pareto_concepts):
     # plot settings
     plt.figure(figsize=(24.0, 10.0))
     ax = plt.axes(projection='3d')
-    plt.subplots_adjust(0.0, 0.0, 1.0, 1.0, 0.2, 0.16)
+    plt.subplots_adjust(left=0.23, bottom=0.17, right=1.0, top=1.0, wspace=0.2, hspace=0.16)
     ax.view_init(azim=-145, elev=15)
     ax.set_ylim(0, 1)
     ax.set_xlim(0, 0.5)
@@ -839,25 +895,15 @@ def plot_pareto(other_points, pareto_concepts):
     # add 3d points of all the points that on the front with their number
     for x, y, z, label in zip(pareto[1], pareto[2], pareto[3], pareto[0]):
         ax.scatter3D(x, y, z, label=label, cmap='Greens', c="r", marker="o")
+    confs = []
+    i = 0
+    for c in pareto_concepts:
+        confs.append(str(i) + " " + c["configuration"])
+        i += 1
+    plt.legend(confs, loc=6, fontsize=10, bbox_to_anchor=(-0.33, 0.5))
     # Make 3D surface of the front
     tri = Triangulation(pareto[1], pareto[3]).triangles
     ax.plot_trisurf(pareto[1], pareto[2], pareto[3], triangles=tri, shade=False, color=(1, 1, 0.4, 0.49), edgecolor='')
-    # # Plot each dof points
-    # plt.figure(4)
-    # for x, y in zip(pareto[1][:5], pareto[2][:5]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
-    # plt.figure(5)
-    # for x, y in zip(pareto[1][5:10], pareto[2][5:10]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
-    # plt.figure(6)
-    # for x, y in zip(pareto[1][10:], pareto[2][10:]):
-    #     plt.scatter(x, y, c="r", marker="o")
-    #     plt.annotate(str(x) + " " + str(y), (x, y))
-    # plt.show()
 
 
 def text2points(ax, points):
@@ -892,10 +938,9 @@ def add_table2plot(pareto):
     cell_text = []
     for row in range(len(rows)):
         cell_text.append(data[row])
-    colwidths = [0.03]*len(columns)
+    colwidths = [0.03] * len(columns)
     # Add a table at the bottom of the axes
     plt.table(cellText=cell_text, rowLabels=rows, colWidths=colwidths, colLabels=columns, loc='bottom')
-    plt.subplots_adjust(left=0.1, bottom=0.15)  # Adjust layout to make room for the table:
     plt.show()
 
 
@@ -903,19 +948,20 @@ def add_table2plot(pareto):
 def save_json(name="data_file", data=None, write_method="a"):
     with open(name + ".json", write_method) as write_file:
         json.dump(data, write_file, indent=2)
-                                                             
+
 
 def load_json(name="data_file"):
-        try:
-            with open(name + ".json", "r") as read_file:
-                return json.load(read_file)
-        except:
-            fix_json(name)
-            with open(name + ".json", "r") as read_file:
-                return json.load(read_file)
+    try:
+        with open(name + ".json", "r") as read_file:
+            return json.load(read_file)
+    except:
+        fix_json(name)
+        with open(name + ".json", "r") as read_file:
+            return json.load(read_file)
 
 
-def fix_json(file_name):
+def fix_json(file_name, fix_type="regular"):
+    if fix_type == "regular":
         with open(file_name + ".json", 'r') as filehandler:
             file_reader = filehandler.readlines()
             data = []
@@ -924,18 +970,32 @@ def fix_json(file_name):
                 if len(row) > 0:
                     if '][' in row:
                         row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
                     data.append(row)
                     empty = False
                 else:
                     if not empty:
                         data = []
                     empty = True
-        with open(file_name + ".json", 'w') as name:
-            name.writelines(data)
+    elif fix_type == "woi_all":
+        with open(file_name + ".json", 'r') as filehandler:
+            file_reader = filehandler.readlines()
+            data = ["["]
+            for row in file_reader:
+                if len(row) > 0:
+                    if '][' in row:
+                        row = ',\n'
+                    elif '}{' in row:
+                        row = '},\n{\n'
+                    data.append(row)
+            data.append("]")
+    with open(file_name + ".json", 'w') as name:
+        name.writelines(data)
 
 
 #  ### Pickle handling
-def pickle_load_data(file_name="bin.pkl"):
+def pickle_load_data(file_name="bin"):
     try:
         with open(file_name + ".pkl") as f:
             x = pickle.load(f)
@@ -947,7 +1007,7 @@ def pickle_load_data(file_name="bin.pkl"):
 
 def pickle_save_data(data, file_name):
     with open(file_name + ".pkl", "wb") as f:
-        pickle.dump(data, f)
+        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
 #  ###how many configurations allready simulated and which to create  ###
@@ -955,13 +1015,14 @@ def which_confs2create(concepts2check, all_concepts, simulated, dof2check="6"):
     print("Start which_confs2create")
     conf2create = []
     for conc in tqdm(concepts2check):
-        if conc[43:44] == dof2check:
+        if conc[43:44] == dof2check:  # and conc[-23:-20] == "0.0" and len(all_concepts[conc]) > 3000:
             for conf in all_concepts[conc]:
                 if conf not in simulated:
                     conf2create.append([conf])
     total = len(conf2create)
     print("About " + str(total) + " configurations lefts. with Avg time of 15 seconds per configuration"
-        " it will take about\n " + str(total * 15 / 3600. / 24) + " days to simulate all of them")
+                                  " it will take about\n " + str(
+        total * 15 / 3600. / 24) + " days to simulate all of them")
     return conf2create
 
 
@@ -974,11 +1035,11 @@ def remain_to_sim(all_concept, dof2check="5"):
     return create_urdf
 
 
-def remain_conf_in_conc(all_concept, min_confs=1000):
+def remain_conf_in_conc(all_concept, min_confs=750):
     print("Start remain_conf_in_conc")
     ga_concept = {}
     for concept in all_concept:
-        if len(all_concepts[concept]) > min_confs and concept[43:44] == "6":
+        if len(all_concept[concept]) > min_confs and concept[43:44] == "6":
             ga_concept[concept] = all_concept[concept]
     save_json("jsons/concepts2ga", ga_concept, "w+")
     return ga_concept
@@ -992,7 +1053,7 @@ def left_confs_concepts():
     c = [[]] * len(b)
     for i in range(len(b)):
         c[i] = [b[i], a[b[i]][0], a[b[i]][1], a[b[i]][2]]
-    MyCsv.save_csv(c, "left_concepts")
+    MyCsv.save_csv(c, "left_concepts", save_mode="w+")
 
 
 def combine_res(all_data, all_concepts):
@@ -1034,21 +1095,169 @@ def confs_number(all=None):
     """Calculate how many configs simulated and how many left in each concept"""
     print("Start confs_number")
     if all is None:
-        all = load_json("jsons/concepts+configs+results")
+        all = load_json("archive/concepts+configs+results_all")
     conf_number = {}
     for i in tqdm(all_concepts):
-        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i])-len(all[i])]
+        conf_number[i] = [len(all_concepts[i]), len(all[i]), len(all_concepts[i]) - len(all[i])]
     return conf_number
 
 
-def concepts2check(confs_max=1000, confs_min=0, dof="6"):
+def concepts2check(concepts, confs_max=1000, confs_min=0, dof="6"):
     """Which concepts we want to select to simulate """
+    all_concepts = concepts
     print("Start concepts2check")
     check_concepts = []
     for k in tqdm(all_concepts):
         if confs_min < len(all_concepts[k]) < confs_max and k[43:44] == dof:
             check_concepts.append(k)
     return check_concepts
+
+
+def check_results():
+    # check how many that have been simulated more than once one mu bigger and one z bigger
+    vm1 = MyCsv.read_csv("firstWOIruns1", "dict")
+    vm2 = MyCsv.read_csv("firstWOIruns2", "dict")
+    vm1.sort()
+    vm2.sort()
+    delta = 1.4
+    t = 0
+    q = 0
+    o = 0
+    w = 0
+    e = 0
+    for p in tqdm(vm1):
+        for v in vm2:
+            if v["name"] == p["name"]:
+                if v["Z"] != "70" and p["Z"] != "70":
+                    q += 1
+                    if v["Z"] == p["Z"] and v["mu"] == p["mu"]:
+                        t += 1
+                    elif float(v["Z"]) >= float(p["Z"]) * delta and float(v["mu"]) * delta <= float(p["mu"]) or \
+                            float(v["Z"]) * delta <= float(p["Z"]) and float(v["mu"]) >= float(p["mu"]) * delta:
+                        o += 1
+                    elif float(v["Z"]) > float(p["Z"]) and float(v["mu"]) > float(p["mu"]) \
+                            or float(v["Z"]) < float(p["Z"]) and float(v["mu"]) < float(p["mu"]):
+                        e += 1
+                    else:
+                        w += 1
+                del vm2[vm2.index(v)]
+                break
+    print("delta= " + str(delta) + " q=" + str(q) + " t=" + str(t) + " o=" + str(o) + " e=" + str(e) + " w:" + str(w) +
+          " percent=" + str(1.0 * o / q))
+
+
+# ###  results check
+def plot_cr(woi_loc="opt_results/18_03/woi", to_save=False):
+    delta = 10
+    woi = load_json(woi_loc)
+    cr = woi["cr"]
+    plt.ioff()
+    plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title('Cr')
+    plt.subplots_adjust(left=0.07, bottom=0.10, right=0.98, top=0.98)
+    max_x = 10
+    for c in cr:
+        conc = np.asarray(cr[c])
+        x = np.argwhere(conc >= 0) * delta + delta
+        if x.shape[0] > 1:
+            if x[-1] > max_x:
+                max_x = x[-1]
+        # conc = conc[conc != 0]
+        plt.plot(x, conc, label=c, color=np.random.rand(3, ), marker="+")
+    plt.xlabel("Generations", fontsize=26)
+    plt.ylabel("Concept Convergence Rate", fontsize=26)
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.xticks(np.arange(0, max_x + delta, step=delta), rotation='vertical', fontsize=14)
+    plt.yticks(fontsize=14)
+    if len(cr) < 16:
+        plt.legend()
+    if to_save:
+        plt.savefig(woi_loc[:-8] + "cr")
+        plt.close()
+    else:
+        plt.show()
+
+
+def plot_woi(folder_loc="opt_results/17_03/optimizaion_WOI", to_save=False):
+    woi = load_json(folder_loc + "/optimizaion_WOI")
+    try:
+        scores = load_json(folder_loc + "/first_gen_res")
+        elits = load_json(folder_loc + "/elits")
+    except:
+        scores = [[]]
+        elits = []
+    points = []
+    labls = []
+    confs_name = []
+    coce_name = []
+    inds2plot = np.arange(0, len(woi), len(woi) / 3)
+    while len(inds2plot) > 5:
+        inds2plot = np.delete(inds2plot, len(inds2plot) / 2)
+    inds2plot[-1] = len(woi) - 1
+    plt.ioff()
+    fig, axs = plt.subplots(len(inds2plot), 1, figsize=(24, 10), facecolor='w', edgecolor='k')
+    plt.subplots_adjust(left=0.47, bottom=0.05, right=0.99, top=0.98, hspace=0.5, wspace=0.1)
+    for w in woi:
+        d = np.asarray(w[w.keys()[0]])
+        inds1 = np.argwhere(d[2] == "6")
+        inds2 = np.argwhere(d[2] == "6.0")
+        inds = np.concatenate((inds1, inds2))
+        point = np.asarray([d[0][inds], d[1][inds]], dtype=float)
+        points.append(point)  # d[0][inds], d[1][inds]])  # 0-mu , 1 - z
+        confs_name.append(d[3][inds])
+        coce_name.append(d[4][inds])
+        labls.append(w.keys()[0])
+    d = 0
+    # points = np.asarray(points, dtype=float)
+    for p in range(len(points)):
+        if p in inds2plot:
+            plot(axs[d / 2], points[p][0], points[p][1], label=labls[p],
+                 name=confs_name[p], conc=coce_name[p], scores=scores, elits=elits)
+            d += 2
+    fig.canvas.set_window_title('WOI')
+    if to_save:
+        plt.savefig(folder_loc + "WOI")
+        plt.close()
+    else:
+        plt.show()
+
+
+def plot(axrow, x, y, label, name, conc, scores, elits):
+    colors = ['g',  "b", "purple", 'grey',"Orange", "cyan", "y", "brown", 'r', "k"]
+    k = 0
+    for n in name:
+        axrow.scatter(x[k], y[k], label=str(n[0]), c=colors[k])
+        axrow.scatter(x[k], y[k], label=str(conc[k][0]), c=colors[k])
+        axrow.annotate(str(x[k][0]) + "," + str(y[k][0]), (x[k], y[k]), ha="center", va="top")
+        k += 1
+    for j in range(len(scores[0])):
+        axrow.scatter(scores[0][j][0], scores[0][j][1], marker="+", color="k")
+    for e in elits:
+        for i in range(len(e[0])):
+            axrow.scatter(e[0][i], e[1][i], marker="*", color="r", alpha=0.2)
+    axrow.set_title(label)
+    try:
+        axrow.legend(loc=4, bbox_to_anchor=(-0.08, 0.0))
+    except:
+        qqqqqqqqq =1
+        # print(ValueError)
+    finally:
+        axrow.set_xlabel("Mid Proximity Joint")
+        axrow.set_ylabel("Manipulability Index")
+
+
+def problematic_confs():
+    with open("results/problematic confs/no_good_confs.txt", "r") as read_file:
+        no_good = read_file.read().split("\n")
+    con = Concepts()
+    results = MyCsv.read_csv("results_all")
+    confs = []
+    for r in results:
+        confs.append(r[0])
+    for ng in no_good:
+        ng = ng.replace("\"", "")
+        if ng not in confs:
+            con.create_files2sim([[ng]])
 
 
 # def check_dupications_configs_in_concepts(all_concepts=None):
@@ -1065,22 +1274,25 @@ def concepts2check(confs_max=1000, confs_min=0, dof="6"):
 #     twice = all_configs[twice_inds]
 
 if __name__ == '__main__':
-    # while True:
     split = False
     calc_concepts = False
     create_urdf = False
     fix_all_from_json = False
-    sumdata = False
+    fix_from_json = False
     to_merge = False
     plotdata = False
-    fix_from_json = False
     pareto_plot = False
+    sumdata = False
     check_num_confs_in_concepts = True
+    sum_all = True
     create_configs = False
+    cr_plot = False
+    woi_plot = False
+    check_problematic_confs = False
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
-        # create random urdf
+        # create urdf
         if create_urdf:
             all_to_sim = con.confs2simulate(concepts_with_values)
             filter2sim, res = con.filter_confs(all_to_sim)
@@ -1098,40 +1310,48 @@ if __name__ == '__main__':
     if fix_from_json:
         FixFromJson()
     if plotdata:
-        plot_data(result_file="/home/tamir/Tamir/Master/Code/sim_results/results_all")
+        plot_data(result_file="/home/tamir/Tamir/Master/Code/results_all")
     if pareto_plot:
         con = assign_results()
         outer_points, pareto_front = domination_check(con)
         pareto_with_concepts = assign_conf2concept(pareto_front)
+        save_json("jsons/front_concept", pareto_with_concepts, "w+")
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
         all_data = MyCsv.read_csv("results_all", "dict")  # all the results
-        save_json("jsons/other/results_all", all_data, "w+")
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        # how many confs simulated
-        conf_number = confs_number()
-        save_json("jsons/other/confs_number", conf_number, "w+")
-        # create CSV file with how many configs simulated and left at each concept
-        left_confs_concepts()
+        save_json("archive/results_all", all_data, "w+")
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
         # Create json file of the remaining concepts and their configurations
-        ga_concepts = remain_conf_in_conc(all_concepts)
+        ga_concepts = remain_conf_in_conc(all_concepts, min_confs=1000)
         # create one file of configurations with there results via concepts
-        combine_data = combine_res(all_data, all_concepts)
+        combine_data = combine_res(all_data, ga_concepts)
         save_json("jsons/concepts+configs+results", combine_data, "w+")
+        if sum_all:
+            combine_data = combine_res(all_data, all_concepts)
+            save_json("archive/concepts+configs+results_all", combine_data, "w+")
+            # how many confs simulated
+            conf_number = confs_number()
+            save_json("jsons/other/confs_number", conf_number, "w+")
+            # create CSV file with how many configs simulated and left at each concept
+            left_confs_concepts()
     if create_configs:
-        all_concepts = load_json("jsons/concepts")  # all the concepts and there configurations
-        confs_in_concepts = 750  # all the concecpts with less than X configurations
+        all_concepts = load_json("archive/concepts")  # all the concepts and there configurations
+        confs_in_concepts = 1500  # all the concecpts with less than X configurations
         # names of simulated confs
         simulated_confs = simulated()
         save_json("jsons/other/simulated", simulated_confs, "w+")
         # which concepts we want to simulte
-        check_concept = concepts2check(confs_max=confs_in_concepts, confs_min=0, dof="6")
+        check_concept = concepts2check(concepts=all_concepts, confs_max=confs_in_concepts, confs_min=1000, dof="6")
         save_json("jsons/other/concepts2check", check_concept, "w+")
         # create the urdf's for the remaining configurations in the selected dof
         to_create = remain_to_sim(all_concepts, dof2check="6")
+    if woi_plot:
+        opt_folder = os.getcwd() + "/results/mutauioncheck/22_04_tamir_mut/"
+        plot_woi(opt_folder)  # "opt_results/"
+    if cr_plot:
+        cr_folder = "22_04_ami_mut"
+        # plot_cr("opt_results/" + cr_folder + "/woi_last")
+        plot_cr("results/mutauioncheck/22_04_tamir_mut/woi_last")
+    if check_problematic_confs:
+        problematic_confs()
 
-
-# todo - check how many that have been simulated more than once one mu bigger and one z bigger!!!!
-# todo - show the configurations that on the woi
-# to?do - concept: "{'#long_link'	long_link	dof	par_axes_y	pitch_joint	p/r_ratio	acc_length
-#  0	0.4	6	0	1	0.5	 1.5}"

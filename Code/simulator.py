@@ -9,11 +9,12 @@ from rosnode import get_node_names
 import getpass
 import sys
 import json
+import rospy
 
 
 class Simulator(object):
 
-    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait1=1.7, wait2=1.2, link_max=0.41):
+    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait0=2, wait1=2.3, wait2=2.7, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -21,6 +22,7 @@ class Simulator(object):
         self.ros = Ros()  # for work with Ros
         self.arm_control = 0
         self.arms = []
+        self.wait0 = wait0
         self.wait1 = wait1
         self.wait2 = wait2
         self.json_data = []
@@ -39,6 +41,7 @@ class Simulator(object):
                         + str(len(self.poses)) + "d_"
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
         main_launch_arg = ["gazebo_gui:=false", "rviz:=false", "dof:=" + str(self.dof) + "dof"]
+        sleep(0.1)
         self.main = self.ros.start_launch("main", "man_gazebo", main_launch_arg)  # main launch file
         # set the obstacles and initiliaze the manipulator
         self.manipulator_move = MoveGroupPythonInterface()  # for path planning and set points
@@ -48,8 +51,7 @@ class Simulator(object):
         pos = self.manipulator_move.get_current_position()
         orien = self.manipulator_move.get_current_orientain()
         self.manipulator_move.go_to_pose_goal([pos.x, pos.y, pos.z], [orien[0], orien[1], orien[2]])
-        # self.manipulator_move.go_to_pose_goal(self.poses[0], self.oriens[0])
-        self.replace_model(0)  # set the first arm
+        self.replace_model(-1)  # set the first arm
 
     @staticmethod
     def save_json(name="data_file", data=None):
@@ -210,20 +212,17 @@ class Simulator(object):
             data_res.append(j[0])
             if j[0]:
                 mu.append(j[2][0])
-                # lci.append(j[2][1])
                 z.append(j[2][1].min())
                 jacobian.append(j[2][2].tolist())
                 curr_pos.append(j[2][3].tolist())
             else:
                 mu.append(-1)
-                # lci.append(-1)
                 z.append(-1)
                 jacobian.append(-1)
                 curr_pos.append(-1)
         self.json_data.append({self.arms[arm]["name"]: [jacobian, curr_pos]})
         suc_res = "False"
         mu_min = -1
-        # lci_min = -1
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
@@ -234,7 +233,6 @@ class Simulator(object):
             data_time = [d[1] for d in data]
             avg_time = np.mean(data_time).round(2)
             mu = np.asarray(mu)
-            # lci = np.asarray(lci)
             z = np.asarray(z)
             # choose only the min values because those are the "worst grade"
             try:
@@ -262,6 +260,7 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         else:
             self.ros.ter_command("rosnode kill /robot_state_publisher")
+        # sleep(self.wait0)
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         sleep(self.wait1)
@@ -271,9 +270,8 @@ class Simulator(object):
     def run_simulation(self,  k=0, len_arm=1638):
         save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
         all_data = []
-        # self.json_data = []
         for arm in range(0, len(self.arms)):
-            print self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms"
+            print(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
             data = []
             joints = self.arms[arm]["arm"].joint_data
             links = self.arms[arm]["arm"].links
@@ -292,7 +290,7 @@ class Simulator(object):
         self.ros.stop_launch(self.main)
 
 
-def simulate(start_arm=0):
+def simulate(start_arm=0, from_opt=True):
     # from which set of arms to start
     # default values
     dofe = 6  # number degrees of freedom of the manipulator
@@ -300,31 +298,42 @@ def simulate(start_arm=0):
     # get pc name for specific configuration
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
+        nums = 3  # how many arms to send to simulator each time
+        wait1_replace = 2.7
+        wait2_replace = 2
+        wait0_replace = 0.01
+    elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.0
-    elif username == "arl_main":  # lab
-        nums = 30  # how many arms to send to simulator each time
+        wait2_replace = 2.3
+        wait0_replace = 2
+    elif username == "tamirm":  # VM
+        nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
-    elif username == "tamirm":  # VM
-        nums = 30  # how many arms to send to simulator each time
+        wait0_replace = 2
+    elif username == "inbarb":  # VM
+        nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
-        wait2_replace = 2.1
+        wait2_replace = 2.3
+        wait0_replace = 2
     else:
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
+        wait0_replace = 2
+    start_arm = start_arm / nums
     create_urdf = False
-    # set parametrs from terminal
-    args = sys.argv
-    if len(args) > 1:
-        dofe = int(args[1])
-        if len(args) > 2:
-            start_arm = int(args[2]) / nums
-            create_urdf = False
-            if len(args) > 3:
-                link_max = float(args[3]) + 0.1
+    if not from_opt:
+        # set parametrs from terminal
+        args = sys.argv
+        if len(args) > 1:
+            dofe = int(args[1])
+            if len(args) > 2:
+                start_arm = int(args[2]) / nums
+                create_urdf = False
+                if len(args) > 3:
+                    link_max = float(args[3]) + 0.1
     ros = Ros()
     # clean ros log file
     ros.ter_command("rosclean purge -y")
@@ -352,111 +361,31 @@ def simulate(start_arm=0):
             ros.ter_command(command)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:],
+                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums],
+                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:  # first run
             sim.arms = arms[:nums]
             sim.run_simulation(nums*t, len(arms))
+    sleep(2)
     ros.ros_core_stop()
+    with open("finish.txt", "w+") as f:
+        f.write("finish")
+        f.close()
+    sleep(2)
+    roscore = ros.checkroscorerun()
+    if roscore:
+        ros.ter_command("kill -9 " + str(roscore))
 
 
 if __name__ == '__main__':
-    # # get pc name for specific configuration
-    # username = getpass.getuser()
-    # if username == "tamir":  # tamir laptop
-    #     nums = 25  # how many arms to send to simulator each time
-    #     wait1_replace = 2.7
-    #     wait2_replace = 2.3
-    # elif username == "arl_main":  # lab
-    #     nums = 25  # how many arms to send to simulator each time
-    #     wait1_replace = 2.7
-    #     wait2_replace = 2.3
-    # elif username == "tamirm":  # VM
-    #     nums = 25  # how many arms to send to simulator each time
-    #     wait1_replace = 2.7
-    #     wait2_replace = 2.1
-    # else:
-    #     nums = 25  # how many arms to send to simulator each time
-    #     wait1_replace = 2.7
-    #     wait2_replace = 2.3
-    # # default values
-    # dofe = 4  # number degrees of freedom of the manipulator
-    # link_max = 0.71 # max link length to check
-    # start_arm = 0  # from which set of arms to start
-    # create_urdf = False
-    # # set parametrs from terminal
-    # args = sys.argv
-    # if len(args) > 1:
-    #     dofe = int(args[1])
-    #     if len(args) > 2:
-    #         start_arm = int(args[2]) / nums
-    #         create_urdf = False
-    #         if len(args) > 3:
-    #             link_max = float(args[3]) + 0.1
-    # ros = Ros()
-    # # clean ros log file
-    # ros.ter_command("rosclean purge -y")
-    # # check if there is roscore running if there is stop it
-    # roscore = ros.checkroscorerun()
-    # if roscore:
-    #     ros.ter_command("kill -9 " + str(roscore))
-    # # start roscore
-    # ros.ros_core_start()
-    # init_node('arl_python', anonymous=True)
-    # # folder to save the file to
-    # foldere = "combined"
-    # sim = Simulator(dof=dofe, folder=foldere, create=create_urdf, wait1=wait1_replace, wait2=wait2_replace, link_max=link_max)
-    # if start_arm > 0:
-    #     ros.stop_launch(sim.arm_control)
-    #     ros.stop_launch(sim.main)
-    # arms = sim.arms
-    # if len(arms) < nums:
-    #     nums = len(arms)
-    # nodes = get_node_names()
-    # for node in nodes:
-    #     if "/moveit_python_wrappers" in node:
-    #         # moveit_arg = "call --wait " + node + """set_logger_level &quot; {logger: 'ros', level: 'Warn'} &quot;" """
-    #         command = "roslaunch man_gazebo logging_level.launch moveit_log:=" + node
-    #         ros.ter_command(command)
-    # for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
-    #     if t == len(arms) / nums:
-    #         sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
-    #         sim.run_simulation(nums*t, len(arms))
-    #     elif t != 0:
-    #         sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums], wait1=wait1_replace, wait2=wait2_replace)
-    #         sim.run_simulation(nums*t, len(arms))
-    #     else:  # first run
-    #         sim.arms = arms[:nums]
-    #         sim.run_simulation(nums*t, len(arms))
-    # ros.ros_core_stop()
-    simulate()
+    simulate(from_opt=False)
 
-# Todo - get errors from terminal
-# todO - failed with error PATH_TOLERANCE_VIOLATED:?
-# todo change link0 to the platform - github
-# done check planner parameters
-# tod - fix the Json save format
-# tod the file name wont change when date change
-# tod change the base_link to 0 meters - check difference
-# tod add to rename the total of success
-# done fix obstacle parameters
-# Done - when not creating an urdf dont use defualt!!!
-# done - check the prismatic limits
-# done - save URDFS in several files -disabled
-# done save to JSON file  - disabled
-# done - change rpy!!!!!!!
-# done change defination of success
-# done delete created files
-# done change length from terminal
-# done get pc name for specific configuration
-# done set parametrs from terminal
-# done -add roll for each manipulator in last joint
-# done add floor at 3 meter
-# done change detection points
-# Done - set for first joint the current location as target.
-# # done  calculate indicies
-# # done change links weight according length
-# # done delete base link visuality and change link0 to box
+# done - get errors from terminal
+# done - run with 1 configuration
+# tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
+# tod?o change link0 to the platform - github

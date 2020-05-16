@@ -1,0 +1,30 @@
+[
+  {
+    "concept": "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 1.0, 'acc_length': 3.1}", 
+    "mu": 0.9, 
+    "configuration": "roll_z_0_1pitch_y_0_7pitch_y_0_4pitch_z_0_4pitch_z_0_4pitch_x_0_7", 
+    "dof": 6.0, 
+    "z": 0.01
+  }, 
+  {
+    "concept": "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 1.0, 'acc_length': 1.5}", 
+    "mu": 0.82, 
+    "configuration": "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_7roll_x_0_1", 
+    "dof": 6.0, 
+    "z": 0.11
+  }, 
+  {
+    "concept": "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 1.0, 'acc_length': 2}", 
+    "mu": 0.8, 
+    "configuration": "roll_z_0_1pitch_y_0_4pitch_y_0_1pitch_x_0_4pitch_x_0_7pitch_y_0_1", 
+    "dof": 6.0, 
+    "z": 0.25
+  }, 
+  {
+    "concept": "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 1.0, 'acc_length': 2}", 
+    "mu": 0.6, 
+    "configuration": "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1", 
+    "dof": 6.0, 
+    "z": 0.26
+  }
+]

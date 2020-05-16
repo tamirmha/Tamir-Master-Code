@@ -5,6 +5,7 @@ import rospy
 # from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import rosgraph
+from rosgraph_msgs.msg import Log
 # Moveit libs
 import moveit_commander
 import moveit_msgs.msg
@@ -151,7 +152,7 @@ class MoveGroupPythonInterface(object):
             return mu, np.diag(z), jacobian, cur_pos
         except:
             # if there numeric error like one of the values is NaN or Inf or divided by zero
-            return -1, -1, np.asarray([-1]*len(joints)), jacobian, cur_pos
+            return -1, 1, np.asarray([-1]*len(joints)), jacobian, cur_pos
 
     @staticmethod
     def mid_joint_proximity(cur_pos, joints, link_length):
@@ -198,14 +199,13 @@ class MoveGroupPythonInterface(object):
         self.move_group.clear_pose_targets()
         if plan:
             ind = self.indices_calc(joints, links)
-        # orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
-        # goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
-        # pos = self.get_current_position()
-        # orien = self.get_current_orientain()
-        # current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
-        # accuracy = self.all_close(goal, current, self.tolerance)
-        # print(goal, current)
-        accuracy = True
+        orientaion = (np.asarray(orientaion)-2 * np.pi) % (2 * np.pi)
+        goal = [pose[0], pose[1], pose[2], orientaion[0], orientaion[1], orientaion[2]]
+        pos = self.get_current_position()
+        orien = self.get_current_orientain()
+        current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
+        accuracy = self.all_close(goal, current, self.tolerance)
+        # accuracy = True
         return accuracy and plan, sim_time, ind
 
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
