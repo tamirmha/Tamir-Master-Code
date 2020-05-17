@@ -304,18 +304,18 @@ def simulate(start_arm=0, from_opt=True):
         wait0_replace = 0.01
     elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2.3
+        wait1_replace = 2.9
+        wait2_replace = 2.5
         wait0_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2.3
+        wait1_replace = 2.9
+        wait2_replace = 2.5
         wait0_replace = 2
     elif username == "inbarb":  # VM
         nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2.3
+        wait1_replace = 2.9
+        wait2_replace = 2.5
         wait0_replace = 2
     else:
         nums = 25  # how many arms to send to simulator each time
