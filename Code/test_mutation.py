@@ -1,4 +1,4 @@
-from Other import save_json, load_json, plot_cr, plot_woi, fix_json, MyCsv
+from Other import save_json, load_json, plot_cr, plot_woi, fix_json
 import os
 import pickle
 import matplotlib.pyplot as plt
@@ -14,7 +14,6 @@ import itertools
 from statistics import variance
 import math
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-import pymoo.indicators.igd as igd
 
 
 def run_results(prob, gen_num=1, elite_archive=True):
@@ -423,33 +422,24 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
     shapes = [".", "+", "*", "^"]  # 30, 50, 100, regular
     volume = []
     manip = []
-    igd_val = igd.IGD(find_opt_front())
-    igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
-    IGD = []
     for i, woi in enumerate(dwoi):
         volume.append([])
         manip.append([])
-        IGD.append([])
         for j, d in enumerate(woi):
             volume[i].append([])
             manip[i].append([])
-            IGD[i].append([])
             fronts = []
             for w in d:
                 front = np.asarray(w[:2]).T
                 fronts.append(front)
             if title == "Hyper Volume":
                 volume[i][j].append(round(hv.compute(fronts[-1]), 4))
-            elif title == "Minimum Manipulability":
+            else:
                 manip[i][j].append(round(np.min(fronts[-1][:, 1]), 3))
-            elif title == "IGD":
-                IGD[i][j].append(round(igd_val.calc(fronts[-1]), 3))
     if title == "Hyper Volume":
         ind2plot = volume
-    elif title == "Minimum Manipulability":
+    else:
         ind2plot = manip
-    elif title == "IGD":
-        ind2plot = IGD
     plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title(title)
     plt.subplots_adjust(left=0.07, bottom=0.07, right=0.98, top=0.95)
     for i, gen in enumerate(gens):
@@ -645,21 +635,8 @@ def csv_from_pkl():
     MyCsv.save_csv(to_save,"test")
 
 
-def find_opt_front():
-    with open(os.getcwd() + "/results/problems.pkl") as f:
-            problems = pickle.load(f)
-    front = [[1], [5], [7], ["hh"], ["sdf"]]
-    conf = []
-    for prob in problems:
-        for res in prob.confs_results:
-            conf = [[1-float(res[res.keys()[0]]["mu"])], [float(res[res.keys()[0]]["z"])],
-                    [float(res[res.keys()[0]]["dof"])], [res[res.keys()[0]]["name"]]]
-            front = domination_check(conf, front, prob.concept_name)
-    return front
-
-
 if __name__ == '__main__':
-    calc_hv = True
+    calc_hv = False
     create_woi_cr = False
     woi_n_generate = False
     anim = False
@@ -750,21 +727,15 @@ if __name__ == '__main__':
         axs[3].set_ylabel("1 - Manipulability", fontsize=26)
     if calc_hv:  # HV calculation
         names = list(itertools.chain(*names))
-        igd_val = igd.IGD(find_opt_front())
-        igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
         referencePoint = [0.5, 1]
         volumes = []
-        igd_res = []
         medians_v = []
         variance_v = []
         medians_l = []
         variance_l = []
-        medians_igd = []
-        variance_igd = []
         min_manip = []
         labels = []
-        volumes_last = []
-        igd_last = []
+        volumes_last =[]
         min_manip_last = []
         k = 0
         hv = HyperVolume(referencePoint)
@@ -774,10 +745,8 @@ if __name__ == '__main__':
             dwoi.append([])
             gens.append([])
             last_vol = []
-            last_igd = []
             last_min_manip = []
             volumes.append([])
-            igd_res.append([])
             min_manip.append([])
             i = 0
             t = 0
@@ -803,18 +772,14 @@ if __name__ == '__main__':
                         gens[k][t].append(g)
                 woi_last = woi_all[-1]["dwoi"]
                 volumes[k].append([])
-                igd_res[k].append([])
                 min_manip[k].append([])
                 for woi in woi_last:
                     front = np.asarray(woi[:2]).T
-                    igd_res[k][i].append(igd_val.calc(np.asarray(front)))
                     volumes[k][i].append(round(hv.compute(front), 4))
                     min_manip[k][i].append(np.min(front[:, 1]))
                 last_vol.append(volumes[k][i][-1])
-                last_igd.append(igd_res[k][i][-1])
                 last_min_manip.append(min_manip[k][i][-1])
                 i += 1
-            igd_last.append(last_igd)
             volumes_last.append(last_vol)
             min_manip_last.append(last_min_manip)
             save_json(os.getcwd() + fol + "all_hv", volumes[k], "w+")
@@ -822,24 +787,13 @@ if __name__ == '__main__':
             variance_v.append(round(variance(last_vol), 5))
             medians_l.append(np.median(last_min_manip))
             variance_l.append(round(variance(last_min_manip), 5))
-            medians_igd.append(np.median(last_igd))
-            variance_igd.append(round(variance(last_igd), 5))
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
-        hv_toscv = medians_v + variance_v
-        MyCsv.save_csv([[str(x)] for x in hv_toscv], "HV")
-        manip_toscv = medians_l + variance_l
-        MyCsv.save_csv([[str(x)] for x in manip_toscv], "Manip")
-        igd_toscv = medians_igd + variance_igd
-        MyCsv.save_csv([[str(x)] for x in igd_toscv], "IGD")
         plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
-        plot_wilcoxon(igd_last, medians_igd, variance_igd, labels, "IGD")
         labels = set_labels(labels)
-        MyCsv.save_csv([[x] for x in labels], "Labels")
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
-        plot_ind_vs_gen(dwoi, gens, labels, title="IGD")
     if woi_n_generate_all:
         if not calc_hv:
             names = list(itertools.chain(*names))
@@ -888,4 +842,3 @@ if __name__ == '__main__':
         conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_3_0.0_3.1
         ind2plot, gens, labels = concepts_data2plot(names, conc_to_check)
         plot_ind_vs_gen_concept(ind2plot, gens, labels, title)
-
