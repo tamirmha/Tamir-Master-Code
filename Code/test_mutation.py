@@ -374,14 +374,18 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     fig = plt.figure(figsize=(24.0, 10.0))
     fig.canvas.set_window_title(titl)
     plt.subplots_adjust(left=0.03, bottom=0.17, right=0.98, top=0.95)
-    grid = plt.GridSpec(1, 3, wspace=0.2)
-    ax = fig.add_subplot(grid[0, -1])
-    ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
-    ax.set_xticklabels(labels, rotation="vertical")
-    ax.set_title("Medians")
-    ax.grid(True, axis="x")
-    # for i, med in enumerate(medians_v):
-    #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
+    grid = plt.GridSpec(1, 1, wspace=0.2)
+    # todo - check this
+    # ax = fig.add_subplot(grid[0, -1])
+    # # ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
+    # print(labels)
+    # print(medians_v)
+    # ax.scatter(labels, medians_v)
+    # # ax.set_xticklabels(labels, rotation="vertical")
+    # ax.set_title("Medians")
+    # ax.grid(True, axis="x")
+    # # for i, med in enumerate(medians_v):
+    # #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
     labels = set_labels(labels)
     ax = fig.add_subplot(grid[0, :-1])
     wil = np.ones((len(volumes), len(volumes))) * 100
@@ -401,7 +405,7 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
             color = "white"
             if round(y, 2) <=5:
                 color = "red"
-            ax.text(i,j, str(round(y, 2)), va='center', ha='center', color=color)
+            ax.text(i, j, str(round(y, 2)), va='center', ha='center', color=color)
     ax.set_xticks(np.arange(16))
     ax.set_yticks(np.arange(16))
     ax.set_xticklabels(labels, rotation="vertical")
@@ -423,16 +427,19 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
     shapes = [".", "+", "*", "^"]  # 30, 50, 100, regular
     volume = []
     manip = []
+    mid = []
     igd_val = igd.IGD(find_opt_front())
     igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
     IGD = []
     for i, woi in enumerate(dwoi):
         volume.append([])
         manip.append([])
+        mid.append([])
         IGD.append([])
         for j, d in enumerate(woi):
             volume[i].append([])
             manip[i].append([])
+            mid[i].append([])
             IGD[i].append([])
             fronts = []
             for w in d:
@@ -442,12 +449,16 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
                 volume[i][j].append(round(hv.compute(fronts[-1]), 4))
             elif title == "Minimum Manipulability":
                 manip[i][j].append(round(np.min(fronts[-1][:, 1]), 3))
+            elif title == "Minimum Mid Proximity":
+                mid[i][j].append(round(np.min(fronts[-1][:, 0]), 3))
             elif title == "IGD":
                 IGD[i][j].append(round(igd_val.calc(fronts[-1]), 3))
     if title == "Hyper Volume":
         ind2plot = volume
     elif title == "Minimum Manipulability":
         ind2plot = manip
+    elif title == "Minimum Mid Proximity":
+        ind2plot = mid
     elif title == "IGD":
         ind2plot = IGD
     plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title(title)
@@ -480,12 +491,14 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
             ind += k
         x_new = []
         y_new = []
-        for i in range(1240):
-            med = np.median(np.asarray(y)[np.argwhere(np.asarray(x) == i)])
+        # flat_listy = flat_list(y)
+        # flat_listx = flat_list(x)
+        for o in range(1240):
+            med = np.median(np.asarray(y)[np.argwhere(np.asarray(x) == o)])
             if math.isnan(med):
                 continue
             y_new.append(med)
-            x_new.append(i)
+            x_new.append(o)
         plt.scatter(x_new, y_new, marker=shape, color=color, label=label)
     plt.xlabel("Generation Number", fontsize=20)
     plt.ylabel(title, fontsize=20)
@@ -494,16 +507,17 @@ def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
     plt.show()
 
 
-def concepts_data2plot(names, conc_to_check, title = "Hyper Volume"):
-    hv = HyperVolume([0.5, 1])
+def concepts_data2plot(names, conc_to_check):
+    h_v = HyperVolume([0.5, 1])
     elites_hv = []
     generations = []
     concepts_names = []
     k = 0
     labels = []
-    for n in names:
-        labels.append(n[47:-1])
+    # for n in names:
+        # labels.append(n[47:-1])
     for fol in tqdm(names):
+        labels.append(fol[47:-1])
         elites_hv.append([])
         generations.append([])
         concepts_names.append([])
@@ -526,7 +540,7 @@ def concepts_data2plot(names, conc_to_check, title = "Hyper Volume"):
         k += 1
     dwoi = elites_hv
     gens = generations
-    hv = HyperVolume([0.5, 1])
+    h_v = HyperVolume([0.5, 1])
     volume = []
     manip = []
     for i, woi in enumerate(dwoi):
@@ -539,19 +553,22 @@ def concepts_data2plot(names, conc_to_check, title = "Hyper Volume"):
             for w in d:
                 front = np.asarray(w[:2]).T
                 fronts.append(front)
-                if title == "Hyper Volume":
-                    h_v = round(hv.compute(front), 4)
-                    volume[i][j].append(h_v)
-                else:
-                    manip[i][j].append(round(np.min(fronts[-1][:, 1]), 3))
-    if title == "Hyper Volume":
-        ind2plot = volume
-    else:
-        ind2plot = manip
-    return ind2plot, gens, labels
+                hv_ind = round(h_v.compute(front), 4)
+                volume[i][j].append(hv_ind)
+                manip[i][j].append(round(np.min(fronts[-1][:, 1]), 3))
+    return volume, manip, gens, labels
 
 
-def plot_ind_vs_gen_concept(ind2plot, gens, labels, title="Hyper Volume"):
+def flat_list(list2flat):
+    flat_list = []
+    for sublist in list2flat:
+        for item in sublist:
+            for i in item:
+                flat_list.append(i)
+    return flat_list
+
+
+def plot_ind_vs_gen_concept(ind2plot, gens, labels, title="Hyper Volume", conc_check=""):
     colors = ["k", "r", "b", "c"]  # Tamir, Ami, Rand, Comb
     shapes = [".", "+", "*", "^"]  # 30, 50, 100, regular
     plt.figure(figsize=(24.0, 10.0)).canvas.set_window_title(title)
@@ -581,21 +598,23 @@ def plot_ind_vs_gen_concept(ind2plot, gens, labels, title="Hyper Volume"):
             if not g:
                 continue
             k = len(g)
-            x += g
-            y += ind2plot[i][ind: ind + k]
+            x.append(g)
+            y.append(ind2plot[i][ind: ind + k])
             ind += k
-            x_new = []
-            y_new = []
-            for o in range(1240):
-                med = np.median(np.asarray(y[0])[np.argwhere(np.asarray(x[0]) == o)])
-                if math.isnan(med):
-                    continue
-                y_new.append(med)
-                x_new.append(o)
+        x_new = []
+        y_new = []
+        flat_listy = flat_list(y)
+        flat_listx = flat_list(x)
+        for o in range(1240):
+            med = np.median(np.asarray(flat_listy)[np.argwhere(np.asarray(flat_listx) == o)])
+            if math.isnan(med):
+                continue
+            y_new.append(med)
+            x_new.append(o)
         plt.scatter(x_new, y_new,color=color, marker=shape,  label=label)
     plt.xlabel("Generation Number", fontsize=20)
     plt.ylabel(title, fontsize=20)
-    plt.title("Concept: " + conc_to_check)
+    plt.title("Concept: " + conc_check)
     plt.grid(True)
     plt.legend()
     plt.show()
@@ -656,6 +675,34 @@ def find_opt_front():
                     [float(res[res.keys()[0]]["dof"])], [res[res.keys()[0]]["name"]]]
             front = domination_check(conf, front, prob.concept_name)
     return front
+
+
+def calc_var_med(vol):
+    medians = []
+    variances = []
+    last_vols = []
+    for k, vols in enumerate(vol):
+        to_med = []
+        last_vols.append([])
+        for v in vols:
+            to_med.append(v[-1])
+            last_vols[k].append(v[-1])
+        medians.append(np.median(to_med))
+        variances.append(variance(to_med))
+    return last_vols, medians, variances
+
+
+def med_var(arr):
+    last = []
+    medians = []
+    variances = []
+    for i, gen in enumerate(arr):
+        last.append([])
+        for g in gen:
+            last[i].append(g[-1])
+        medians.append(round(np.median(last[-1]), 5))
+        variances.append(round(variance(last[-1]), 5))
+    return last, medians, variances
 
 
 if __name__ == '__main__':
@@ -754,18 +801,10 @@ if __name__ == '__main__':
         igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
         referencePoint = [0.5, 1]
         volumes = []
-        igd_res = []
-        medians_v = []
-        variance_v = []
-        medians_l = []
-        variance_l = []
-        medians_igd = []
-        variance_igd = []
+        mid = []
         min_manip = []
+        igd_res = []
         labels = []
-        volumes_last = []
-        igd_last = []
-        min_manip_last = []
         k = 0
         hv = HyperVolume(referencePoint)
         dwoi = []
@@ -773,16 +812,14 @@ if __name__ == '__main__':
         for fol in tqdm(names):
             dwoi.append([])
             gens.append([])
-            last_vol = []
-            last_igd = []
-            last_min_manip = []
             volumes.append([])
+            mid.append([])
             igd_res.append([])
             min_manip.append([])
             i = 0
             t = 0
             for dircetor in os.listdir(os.getcwd() + fol):
-                if "hv.json" in dircetor:
+                if "all_" in dircetor:
                     continue
                 name = fol + dircetor
                 try:
@@ -803,43 +840,49 @@ if __name__ == '__main__':
                         gens[k][t].append(g)
                 woi_last = woi_all[-1]["dwoi"]
                 volumes[k].append([])
+                mid[k].append([])
                 igd_res[k].append([])
                 min_manip[k].append([])
                 for woi in woi_last:
                     front = np.asarray(woi[:2]).T
                     igd_res[k][i].append(igd_val.calc(np.asarray(front)))
                     volumes[k][i].append(round(hv.compute(front), 4))
+                    mid[k][i].append(np.min(front[:, 0]))
                     min_manip[k][i].append(np.min(front[:, 1]))
-                last_vol.append(volumes[k][i][-1])
-                last_igd.append(igd_res[k][i][-1])
-                last_min_manip.append(min_manip[k][i][-1])
                 i += 1
-            igd_last.append(last_igd)
-            volumes_last.append(last_vol)
-            min_manip_last.append(last_min_manip)
             save_json(os.getcwd() + fol + "all_hv", volumes[k], "w+")
-            medians_v.append(np.median(last_vol))
-            variance_v.append(round(variance(last_vol), 5))
-            medians_l.append(np.median(last_min_manip))
-            variance_l.append(round(variance(last_min_manip), 5))
-            medians_igd.append(np.median(last_igd))
-            variance_igd.append(round(variance(last_igd), 5))
+            save_json(os.getcwd() + fol + "all_Manip", min_manip[k], "w+")
+            save_json(os.getcwd() + fol + "all_MidProximity", mid[k], "w+")
+            save_json(os.getcwd() + fol + "all_IGD", igd_res[k], "w+")
             labels.append("_".join(fol.split("/")[5:7]))
             k += 1
+        save_folder="results/mutauioncheck/woi_025_075/30_runs/"
+        last_gen, medians_gen, variance_gen = med_var(gens)
+        gen_toscv = medians_gen + variance_gen
+        MyCsv.save_csv([[str(x)] for x in gen_toscv],save_folder + "Gen", save_mode='w+')
+        plot_wilcoxon(last_gen, medians_gen, variance_gen, labels, "Generations")
+        volumes_last, medians_v, variance_v = med_var(volumes)
         hv_toscv = medians_v + variance_v
-        MyCsv.save_csv([[str(x)] for x in hv_toscv], "HV")
-        manip_toscv = medians_l + variance_l
-        MyCsv.save_csv([[str(x)] for x in manip_toscv], "Manip")
-        igd_toscv = medians_igd + variance_igd
-        MyCsv.save_csv([[str(x)] for x in igd_toscv], "IGD")
+        MyCsv.save_csv([[str(x)] for x in hv_toscv], save_folder + "HV", save_mode='w+')
         plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
+        mid_last, medians_mid, variance_mid = med_var(mid)
+        mid_toscv = medians_mid + variance_mid
+        MyCsv.save_csv([[str(x)] for x in mid_toscv], save_folder + "Mid", save_mode='w+')
+        plot_wilcoxon(mid_last, medians_mid, variance_mid, labels, "Minimum Mid Proximity")
+        min_manip_last, medians_l, variance_l = med_var(min_manip)
+        manip_toscv = medians_l + variance_l
+        MyCsv.save_csv([[str(x)] for x in manip_toscv], save_folder + "Manip", save_mode='w+')
         plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
+        igd_last, medians_igd, variance_igd = med_var(igd_res)
+        igd_toscv = medians_igd + medians_igd
+        MyCsv.save_csv([[str(x)] for x in igd_toscv], save_folder + "IGD", save_mode='w+')
         plot_wilcoxon(igd_last, medians_igd, variance_igd, labels, "IGD")
         labels = set_labels(labels)
         MyCsv.save_csv([[x] for x in labels], "Labels")
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
         plot_ind_vs_gen(dwoi, gens, labels, title="IGD")
+        plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Mid Proximity")
     if woi_n_generate_all:
         if not calc_hv:
             names = list(itertools.chain(*names))
@@ -879,13 +922,24 @@ if __name__ == '__main__':
         # plt.close()
     if concept_woi:
         names = list(itertools.chain(*names))
-        title = "Hyper Volume"
-        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 2, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_2_4_0.0_2.6
-        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_4_0.0_2.6
-        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_3_0.0_2.6
-        conc_to_check = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 2, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_2_0.0_2.6
-        conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_4_0.0_3.1
-        conc_to_check = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_3_0.0_3.1
-        ind2plot, gens, labels = concepts_data2plot(names, conc_to_check)
-        plot_ind_vs_gen_concept(ind2plot, gens, labels, title)
-
+        # title = "Hyper Volume"
+        conc_to_check1 = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 2, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_2_4_0.0_2.6
+        conc_to_check2 = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_4_0.0_2.6
+        conc_to_check3 = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_3_0.0_2.6
+        conc_to_check4 = u'{\'#long_link\': 2, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 2, \'p/r_ratio\': 0.0, \'acc_length\': 2.6}'  # 2_0.7_6_0_2_0.0_2.6
+        conc_to_check5 = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 4, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_4_0.0_3.1
+        conc_to_check6 = u'{\'#long_link\': 3, \'long_link\': 0.7, \'dof\': 6, \'par_axes_y\': 0, \'pitch_joint\': 3, \'p/r_ratio\': 0.0, \'acc_length\': 3.1}'  # 3_0.7_6_0_3_0.0_3.1
+        con2check = [conc_to_check1, conc_to_check2, conc_to_check3, conc_to_check4, conc_to_check5, conc_to_check6]
+        for conc_to_check in con2check[:1]:
+            vol, man, gens, labels = concepts_data2plot(names, conc_to_check)
+            plot_ind_vs_gen_concept(vol, gens, labels, "Hyper Volume", conc_check=conc_to_check)
+            plot_ind_vs_gen_concept(man, gens, labels, "Min Manipulability", conc_check=conc_to_check)
+            last_vols, medians, variances = calc_var_med(vol)
+            last_man, medians_man, variances_man = calc_var_med(man)
+            plot_wilcoxon(last_vols, medians, variances, labels, titl="Hyper Volume")
+            plot_wilcoxon(last_man, medians_man, variances_man, labels, titl="Min Manipulability")
+# folder = "/home/tamir/Tamir/Master/Code/results/mutauioncheck/woi_025_075/30_runs/mut_cr_regular/rand/12_05_2/"
+# last = load_json(folder + "woi_last")
+# woi = last["dwoi"][-3]
+# referencePoint = [0.5, 1]
+# hv = HyperVolume(referencePoint)
