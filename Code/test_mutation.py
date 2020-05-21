@@ -714,7 +714,8 @@ if __name__ == '__main__':
     woi_n_generate_all = False
     concept_woi = False
     res2plot = False
-    selected_concepts = True
+    selected_concepts = False
+    hv_in_gen = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
@@ -1008,3 +1009,37 @@ if __name__ == '__main__':
                 ax[i/2, 1].set_xlim((0, 0.5))
                 ax[i/2, 0].set_ylim((0, 1))
                 ax[i/2, 1].set_ylim((0, 1))
+    if hv_in_gen:
+        names = list(itertools.chain(*names))
+        gens2find = [30, 50, 75, 125, 200]
+        HV = HyperVolume([0.5, 1])
+        for gen2find in gens2find:
+            h_v = []
+            median = []
+            var = []
+            labels = []
+            for n, fol in enumerate(tqdm(names)):
+                h_v.append([])
+                for i, dircetor in enumerate(os.listdir(os.getcwd() + fol)):
+                    h_v[n].append([])
+                    if "all_" in dircetor:
+                        continue
+                    name = fol + dircetor
+                    try:
+                        woi_all = load_json(os.getcwd() + name + "/woi_All")
+                    except:
+                        fix_json(os.getcwd() + name + "/woi_All", "woi_all")
+                        woi_all = load_json(os.getcwd() + name + "/woi_All")
+                    if len(woi_all) < gen2find:
+                        gen2find = len(woi_all)
+                    woi = woi_all[gen2find]["dwoi"][-1]
+                    front = np.asarray(woi[:2]).T
+                    h_v[n][i].append(HV.compute(front))
+                h_v[n] = [x[0] for x in h_v[n] if x != []]
+                median.append(np.median(h_v[n]))
+                var.append(np.median(h_v[n]))
+                labels.append("_".join(fol.split("/")[5:7]))
+            hv2csv = median + var
+            MyCsv.save_csv([[str(x)] for x in hv2csv], os.getcwd() + "/results/mutauioncheck/woi_025_075/30_runs/HV@" + str(gen2find),
+                           save_mode='w+')
+            plot_wilcoxon(h_v, median, var, labels, "HV@" + str(gen2find))
