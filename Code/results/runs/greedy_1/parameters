@@ -1,6 +1,0 @@
-mutation = tamir
-Thigh = 0.01
-Tlow = 0.005
-Delta = 10 generations
-Concepts to continue = 90%
-Min Concepts = 10%

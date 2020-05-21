@@ -706,13 +706,15 @@ def med_var(arr):
 
 
 if __name__ == '__main__':
-    calc_hv = True
+    calc_hv = False
     create_woi_cr = False
     woi_n_generate = False
     anim = False
     plot_concept_front = False
     woi_n_generate_all = False
     concept_woi = False
+    res2plot = False
+    selected_concepts = True
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
@@ -878,7 +880,7 @@ if __name__ == '__main__':
         MyCsv.save_csv([[str(x)] for x in igd_toscv], save_folder + "IGD", save_mode='w+')
         plot_wilcoxon(igd_last, medians_igd, variance_igd, labels, "IGD")
         labels = set_labels(labels)
-        MyCsv.save_csv([[x] for x in labels], "Labels")
+        MyCsv.save_csv([[x] for x in labels], save_folder + "Labels", save_mode='w+')
         plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
         plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
         plot_ind_vs_gen(dwoi, gens, labels, title="IGD")
@@ -938,8 +940,71 @@ if __name__ == '__main__':
             last_man, medians_man, variances_man = calc_var_med(man)
             plot_wilcoxon(last_vols, medians, variances, labels, titl="Hyper Volume")
             plot_wilcoxon(last_man, medians_man, variances_man, labels, titl="Min Manipulability")
-# folder = "/home/tamir/Tamir/Master/Code/results/mutauioncheck/woi_025_075/30_runs/mut_cr_regular/rand/12_05_2/"
-# last = load_json(folder + "woi_last")
-# woi = last["dwoi"][-3]
-# referencePoint = [0.5, 1]
-# hv = HyperVolume(referencePoint)
+    if res2plot:
+        # folder = "/home/tamir/Tamir/Master/Code/"
+        all_res = MyCsv.read_csv("results_all", "dict")
+        points = [[], []]
+        for res in all_res:
+            if res["dof"] == "6" or res["dof"] == "6.0":
+                points[0].append(float(res["Z"]))
+                points[1].append(1 - float(res["mu"]))
+        plt.scatter(points[0], points[1], alpha=0.2)
+        plt.xlim((0, 0.5))
+        plt.ylim((0.3, 1))
+        plt.xlabel("Mid Proximity Joint", fontsize=20)
+        plt.ylabel("1 - Manipulability", fontsize=20)
+    if selected_concepts:
+        folder = "/home/tamir/Tamir/Master/Code/jsons/"
+        concepts = load_json(folder + "concepts+configs+results")
+        concepts_names = ["{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}",
+        "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 1.5}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 2.6}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2.6}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 0, 'p/r_ratio': 1.0, 'acc_length': 2.6}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 1.5}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 1.5}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.5, 'acc_length': 2.6}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 2}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2.6}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 1.5}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 1.5}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.2, 'acc_length': 2.6}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}",
+        "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 3.1}",
+        "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2.6}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 1.0, 'acc_length': 1.5}",
+        "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 1.0, 'acc_length': 2}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 1, 'p/r_ratio': 0.5, 'acc_length': 2.6}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 2}",
+        "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 1.5}",
+        "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.2, 'acc_length': 3.1}",
+        "{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}" ]
+        conf2plot =[]
+        fig, ax = plt.subplots(len(concepts_names)/2, 2,figsize=(24.0, 10.0))
+        fig.canvas.set_window_title("Selected Concepts Object State")
+        plt.subplots_adjust(left=0.02, bottom=0.05, right=0.98, top=0.95, hspace=0.65)
+        for i, concepts_name in enumerate(concepts_names):
+            conf2plot.append([[],[]])
+            conc2check = concepts[concepts_name]
+            for conf in conc2check:
+                z = conf[conf.keys()[0]]["z"]
+                mu = conf[conf.keys()[0]]["mu"]
+                if z == "70":
+                    z = 0.5
+                    mu = 1
+                conf2plot[i][0].append(z)
+                conf2plot[i][1].append(mu)
+            if i % 2:
+                ax[i/2, 0].scatter(np.asarray(conf2plot[i-1][0], dtype=float), np.asarray(conf2plot[i-1][1], dtype=float),
+                            label=conc2check[i-1], c=np.random.rand(3,))
+                ax[i/2, 1].scatter(np.asarray(conf2plot[i][0], dtype=float), np.asarray(conf2plot[i][1], dtype=float),
+                            label=conc2check[i], c=np.random.rand(3,))
+                ax[i/2, 0].set_xlim((0, 0.5))
+                ax[i/2, 1].set_xlim((0, 0.5))
+                ax[i/2, 0].set_ylim((0, 1))
+                ax[i/2, 1].set_ylim((0, 1))
