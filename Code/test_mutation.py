@@ -715,7 +715,7 @@ if __name__ == '__main__':
     concept_woi = False
     res2plot = False
     selected_concepts = False
-    hv_in_gen = False
+    hv_in_gen = True
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
@@ -1037,7 +1037,7 @@ if __name__ == '__main__':
                     h_v[n][i].append(HV.compute(front))
                 h_v[n] = [x[0] for x in h_v[n] if x != []]
                 median.append(np.median(h_v[n]))
-                var.append(np.median(h_v[n]))
+                var.append(variance(h_v[n]))
                 labels.append("_".join(fol.split("/")[5:7]))
             hv2csv = median + var
             MyCsv.save_csv([[str(x)] for x in hv2csv], os.getcwd() + "/results/mutauioncheck/woi_025_075/30_runs/HV@" + str(gen2find),
