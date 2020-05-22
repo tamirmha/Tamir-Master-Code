@@ -371,22 +371,20 @@ def woi_comprasion_all(names=["/results/mutauioncheck/22_04_tamir_mut/"]):
 
 
 def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
+    labels = set_labels(labels)
     fig = plt.figure(figsize=(24.0, 10.0))
     fig.canvas.set_window_title(titl)
-    plt.subplots_adjust(left=0.03, bottom=0.17, right=0.98, top=0.95)
-    grid = plt.GridSpec(1, 1, wspace=0.2)
+    plt.subplots_adjust(left=0.53, bottom=0.15, right=0.98, top=0.95)
+    grid = plt.GridSpec(1, 3, wspace=0.2)
     # todo - check this
-    # ax = fig.add_subplot(grid[0, -1])
-    # # ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
-    # print(labels)
-    # print(medians_v)
-    # ax.scatter(labels, medians_v)
-    # # ax.set_xticklabels(labels, rotation="vertical")
-    # ax.set_title("Medians")
-    # ax.grid(True, axis="x")
-    # # for i, med in enumerate(medians_v):
-    # #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
-    labels = set_labels(labels)
+    ax = fig.add_subplot(grid[0, -1])
+    ax.errorbar(range(16), medians_v, yerr=variance_v, ecolor='k', fmt="*r")
+    ax.set_xticks(range(16))
+    ax.set_xticklabels(labels, rotation="vertical")
+    ax.set_title("Medians")
+    ax.grid(True, axis="x")
+    # for i, med in enumerate(medians_v):
+    #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
     ax = fig.add_subplot(grid[0, :-1])
     wil = np.ones((len(volumes), len(volumes))) * 100
     for i in range(len(volumes)):
@@ -412,13 +410,6 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     ax.xaxis.set_ticks_position('bottom')
     ax.set_yticklabels(labels)
     ax.set_title("Wilcoxon", y=1, fontsize=24)
-    # ax = fig.add_subplot(grid[0, -1])
-    # ax.errorbar(labels, medians_v, yerr=variance_v, ecolor='k', fmt="*r")
-    # ax.set_xticklabels(labels, rotation="vertical")
-    # ax.set_title("Medians")
-    # # ax.grid(True, axis="x")
-    # # for i, med in enumerate(medians_v):
-    # #     ax.annotate(str(variance_v[i]), (i, med), ha='center', va='top')
 
 
 def plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume"):
@@ -706,7 +697,7 @@ def med_var(arr):
 
 
 if __name__ == '__main__':
-    calc_hv = False
+    calc_hv = True
     create_woi_cr = False
     woi_n_generate = False
     anim = False
@@ -715,7 +706,7 @@ if __name__ == '__main__':
     concept_woi = False
     res2plot = False
     selected_concepts = False
-    hv_in_gen = True
+    hv_in_gen = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
