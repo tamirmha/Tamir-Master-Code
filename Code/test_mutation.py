@@ -374,9 +374,8 @@ def plot_wilcoxon(volumes, medians_v, variance_v, labels, titl="Hyper Volume"):
     labels = set_labels(labels)
     fig = plt.figure(figsize=(24.0, 10.0))
     fig.canvas.set_window_title(titl)
-    plt.subplots_adjust(left=0.53, bottom=0.15, right=0.98, top=0.95)
+    plt.subplots_adjust(left=0.05, bottom=0.2, right=0.98, top=0.95)
     grid = plt.GridSpec(1, 3, wspace=0.2)
-    # todo - check this
     ax = fig.add_subplot(grid[0, -1])
     ax.errorbar(range(16), medians_v, yerr=variance_v, ecolor='k', fmt="*r")
     ax.set_xticks(range(16))
