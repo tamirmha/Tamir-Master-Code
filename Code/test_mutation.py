@@ -695,7 +695,7 @@ def med_var(arr):
     return last, medians, variances
 
 
-def Confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/archive/", file_name="concepts+configs+results_all"):
+def Confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", file_name="concepts+configs+results"):
     b = load_json("/home/tamir/Tamir/Master/Code/jsons/other/confs_number")
     concepts = load_json(folder_name + file_name)
     conf2plot =[]

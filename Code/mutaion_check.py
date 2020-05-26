@@ -22,7 +22,7 @@ from simulator import simulate
 # # np.random.seed(1010101)
 # # np.random.seed(111111)
 # # np.random.seed(0)
-from optimization import Optimization
+from optimization_copy import Optimization
 
 
 gen_num = 1240
