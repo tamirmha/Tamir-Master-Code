@@ -704,7 +704,7 @@ if __name__ == '__main__':
     woi_n_generate_all = False
     concept_woi = False
     res2plot = False
-    selected_concepts = True
+    selected_concepts = False
     hv_in_gen = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
@@ -1035,3 +1035,37 @@ if __name__ == '__main__':
             MyCsv.save_csv([[str(x)] for x in hv2csv], os.getcwd() + "/results/mutauioncheck/woi_025_075/30_runs/HV@" + str(gen2find),
                            save_mode='w+')
             plot_wilcoxon(h_v, median, var, labels, "HV@" + str(gen2find))
+
+
+def Confs_passed_concept(folder="/home/tamir/Tamir/Master/Code/jsons/", file_name="concepts+configs+results"):
+    concepts = load_json(folder + file_name)
+    conf2plot =[]
+    concepts_names = concepts.keys()
+    passed = []
+    passed_percent = []
+    total = []
+    tocsv = [["Concept name"], ["Number of configurations"], ["Passed %"]]
+    for i, concepts_name in enumerate(concepts_names):
+        conf2plot.append([[],[]])
+        conc2check = concepts[concepts_name]
+        passed.append(0)
+        total.append(len(conc2check))
+        for conf in conc2check:
+            z = float(conf[conf.keys()[0]]["z"])
+            mu = float(conf[conf.keys()[0]]["mu"])
+            if z == 70:
+                z = 0.5
+                mu = 1
+            else:
+                passed[i] += 1
+            conf2plot[i][0].append(z)
+            conf2plot[i][1].append(1-mu)
+        passed_percent.append(round(1.*passed[i] / total[i], 2))
+        tocsv[0].append(concepts_name)
+        tocsv[1].append(str(total[i]))
+        tocsv[2].append(str(passed_percent[i]))
+    tocsv = np.asarray(tocsv).T
+    MyCsv.save_csv(tocsv, "all data", save_mode="w+")
+
+
+Confs_passed_concept()

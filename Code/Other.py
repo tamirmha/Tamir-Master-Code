@@ -1282,9 +1282,9 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
+    sumdata = False
     check_num_confs_in_concepts = False
-    sum_all = True
+    sum_all = False
     create_configs = False
     cr_plot = False
     woi_plot = False
@@ -1354,4 +1354,3 @@ if __name__ == '__main__':
         plot_cr("results/mutauioncheck/22_04_tamir_mut/woi_last")
     if check_problematic_confs:
         problematic_confs()
-
