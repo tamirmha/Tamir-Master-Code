@@ -1049,7 +1049,7 @@ def left_confs_concepts():
     # create CSV file with how many configs simulated and left at each concept
     print("Start left_confs_concepts")
     a = load_json("jsons/other/confs_number")
-    b = list(a)
+    b = list(load_json("jsons/other/confs_number"))
     c = [[]] * len(b)
     for i in range(len(b)):
         c[i] = [b[i], a[b[i]][0], a[b[i]][1], a[b[i]][2]]
