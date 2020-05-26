@@ -696,7 +696,7 @@ def med_var(arr):
 
 
 if __name__ == '__main__':
-    calc_hv = True
+    calc_hv = False
     create_woi_cr = False
     woi_n_generate = False
     anim = False
@@ -704,7 +704,7 @@ if __name__ == '__main__':
     woi_n_generate_all = False
     concept_woi = False
     res2plot = False
-    selected_concepts = False
+    selected_concepts = True
     hv_in_gen = False
     fol = "/results/mutauioncheck/woi_025_075/30_runs/"
     # end_fol = ""
@@ -983,22 +983,24 @@ if __name__ == '__main__':
             conf2plot.append([[],[]])
             conc2check = concepts[concepts_name]
             for conf in conc2check:
-                z = conf[conf.keys()[0]]["z"]
-                mu = conf[conf.keys()[0]]["mu"]
-                if z == "70":
+                z = float(conf[conf.keys()[0]]["z"])
+                mu = float(conf[conf.keys()[0]]["mu"])
+                if z == 70:
                     z = 0.5
                     mu = 1
                 conf2plot[i][0].append(z)
-                conf2plot[i][1].append(mu)
+                conf2plot[i][1].append(1-mu)
             if i % 2:
                 ax[i/2, 0].scatter(np.asarray(conf2plot[i-1][0], dtype=float), np.asarray(conf2plot[i-1][1], dtype=float),
-                            label=conc2check[i-1], c=np.random.rand(3,))
+                            label=str(i-1), c=np.random.rand(3,))
                 ax[i/2, 1].scatter(np.asarray(conf2plot[i][0], dtype=float), np.asarray(conf2plot[i][1], dtype=float),
-                            label=conc2check[i], c=np.random.rand(3,))
+                            label=str(i), c=np.random.rand(3,))
                 ax[i/2, 0].set_xlim((0, 0.5))
                 ax[i/2, 1].set_xlim((0, 0.5))
                 ax[i/2, 0].set_ylim((0, 1))
                 ax[i/2, 1].set_ylim((0, 1))
+                ax[i/2, 0].legend()
+                ax[i/2, 1].legend()
     if hv_in_gen:
         names = list(itertools.chain(*names))
         gens2find = [30, 50, 75, 125, 200]
