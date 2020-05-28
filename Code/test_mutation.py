@@ -695,35 +695,34 @@ def med_var(arr):
     return last, medians, variances
 
 
-def Confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", file_name="concepts+configs+results"):
+def confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", file_name="concepts+configs+results"):
     b = load_json("/home/tamir/Tamir/Master/Code/jsons/other/confs_number")
     concepts = load_json(folder_name + file_name)
     conf2plot =[]
     concepts_names = concepts.keys()
-    passed = []
-    passed_percent = []
-    tocsv = [["Concept name"], ["Number of configurations"], ["simulated"], ["Passed %"]]
+    tocsv = [["Concept Number"], ["Concept name"], ["Number of configurations"], ["simulated"], ["Passed %"]]
     for i, concepts_name in enumerate(concepts_names):
         conf2plot.append([[],[]])
         conc2check = concepts[concepts_name]
-        passed.append(0)
+        passed = 0
         for conf in conc2check:
             z = float(conf[conf.keys()[0]]["z"])
             mu = float(conf[conf.keys()[0]]["mu"])
             if z == 70:
                 z = 0.5
-                mu = 1
+                mu = 0
             else:
-                passed[i] += 1
+                passed += 1
             conf2plot[i][0].append(z)
             conf2plot[i][1].append(1-mu)
-        passed_percent.append(round(1.*passed[i] / float(b[concepts_name][0]), 4))
-        tocsv[0].append(concepts_name)
-        tocsv[1].append(b[concepts_name][0])
-        tocsv[2].append(b[concepts_name][1])
-        tocsv[3].append(str(passed_percent[i]))
+        tocsv[0].append(i+1)
+        tocsv[1].append(concepts_name)
+        tocsv[2].append(b[concepts_name][0])
+        tocsv[3].append(b[concepts_name][1])
+        tocsv[4].append(str(round(1.*passed / float(b[concepts_name][0]), 4)))
     tocsv = np.asarray(tocsv).T
     MyCsv.save_csv(tocsv, "all data", save_mode="w+")
+    return conf2plot
 
 
 if __name__ == '__main__':
@@ -1019,7 +1018,7 @@ if __name__ == '__main__':
                 mu = float(conf[conf.keys()[0]]["mu"])
                 if z == 70:
                     z = 0.5
-                    mu = 1
+                    mu = 0
                 conf2plot[i][0].append(z)
                 conf2plot[i][1].append(1-mu)
             if i % 2:
@@ -1068,7 +1067,21 @@ if __name__ == '__main__':
                            save_mode='w+')
             plot_wilcoxon(h_v, median, var, labels, "HV@" + str(gen2find))
     if passed_confs:
-        Confs_passed_concept()
-
-
-
+        to_plot_all = confs_passed_concept()
+        plots_in_window = 24
+        for j in range(9):
+            to_plot = to_plot_all[j*plots_in_window: j*plots_in_window + plots_in_window]
+            fig, ax = plt.subplots(plots_in_window/2, 2, figsize=(24.0, 10.0))
+            fig.canvas.set_window_title("Selected Concepts Object State " + str(j))
+            plt.subplots_adjust(left=0.02, bottom=0.05, right=0.98, top=0.95, hspace=0.65)
+            for i in range(1, plots_in_window, 2):
+                ax[i/2, 0].scatter(np.asarray(to_plot[i-1][0], dtype=float), np.asarray(to_plot[i-1][1], dtype=float),
+                                   label=str(j*plots_in_window + i), c=np.random.rand(3,))
+                ax[i/2, 1].scatter(np.asarray(to_plot[i][0], dtype=float), np.asarray(to_plot[i][1], dtype=float),
+                                   label=str(j*plots_in_window + i + 1), c=np.random.rand(3,))
+                ax[i/2, 0].set_xlim((0, 0.5))
+                ax[i/2, 1].set_xlim((0, 0.5))
+                ax[i/2, 0].set_ylim((0, 1))
+                ax[i/2, 1].set_ylim((0, 1))
+                ax[i/2, 0].legend()
+                ax[i/2, 1].legend()

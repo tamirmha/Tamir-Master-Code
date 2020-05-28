@@ -49,7 +49,7 @@ class Optimization:
     """ This class run all the optimization method using the DWOI & Problem classes"""
     def __init__(self, run_time=7, num_gens=200, parents_number=1, large_concept=1000, arms_limit=[1, 0],
                  allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10, gen_start=0,
-                 low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI"):
+                 low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI", mutation_type="random"):
         # how many dats to run
         self.run_time = run_time
         # how many gens to run
@@ -74,6 +74,7 @@ class Optimization:
         self.high_cr_treshhold = high_cr_treshhold
         # the name of the json file of the DWOI - saved every gen
         self.name=name
+        self.mutation_type = mutation_type
         # Initilize all the concepts GA
         print("initiliaze data")
         # load the first WOI
@@ -89,8 +90,6 @@ class Optimization:
             self.woi.start_time = time()
             self.woi.run_time = self.run_time* 24 * 3600
             self.woi.stopped = False
-        save_name = 'results_file' + datetime.now().strftime("%d_%m_") +  "6dof_4d_"
-        MyCsv.save_csv([], save_name)
 
     def init_concepts(self, larg_concept=1500, arm_limit=None, number_of_parents=1, delta_allocation=10):
         """ Initilize all the concept and the first populations
@@ -155,13 +154,13 @@ class Optimization:
                  "\nGreedy Allocation: " + str(self.greedy_allocation) +\
                  "\nPercent to continue: " + str(self.percent2continue) + \
                  "\nLow Cr treshhold: " + str(self.low_cr_treshhold) +\
+                 "\nMutaion Type: " + self.mutation_type +\
                  "\nHigh Cr treshhold: " + str(self.high_cr_treshhold)
         # enter all the results to one folder
         results_folder = "opt_results/" + datetime.now().strftime("%d_%m")  # + "-0"
         if not os.path.isdir(results_folder):
             exist = False
             os.mkdir(results_folder)
-            os.mkdir(results_folder + "/urdf")
             print(results_folder + " folder created \nStart Optimization")
             with open(results_folder + "/parameters.txt", "w+") as f:
                 f.write(params)
@@ -188,19 +187,17 @@ class Optimization:
                 probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
-        cr_change = 10000                 # todo  for mutation check
+        cr_change = 3              # todo  for mutation check
         # running each generation
         save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
-        for n in range(self.gen_start-1, self.num_gens):
-            print("\033[34m" + "\033[47m" + "Generation " + str(n + 1) + " of " + str(self.num_gens) + " generations"
-                  + "\033[0m")
+        for n in tqdm(range(self.gen_start-1, self.num_gens)):
             # simulate the population
             probs = self.sim(prob=probs)
-            to_pop = []
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
                 if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
+                    probs[t].stopped = True
                     continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
@@ -209,7 +206,6 @@ class Optimization:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
                     if probs[t].stopped:  # todo - uncomment
-                        to_pop.append(t)
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
@@ -217,13 +213,9 @@ class Optimization:
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
-                for p in range(len(to_pop)):
-                    probs.pop(to_pop[p] - p)
                 probs = self.ra.run(cr, probs)
                 cr = []
             if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
-                for p in range(len(to_pop)):
-                    probs.pop(to_pop[p] - p)
                 probs = self.ra.run(cr, probs)
                 cr = []
             # check which concepts are inside the DWOI
@@ -274,7 +266,7 @@ class Optimization:
             selected_confs_ind = prob.confs_by_indices(selection, fitness)
             selected_confs = prob.get_conifgs_by_indices(selected_confs_ind, confs_results_elite)
             # Mating
-            population = prob.mating(selected_confs)
+            population = prob.mating(selected_confs, mutation_type=self.mutation_type)
         else:  # if small concept
             # Random Selection
             population = prob.rand_pop()
@@ -292,7 +284,6 @@ class Optimization:
         pickle_save_data(self.probs, "problems")
         pickle_save_data(self.woi, "woi")
         print("saved problems")
-        self.set_new_data()
         print("Finished")
 
     def sim(self, prob):
@@ -452,6 +443,7 @@ class Problem:
         self.cr = 0  # Convergence rate of the concept
         self.delta_allocation = delta_allocation
         self.elit_confs_archive = []
+
 
     def set_population(self, pop):
         self.population = pop
@@ -617,7 +609,7 @@ class Problem:
             return np.asarray([100])  # (distance of the point 70,71) if the initial position didnt reach
         return np.abs(np.round(np.log(selected) / c, 3))  # [10-x for x in selected]
 
-    def mating(self, parents, mutation_percent=100):
+    def mating(self, parents, mutation_type="random", mutation_percent=100):
         """
         :param parents - [list] all the parents that go into the mating pool
         :param mutation_percent - [int] how much mutation wanted
@@ -655,12 +647,25 @@ class Problem:
                         spring.append(cross_spring)
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
-                    nb = 2  # Todo 1
-                    # if len(self.get_population()) > 100:  # cr == 0 or
-                    if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 1  # 2
-                    # mut_spring = self.mutation_rand(parent_1, nb)
-                    mut_spring = self.rand_pop(1)
+                    if mutation_type == "random":
+                        mut_spring = self.rand_pop(1)
+                    elif mutation_type == "ami":
+                        nb = 2
+                        if len(self.get_population()) > 100:
+                            nb = 1
+                        mut_spring = self.mutation_rand(parent_1, nb)
+                    elif mutation_type == "comb":
+                        nb = 2
+                        if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
+                            nb = 1
+                        mut_spring = self.mutation_rand(parent_1, nb)
+                    elif mutation_type == "Tamir":
+                        nb = 1
+                        if len(self.get_population()) > 100:
+                            nb = 2
+                        mut_spring = self.mutation_rand(parent_1, nb)
+                    else:
+                        print("error in mutaion type")
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -984,10 +989,9 @@ class DWOI:
             print("Time Limit passed")
             self.stopped = True
         stopped = 0
-        naems = []
-        # todo - uncomment alll
+        # todo - uncomment all
         for q in prbs:
-            if q.in_dwoi or q.stopped:
+            if q.stopped:
                 stopped += 1
         if stopped == len(prbs):
             print("All concepts stopped or in DWOI")

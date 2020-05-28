@@ -35,22 +35,24 @@ per2cont = 90
 low_cr = 0.005
 high_cr = 0.01
 par_num = 1
-lar_con = 1500
+lar_con = 500
 start_time = start_time / (3600. * 24)
 base_folder = os.getcwd()
 
-for i in range(30):
-    os.chdir(base_folder)
-    c = Process(target=clock, args=((time_run - start_time) * 3600 * 24,))
-    c.start()
-    tic = time()
-    opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run - start_time,
-                       large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
-                       high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen)
-    try:
-        opt.run()
-    finally:
-        opt.finish()
-        print(time() - tic)
-        c.terminate()
-        os.rename(os.getcwd(), os.getcwd() + "_" + str(i))
+mutation_type = ["ami", "Tamir", "comb", "random"]
+for mut_type in mutation_type:
+    for i in range(3):
+        os.chdir(base_folder)
+        c = Process(target=clock, args=((time_run - start_time) * 3600 * 24,))
+        c.start()
+        tic = time()
+        opt = Optimization(num_gens=gen_num, greedy_allocation=greedy, allocation_delta=delta, run_time=time_run - start_time,
+                           large_concept=lar_con, percent2continue=per2cont, low_cr_treshhold=low_cr,
+                           high_cr_treshhold=high_cr, parents_number=par_num, gen_start=start_gen, mutation_type=mut_type)
+        try:
+            opt.run()
+        finally:
+            opt.finish()
+            print(time() - tic)
+            c.terminate()
+            os.rename(os.getcwd(), os.getcwd()[:-5] + mut_type + os.getcwd()[-6:] + "_" + str(i))
