@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="add IGD results">
+    <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_mutation.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_mutation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mutaion_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutaion_check.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimization_copy.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization_copy.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -391,13 +391,7 @@
       <workItem from="1590044475628" duration="5490000" />
       <workItem from="1590050479453" duration="7857000" />
       <workItem from="1590070830074" duration="7638000" />
-    </task>
-    <task id="LOCAL-00049" summary="add: 3d Plot and table for legend">
-      <created>1576573960335</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1576573960335</updated>
+      <workItem from="1590648890086" duration="3637000" />
     </task>
     <task id="LOCAL-00050" summary="chabge folders names">
       <created>1576574557110</created>
@@ -735,7 +729,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590058933480</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="add features to mutaion_check.py">
+      <created>1590648988402</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1590648988403</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -769,7 +770,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="fix check domination and elitism" />
     <MESSAGE value="optimization.py - add optimization class" />
     <MESSAGE value="reaarange folders" />
     <MESSAGE value="rearrange folders" />
@@ -794,7 +794,8 @@
     <MESSAGE value="add IGD results" />
     <MESSAGE value="Add Mid proximity index and median generation to mutation check" />
     <MESSAGE value="plot selected concepts" />
-    <option name="LAST_COMMIT_MESSAGE" value="plot selected concepts" />
+    <MESSAGE value="add features to mutaion_check.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="add features to mutaion_check.py" />
   </component>
   <component name="WindowStateProjectService">
     <state x="169" y="129" width="1140" height="443" key="#xdebugger.XInspectDialog" timestamp="1590038180663">
@@ -807,10 +808,10 @@
     <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="946" y="487" width="920" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1590040305108" />
     <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
-    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1590078956662">
+    <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1590648988277">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1590078956662" />
+    <state x="434" y="89" width="1116" height="816" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1590648988277" />
     <state x="317" y="157" width="1116" height="921" key="CommitChangelistDialog2/67.27.1853.1173@67.27.1853.1173" timestamp="1590058909698" />
     <state x="167" y="136" width="1482" height="968" key="DiffContextDialog" timestamp="1590046722551">
       <screen x="67" y="27" width="1853" height="1173" />
@@ -885,10 +886,10 @@
     </state>
     <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
     <state x="660" y="173" key="SettingsEditor/67.27.3773.1053@67.27.3773.1053" timestamp="1590060625275" />
-    <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1590058959218">
-      <screen x="67" y="27" width="1853" height="1173" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1590648991118">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1589628855727" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1590648991118" />
     <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1590058959218" />
     <state x="866" y="399" width="433" height="307" key="cloudConfig.SelfSettingsDialog" timestamp="1590071525245">
       <screen x="67" y="27" width="1853" height="1053" />

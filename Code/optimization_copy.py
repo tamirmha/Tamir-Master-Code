@@ -48,7 +48,7 @@ from simulator import simulate
 class Optimization:
     """ This class run all the optimization method using the DWOI & Problem classes"""
     def __init__(self, run_time=7, num_gens=200, parents_number=1, large_concept=1000, arms_limit=[1, 0],
-                 allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10, gen_start=0,
+                 allocation_delta=10, greedy_allocation=True, percent2continue=90, min_cont_par=10, gen_start=0, cr=3,
                  low_cr_treshhold=0.001, high_cr_treshhold=0.003, name="optimizaion_WOI", mutation_type="random"):
         # how many dats to run
         self.run_time = run_time
@@ -75,6 +75,7 @@ class Optimization:
         # the name of the json file of the DWOI - saved every gen
         self.name=name
         self.mutation_type = mutation_type
+        self.cr = cr
         # Initilize all the concepts GA
         print("initiliaze data")
         # load the first WOI
@@ -155,6 +156,7 @@ class Optimization:
                  "\nPercent to continue: " + str(self.percent2continue) + \
                  "\nLow Cr treshhold: " + str(self.low_cr_treshhold) +\
                  "\nMutaion Type: " + self.mutation_type +\
+                 "\nCr: " + str(self.cr) +\
                  "\nHigh Cr treshhold: " + str(self.high_cr_treshhold)
         # enter all the results to one folder
         results_folder = "opt_results/" + datetime.now().strftime("%d_%m")  # + "-0"
@@ -187,7 +189,7 @@ class Optimization:
                 probs.append(p)
         cr = []
         cr_total = [[], [], [], [], [], []]  # for mutation check
-        cr_change = 3              # todo  for mutation check
+        cr_change = self.cr            # todo  for mutation check
         # running each generation
         save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         for n in tqdm(range(self.gen_start-1, self.num_gens)):
@@ -647,7 +649,7 @@ class Problem:
                         spring.append(cross_spring)
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
-                    if mutation_type == "random":
+                    if mutation_type == "rand":
                         mut_spring = self.rand_pop(1)
                     elif mutation_type == "ami":
                         nb = 2
@@ -665,7 +667,7 @@ class Problem:
                             nb = 2
                         mut_spring = self.mutation_rand(parent_1, nb)
                     else:
-                        print("error in mutaion type")
+                        print("error in mutaion type " + mutation_type)
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
