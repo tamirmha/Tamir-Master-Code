@@ -1,0 +1,85 @@
+[
+  [
+    [
+      2.0
+    ], 
+    [
+      2.0
+    ], 
+    [
+      6
+    ], 
+    [
+      "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_4pris_x_0_1roll_x_0_1"
+    ], 
+    "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.2, 'acc_length': 2.6}"
+  ], 
+  [
+    [
+      0.004
+    ], 
+    [
+      0.783
+    ], 
+    [
+      6
+    ], 
+    [
+      "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_z_0_1pitch_y_0_1roll_x_0_1"
+    ], 
+    "{'#long_link': 0, 'long_link': 0.4, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 1.5}"
+  ], 
+  [
+    [
+      0.002
+    ], 
+    [
+      0.7130000000000001
+    ], 
+    [
+      6
+    ], 
+    [
+      "roll_z_0_1roll_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_4pitch_z_0_1"
+    ], 
+    "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 2.6}"
+  ], 
+  [
+    [
+      0.001, 
+      0.0
+    ], 
+    [
+      0.806, 
+      0.894
+    ], 
+    [
+      6, 
+      6
+    ], 
+    [
+      "roll_z_0_1pitch_y_0_4roll_z_0_7pitch_y_0_1pitch_z_0_1pitch_x_0_1", 
+      "roll_z_0_1pitch_y_0_4pitch_x_0_1pitch_x_0_4pitch_x_0_1roll_y_0_7"
+    ], 
+    "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 4, 'p/r_ratio': 0.0, 'acc_length': 2}"
+  ], 
+  [
+    [
+      0.001, 
+      0.004
+    ], 
+    [
+      0.889, 
+      0.79
+    ], 
+    [
+      6, 
+      6
+    ], 
+    [
+      "roll_z_0_1pitch_y_0_4roll_x_0_7roll_y_0_4pitch_y_0_4roll_y_0_1", 
+      "roll_z_0_1pitch_y_0_4roll_x_0_7roll_y_0_4pitch_y_0_4roll_z_0_4"
+    ], 
+    "{'#long_link': 1, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.0, 'acc_length': 2.6}"
+  ]
+]

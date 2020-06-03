@@ -632,7 +632,7 @@ def set_labels(labels):
             labes[l] += ["Regular"]
     labels = []
     for l in labes:
-        labels.append(l[1] + "_"+ l[0])
+        labels.append(l[1] + "_" + l[0])
     return labels
 
 
@@ -726,7 +726,7 @@ def confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", fil
 
 
 if __name__ == '__main__':
-    calc_hv = False
+    calc_hv = True
     create_woi_cr = False
     woi_n_generate = False
     anim = False
@@ -737,7 +737,7 @@ if __name__ == '__main__':
     selected_concepts = False
     hv_in_gen = False
     passed_confs = True
-    fol = "/results/mutauioncheck/woi_025_075/30_runs/"
+    fol = "/results/mutauioncheck/woi_025_075/30_runs/new_concepts/"
     # end_fol = ""
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
     names = []
@@ -878,12 +878,12 @@ if __name__ == '__main__':
             save_json(os.getcwd() + fol + "all_Manip", min_manip[k], "w+")
             save_json(os.getcwd() + fol + "all_MidProximity", mid[k], "w+")
             save_json(os.getcwd() + fol + "all_IGD", igd_res[k], "w+")
-            labels.append("_".join(fol.split("/")[5:7]))
+            labels.append("_".join(fol.split("/")[6:8]))
             k += 1
-        save_folder="results/mutauioncheck/woi_025_075/30_runs/"
+        save_folder = "results/mutauioncheck/woi_025_075/30_runs/new_concepts/"
         last_gen, medians_gen, variance_gen = med_var(gens)
         gen_toscv = medians_gen + variance_gen
-        MyCsv.save_csv([[str(x)] for x in gen_toscv],save_folder + "Gen", save_mode='w+')
+        MyCsv.save_csv([[str(x)] for x in gen_toscv], save_folder + "Gen", save_mode='w+')
         plot_wilcoxon(last_gen, medians_gen, variance_gen, labels, "Generations")
         volumes_last, medians_v, variance_v = med_var(volumes)
         hv_toscv = medians_v + variance_v

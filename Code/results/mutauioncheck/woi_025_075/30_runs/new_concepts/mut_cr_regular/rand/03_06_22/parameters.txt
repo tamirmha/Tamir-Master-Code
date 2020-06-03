@@ -1,0 +1,12 @@
+Number of gens: 1240
+parents_number: 1
+Large concept: 500
+Run Time (days): 1.0
+Allocation Delta: 10
+Population: 1
+Greedy Allocation: False
+Percent to continue: 90
+Low Cr treshhold: 0.005
+Mutaion Type: rand
+Cr: 10000
+High Cr treshhold: 0.01

@@ -43,7 +43,7 @@ mutation_type = ["ami", "Tamir", "comb", "rand"]
 for cr in tqdm(crs):
     fol = "mut_cr_" + str(cr) + "0/"
     if cr == 10000:
-        fol = "mut_cr_regular"
+        fol = "mut_cr_regular/"
     for mut_type in mutation_type:
         for i in range(30):
             os.chdir(base_folder)
