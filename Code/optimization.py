@@ -1141,7 +1141,7 @@ if __name__ == '__main__':
     low_cr = 0.005
     high_cr = 0.01
     par_num = 1
-    lar_con = 1500
+    lar_con = 1000
     args = sys.argv
     if len(args) > 1:
         start_time = int(args[1])

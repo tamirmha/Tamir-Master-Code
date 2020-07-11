@@ -726,23 +726,25 @@ def confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", fil
 
 
 if __name__ == '__main__':
-    calc_hv = True
     create_woi_cr = False
+    calc_hv = True
+    hv_in_gen = False
+    plot_concept_front = False
     woi_n_generate = False
     anim = False
-    plot_concept_front = False
     woi_n_generate_all = False
     concept_woi = False
     res2plot = False
     selected_concepts = False
-    hv_in_gen = False
-    passed_confs = True
-    fol = "/results/mutauioncheck/woi_025_075/30_runs/new_concepts/"
-    # end_fol = ""
+    passed_confs = False
+    fol = "/results/mutauioncheck/woi_025_075/30_runs/2/"
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
+    fol = "/opt_results/"
+    sub_fols = ["Regular Random/", "Medium Exploition/", "Ease Exploration/"]
     names = []
     for sub in sub_fols:
-        names.append([fol + sub + "ami/", fol + sub + "Tamir/", fol + sub + "rand/", fol + sub + "comb/"])
+        # names.append([fol + sub + "ami/", fol + sub + "Tamir/", fol + sub + "rand/", fol + sub + "comb/"])
+        names.append([fol + sub + "05_07/", fol + sub + "06_07/", fol + sub + "07_07/"])
     if anim:
         for name in names:
             d = 3
@@ -776,10 +778,12 @@ if __name__ == '__main__':
     if create_woi_cr:
         names = list(itertools.chain(*names))
         for fol in tqdm(names):
-            for dircetor in os.listdir(os.getcwd()+fol):
+            if True:
+                dircetor = ""
+            # for dircetor in os.listdir(os.getcwd()+fol):
                 created = False
                 if os.path.isdir(os.getcwd() + fol + "/" + dircetor) and dircetor != "urdf":
-                    name = fol + dircetor + "/"
+                    name = fol + dircetor  # + "/"
                     first_gen_and_elite_res(name=name)
                     plot_cr(os.getcwd() + name + "woi_last", to_save=True)
                     plot_woi(os.getcwd() + name, to_save=True)
@@ -793,7 +797,7 @@ if __name__ == '__main__':
                 # plot_cr(os.getcwd() + name + "woi_last", to_save=True)
                 # plot_woi(os.getcwd() + name, to_save=True)
     if plot_concept_front:
-        fig, axs = plt.subplots(2, 1, figsize=(24, 10), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(5, 1, figsize=(24, 10), facecolor='w', edgecolor='k')
         plt.subplots_adjust(left=0.05, bottom=0.07, right=0.99, top=0.99)
         colors = ["b", "k", "r", "cyan", "y", "purple"]
         points, names = all_points()
@@ -820,14 +824,16 @@ if __name__ == '__main__':
         plt.xlabel("Mid Proximity", fontsize=26)
         axs[3].set_ylabel("1 - Manipulability", fontsize=26)
     if calc_hv:  # HV calculation
-        names = list(itertools.chain(*names))
-        igd_val = igd.IGD(find_opt_front())
-        igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
+        save_folder = "/opt_results/" # "results/mutauioncheck/woi_025_075/30_runs/" + fol[-22:-20]
+        if not create_woi_cr:
+            names = list(itertools.chain(*names))
+        # igd_val = igd.IGD(find_opt_front())
+        # igd_val.true_front = np.asarray(igd_val.true_front[:2]).T
         referencePoint = [0.5, 1]
         volumes = []
         mid = []
         min_manip = []
-        igd_res = []
+        # igd_res = []
         labels = []
         k = 0
         hv = HyperVolume(referencePoint)
@@ -838,11 +844,13 @@ if __name__ == '__main__':
             gens.append([])
             volumes.append([])
             mid.append([])
-            igd_res.append([])
+            # igd_res.append([])
             min_manip.append([])
             i = 0
             t = 0
-            for dircetor in os.listdir(os.getcwd() + fol):
+            if True:
+                dircetor = ""
+            # for dircetor in os.listdir(os.getcwd() + fol):
                 if "all_" in dircetor:
                     continue
                 name = fol + dircetor
@@ -865,48 +873,51 @@ if __name__ == '__main__':
                 woi_last = woi_all[-1]["dwoi"]
                 volumes[k].append([])
                 mid[k].append([])
-                igd_res[k].append([])
+                # igd_res[k].append([])
                 min_manip[k].append([])
                 for woi in woi_last:
                     front = np.asarray(woi[:2]).T
-                    igd_res[k][i].append(igd_val.calc(np.asarray(front)))
+                    # igd_res[k][i].append(igd_val.calc(np.asarray(front)))
                     volumes[k][i].append(round(hv.compute(front), 4))
                     mid[k][i].append(np.min(front[:, 0]))
                     min_manip[k][i].append(np.min(front[:, 1]))
                 i += 1
-            save_json(os.getcwd() + fol + "all_hv", volumes[k], "w+")
-            save_json(os.getcwd() + fol + "all_Manip", min_manip[k], "w+")
-            save_json(os.getcwd() + fol + "all_MidProximity", mid[k], "w+")
-            save_json(os.getcwd() + fol + "all_IGD", igd_res[k], "w+")
+            # save_json(os.getcwd() + fol + "all_hv", volumes[k], "w+")
+            # save_json(os.getcwd() + fol + "all_Manip", min_manip[k][0][-1], "w+")
+            # # save_json(os.getcwd() + fol + "all_MidProximity", mid[k][0][-1], "w+")
+            data2save = {"hv": volumes[k][0][-1],  "min_manip": min_manip[k][0][-1],
+                         "gens": gens[k][0][-1], "total gens": woi_all[-1]["gen"]}
+            save_json(os.getcwd() + fol + "all", data2save, "w+")
+            # save_json(os.getcwd() + fol + "all_IGD", igd_res[k], "w+")
             labels.append("_".join(fol.split("/")[6:8]))
             k += 1
-        save_folder = "results/mutauioncheck/woi_025_075/30_runs/new_concepts/"
-        last_gen, medians_gen, variance_gen = med_var(gens)
-        gen_toscv = medians_gen + variance_gen
-        MyCsv.save_csv([[str(x)] for x in gen_toscv], save_folder + "Gen", save_mode='w+')
-        plot_wilcoxon(last_gen, medians_gen, variance_gen, labels, "Generations")
-        volumes_last, medians_v, variance_v = med_var(volumes)
-        hv_toscv = medians_v + variance_v
-        MyCsv.save_csv([[str(x)] for x in hv_toscv], save_folder + "HV", save_mode='w+')
-        plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
-        mid_last, medians_mid, variance_mid = med_var(mid)
-        mid_toscv = medians_mid + variance_mid
-        MyCsv.save_csv([[str(x)] for x in mid_toscv], save_folder + "Mid", save_mode='w+')
-        plot_wilcoxon(mid_last, medians_mid, variance_mid, labels, "Minimum Mid Proximity")
-        min_manip_last, medians_l, variance_l = med_var(min_manip)
-        manip_toscv = medians_l + variance_l
-        MyCsv.save_csv([[str(x)] for x in manip_toscv], save_folder + "Manip", save_mode='w+')
-        plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
-        igd_last, medians_igd, variance_igd = med_var(igd_res)
-        igd_toscv = medians_igd + medians_igd
-        MyCsv.save_csv([[str(x)] for x in igd_toscv], save_folder + "IGD", save_mode='w+')
-        plot_wilcoxon(igd_last, medians_igd, variance_igd, labels, "IGD")
-        labels = set_labels(labels)
-        MyCsv.save_csv([[x] for x in labels], save_folder + "Labels", save_mode='w+')
-        plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
-        plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
-        plot_ind_vs_gen(dwoi, gens, labels, title="IGD")
-        plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Mid Proximity")
+        # save_folder = "results/mutauioncheck/woi_025_075/30_runs/2/"
+        # last_gen, medians_gen, variance_gen = med_var(gens)
+        # gen_toscv = medians_gen + variance_gen
+        # MyCsv.save_csv([[str(x)] for x in gen_toscv], save_folder + "Gen", save_mode='w+')
+        # plot_wilcoxon(last_gen, medians_gen, variance_gen, labels, "Generations")
+        # volumes_last, medians_v, variance_v = med_var(volumes)
+        # hv_toscv = medians_v + variance_v
+        # MyCsv.save_csv([[str(x)] for x in hv_toscv], save_folder + "HV", save_mode='w+')
+        # plot_wilcoxon(volumes_last, medians_v, variance_v, labels)
+        # mid_last, medians_mid, variance_mid = med_var(mid)
+        # mid_toscv = medians_mid + variance_mid
+        # MyCsv.save_csv([[str(x)] for x in mid_toscv], save_folder + "Mid", save_mode='w+')
+        # plot_wilcoxon(mid_last, medians_mid, variance_mid, labels, "Minimum Mid Proximity")
+        # min_manip_last, medians_l, variance_l = med_var(min_manip)
+        # manip_toscv = medians_l + variance_l
+        # MyCsv.save_csv([[str(x)] for x in manip_toscv], save_folder + "Manip", save_mode='w+')
+        # plot_wilcoxon(min_manip_last, medians_l, variance_l, labels, "Minimum Manipulability")
+        # # igd_last, medians_igd, variance_igd = med_var(igd_res)
+        # # igd_toscv = medians_igd + variance_igd
+        # # MyCsv.save_csv([[str(x)] for x in igd_toscv], save_folder + "IGD", save_mode='w+')
+        # # plot_wilcoxon(igd_last, medians_igd, variance_igd, labels, "IGD")
+        # labels = set_labels(labels)
+        # MyCsv.save_csv([[x] for x in labels], save_folder + "Labels", save_mode='w+')
+        # plot_ind_vs_gen(dwoi, gens, labels, title="Hyper Volume")
+        # plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Manipulability")
+        # plot_ind_vs_gen(dwoi, gens, labels, title="IGD")
+        # plot_ind_vs_gen(dwoi, gens, labels, title="Minimum Mid Proximity")
     if woi_n_generate_all:
         if not calc_hv:
             names = list(itertools.chain(*names))
@@ -1033,10 +1044,12 @@ if __name__ == '__main__':
                 ax[i/2, 0].legend()
                 ax[i/2, 1].legend()
     if hv_in_gen:
-        names = list(itertools.chain(*names))
+        if not calc_hv:
+            names = list(itertools.chain(*names))
         gens2find = [30, 50, 75, 125, 200]
         HV = HyperVolume([0.5, 1])
         for gen2find in gens2find:
+            gen2find_name = gen2find
             h_v = []
             median = []
             var = []
@@ -1054,18 +1067,18 @@ if __name__ == '__main__':
                         fix_json(os.getcwd() + name + "/woi_All", "woi_all")
                         woi_all = load_json(os.getcwd() + name + "/woi_All")
                     if len(woi_all) < gen2find:
-                        gen2find = len(woi_all)
+                        gen2find = len(woi_all) - 1
                     woi = woi_all[gen2find]["dwoi"][-1]
                     front = np.asarray(woi[:2]).T
                     h_v[n][i].append(HV.compute(front))
                 h_v[n] = [x[0] for x in h_v[n] if x != []]
                 median.append(np.median(h_v[n]))
                 var.append(variance(h_v[n]))
-                labels.append("_".join(fol.split("/")[5:7]))
+                labels.append("_".join(fol.split("/")[6:8]))
             hv2csv = median + var
-            MyCsv.save_csv([[str(x)] for x in hv2csv], os.getcwd() + "/results/mutauioncheck/woi_025_075/30_runs/HV@" + str(gen2find),
-                           save_mode='w+')
-            plot_wilcoxon(h_v, median, var, labels, "HV@" + str(gen2find))
+            MyCsv.save_csv([[str(x)] for x in hv2csv], os.getcwd() + "/results/mutauioncheck/woi_025_075/30_runs/HV@"
+                           + str(gen2find_name), save_mode='w+')
+            plot_wilcoxon(h_v, median, var, labels, "HV@" + str(gen2find_name))
     if passed_confs:
         to_plot_all = confs_passed_concept()
         plots_in_window = 24
@@ -1085,3 +1098,5 @@ if __name__ == '__main__':
                 ax[i/2, 1].set_ylim((0, 1))
                 ax[i/2, 0].legend()
                 ax[i/2, 1].legend()
+
+##long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 3, 'p/r_ratio': 0.0, 'acc_length': 3.1}
