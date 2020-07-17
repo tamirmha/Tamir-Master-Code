@@ -744,7 +744,7 @@ if __name__ == '__main__':
     names = []
     for sub in sub_fols:
         # names.append([fol + sub + "ami/", fol + sub + "Tamir/", fol + sub + "rand/", fol + sub + "comb/"])
-        names.append([fol + sub + "05_07/", fol + sub + "06_07/", fol + sub + "07_07/"])
+        names.append([fol + sub + ""]) #, fol + sub + "10_07/", fol + sub + "11_07/"])
     if anim:
         for name in names:
             d = 3
