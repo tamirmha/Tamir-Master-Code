@@ -3,9 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mutaion_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutaion_check.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimization_copy.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization_copy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/other/confs_number.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/confs_number.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/left_concepts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/left_concepts.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimization.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries_with_failed.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries_with_failed.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../general/Genetic algorithm/sum.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/../general/Genetic algorithm/sum.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +70,8 @@
       <recent name="$PROJECT_DIR$/results" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_mutation">
-    <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.Other">
+    <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -198,11 +205,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Other" />
+        <item itemvalue="Python.simulator" />
         <item itemvalue="Python.test_mutation" />
         <item itemvalue="Python.Other" />
         <item itemvalue="Python.optimization" />
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.simulator" />
       </list>
     </recent_temporary>
   </component>
@@ -392,6 +399,19 @@
       <workItem from="1590050479453" duration="7857000" />
       <workItem from="1590070830074" duration="7638000" />
       <workItem from="1590648890086" duration="3637000" />
+      <workItem from="1594488462045" duration="1886000" />
+      <workItem from="1594569224535" duration="268000" />
+      <workItem from="1595002622330" duration="19000" />
+      <workItem from="1595004770730" duration="24000" />
+      <workItem from="1595005099034" duration="2969000" />
+      <workItem from="1595179250678" duration="883000" />
+      <workItem from="1595181052369" duration="1126000" />
+      <workItem from="1595443133811" duration="1335000" />
+      <workItem from="1595527010893" duration="28000" />
+      <workItem from="1595533954589" duration="2106000" />
+      <workItem from="1595566116430" duration="851000" />
+      <workItem from="1595596478598" duration="2310000" />
+      <workItem from="1595663069687" duration="288000" />
     </task>
     <task id="LOCAL-00050" summary="chabge folders names">
       <created>1576574557110</created>
@@ -805,9 +825,7 @@
     <state x="946" y="487" width="920" height="570" key="#xdebugger.evaluate" timestamp="1590040305108">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
-    <state x="227" y="161" width="1364" height="569" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1584383532349" />
     <state x="946" y="487" width="920" height="570" key="#xdebugger.evaluate/67.27.1853.1173@67.27.1853.1173" timestamp="1590040305108" />
-    <state x="356" y="385" key="#xdebugger.evaluate/67.27.3773.1053@67.27.3773.1053" timestamp="1584378783546" />
     <state x="434" y="89" width="1116" height="921" key="CommitChangelistDialog2" timestamp="1590648988277">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -821,70 +839,62 @@
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="776" y="370" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1173@67.27.1853.1173" timestamp="1589788229034" />
-    <state width="1807" height="398" key="GridCell.Tab.0.bottom" timestamp="1590040752724">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.0.bottom" timestamp="1595179704497">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.bottom/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="349" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595179704497" />
     <state width="1807" height="398" key="GridCell.Tab.0.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="354" key="GridCell.Tab.0.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
-    <state width="1807" height="398" key="GridCell.Tab.0.center" timestamp="1590040752724">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.0.center" timestamp="1595179704496">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.center/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="349" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595179704496" />
     <state width="1807" height="398" key="GridCell.Tab.0.center/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="354" key="GridCell.Tab.0.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
-    <state width="1807" height="398" key="GridCell.Tab.0.left" timestamp="1590040752723">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.0.left" timestamp="1595179704496">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.left/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752723" />
-    <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762718" />
+    <state width="1807" height="349" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595179704496" />
     <state width="1807" height="398" key="GridCell.Tab.0.left/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="354" key="GridCell.Tab.0.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
-    <state width="1807" height="398" key="GridCell.Tab.0.right" timestamp="1590040752724">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.0.right" timestamp="1595179704497">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.right/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384762719" />
+    <state width="1807" height="349" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595179704497" />
     <state width="1807" height="398" key="GridCell.Tab.0.right/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="354" key="GridCell.Tab.0.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378838153" />
-    <state width="1807" height="398" key="GridCell.Tab.1.bottom" timestamp="1590040752726">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.1.bottom" timestamp="1595179662976">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.bottom/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752726" />
-    <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="349" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595179662976" />
     <state width="1807" height="398" key="GridCell.Tab.1.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
-    <state width="1807" height="354" key="GridCell.Tab.1.bottom/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
-    <state width="1807" height="398" key="GridCell.Tab.1.center" timestamp="1590040752725">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.1.center" timestamp="1595179662976">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.center/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="349" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595179662976" />
     <state width="1807" height="398" key="GridCell.Tab.1.center/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
-    <state width="1807" height="354" key="GridCell.Tab.1.center/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
-    <state width="1807" height="398" key="GridCell.Tab.1.left" timestamp="1590040752725">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.1.left" timestamp="1595179662975">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.left/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764357" />
+    <state width="1807" height="349" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595179662975" />
     <state width="1807" height="398" key="GridCell.Tab.1.left/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="354" key="GridCell.Tab.1.left/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793434" />
-    <state width="1807" height="398" key="GridCell.Tab.1.right" timestamp="1590040752725">
-      <screen x="0" y="27" width="3840" height="1173" />
+    <state width="1807" height="349" key="GridCell.Tab.1.right" timestamp="1595179662976">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.right/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1584384764358" />
+    <state width="1807" height="349" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595179662976" />
     <state width="1807" height="398" key="GridCell.Tab.1.right/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
-    <state width="1807" height="354" key="GridCell.Tab.1.right/67.27.3773.1053@67.27.3773.1053" timestamp="1584378793435" />
     <state x="874" y="480" width="476" height="264" key="MultipleFileMergeDialog" timestamp="1589702168113">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="874" y="480" width="476" height="264" key="MultipleFileMergeDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1589702168113" />
-    <state x="660" y="173" key="SettingsEditor" timestamp="1590060625275">
-      <screen x="67" y="27" width="3773" height="1053" />
+    <state x="358" y="173" key="SettingsEditor" timestamp="1595002636856">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="482" y="205" key="SettingsEditor/67.27.1853.1173@67.27.1853.1173" timestamp="1584269580725" />
+    <state x="358" y="173" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1595002636856" />
     <state x="660" y="173" key="SettingsEditor/67.27.3773.1053@67.27.3773.1053" timestamp="1590060625275" />
     <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1590648991118">
       <screen x="67" y="27" width="1853" height="1053" />
@@ -899,10 +909,6 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="405" y="260" width="1167" height="584" key="com.intellij.execution.console.ConsoleHistoryController$MyBrowseAction$1/67.27.1853.1053@67.27.1853.1053" timestamp="1589622739957" />
-    <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584522096698">
-      <screen x="67" y="27" width="1853" height="1173" />
-    </state>
-    <state x="473" y="158" width="1031" height="815" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1853.1173@67.27.1853.1173" timestamp="1584522096698" />
     <state x="765" y="517" width="457" height="190" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589702378086">
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
@@ -915,6 +921,18 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_mutation.py</url>
+          <line>781</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/simulator.py</url>
+          <line>372</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -928,9 +946,9 @@
     <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1584525289469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$Other.coverage" NAME="Other Coverage Results" MODIFIED="1584603238991" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$optimization.coverage" NAME="optimization Coverage Results" MODIFIED="1584541844635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1574766471377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1595179542244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$merge_data.coverage" NAME="merge_data Coverage Results" MODIFIED="1573745224510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$test_mutation.coverage" NAME="test_mutation Coverage Results" MODIFIED="1590040281156" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$test_mutation.coverage" NAME="test_mutation Coverage Results" MODIFIED="1594488639393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$merge_csv.coverage" NAME="merge_csv Coverage Results" MODIFIED="1572616595992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$ros.coverage" NAME="ros Coverage Results" MODIFIED="1575206142100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Code$colormaps_reference.coverage" NAME="colormaps_reference Coverage Results" MODIFIED="1576419486141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads" />

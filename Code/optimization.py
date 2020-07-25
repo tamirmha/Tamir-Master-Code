@@ -174,15 +174,8 @@ class Optimization:
 
     def run(self):
         woi = self.woi
-        probs = self.probs  # todo - uncomment
-        # probs = []
-        # for p in self.probs:
-        #     # if p.concept_name[-23:-20] == "0.0" and len(p.confs_of_concepts) > 3000:
-        #     if p.concept_name == u"{'#long_link': 3, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 0, 'pitch_joint': 2, 'p/r_ratio': 0.5, 'acc_length': 3.1}":
-        #         probs.append(p)
+        probs = self.probs
         cr = []
-        # cr_total = [[], [], [], [], [], []]  # for mutation check
-        # cr_change = 10000                 # todo  for mutation check
         # running each generation
         save_json(self.name, [{"gen_" + str(woi.get_gen()): woi.get_last_dwoi()}])
         for n in range(self.gen_start-1, self.num_gens):
@@ -194,28 +187,20 @@ class Optimization:
             for t in range(len(probs)):
                 if n == 0:
                     self.woi.cr[probs[t].concept_name] = []
-                # if sum(cr_total[t][-cr_change:]) == 0.0 and len(cr_total[t]) > cr_change:  # todo for mutaion check
-                #     continue
                 probs[t] = self.run_gen(probs[t])
                 probs[t].elit_confs_archive.append(copy.deepcopy(probs[t].get_elite_confs()))
                 # Check Convergance rate
                 if not (n + 1) % self.allocation_delta:
                     start_ind = self.allocation_delta * ((n + 1) / self.allocation_delta - 1)
                     end_ind = n
-                    if probs[t].stopped:  # todo - uncomment
+                    if probs[t].stopped:
                         to_pop.append(t)
                         continue
                     probs[t].set_cr(probs[t].get_dis()[start_ind], probs[t].get_dis()[end_ind])
                     cr.append(probs[t].get_cr())
-                    # cr_total[t].append(probs[t].get_cr())  # todo for mutaion check
                     self.woi.cr[probs[t].concept_name].append(probs[t].get_cr())
             # Resource allocation
-            if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
-                for p in range(len(to_pop)):
-                    probs.pop(to_pop[p] - p)
-                probs = self.ra.run(cr, probs)
-                cr = []
-            if not (n + 1) % self.allocation_delta:  # and self.greedy_allocation:
+            if not (n + 1) % self.allocation_delta:
                 for p in range(len(to_pop)):
                     probs.pop(to_pop[p] - p)
                 probs = self.ra.run(cr, probs)
@@ -245,7 +230,7 @@ class Optimization:
         # check if the local stop condition applied
         if prob.stopped:
             return prob
-        elif prob.paused or prob.in_dwoi:  # todo
+        elif prob.paused or prob.in_dwoi:
             prob.add_dis(1.5)
             return prob
         population = prob.get_population()
@@ -649,12 +634,12 @@ class Problem:
                         spring.append(cross_spring)
                         cross_offspring += 1
                 if not mut_ok and mut_offspring < num_mutations:
-                    nb = 2  # Todo 1
-                    # if len(self.get_population()) > 100:  # cr == 0 or
-                    if 100 < len(self.get_population()) < 250:   # if the Cr=zero or more than 100 gens- mutate more
-                        nb = 1  # 2
-                    # mut_spring = self.mutation_rand(parent_1, nb)
-                    mut_spring = self.rand_pop(1)
+                    nb = 2  # Todo 1 for exploration \ 2 for explotitionor combine
+                    # if len(self.get_population()) > 100: # todo - uncomment this for exploration or explotition
+                    if 100 < len(self.get_population()) < 250:  # todo - uncomment this for combine
+                        nb = 1  # Todo 2 for exploration \ 1 for explotitionor combine
+                    mut_spring = self.mutation_rand(parent_1, nb)
+                    # mut_spring = self.rand_pop(1) // random mutation
                     mut_conf = self.check_conf(mut_spring) and mut_spring not in offspring and mut_spring not in prev_confs
                     if mut_conf:
                         mut_ok = mut_spring not in self.get_prev_confs()
@@ -979,7 +964,6 @@ class DWOI:
             self.stopped = True
         stopped = 0
         naems = []
-        # todo - uncomment alll
         for q in prbs:
             if q.in_dwoi or q.stopped:
                 stopped += 1
@@ -1112,7 +1096,6 @@ class ResourceAllocation:
         for i in tqdm(range(len(prob))):
             if prob[i].in_dwoi:
                 continue
-                qqq = 3  # todo
             elif i in decisions[0]:
                 prob[i].stopped = False
                 prob[i].paused = False
@@ -1125,7 +1108,7 @@ class ResourceAllocation:
         return prob
 
 
-with_sim = True  # todo
+with_sim = True
 if __name__ == '__main__':
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
@@ -1178,5 +1161,3 @@ if __name__ == '__main__':
             save_json("woi_last", opt.woi.__dict__, "w+")
         print(time()-tic)
         c.terminate()
-
-# todo - decide: t_high, t_low, cont_per_max, cont_min @ resource allocation
