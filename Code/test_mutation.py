@@ -740,7 +740,7 @@ if __name__ == '__main__':
     fol = "/results/mutauioncheck/woi_025_075/30_runs/2/"
     sub_fols = ["mut_cr_30/", "mut_cr_50/", "mut_cr_100/", "mut_cr_regular/"]
     fol = "/opt_results/"
-    sub_fols = ["Regular Random/", "Medium Exploition/", "Ease Exploration/"]
+    sub_fols = ["Regular Random/7days/", "Medium Exploition/7days/", "Ease Exploration/7days/"]
     names = []
     for sub in sub_fols:
         # names.append([fol + sub + "ami/", fol + sub + "Tamir/", fol + sub + "rand/", fol + sub + "comb/"])
@@ -855,10 +855,10 @@ if __name__ == '__main__':
                     continue
                 name = fol + dircetor
                 try:
-                    woi_all = load_json(os.getcwd() + name + "/woi_All")
+                    woi_all = load_json(os.getcwd() + name + "woi_All")
                 except:
-                    fix_json(os.getcwd() + name + "/woi_All", "woi_all")
-                    woi_all = load_json(os.getcwd() + name + "/woi_All")
+                    fix_json(os.getcwd() + name + "woi_All", "woi_all")
+                    woi_all = load_json(os.getcwd() + name + "woi_All")
                 gens[k].append([])
                 for g, w in enumerate(woi_all):
                     if not dwoi[k]:
