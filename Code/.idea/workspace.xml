@@ -2,248 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58a50c7b-a10b-4ab2-abb9-7e0f2141f704" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/20_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/21_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/22_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/23_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/24_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/25_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/26_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/2days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Ease Exploration/7days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/20_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/21_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/22_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/23_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/25_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/26_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/2_days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Medium Exploition/7days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/20_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/21_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/22_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/23_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/24_07/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/2_days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/WOI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/all.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/cr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/elits.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/first_gen_res.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/optimizaion_WOI.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/parameters.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/pop.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/woi.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/woi_All.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opt_results/Regular Random/7days/woi_last.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/before_opt_runs.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/complete.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/firstWOIruns.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file23_07_6dof_4d_i_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file23_07_6dof_4d_i_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_i_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_i_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_s_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_s_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_t_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file24_07_6dof_4d_t_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_i_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_i_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_i_1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_i_1.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_01.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_01.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_0s_4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_p_0s_4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_01.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_01.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_s_4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_t_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file25_07_6dof_4d_t_0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_i_1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_i_1.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_p_4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_p_4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_01.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_01.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_3.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries/opt_25_07/results_file26_07_6dof_4d_s_4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/6dof/opt_tries.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results/calculated/new_opt_tries.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Other.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/archive/concepts+configs+results_all.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jsons/concepts+configs+results.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/concepts+configs+results.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/before_opt_runs_with_failed.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/complete_with_failed.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/firstWOIruns_with_failed.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/new_opt_tries_with_failed.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/calculated/6dof/opt_tries_with_failed.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results/problematic confs/no_good_confs.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_mutation.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_mutation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsons/other/confs_number.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsons/other/confs_number.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/left_concepts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/left_concepts.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/calculated/new_opt_tries.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -308,14 +73,11 @@
       <recent name="$PROJECT_DIR$/results" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_mutation">
+  <component name="RunManager" selected="Python.Other">
     <configuration name="Other" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -440,8 +202,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test_mutation" />
         <item itemvalue="Python.Other" />
+        <item itemvalue="Python.test_mutation" />
         <item itemvalue="Python.simulator" />
         <item itemvalue="Python.Other" />
         <item itemvalue="Python.optimization" />
@@ -647,14 +409,7 @@
       <workItem from="1595566116430" duration="851000" />
       <workItem from="1595596478598" duration="2310000" />
       <workItem from="1595663069687" duration="1952000" />
-      <workItem from="1595783974279" duration="5762000" />
-    </task>
-    <task id="LOCAL-00051" summary="add: partial results">
-      <created>1576580714864</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1576580714864</updated>
+      <workItem from="1595783974279" duration="7001000" />
     </task>
     <task id="LOCAL-00052" summary="add: small fixes">
       <created>1576582878302</created>
@@ -992,7 +747,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595663477177</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="add results">
+      <created>1595790844403</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1595790844403</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1076,53 +838,53 @@
       <screen x="67" y="27" width="1853" height="1173" />
     </state>
     <state x="776" y="370" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1173@67.27.1853.1173" timestamp="1589788229034" />
-    <state width="1807" height="349" key="GridCell.Tab.0.bottom" timestamp="1595790733529">
+    <state width="1807" height="349" key="GridCell.Tab.0.bottom" timestamp="1595795218899">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.bottom/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="349" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733529" />
+    <state width="1807" height="349" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218899" />
     <state width="1807" height="398" key="GridCell.Tab.0.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="349" key="GridCell.Tab.0.center" timestamp="1595790733528">
+    <state width="1807" height="349" key="GridCell.Tab.0.center" timestamp="1595795218899">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.center/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="349" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733528" />
+    <state width="1807" height="349" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218899" />
     <state width="1807" height="398" key="GridCell.Tab.0.center/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="349" key="GridCell.Tab.0.left" timestamp="1595790733528">
+    <state width="1807" height="349" key="GridCell.Tab.0.left" timestamp="1595795218899">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.left/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752723" />
-    <state width="1807" height="349" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733528" />
+    <state width="1807" height="349" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218899" />
     <state width="1807" height="398" key="GridCell.Tab.0.left/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="349" key="GridCell.Tab.0.right" timestamp="1595790733528">
+    <state width="1807" height="349" key="GridCell.Tab.0.right" timestamp="1595795218899">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.0.right/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752724" />
-    <state width="1807" height="349" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733528" />
+    <state width="1807" height="349" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218899" />
     <state width="1807" height="398" key="GridCell.Tab.0.right/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="349" key="GridCell.Tab.1.bottom" timestamp="1595790733529">
+    <state width="1807" height="349" key="GridCell.Tab.1.bottom" timestamp="1595795218900">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.bottom/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752726" />
-    <state width="1807" height="349" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733529" />
+    <state width="1807" height="349" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218900" />
     <state width="1807" height="398" key="GridCell.Tab.1.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
-    <state width="1807" height="349" key="GridCell.Tab.1.center" timestamp="1595790733529">
+    <state width="1807" height="349" key="GridCell.Tab.1.center" timestamp="1595795218900">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.center/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="349" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733529" />
+    <state width="1807" height="349" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218900" />
     <state width="1807" height="398" key="GridCell.Tab.1.center/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
-    <state width="1807" height="349" key="GridCell.Tab.1.left" timestamp="1595790733529">
+    <state width="1807" height="349" key="GridCell.Tab.1.left" timestamp="1595795218899">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.left/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="349" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733529" />
+    <state width="1807" height="349" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218899" />
     <state width="1807" height="398" key="GridCell.Tab.1.left/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312752" />
-    <state width="1807" height="349" key="GridCell.Tab.1.right" timestamp="1595790733529">
+    <state width="1807" height="349" key="GridCell.Tab.1.right" timestamp="1595795218900">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1807" height="398" key="GridCell.Tab.1.right/0.27.3840.1173@0.27.3840.1173" timestamp="1590040752725" />
-    <state width="1807" height="349" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595790733529" />
+    <state width="1807" height="349" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1595795218900" />
     <state width="1807" height="398" key="GridCell.Tab.1.right/67.27.1853.1173@67.27.1853.1173" timestamp="1590040312753" />
     <state x="874" y="480" width="476" height="264" key="MultipleFileMergeDialog" timestamp="1589702168113">
       <screen x="67" y="27" width="1853" height="1173" />
@@ -1133,10 +895,10 @@
     </state>
     <state x="358" y="173" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1595002636856" />
     <state x="660" y="173" key="SettingsEditor/67.27.3773.1053@67.27.3773.1053" timestamp="1590060625275" />
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595663483322">
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595790848106">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1595663483322" />
+    <state x="588" y="287" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1595790848106" />
     <state x="588" y="318" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.1173@67.27.1853.1173" timestamp="1590058959218" />
     <state x="866" y="399" width="433" height="307" key="cloudConfig.SelfSettingsDialog" timestamp="1590071525245">
       <screen x="67" y="27" width="1853" height="1053" />
@@ -1168,11 +930,6 @@
           <url>file://$PROJECT_DIR$/test_mutation.py</url>
           <line>860</line>
           <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Other.py</url>
-          <line>954</line>
-          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
