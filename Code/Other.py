@@ -319,7 +319,7 @@ class Concepts:
                 link_length.append(arm[a] + "." + arm[a + 1][:1])
         return joints, prev_axe, link_length
 
-    def create_files2sim(self, to_sim, confs_file5="urdf/5dof", confs_file6="urdf/6dof"):
+    def create_files2sim(self, to_sim,confs_file4="urdf/4dof", confs_file5="urdf/5dof", confs_file6="urdf/6dof"):
         """ get configurations and save urdf files
         :param to_sim: list of configurations to create urdfs
         :param confs_file5: name of csv file with all 5dof configurations to create
@@ -327,8 +327,11 @@ class Concepts:
         """
         conf_5dof = [[] for i in range(20)]  # 54, 50
         conf_6dof = [[] for i in range(20)]  # 60, 65
+        conf_4dof = [[] for i in range(20)]  # 40, 45
         i6 = 0
+        i4 = 0
         i5 = 0
+        i4_length = 0
         i5_length = 0
         i6_length = 0
         for conf in to_sim:
@@ -338,8 +341,14 @@ class Concepts:
             elif 60 <= len(conf[0]) <= 65:
                 conf_6dof[i6].append(conf)
                 i6_length, i6 = self.create_urdfs(i6_length, i6, 6, conf)
+            elif 40 <= len(conf[0]) <= 45:
+                conf_4dof[i4].append(conf)
+                i4_length, i4 = self.create_urdfs(i4_length, i4, 4, conf)
         conf_6dof = [x for x in conf_6dof if x]
         conf_5dof = [x for x in conf_5dof if x]
+        conf_4dof = [x for x in conf_4dof if x]
+        for k in range(len(conf_4dof)):
+            MyCsv.save_csv(conf_4dof[k], confs_file4)
         for k in range(len(conf_5dof)):
             MyCsv.save_csv(conf_5dof[k], confs_file5)
         for k in range(len(conf_6dof)):
@@ -684,7 +693,7 @@ def plot_data(result_file="/home/tamir/Tamir/Master/Code/results/results_all"):
             mu.append(float(dat["mu"]))
             time.append(float(dat["time"]))
             z.append(float(dat["Z"]))
-            lci.append(float(dat["LCI"]))
+            lci.append(0)  # float(dat["LCI"])
             dof.append(float(dat["dof"]))
     plt.subplot(551)
     plt.title("Manipulability")
@@ -793,7 +802,7 @@ def assign_results(res_name="results_all"):
     y = []
     z = []
     name = []
-    for r in results:
+    for r in tqdm(results):
         # add only points thats succeded to reach the point
         if r["Z"] != '70' and r["name"] != "name":
             name.append(r["name"])
@@ -826,7 +835,7 @@ def domination_check(conf):
     """ check domination in 3D"""
     front = [[1], [1], [6], [conf[3][0]]]
     points = [[], [], [], []]
-    for i, j, k, l in zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:]):  # z, mu, dof, configuration
+    for i, j, k, l in tqdm(zip(conf[0][:], conf[1][:], conf[2][:], conf[3][:])):  # z, mu, dof, configuration
         added = False
         for i_front, j_front, k_front, l_front in zip(front[0], front[1], front[2],
                                                       front[3]):  # zip(x_front, y_front, z_front, conf_front):
@@ -884,7 +893,7 @@ def plot_pareto(other_points, pareto_concepts):
     ax.set_xlim(0, 0.5)
     ax.set_zticks(np.arange(4, 7, 1.0))
     ax.set_zlabel("DOF")
-    ax.set_ylabel("Munibulability")
+    ax.set_ylabel("1- Manipulability")
     ax.set_xlabel("Mid Proximity Joint")
     # add to each point in the front its number
     pareto, ax = text2points(ax, pareto_concepts)
@@ -1282,8 +1291,8 @@ if __name__ == '__main__':
     to_merge = False
     plotdata = False
     pareto_plot = False
-    sumdata = True
-    check_num_confs_in_concepts = True
+    sumdata = False
+    check_num_confs_in_concepts = False
     sum_all = True
     create_configs = False
     cr_plot = False
@@ -1312,9 +1321,13 @@ if __name__ == '__main__':
     if plotdata:
         plot_data(result_file="/home/tamir/Tamir/Master/Code/results_all")
     if pareto_plot:
+        print("Start assigning results")
         con = assign_results()
+        print("Stop assigning results and start domination check")
         outer_points, pareto_front = domination_check(con)
+        print("Stop  domination check and start assignning configurations in  concepts")
         pareto_with_concepts = assign_conf2concept(pareto_front)
+        print("saving data")
         save_json("jsons/front_concept", pareto_with_concepts, "w+")
         plot_pareto(outer_points, pareto_with_concepts)
     if check_num_confs_in_concepts:
@@ -1355,3 +1368,53 @@ if __name__ == '__main__':
     if check_problematic_confs:
         problematic_confs()
 
+a = load_json("opt_results/Ease Exploration/7days/pop")
+b = load_json("opt_results/Medium Exploition/7days/pop")
+c = load_json("opt_results/Regular Random/7days/pop")
+
+confs_a = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+         "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
+         "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4"]
+confs_b = ["roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
+           "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
+           "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"]
+confs_c = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+            "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
+            "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
+inds_a = []
+inds_b = []
+inds_c = []
+for i in range(3):
+    inds_a.append(a.index(confs_a[i]))
+    inds_b.append(b.index(confs_b[i]))
+    inds_c.append(c.index(confs_c[i]))
+
+# confs = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+#         "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
+#         "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4",
+#         "roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
+#         "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
+#         "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7",
+#         "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+#         "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
+#         "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
+confs = ["roll_z_0_1pitch_y_0_1pitch_z_0_7roll_z_0_4",
+        "roll_z_0_1pitch_y_0_4pitch_y_0_4roll_x_0_7",
+        "roll_z_0_1pitch_y_0_4roll_x_0_4roll_y_0_7roll_y_0_7",
+        "roll_z_0_1roll_y_0_7pitch_y_0_7pitch_z_0_1pris_x_0_4",
+        "roll_z_0_1roll_y_0_4roll_y_0_4pitch_y_0_1pitch_x_0_4",
+        "roll_z_0_1pitch_y_0_4pitch_y_0_4pitch_y_0_4pitch_z_0_1",
+        "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_1roll_x_0_4",
+        "roll_z_0_1pitch_y_0_4pitch_z_0_1pitch_x_0_4pitch_z_0_1",
+        "roll_z_0_1pitch_y_0_4roll_y_0_1pitch_y_0_4roll_z_0_4",
+        "roll_z_0_1pitch_y_0_4pitch_x_0_1roll_x_0_4roll_y_0_4",
+        "roll_z_0_1pitch_y_0_1pitch_z_0_4roll_x_0_4roll_y_0_4",
+        "roll_z_0_1roll_y_0_4pitch_y_0_1roll_y_0_4roll_y_0_4",
+        "roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
+        "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7",
+        "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
+        "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1"]
+
+con = Concepts()
+for ng in confs:
+    con.create_files2sim([[ng]])

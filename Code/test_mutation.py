@@ -726,8 +726,8 @@ def confs_passed_concept(folder_name="/home/tamir/Tamir/Master/Code/jsons/", fil
 
 
 if __name__ == '__main__':
-    create_woi_cr = False
-    calc_hv = True
+    create_woi_cr = True
+    calc_hv = False
     hv_in_gen = False
     plot_concept_front = False
     woi_n_generate = False

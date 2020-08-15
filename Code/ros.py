@@ -107,35 +107,20 @@ class MoveGroupPythonInterface(object):
         self.scene = moveit_commander.PlanningSceneInterface()
         group_name = "manipulator"
         self.move_group = moveit_commander.MoveGroupCommander(group_name)
-
         self.box_name = ''
         self.cylinder_name = ''
         self.move_group.set_goal_orientation_tolerance(0.05)
         self.move_group.set_goal_position_tolerance(0.01)
-
         # Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                         moveit_msgs.msg.DisplayTrajectory, queue_size=20)
         # Getting Basic Information
         self.planning_frame = self.move_group.get_planning_frame()
-        self.move_group.set_planner_id("RRTkConfigDefault")
-        self.move_group.set_planning_time(5)
+        self.move_group.set_planner_id("RRTstarkConfigDefault")
+        self.move_group.set_planning_time(10)
         # self.move_group.set_num_planning_attempts(10)
-        self.tolerance = [0.1, 0.1, 0.1, 0.5, 0.5, 0.5]
+        self.tolerance = [0.1, 0.1, 0.1, 0.75, 0.75, 0.75]
         self.move_group.clear_pose_targets()
-
-    # @staticmethod
-    # def manipulability_index(jacobian):
-    #     n = jacobian.size / len(jacobian)
-    #     if n == 5:
-    #         det_j = np.linalg.det(np.matmul(np.transpose(jacobian), jacobian))
-    #     else:
-    #         det_j = np.linalg.det(np.matmul(jacobian, np.transpose(jacobian)))
-    #     if det_j > 0.00001:  # preventing numeric problems
-    #         # return round(det_j ** (1/n), 3)
-    #         return round(det_j ** 0.5, 3)
-    #     else:
-    #         return 0
 
     def indices_calc(self, joints, links):
         try:
@@ -192,7 +177,7 @@ class MoveGroupPythonInterface(object):
         plan = self.move_group.go(wait=True)  # return true if succeed false if not
         if not plan:
             plan = self.move_group.go(wait=True)  # sometimes arrives but not in timeout
-        toc =  rospy.get_time()
+        toc = rospy.get_time()
         sim_time = round(toc - tic, 3)
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
@@ -205,7 +190,7 @@ class MoveGroupPythonInterface(object):
         orien = self.get_current_orientain()
         current = [pos.x, pos.y, pos.z, orien[0], orien[1], orien[2]]
         accuracy = self.all_close(goal, current, self.tolerance)
-        # accuracy = True
+        accuracy = True
         return accuracy and plan, sim_time, ind
 
     def add_obstacles(self, height=3.75, radius=0.1, pose=None, timeout=4):
@@ -246,7 +231,9 @@ class MoveGroupPythonInterface(object):
         for index in range(len(goal)):
             if abs(actual[index] - goal[index]) > tolerance[index]:
                 if index > 2:  # for angles
-                    if abs(actual[index] - goal[index]) < 2*pi - tolerance[index]:  # 2 pi with tolerance
+                    if abs(actual[index] - goal[index]) < 2*pi - tolerance[index] and\
+                            abs(actual[index] - goal[index]) < pi - tolerance[index] and \
+                            abs(actual[index] - goal[index]) < pi + tolerance[index]:  # 2 pi with tolerance
                         return False
                 else:
                     return False
@@ -256,9 +243,9 @@ class MoveGroupPythonInterface(object):
         return self.move_group.get_current_pose().pose.position
 
     def get_current_orientain(self):
-        a = self.move_group.get_current_pose().pose.orientation  # return orientation in quaternions
-        orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])) - 2 * np.pi) % (2 * np.pi)
-        return orien  # (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])))
+        # a = self.move_group.get_current_pose().pose.orientation  # return orientation in quaternions
+        # orien = (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])) - 2 * np.pi) % (2 * np.pi)
+        return self.move_group.get_current_rpy()  # orien  # (np.asarray(tf.transformations.euler_from_quaternion([a.x, a.y, a.z, a.w])))
 
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
         # Ensuring Collision Updates Are Receieved
@@ -679,25 +666,134 @@ def main_move_group():
     # u = manipulator.manipulability_index(a)
     time.sleep(0.13)
     manipulator.add_obstacles(height=3.75)  # add floor
-    # desired positions of the EE in world frame
-    # poses = [[0.5, 0, 3.9], [0.2, 0, 3.9], [0.2, 0.0, 3.65], [0.2, 0, 3.4]]  # , [0.5, -0.15, 3.45], [0.5, 0.15, 3.45]]
-    # desired orientaions of the EE in world frame
-    # oriens = [[-3.1459, 0, 0],[0, 3.14*0.75, 0], [0, 3.14*0.5, 0], [0, 3.14*0.5, 0]]  # , [-0.81, 0.52, 0], [0.9, 0.02, 0]]
-    # 0.864246189594, -0.264724522829, 0.406788229942, 0.132373735309
     z = 3
-    poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
-    oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
+    # poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
+    oriens = [[0, 3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0]]
+    poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
+                  [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
+                  [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
+                  [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
+                  [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
+                  [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
+                  [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
+                  [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
+    oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
+               [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+               [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+               [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
+               [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
+               [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+               [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+               [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
+    results = []
+    for i in range(len(poses)):
+        pose = poses[i]
+        orientaion = oriens[i]
+        results.append(manipulator.go_to_pose_goal(pose, orientaion))
+        time.sleep(0.5)
+        # raw_input("press enter")
+    return results
 
-    for j in range(3):
-        for i in range(len(poses)):
-            pose = poses[i]
-            orientaion = oriens[i]
-            print manipulator.go_to_pose_goal(pose, orientaion)
-            time.sleep(0.1)
-        raw_input("press enter")
+
+def myhook():
+    print "shutdown time!"
+
+def assign_data(data, arm, confname):
+    """
+    Calculate the manipulaot indices(Manipulability, Local Conditioning Index, Joint Mid-Range Proximity)
+    if the manipulator succed and the time that take
+    :param data: array of the result of the configuration about each detection point
+    :param arm: which configuration
+    :return: array of the results
+    """
+    data_res = []
+    jacobian = []
+    curr_pos = []
+    mu = []   # Manipulability index
+    z = []    # Joint Mid-Range Proximity
+    arm_number = str(arm + 1 )
+    for j in data:
+        data_res.append(j[0])
+        if j[0]:
+            mu.append(j[2][0])
+            z.append(j[2][1].min())
+            jacobian.append(j[2][2].tolist())
+            curr_pos.append(j[2][3].tolist())
+        else:
+            mu.append(-1)
+            z.append(-1)
+            jacobian.append(-1)
+            curr_pos.append(-1)
+
+    mu = np.asarray(mu)
+    z = np.asarray(z)
+    # choose only the min values because those are the "worst grade"
+    try:
+        mu_min = mu[mu >= 0.0].min()
+    except:
+        mu_min = -16
+    try:
+        z_max = z[z >= 0.0].max()
+    except:
+        z_max = 16
+    return [arm_number, confname, data_res, str(mu_min), str(z_max)]
+
 
 
 if __name__ == '__main__':
-    main_move_group()
-    # mo = MoveGroupPythonInterface()
-    # print(mo.move_group.get_current_joint_values())
+    from Other import MyCsv
+    Ros()
+    z = 3
+    poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
+         [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
+         [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
+         [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
+         [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
+         [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
+         [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
+         [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
+    oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
+          [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+          [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+          [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
+          [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
+          [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+          [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+          [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
+    all_data = []
+    # res = []
+    confs = [#"roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
+            # "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1",
+            # "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
+            "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"]
+
+    arm = 0
+    for conf in confs:
+        results = []
+        try:
+            cmd = "roslaunch man_gazebo main.launch rviz:=false dof:=6dof man:=combined/" + conf
+            Ros.ter_command(cmd)
+            time.sleep(6)
+            # res.append(main_move_group())
+            rospy.init_node('move_group_interface1', anonymous=True)
+            manipulator = MoveGroupPythonInterface()
+            time.sleep(0.13)
+            manipulator.add_obstacles(height=3.75)  # add floor
+            for i in range(len(poses)):
+                pose = poses[i]
+                orientaion = oriens[i]
+                results.append(manipulator.go_to_pose_goal(pose, orientaion))
+
+                time.sleep(1)
+                # raw_input("press enter")
+            rospy.on_shutdown(myhook)
+            Ros.ter_command("roskill")
+            time.sleep(6)
+        except:
+            print "error"
+            print results
+        finally:
+            MyCsv.save_csv([results], conf)
+            all_data.append(assign_data(results, arm, conf))
+            MyCsv.save_csv(all_data, "results")
+            arm += 1

@@ -14,7 +14,7 @@ import rospy
 
 class Simulator(object):
 
-    def __init__(self, dof=6, folder='combined', create=False, arms=None, wait0=2, wait1=2.3, wait2=2.7, link_max=0.41):
+    def __init__(self, dof=6, folder='combined', create=False, arms=None,  wait1=2.3, wait2=2.7, link_max=0.41):
         # if arms is None:
         #   arms = []
         self.dof = dof
@@ -22,7 +22,6 @@ class Simulator(object):
         self.ros = Ros()  # for work with Ros
         self.arm_control = 0
         self.arms = []
-        self.wait0 = wait0
         self.wait1 = wait1
         self.wait2 = wait2
         self.json_data = []
@@ -35,8 +34,24 @@ class Simulator(object):
                 self.arms = arms
         # desired positions and orientaions of the EE in world frame
         z = 3  # height from ground
-        self.poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
-        self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
+        # self.poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
+        # self.oriens = [[-3.14, 0, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.25, 0]]
+        self.poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
+                      [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
+                      [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
+                      [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
+                      [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
+                      [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
+                      [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
+                      [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
+        self.oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
+                       [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+                       [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+                       [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
+                       [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
+                       [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+                       [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+                       [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
         self.save_name = 'results_file' + datetime.now().strftime("%d_%m_") + str(dof) + "dof_" \
                         + str(len(self.poses)) + "d_"
         # for some reason the 1st manipulator must succeed reach to point otherwise the other manipulators will failed
@@ -172,7 +187,7 @@ class Simulator(object):
             # self.arms.append({"name": fil.replace(".urdf.xacro", ""), "folder": fol[0]})
 
     @staticmethod
-    def get_urdf(name="roll_z_0_1pris_y_0_7pris_y_0_7pitch_x_0_7pitch_x_0_7pris_x_0_7"):
+    def get_urdf(name=""):
         joints = ["roll"]
         prev_axe = ["z"]
         link_length = ["0.1"]
@@ -204,7 +219,6 @@ class Simulator(object):
         jacobian = []
         curr_pos = []
         mu = []   # Manipulability index
-        # lci = []  # Local Conditioning Index
         z = []    # Joint Mid-Range Proximity
 
         arm_number = str(arm + 1 + k)
@@ -226,7 +240,7 @@ class Simulator(object):
         z_max = -1
         data_time = [-1, -1, -1, -1]
         avg_time = -1
-        if data_res.count(True) >= 3 and data_res[3] and (data_res[0] or data_res[1]):
+        if True:  # data_res.count(True) >= 3 and data_res[3] and (data_res[0] or data_res[1]):
             # if the arm arrived to 3 or more point and get to the lower point or one of the two
             # top points --> it success and calc indices
             suc_res = "True"
@@ -252,7 +266,6 @@ class Simulator(object):
         """
         replace configuration in the simulation
         :param arm: the new configuration tho simulate
-        :return:
         """
         fil = "man:=" + self.arms[arm + 1]["folder"] + "/" + self.arms[arm + 1]["name"] + \
               " dof:=" + str(self.dof) + "dof"
@@ -260,7 +273,6 @@ class Simulator(object):
             self.ros.stop_launch(self.arm_control)  # this launch file must be stopped, otherwise it wont work
         else:
             self.ros.ter_command("rosnode kill /robot_state_publisher")
-        # sleep(self.wait0)
         replace_command = "roslaunch man_gazebo replace_model.launch " + fil
         self.ros.ter_command(replace_command)
         sleep(self.wait1)
@@ -268,7 +280,7 @@ class Simulator(object):
         sleep(self.wait2)
 
     def run_simulation(self,  k=0, len_arm=1638):
-        save_name = self.save_name  # 'results_file' + datetime.now().strftime("%d_%m_%y")  # file to save the results
+        save_name = self.save_name  # file to save the results
         all_data = []
         for arm in range(0, len(self.arms)):
             print(self.arms[arm]["name"] + " " + str(arm + 1 + k) + " of " + str(len_arm) + " arms")
@@ -291,7 +303,6 @@ class Simulator(object):
 
 
 def simulate(start_arm=0, from_opt=True):
-    # from which set of arms to start
     # default values
     dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
@@ -299,29 +310,24 @@ def simulate(start_arm=0, from_opt=True):
     username = getpass.getuser()
     if username == "tamir":  # tamir laptop
         nums = 3  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2
-        wait0_replace = 0.01
+        wait1_replace = 3
+        wait2_replace = 3
     elif username == "shayo":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.9
         wait2_replace = 2.5
-        wait0_replace = 2
     elif username == "tamirm":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.9
         wait2_replace = 2.5
-        wait0_replace = 2
     elif username == "inbarb":  # VM
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.9
         wait2_replace = 2.5
-        wait0_replace = 2
     else:
         nums = 25  # how many arms to send to simulator each time
         wait1_replace = 2.7
         wait2_replace = 2.3
-        wait0_replace = 2
     start_arm = start_arm / nums
     create_urdf = False
     if not from_opt:
@@ -361,12 +367,10 @@ def simulate(start_arm=0, from_opt=True):
             ros.ter_command(command)
     for t in range(start_arm, int(np.ceil(1.0*len(arms) / nums))):
         if t == len(arms) / nums:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:],
-                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:], wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         elif t != 0:
-            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums],
-                            wait0=wait0_replace, wait1=wait1_replace, wait2=wait2_replace)
+            sim = Simulator(dof=dofe, folder=foldere, create=False, arms=arms[t * nums:(t + 1) * nums],wait1=wait1_replace, wait2=wait2_replace)
             sim.run_simulation(nums*t, len(arms))
         else:  # first run
             sim.arms = arms[:nums]
@@ -384,8 +388,3 @@ def simulate(start_arm=0, from_opt=True):
 
 if __name__ == '__main__':
     simulate(from_opt=False)
-
-# done - get errors from terminal
-# done - run with 1 configuration
-# tod?O - failed with error PATH_TOLERANCE_VIOLATED:?
-# tod?o change link0 to the platform - github
