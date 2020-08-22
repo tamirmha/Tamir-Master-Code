@@ -1269,18 +1269,54 @@ def problematic_confs():
             con.create_files2sim([[ng]])
 
 
-# def check_dupications_configs_in_concepts(all_concepts=None):
-#     """Check if there are duplicate configurations in the concepts """
-#     if all_concepts is None:
-#         all_concepts = load_json("jsons/concepts")
-#     configs = []
-#     for conc in all_concepts:
-#         configs.append(all_concepts[conc])
-#     all_configs = np.concatenate(np.asarray(configs))
-#     unq, unq_idx = np.unique(all_configs, True)
-#     unq_cnt = np.bincount(unq_idx)
-#     twice_inds = np.argwhere(unq_cnt < 1)
-#     twice = all_configs[twice_inds]
+def calcMeanMedianMu(dof4res, dof5res, dof6res):
+    mu_statistic = [["conf", "median", "mean"]]
+    for i in load_json(dof4res):
+        conf= i.keys()[0]
+        jacobian = i[conf][0]
+        res = []
+        for jacob in jacobian:
+            if jacob != -1:
+                j_ev = np.linalg.svd(jacob, compute_uv=False)
+                # Manipulability index
+                res.append(1-round(np.product(j_ev), 3))
+        mu_statistic.append([conf, round(np.median(np.asarray(res)), 3), round(np.mean(np.asarray(res)), 3)])
+    for i in load_json(dof5res):
+        conf= i.keys()[0]
+        jacobian = i[conf][0]
+        res = []
+        for jacob in jacobian:
+            if jacob != -1:
+                j_ev = np.linalg.svd(jacob, compute_uv=False)
+                # Manipulability index
+                res.append(1-round(np.product(j_ev), 3))
+        mu_statistic.append([conf, round(np.median(np.asarray(res)), 3), round(np.mean(np.asarray(res)), 3)])
+    for i in load_json(dof6res):
+        conf= i.keys()[0]
+        jacobian = i[conf][0]
+        res = []
+        for jacob in jacobian:
+            if jacob != -1:
+                j_ev = np.linalg.svd(jacob, compute_uv=False)
+                # Manipulability index
+                res.append(1-round(np.product(j_ev), 3))
+        mu_statistic.append([conf, round(np.median(np.asarray(res)), 3), round(np.mean(np.asarray(res)), 3)])
+    MyCsv.save_csv(mu_statistic, "MuStatistic", csv_type="list", save_mode='ab')
+
+
+def check_dupications_configs_in_concepts(all_concepts=None):
+    """Check if there are duplicate configurations in the concepts """
+    if all_concepts is None:
+        all_concepts = load_json("jsons/concepts")
+    configs = []
+    for conc in all_concepts:
+        configs.append(all_concepts[conc])
+    all_configs = np.concatenate(np.asarray(configs))
+    unq, unq_idx = np.unique(all_configs, True)
+    unq_cnt = np.bincount(unq_idx)
+    twice_inds = np.argwhere(unq_cnt < 1)
+    twice = all_configs[twice_inds]
+
 
 if __name__ == '__main__':
     split = False
@@ -1298,6 +1334,7 @@ if __name__ == '__main__':
     cr_plot = False
     woi_plot = False
     check_problematic_confs = False
+    MeanMedianMu = True
     if calc_concepts:
         con = Concepts()
         concepts_with_values = con.calc()
@@ -1367,54 +1404,59 @@ if __name__ == '__main__':
         plot_cr("results/mutauioncheck/22_04_tamir_mut/woi_last")
     if check_problematic_confs:
         problematic_confs()
+    if MeanMedianMu:
+        calcMeanMedianMu("results/to_add/results_file14_08_4dof_36d_", "results/to_add/results_file14_08_5dof_36d_",
+                         "results/to_add/results_file14_08_6dof_36d_")
 
-a = load_json("opt_results/Ease Exploration/7days/pop")
-b = load_json("opt_results/Medium Exploition/7days/pop")
-c = load_json("opt_results/Regular Random/7days/pop")
 
-confs_a = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
-         "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
-         "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4"]
-confs_b = ["roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
-           "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
-           "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"]
-confs_c = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
-            "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
-            "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
-inds_a = []
-inds_b = []
-inds_c = []
-for i in range(3):
-    inds_a.append(a.index(confs_a[i]))
-    inds_b.append(b.index(confs_b[i]))
-    inds_c.append(c.index(confs_c[i]))
-
-# confs = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
-#         "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
-#         "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4",
-#         "roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
-#         "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
+# a = load_json("opt_results/Ease Exploration/7days/pop")
+# b = load_json("opt_results/Medium Exploition/7days/pop")
+# c = load_json("opt_results/Regular Random/7days/pop")
+#
+# confs_a = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+#          "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
+#          "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4"]
+# confs_b = ["roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
+#            "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
+#            "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"]
+# confs_c = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+#             "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
+#             "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
+# inds_a = []
+# inds_b = []
+# inds_c = []
+# for i in range(3):
+#     inds_a.append(a.index(confs_a[i]))
+#     inds_b.append(b.index(confs_b[i]))
+#     inds_c.append(c.index(confs_c[i]))
+#
+# # confs = ["roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+# #         "roll_z_0_1pitch_y_0_7roll_x_0_4roll_y_0_7pitch_y_0_1roll_z_0_4",
+# #         "roll_z_0_1roll_y_0_1pitch_y_0_4pitch_z_0_1roll_x_0_1roll_y_0_4",
+# #         "roll_z_0_1roll_y_0_4pitch_y_0_1pitch_x_0_7roll_z_0_1roll_y_0_1",
+# #         "roll_z_0_1pitch_y_0_7pitch_z_0_7pitch_z_0_1pitch_y_0_7roll_x_0_4",
+# #         "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7",
+# #         "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
+# #         "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
+# #         "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
+# confs = ["roll_z_0_1pitch_y_0_1pitch_z_0_7roll_z_0_4",
+#         "roll_z_0_1pitch_y_0_4pitch_y_0_4roll_x_0_7",
+#         "roll_z_0_1pitch_y_0_4roll_x_0_4roll_y_0_7roll_y_0_7",
+#         "roll_z_0_1roll_y_0_7pitch_y_0_7pitch_z_0_1pris_x_0_4",
+#         "roll_z_0_1roll_y_0_4roll_y_0_4pitch_y_0_1pitch_x_0_4",
+#         "roll_z_0_1pitch_y_0_4pitch_y_0_4pitch_y_0_4pitch_z_0_1",
+#         "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_1roll_x_0_4",
+#         "roll_z_0_1pitch_y_0_4pitch_z_0_1pitch_x_0_4pitch_z_0_1",
+#         "roll_z_0_1pitch_y_0_4roll_y_0_1pitch_y_0_4roll_z_0_4",
+#         "roll_z_0_1pitch_y_0_4pitch_x_0_1roll_x_0_4roll_y_0_4",
+#         "roll_z_0_1pitch_y_0_1pitch_z_0_4roll_x_0_4roll_y_0_4",
+#         "roll_z_0_1roll_y_0_4pitch_y_0_1roll_y_0_4roll_y_0_4",
+#         "roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
 #         "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7",
-#         "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_y_0_1pitch_x_0_4roll_z_0_7",
-#         "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_7pitch_y_0_1pitch_z_0_1",
-#         "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7"]
-confs = ["roll_z_0_1pitch_y_0_1pitch_z_0_7roll_z_0_4",
-        "roll_z_0_1pitch_y_0_4pitch_y_0_4roll_x_0_7",
-        "roll_z_0_1pitch_y_0_4roll_x_0_4roll_y_0_7roll_y_0_7",
-        "roll_z_0_1roll_y_0_7pitch_y_0_7pitch_z_0_1pris_x_0_4",
-        "roll_z_0_1roll_y_0_4roll_y_0_4pitch_y_0_1pitch_x_0_4",
-        "roll_z_0_1pitch_y_0_4pitch_y_0_4pitch_y_0_4pitch_z_0_1",
-        "roll_z_0_1pitch_y_0_4roll_y_0_4pitch_y_0_1roll_x_0_4",
-        "roll_z_0_1pitch_y_0_4pitch_z_0_1pitch_x_0_4pitch_z_0_1",
-        "roll_z_0_1pitch_y_0_4roll_y_0_1pitch_y_0_4roll_z_0_4",
-        "roll_z_0_1pitch_y_0_4pitch_x_0_1roll_x_0_4roll_y_0_4",
-        "roll_z_0_1pitch_y_0_1pitch_z_0_4roll_x_0_4roll_y_0_4",
-        "roll_z_0_1roll_y_0_4pitch_y_0_1roll_y_0_4roll_y_0_4",
-        "roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
-        "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7",
-        "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
-        "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1"]
+#         "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
+#         "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1"]
+#
+# con = Concepts()
+# for ng in confs:
+#     con.create_files2sim([[ng]])
 
-con = Concepts()
-for ng in confs:
-    con.create_files2sim([[ng]])

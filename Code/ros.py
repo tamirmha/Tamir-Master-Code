@@ -109,8 +109,8 @@ class MoveGroupPythonInterface(object):
         self.move_group = moveit_commander.MoveGroupCommander(group_name)
         self.box_name = ''
         self.cylinder_name = ''
-        self.move_group.set_goal_orientation_tolerance(0.05)
-        self.move_group.set_goal_position_tolerance(0.01)
+        self.move_group.set_goal_orientation_tolerance(0.01)
+        self.move_group.set_goal_position_tolerance(0.05)
         # Create a `DisplayTrajectory`_ ROS publisher which is used to display trajectories in Rviz:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                         moveit_msgs.msg.DisplayTrajectory, queue_size=20)
@@ -667,24 +667,24 @@ def main_move_group():
     time.sleep(0.13)
     manipulator.add_obstacles(height=3.75)  # add floor
     z = 3
-    # poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
-    oriens = [[0, 3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0]]
-    poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
-                  [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
-                  [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
-                  [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
-                  [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
-                  [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
-                  [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
-                  [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
-    oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
-               [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-               [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-               [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
-               [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
-               [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-               [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-               [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
+    poses = [[0.5, 0, z + 0.9], [0.2, 0, z + 0.9], [0.2, 0.0, z + 0.65], [0.2, 0, z + 0.4]]
+    oriens = [[0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0]]
+    # poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
+    #               [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
+    #               [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
+    #               [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
+    #               [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
+    #               [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
+    #               [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
+    #               [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
+    # oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
+    #            [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+    #            [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+    #            [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
+    #            [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
+    #            [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+    #            [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+    #            [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
     results = []
     for i in range(len(poses)):
         pose = poses[i]
@@ -698,9 +698,10 @@ def main_move_group():
 def myhook():
     print "shutdown time!"
 
+
 def assign_data(data, arm, confname):
     """
-    Calculate the manipulaot indices(Manipulability, Local Conditioning Index, Joint Mid-Range Proximity)
+    Calculate the manipulaot indices(Manipulability, Joint Mid-Range Proximity)
     if the manipulator succed and the time that take
     :param data: array of the result of the configuration about each detection point
     :param arm: which configuration
@@ -724,7 +725,6 @@ def assign_data(data, arm, confname):
             z.append(-1)
             jacobian.append(-1)
             curr_pos.append(-1)
-
     mu = np.asarray(mu)
     z = np.asarray(z)
     # choose only the min values because those are the "worst grade"
@@ -739,61 +739,68 @@ def assign_data(data, arm, confname):
     return [arm_number, confname, data_res, str(mu_min), str(z_max)]
 
 
-
 if __name__ == '__main__':
-    from Other import MyCsv
-    Ros()
-    z = 3
-    poses = [[0.5, 0, z + 0.9], [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
-         [0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
-         [0.2, 0, z + 0.9], [0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
-         [0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
-         [0.2, 0.0, z + 0.65], [0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
-         [0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
-         [0.2, 0, z + 0.4],  [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
-         [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]]
-    oriens = [[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
-          [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-          [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-          [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
-          [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
-          [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-          [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-          [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]]
-    all_data = []
-    # res = []
-    confs = [#"roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
-            # "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1",
-            # "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
-            "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"]
-
-    arm = 0
-    for conf in confs:
-        results = []
-        try:
-            cmd = "roslaunch man_gazebo main.launch rviz:=false dof:=6dof man:=combined/" + conf
-            Ros.ter_command(cmd)
-            time.sleep(6)
-            # res.append(main_move_group())
-            rospy.init_node('move_group_interface1', anonymous=True)
-            manipulator = MoveGroupPythonInterface()
-            time.sleep(0.13)
-            manipulator.add_obstacles(height=3.75)  # add floor
-            for i in range(len(poses)):
-                pose = poses[i]
-                orientaion = oriens[i]
-                results.append(manipulator.go_to_pose_goal(pose, orientaion))
-
-                time.sleep(1)
-                # raw_input("press enter")
-            rospy.on_shutdown(myhook)
-            Ros.ter_command("roskill")
-            time.sleep(6)
-        except:
-            print "error"
-            print results
-        finally:
-            MyCsv.save_csv([results], conf)
-            all_data.append(assign_data(results, arm, conf))
-            MyCsv.save_csv(all_data, "results")
-            arm += 1
+    main_move_group()
+    # from Other import MyCsv
+    # Ros()
+    # z = 3
+    # poses = [#[0.5, 0, z + 0.9],# [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
+    #      #[0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
+    #      [0.2, 0, z + 0.9], #[0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
+    #      #[0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
+    #      [0.2, 0.0, z + 0.65], #[0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
+    #      #[0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
+    #      [0.2, 0, z + 0.4]#, [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
+    #     # [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]
+    #      ]
+    # oriens = [#[0, -3.14, 0], #[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
+    #       #[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+    #       [0, 3.1459*0.75, 0], #[0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
+    #       #[0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
+    #       [0, 3.1459*0.5, 0], #[0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
+    #       #[0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+    #       [0, 3.1459*0.36, 0]#, [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
+    #       #[0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]
+    #           ]
+    # all_data = []
+    # # res = []
+    # confs = ["roll_z_0_1pitch_y_0_4pitch_y_0_4roll_x_0_7",
+    #     #"roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
+    #         # "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1",
+    #         # "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
+    #         # "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"
+    #     ]
+    #
+    # arm = 0
+    # for conf in confs:
+    #     results = []
+    #     try:
+    #         cmd = "roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=true dof:=4dof man:=combined/" + conf
+    #         Ros.ter_command(cmd)
+    #         time.sleep(6)
+    #         # res.append(main_move_group())
+    #         rospy.init_node('move_group_interface1', anonymous=True)
+    #         manipulator = MoveGroupPythonInterface()
+    #         time.sleep(0.13)
+    #         manipulator.add_obstacles(height=3.75) # add floor
+    #         time.sleep(0.5)
+    #
+    #         for i in range(len(poses)):
+    #             pose = poses[i]
+    #             orientaion = oriens[i]
+    #             results.append(manipulator.go_to_pose_goal(pose, orientaion))
+    #
+    #             time.sleep(1)
+    #             # raw_input("press enter")
+    #         rospy.on_shutdown(myhook)
+    #         Ros.ter_command("roskill")
+    #         time.sleep(6)
+    #     except:
+    #         print "error"
+    #         print results
+    #     finally:
+    #         MyCsv.save_csv([results], conf)
+    #         all_data.append(assign_data(results, arm, conf))
+    #         MyCsv.save_csv(all_data, "results")
+    #         arm += 1
+    #
