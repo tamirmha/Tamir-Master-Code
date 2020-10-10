@@ -1,3 +1,8 @@
+""" This file handle all the simulation process:
+    1) first create (if create_urdf == True) the dsired urdf files
+    2) run over all the urdf files and enter them to the simulator
+    3) create csv file (the name of the file is the current date and time) with the results of simulation
+ """
 from ros import Ros, MoveGroupPythonInterface, UrdfClass, HandleCSV
 from datetime import datetime
 from os import environ, listdir, path, mkdir  # , rename
@@ -306,28 +311,9 @@ def simulate(start_arm=0, from_opt=True):
     # default values
     dofe = 6  # number degrees of freedom of the manipulator
     link_max = 0.71  # max link length to check
-    # get pc name for specific configuration
-    username = getpass.getuser()
-    if username == "tamir":  # tamir laptop
-        nums = 3  # how many arms to send to simulator each time
-        wait1_replace = 3
-        wait2_replace = 3
-    elif username == "shayo":  # VM
-        nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.9
-        wait2_replace = 2.5
-    elif username == "tamirm":  # VM
-        nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.9
-        wait2_replace = 2.5
-    elif username == "inbarb":  # VM
-        nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.9
-        wait2_replace = 2.5
-    else:
-        nums = 25  # how many arms to send to simulator each time
-        wait1_replace = 2.7
-        wait2_replace = 2.3
+    nums = 25  # how many arms to send to simulator each time
+    wait1_replace = 3
+    wait2_replace = 3
     start_arm = start_arm / nums
     create_urdf = False
     if not from_opt:

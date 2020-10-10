@@ -1,3 +1,5 @@
+""" This file has several classes and function that the other files are using
+and several classes and finction to analysis the results"""
 import os
 from os import environ, listdir, mkdir, path
 import shutil

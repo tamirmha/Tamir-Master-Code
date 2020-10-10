@@ -1,16 +1,14 @@
-#!/usr/bin/env python
+""" This File handle the communication with ROS & Moveit, create urdf files to the desired configurations
+    and handle csv files that file  needs """
 # Ros Libs
 import roslaunch
 import rospy
-# from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import rosgraph
-from rosgraph_msgs.msg import Log
 # Moveit libs
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
-import tf
 # System Libs
 import subprocess
 import shlex
@@ -22,7 +20,6 @@ from logging import warning
 import numpy as np
 import csv
 from socket import error
-import sys
 
 
 class Ros(object):
@@ -695,112 +692,49 @@ def main_move_group():
     return results
 
 
-def myhook():
-    print "shutdown time!"
+# def myhook():
+#     print "shutdown time!"
 
 
-def assign_data(data, arm, confname):
-    """
-    Calculate the manipulaot indices(Manipulability, Joint Mid-Range Proximity)
-    if the manipulator succed and the time that take
-    :param data: array of the result of the configuration about each detection point
-    :param arm: which configuration
-    :return: array of the results
-    """
-    data_res = []
-    jacobian = []
-    curr_pos = []
-    mu = []   # Manipulability index
-    z = []    # Joint Mid-Range Proximity
-    arm_number = str(arm + 1 )
-    for j in data:
-        data_res.append(j[0])
-        if j[0]:
-            mu.append(j[2][0])
-            z.append(j[2][1].min())
-            jacobian.append(j[2][2].tolist())
-            curr_pos.append(j[2][3].tolist())
-        else:
-            mu.append(-1)
-            z.append(-1)
-            jacobian.append(-1)
-            curr_pos.append(-1)
-    mu = np.asarray(mu)
-    z = np.asarray(z)
-    # choose only the min values because those are the "worst grade"
-    try:
-        mu_min = mu[mu >= 0.0].min()
-    except:
-        mu_min = -16
-    try:
-        z_max = z[z >= 0.0].max()
-    except:
-        z_max = 16
-    return [arm_number, confname, data_res, str(mu_min), str(z_max)]
+# def assign_data(data, arm, confname):
+#     """
+#     Calculate the manipulaot indices(Manipulability, Joint Mid-Range Proximity)
+#     if the manipulator succed and the time that take
+#     :param data: array of the result of the configuration about each detection point
+#     :param arm: which configuration
+#     :return: array of the results
+#     """
+#     data_res = []
+#     jacobian = []
+#     curr_pos = []
+#     mu = []   # Manipulability index
+#     z = []    # Joint Mid-Range Proximity
+#     arm_number = str(arm + 1 )
+#     for j in data:
+#         data_res.append(j[0])
+#         if j[0]:
+#             mu.append(j[2][0])
+#             z.append(j[2][1].min())
+#             jacobian.append(j[2][2].tolist())
+#             curr_pos.append(j[2][3].tolist())
+#         else:
+#             mu.append(-1)
+#             z.append(-1)
+#             jacobian.append(-1)
+#             curr_pos.append(-1)
+#     mu = np.asarray(mu)
+#     z = np.asarray(z)
+#     # choose only the min values because those are the "worst grade"
+#     try:
+#         mu_min = mu[mu >= 0.0].min()
+#     except:
+#         mu_min = -16
+#     try:
+#         z_max = z[z >= 0.0].max()
+#     except:
+#         z_max = 16
+#     return [arm_number, confname, data_res, str(mu_min), str(z_max)]
 
 
 if __name__ == '__main__':
     main_move_group()
-    # from Other import MyCsv
-    # Ros()
-    # z = 3
-    # poses = [#[0.5, 0, z + 0.9],# [0.55, 0, z + 0.9], [0.55, 0, z + 0.95], [0.5, 0, z + 0.95], [0.45, 0, z + 0.95],
-    #      #[0.45, 0, z + 0.9], [0.45, 0, z + 0.85], [0.5, 0, z + 0.85], [0.55, 0, z + 0.85],
-    #      [0.2, 0, z + 0.9], #[0.25, 0, z + 0.9], [0.25, 0, z + 0.95], [0.2, 0, z + 0.95], [0.15, 0, z + 0.95],
-    #      #[0.15, 0, z + 0.9], [0.15, 0, z + 0.85], [0.2, 0, z + 0.85], [0.25, 0, z + 0.85],
-    #      [0.2, 0.0, z + 0.65], #[0.25, 0.0, z + 0.65], [0.25, 0.0, z + 0.7], [0.2, 0.0, z + 0.7], [0.15, 0.0, z + 0.7],
-    #      #[0.15, 0.0, z + 0.65], [0.15, 0.0, z + 0.6], [0.2, 0.0, z + 0.6], [0.25, 0.0, z + 0.6],
-    #      [0.2, 0, z + 0.4]#, [0.25, 0, z + 0.4],  [0.25, 0, z + 0.45],  [0.2, 0, z + 0.45], [0.15, 0, z + 0.45],
-    #     # [0.15, 0, z + 0.4],  [0.15, 0, z + 0.35],  [0.2, 0, z + 0.35],  [0.25, 0, z + 0.35]
-    #      ]
-    # oriens = [#[0, -3.14, 0], #[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0],
-    #       #[0, -3.14, 0], [0, -3.14, 0], [0, -3.14, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-    #       [0, 3.1459*0.75, 0], #[0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0],
-    #       #[0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.75, 0], [0, 3.1459*0.5, 0],
-    #       [0, 3.1459*0.5, 0], #[0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0],
-    #       #[0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.5, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-    #       [0, 3.1459*0.36, 0]#, [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0],
-    #       #[0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0], [0, 3.1459*0.36, 0]
-    #           ]
-    # all_data = []
-    # # res = []
-    # confs = ["roll_z_0_1pitch_y_0_4pitch_y_0_4roll_x_0_7",
-    #     #"roll_z_0_1pitch_y_0_7roll_z_0_4pitch_y_0_1roll_x_0_4roll_y_0_7",
-    #         # "roll_z_0_1roll_y_0_4pitch_y_0_4pitch_x_0_1pitch_y_0_7pitch_x_0_1",
-    #         # "roll_z_0_1pitch_y_0_4pitch_y_0_1roll_x_0_1pitch_y_0_1pitch_x_0_7",
-    #         # "roll_z_0_1pitch_y_0_1roll_y_0_4pitch_y_0_1roll_z_0_7roll_y_0_7"
-    #     ]
-    #
-    # arm = 0
-    # for conf in confs:
-    #     results = []
-    #     try:
-    #         cmd = "roslaunch man_gazebo main.launch gazebo_gui:=false rviz:=true dof:=4dof man:=combined/" + conf
-    #         Ros.ter_command(cmd)
-    #         time.sleep(6)
-    #         # res.append(main_move_group())
-    #         rospy.init_node('move_group_interface1', anonymous=True)
-    #         manipulator = MoveGroupPythonInterface()
-    #         time.sleep(0.13)
-    #         manipulator.add_obstacles(height=3.75) # add floor
-    #         time.sleep(0.5)
-    #
-    #         for i in range(len(poses)):
-    #             pose = poses[i]
-    #             orientaion = oriens[i]
-    #             results.append(manipulator.go_to_pose_goal(pose, orientaion))
-    #
-    #             time.sleep(1)
-    #             # raw_input("press enter")
-    #         rospy.on_shutdown(myhook)
-    #         Ros.ter_command("roskill")
-    #         time.sleep(6)
-    #     except:
-    #         print "error"
-    #         print results
-    #     finally:
-    #         MyCsv.save_csv([results], conf)
-    #         all_data.append(assign_data(results, arm, conf))
-    #         MyCsv.save_csv(all_data, "results")
-    #         arm += 1
-    #

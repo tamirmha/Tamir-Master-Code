@@ -1,4 +1,14 @@
 # coding=utf-8
+""" This file is optimization step:
+ the Multy Object Optimization is (fully descriped in the following document) done by using
+ this 3 methods:
+ 1) using evolutionary strategies (ES) algorithm (Evolutionary Algorithm):
+    using population of 1, Roulette Wheel Selection, elitism and only mutation
+ 2) Dynamic Window of Intrest
+ 3) Set Base Concept
+
+ """
+
 """ Variables: x1 : Joints type - array [Roll, Pitch, Pris]
             x2: Previous axe - array [X, Y, Z]
             x3 : Link Length - array [0.1, 0.4, 0.7]
@@ -16,9 +26,7 @@ Constrains:
 •	If (X1[i]==Roll and X2[i]==Z) than (X1[i+1]!=Roll and X2[i+1]!=Z)
 •	Arrival points : reach to one from two upper points and to the middle and bottom points
 """
-# from typing import Iterable
 
-# from simulator import simulate
 from ros import UrdfClass
 from Other import load_json, save_json, clock, Concepts, MyCsv, get_key, listener, pickle_load_data, pickle_save_data
 from scipy.spatial import distance
@@ -30,19 +38,8 @@ from time import time, sleep
 import os
 import shutil
 import sys
-import getpass
 from multiprocessing import Process
 from simulator import simulate
-# from ros_error_check import listener
-# import shlex
-# import subprocess
-# from ros import Ros
-
-
-# np.random.seed(100100)
-# # np.random.seed(1010101)
-# # np.random.seed(111111)
-# # np.random.seed(0)
 
 
 class Optimization:
@@ -1110,10 +1107,6 @@ class ResourceAllocation:
 
 with_sim = True
 if __name__ == '__main__':
-    username = getpass.getuser()
-    if username == "tamir":  # tamir laptop
-        np.random.seed(100100)
-        # np.random.seed(111011)
     gen_num = 1240
     start_time = 0
     time_run = 1

@@ -14,9 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 __author__ = "Simon Wessing"
-
 
 class HyperVolume:
     """
@@ -166,9 +164,8 @@ class HyperVolume:
         decorated.sort()
         # write back to original list
         nodes[:] = [node for (_, node) in decorated]
-            
-            
-            
+
+
 class MultiList: 
     """A special data structure needed by FonsecaHyperVolume. 
     
@@ -280,18 +277,11 @@ class MultiList:
             node.next[i].prev[i] = node
             if bounds[i] > node.cargo[i]:
                 bounds[i] = node.cargo[i]
-            
 
 
 if __name__ == "__main__":
-
     # Example:
     referencePoint = [2, 2, 2]
     hv = HyperVolume(referencePoint)
     front = [[1,0,1], [0,1,0]]
     volume = hv.compute(front)
-
-            
-            
-            
-        

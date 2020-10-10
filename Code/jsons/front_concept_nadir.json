@@ -1,9 +1,0 @@
-[
-  {
-    "concept": "{'#long_link': 2, 'long_link': 0.7, 'dof': 6, 'par_axes_y': 2, 'pitch_joint': 5, 'p/r_ratio': 1.0, 'acc_length': 3.1}", 
-    "mu": 0.0, 
-    "configuration": "roll_z_0_1pitch_y_0_7pitch_y_0_4pitch_z_0_4pitch_z_0_4pitch_x_0_7", 
-    "dof": 6.0, 
-    "z": 0.0
-  }
-]
