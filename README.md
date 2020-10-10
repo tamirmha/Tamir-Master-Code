@@ -21,7 +21,7 @@ The Code is built from :
 * Reach points of the simulator can added or changed
 
 ## Technologies
-* Python 2.7 (requirements file are added)
+* Python 2.7 (requirements file are attached)
 * Ubuntu 18.04
 
 ## Tools and methods
@@ -34,4 +34,4 @@ The Window Of Interest (WOI) indicates what is considered as an acceptable perfo
 
 The WOI is dynamic (DWOI), meanings that WOI is updated during the processes and continues to approach the origin of axes. The evolutionary mating is done only inside each concept, isn’t done between concepts. In concepts with a small number of configurations the selection will be randomly and for concepts with a large number of configurations the selection will be done by the Evolution Strategies. 
 
-The results of this algorithm return several design concepts that can be explore more deeply
+The results of this algorithm return several design concepts that can be explore more deeply.
