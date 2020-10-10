@@ -1,8 +1,10 @@
 # Manipulator Optimization 
 This Project finds an optimal kinematics design of manipulators using [Evolution Strategies](http://www.scholarpedia.org/article/Evolution_strategies) and [Multi-Object Optimization](https://en.wikipedia.org/wiki/Multi-objective_optimization).
+This thesis using the 'Set-based concept' and Dynamic Window of Interest approaches. the Set-based concept approach simultaneously explores different design concepts, which are meaningful sub-sets of the entire set of solutions. The set-based concept search approach is not optimization, but gaining general knowledge of the design space. The approach to design space exploration includes predefined design concepts that are used to explore the design space at both the level of concepts and the particular designs that accompanies it.
+The Window Of Interest (WOI) indicates what is considered as an acceptable performance vector. Rather than being interested in finding concepts' fronts, here the designers are interested in finding which of the considered concepts have at least one solution with a performance vector within a dynamically changed WOI. Concepts that meet this requirement are considered satisficing
 
 # Author
-[Tamir Mhabary](https://www.linkedin.com/in/tamirmhabary/) Algorithm and Robotics Reasercher
+[Tamir Mhabary](https://www.linkedin.com/in/tamirmhabary/) Algorithm and Robotics Researcher
 
 ## Introduction 
 The code is part of my Master thesis: "AN OPTIMAL KINEMATIC DESIGN OF A MANIPULATOR FOR EARLY DETECTION OF STRESSES IN GREENHOUSE CROPS"
@@ -21,4 +23,5 @@ The ROS files are in the following link *********
 * Ubuntu 18.04
 
 ## Tools and methods
-[Evolution Strategies](http://www.scholarpedia.org/article/Evolution_strategies) 
+
+[Evolution Strategies](http://www.scholarpedia.org/article/Evolution_strategies) done by using a population of 1, Roulette Wheel Selection, elitism, and mutation only.
