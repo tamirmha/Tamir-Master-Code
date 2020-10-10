@@ -22,7 +22,7 @@ The ROS files are in the following link *********
 * Ubuntu 18.04
 
 ## Tools and methods
-[Algorithm](./Algorithm.png)
+![Algorithm](./Algorithm.png)
 
 [Evolution Strategies](http://www.scholarpedia.org/article/Evolution_strategies) done by using a population of 1, Roulette Wheel Selection, elitism, and mutation only.
 
