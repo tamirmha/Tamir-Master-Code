@@ -15,7 +15,10 @@ The Code is built from :
 * optimization.py: the main file of the project.   select which configurations to create and enter to the simulation, according to Evolution Strategies and Multi-Object Optimization methods
 * other.py, hv.py, and test_mutation.py:  have helping functions and results analysis.
 
-The ROS files are in the following link *********
+# Notes
+* The ROS files are in the following link *********
+* With minor changes this code can work without concepts approach
+* Reach points of the simulator can added or changed
 
 ## Technologies
 * Python 2.7 (requirements file are added)
@@ -29,5 +32,6 @@ The ROS files are in the following link *********
 The Set-based concept approach simultaneously explores different design concepts, which are meaningful sub-sets of the entire set of solutions. The set-based concept search approach is not optimization, but gaining general knowledge of the design space. The approach to design space exploration includes predefined design concepts that are used to explore the design space at both the level of concepts and the particular designs that accompanies it.
 The Window Of Interest (WOI) indicates what is considered as an acceptable performance vector. Rather than being interested in finding concepts' fronts, here the designers are interested in finding which of the considered concepts have at least one solution with a performance vector within a dynamically changed WOI. Concepts that meet this requirement are considered satisficing.
 
-he WOI is dynamic (DWOI), meanings that WOI is updated during the processes and continues to approach the origin of axes.  The procedure of calculating the initial WOI was described in the previous section ‎3.6).  The evolutionary mating is done only inside each concept, isn’t done between concepts. In concepts with a small number of configurations the selection will be randomly and for concepts with a large number of configurations the selection will be done by the Evolution Strategies. 
+The WOI is dynamic (DWOI), meanings that WOI is updated during the processes and continues to approach the origin of axes. The evolutionary mating is done only inside each concept, isn’t done between concepts. In concepts with a small number of configurations the selection will be randomly and for concepts with a large number of configurations the selection will be done by the Evolution Strategies. 
 
+The results of this algorithm return several design concepts that can be explore more deeply
