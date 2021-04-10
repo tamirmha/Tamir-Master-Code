@@ -14,6 +14,7 @@ The Code is built from :
 * simulator.py:  a file that handles the simulation:  which URDF's files to create, and calculate the results
 * optimization.py: the main file of the project.   select which configurations to create and enter to the simulation, according to Evolution Strategies and Multi-Object Optimization methods
 * other.py, hv.py, and test_mutation.py:  have helping functions and results analysis.
+* to install requirments: cat requirements.txt | xargs -n 1 pip install  - install requirments and skip erros(the ros packages doesn't installad from pip)
 
 # Notes
 * The ROS files can be found [here](https://github.com/tamirmha/manipulator_ros)
@@ -35,5 +36,3 @@ The Window Of Interest (WOI) indicates what is considered as an acceptable perfo
 The WOI is dynamic (DWOI), meanings that WOI is updated during the processes and continues to approach the origin of axes. The evolutionary mating is performed only inside each concept, isn’t done between concepts. In concepts with a small number of configurations the selection will be random and for concepts with a large number of configurations the selection will be done by the Evolution Strategies. 
 
 The results of this algorithm return several design concepts that can be explored more deeply.
-
-cat requirements.txt | xargs -n 1 pip install  - install requirments and skip erros(the ros packages doesn't installad from pip)
